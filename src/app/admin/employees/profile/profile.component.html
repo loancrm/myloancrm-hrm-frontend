@@ -1,0 +1,1735 @@
+<div class="container-fluid mt-2" *ngIf="employees">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">{{
+              employees.employeeName | capitalizeFirst
+            }}</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../../assets/images/menu/viewemployee.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+<div class="container-fluid bg-color mt-3 text-capitalize">
+  <div class="row" *ngIf="employees">
+    <div class="col-md-4">
+      <div class="card profilecard">
+        <div class="profilebg"></div>
+        <div
+          class="d-flex profile-img-container flex-column align-items-center justify-content-center"
+          style="height: 270px"
+        >
+          <h5 class="card-title">
+            {{ employees.employeeName | capitalizeFirst }}
+          </h5>
+          <div
+            *ngIf="
+              employees && employees.passPhoto && employees.passPhoto.length > 0
+            "
+          >
+            <ng-container *ngIf="isImageFile(employees.passPhoto[0])">
+              <a [href]="'//' + employees.passPhoto[0]" target="_blank">
+                <img
+                  [src]="'//' + employees.passPhoto[0]"
+                  alt="Profile"
+                  class="profileimg mb-3"
+                  style="width: 190px; height: 190px"
+                />
+              </a>
+            </ng-container>
+            <ng-container *ngIf="!isImageFile(employees.passPhoto[0])">
+              <a [href]="'//' + employees.passPhoto[0]" target="_blank">
+                <i
+                  [class]="getFileIcon(employees.passPhoto[0].split('.').pop())"
+                  class="file-icon"
+                ></i>
+              </a>
+            </ng-container>
+          </div>
+          <div *ngIf="employees && employees.passPhoto == null">
+            <tr class="text-center">
+              <img
+                src="../../../../assets/images/profile/woman.png"
+                alt="Profile"
+                class="profileimg mb-3"
+                style="width: 190px; height: 190px"
+              />
+            </tr>
+          </div>
+          <span
+            class="table-column-data fw-bold statusdata mb-2"
+            *ngIf="employees.employeeInternalStatus"
+            [ngStyle]="{
+              color: getStatusColor(
+                getStatusName(employees.employeeInternalStatus)
+              ).textColor,
+              'background-color': getStatusColor(
+                getStatusName(employees.employeeInternalStatus)
+              ).backgroundColor
+            }"
+          >
+            {{ getStatusName(employees.employeeInternalStatus) }}
+          </span>
+        </div>
+        <div class="profilecards">
+          <div
+            *ngFor="let section of sections"
+            class="card tabcard"
+            [ngClass]="{ 'active-card': activeSection === section.id }"
+            (click)="selectSection(section.id)"
+          >
+            <div>
+              <h5 class="card-name">{{ section.label }}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <ng-container [ngSwitch]="activeSection">
+        <div *ngSwitchCase="'employeeDetails'">
+          <div class="card detailscard">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <span>Basic Details</span>
+              <button
+                *ngIf="!capabilities.employee"
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Update"
+                class="editicon"
+                icon="fa fa-pen-to-square"
+                (click)="updateEmployee(employees.employeeId)"
+              ></button>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-user"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Name<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.employeeName
+                        ? (employees.employeeName | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-id-badge"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Custom Employee Id<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.customEmployeeId
+                        ? (employees.customEmployeeId )
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-building"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Department<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.designationName
+                        ? employees.designationName
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-calendar-alt"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Date Of Joining<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.joiningDate
+                        ? (employees.joiningDate | date)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-briefcase"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Office Branch<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.ofcBranchName ? employees.ofcBranchName : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"
+                    ><i class="fas fa-money-bill-wave"></i
+                  ></span>
+                  <div class="label d-flex justify-content-between">
+                    CTC<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    Rs.
+                    {{
+                      employees.salary ? roundToLPA(employees.salary * 12) : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line" *ngIf="employees.totalSalary">
+                  <span class="icon">
+                    <i class="fas fa-wallet"></i>
+                  </span>
+                  <div class="label d-flex justify-content-between">
+                    Salary With Hike<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    Rs.
+                    {{
+                      employees.totalSalary
+                        ? roundToLPA(employees.totalSalary * 12)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <p-accordion
+                  class="my-2 hikeaccordian"
+                  *ngIf="employees.salaryHikes"
+                >
+                  <p-accordionTab header="Salary Hike Details">
+                    <div
+                      *ngFor="let hike of employees.salaryHikes; let i = index"
+                    >
+                      <div class="label my-3">{{ i + 1 }}. Hike Details</div>
+                      <div class="info-line">
+                        <span class="icon">
+                          <i class="fas fa-calendar-day"></i>
+                        </span>
+                        <div class="label d-flex justify-content-between">
+                          Hike Date<b>:&nbsp;</b>
+                        </div>
+                        <div class="value">{{ hike.hikeDate | date }}</div>
+                      </div>
+                      <div class="info-line">
+                        <span class="icon"
+                          ><i class="fas fa-money-bill-wave"></i
+                        ></span>
+                        <div class="label d-flex justify-content-between">
+                          Monthly Hike<b>:&nbsp;</b>
+                        </div>
+                        <div class="value">Rs. {{ hike.monthlyHike }}</div>
+                      </div>
+                    </div>
+                  </p-accordionTab>
+                </p-accordion>
+
+                <div class="">
+                  <div class="label">Offer Letter (Signed)<b>:&nbsp;</b></div>
+                  <div class="value m-2">
+                    <div
+                      *ngIf="
+                        employees &&
+                        employees.offerLetter &&
+                        employees.offerLetter.length > 0
+                      "
+                      class="files-container"
+                    >
+                      <div
+                        *ngFor="let file of employees.offerLetter"
+                        class="file-item"
+                      >
+                        <ng-container
+                          *ngIf="isImageFile(file); else otherFileTemplate"
+                        >
+                          <a [href]="'//' + file" target="_blank">
+                            <img
+                              [src]="'//' + file"
+                              alt="Aadhaar Image"
+                              class="kycimage"
+                            />
+                          </a>
+                        </ng-container>
+                        <ng-template #otherFileTemplate>
+                          <a [href]="'//' + file" target="_blank">
+                            <i
+                              [class]="getFileIcon(file.split('.').pop())"
+                              class="file-icon"
+                            ></i>
+                          </a>
+                        </ng-template>
+                      </div>
+                    </div>
+                    <div *ngIf="employees?.offerLetter == null">
+                      <div class="text-center">
+                        <div colspan="10" class="fw-bold">
+                          <img
+                            src="../../../../assets/images/menu/nodata.gif"
+                            width="150"
+                            height="150"
+                          />
+                          <p>No Files Uploaded</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngSwitchCase="'personalDetails'">
+          <div class="card detailscard">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <span>Personal Details</span>
+              <button
+                *ngIf="!capabilities.employee"
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Update"
+                class="editicon"
+                icon="fa fa-pen-to-square"
+                (click)="updateEmployee(employees.employeeId)"
+              ></button>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-user-graduate"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Qualification<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.qualification
+                        ? (employees.qualification | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-envelope"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Email Address<b>:&nbsp;</b>
+                  </div>
+                  <div class="value text-lowercase">
+                    {{ employees.emailAddress ? employees.emailAddress : "-" }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-venus-mars"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Gender<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.genderName
+                        ? (employees.genderName | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-phone"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Primary Phone<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{ employees.primaryPhone ? employees.primaryPhone : "-" }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-phone-alt"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Secondary Phone<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.secondaryPhone ? employees.secondaryPhone : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-user-friends"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Guardian<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.careOfName
+                        ? (employees.careOfName | capitalizeFirst)
+                        : "-"
+                    }}
+                    ({{
+                      employees.careOf
+                        ? (employees.careOf | capitalizeFirst)
+                        : "-"
+                    }})
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-birthday-cake"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Date Of Birth<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.dateOfBirth
+                        ? (employees.dateOfBirth | date)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-city"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    City<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.city ? (employees.city | capitalizeFirst) : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-map-location"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    District<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.district
+                        ? (employees.district | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon">
+                    <i class="fas fa-flag"></i>
+                  </span>
+                  <div class="label d-flex justify-content-between">
+                    State<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.state
+                        ? (employees.state | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"
+                    ><i class="fas fa-map-marker-alt"></i
+                  ></span>
+                  <div class="label d-flex justify-content-between">
+                    Current Address<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.currentAddress
+                        ? (employees.currentAddress | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-home"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Permanent Address<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.permanentAddress
+                        ? (employees.permanentAddress | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngSwitchCase="'experienceDetails'">
+          <div class="card detailscard">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <span>Experience Details</span>
+              <button
+                *ngIf="!capabilities.employee"
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Update"
+                class="editicon"
+                icon="fa fa-pen-to-square"
+                (click)="updateEmployee(employees.employeeId)"
+              ></button>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-business-time"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Job Experience<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.experience
+                        ? (employees.experience | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-building"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Previous Company Name<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.prevCompanyName
+                        ? (employees.prevCompanyName | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-user"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Previous Employer Name<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.prevEmployerName
+                        ? (employees.prevEmployerName | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-phone"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Previous Employer Contact<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.prevEmployerContact
+                        ? (employees.prevEmployerContact | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <ng-container>
+                  <div
+                    class="card-header d-flex justify-content-between align-items-center mb-2"
+                  >
+                    <span>Education / Experience Documents</span>
+                  </div>
+                  <ng-container
+                    *ngFor="let document of employees.otherDocuments"
+                  >
+                    <div class="info-line">
+                      <span class="icon"><i class="fas fa-file"></i></span>
+                      <div class="label d-flex justify-content-between">
+                        {{ document.name | capitalizeFirst }}<b>:&nbsp;</b>
+                      </div>
+                      <div class="value">
+                        <div
+                          *ngIf="
+                            document.otherDocuments &&
+                            document.otherDocuments.length > 0
+                          "
+                          class="files-container"
+                        >
+                          <div
+                            *ngFor="let file of document.otherDocuments"
+                            class="file-item"
+                          >
+                            <ng-container
+                              *ngIf="isImageFile(file); else otherFileTemplate"
+                            >
+                              <a [href]="'//' + file" target="_blank">
+                                <img
+                                  [src]="'//' + file"
+                                  alt="{{ document.name }} Image"
+                                  class="otherdocs"
+                                />
+                              </a>
+                            </ng-container>
+                            <ng-template #otherFileTemplate>
+                              <a [href]="'//' + file" target="_blank">
+                                <i
+                                  [class]="getFileIcon(file.split('.').pop())"
+                                  class="file-icon"
+                                ></i>
+                              </a>
+                            </ng-template>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <div *ngIf="employees?.otherDocuments == null">
+                    <div class="text-center">
+                      <div colspan="10" class="fw-bold">
+                        <img
+                          src="../../../../assets/images/menu/nodata.gif"
+                          width="150"
+                          height="150"
+                        />
+                        <p>No Files Uploaded</p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngSwitchCase="'kycDetails'">
+          <div class="card detailscard">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <span>KYC Details</span>
+              <button
+                *ngIf="!capabilities.employee"
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Update"
+                class="editicon"
+                icon="fa fa-pen-to-square"
+                (click)="updateEmployee(employees.employeeId)"
+              ></button>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-address-card"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Pan Number<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{ employees.panNumber ? employees.panNumber : "-" }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-fingerprint"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Aadhaar Number<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{ employees.aadharNumber ? employees.aadharNumber : "-" }}
+                  </div>
+                </div>
+                <div class="">
+                  <div class="label">Pan Card<b>:&nbsp;</b></div>
+                  <div class="value m-2">
+                    <div
+                      *ngIf="
+                        employees &&
+                        employees.panCard &&
+                        employees.panCard.length > 0
+                      "
+                      class="files-container"
+                    >
+                      <div
+                        *ngFor="let file of employees.panCard"
+                        class="file-item"
+                      >
+                        <ng-container
+                          *ngIf="isImageFile(file); else otherFileTemplate"
+                        >
+                          <a [href]="'//' + file" target="_blank">
+                            <img
+                              [src]="'//' + file"
+                              alt="Aadhaar Image"
+                              class="kycimage"
+                            />
+                          </a>
+                        </ng-container>
+                        <ng-template #otherFileTemplate>
+                          <a [href]="'//' + file" target="_blank">
+                            <i
+                              [class]="getFileIcon(file.split('.').pop())"
+                              class="file-icon"
+                            ></i>
+                          </a>
+                        </ng-template>
+                      </div>
+                    </div>
+                    <div *ngIf="employees?.panCard == null">
+                      <div class="text-center">
+                        <div colspan="10" class="fw-bold">
+                          <img
+                            src="../../../../assets/images/menu/nodata.gif"
+                            width="150"
+                            height="150"
+                          />
+                          <p>No Files Uploaded</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="">
+                  <div class="label">Aadhaar Card<b>:&nbsp;</b></div>
+                  <div class="value m-2">
+                    <div
+                      *ngIf="
+                        employees &&
+                        employees.aadharCard &&
+                        employees.aadharCard.length > 0
+                      "
+                      class="files-container"
+                    >
+                      <div
+                        *ngFor="let file of employees.aadharCard"
+                        class="file-item"
+                      >
+                        <ng-container
+                          *ngIf="isImageFile(file); else otherFileTemplate"
+                        >
+                          <a [href]="'//' + file" target="_blank">
+                            <img
+                              [src]="'//' + file"
+                              alt="Aadhaar Image"
+                              class="kycimage"
+                            />
+                          </a>
+                        </ng-container>
+                        <ng-template #otherFileTemplate>
+                          <a [href]="'//' + file" target="_blank">
+                            <i
+                              [class]="getFileIcon(file.split('.').pop())"
+                              class="file-icon"
+                            ></i>
+                          </a>
+                        </ng-template>
+                      </div>
+                    </div>
+                    <div *ngIf="employees?.aadharCard == null">
+                      <div class="text-center">
+                        <div colspan="10" class="fw-bold">
+                          <img
+                            src="../../../../assets/images/menu/nodata.gif"
+                            width="150"
+                            height="150"
+                          />
+                          <p>No Files Uploaded</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngSwitchCase="'accountDetails'">
+          <div class="card detailscard">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <span>Salary Account Details</span>
+              <button
+                *ngIf="!capabilities.employee"
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Update"
+                class="editicon"
+                icon="fa fa-pen-to-square"
+                (click)="updateEmployee(employees.employeeId)"
+              ></button>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-user"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Account Holder Name<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.accountHolderName
+                        ? (employees.accountHolderName | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"
+                    ><i class="fas fa-building-columns"></i
+                  ></span>
+                  <div class="label d-flex justify-content-between">
+                    Bank Name<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{ employees.bankName ? employees.bankName : "-" }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-briefcase"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Branch<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.bankBranch
+                        ? (employees.bankBranch | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-credit-card"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Account Number<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.accountNumber ? employees.accountNumber : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-key"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    IFSC Code<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{ employees.ifscCode ? employees.ifscCode : "-" }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngSwitchCase="'otherDetails'">
+          <div class="card detailscard">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <span>Other Details</span>
+              <button
+                *ngIf="!capabilities.employee"
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Update"
+                class="editicon"
+                icon="fa fa-pen-to-square"
+                (click)="updateEmployee(employees.employeeId)"
+              ></button>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-user"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Created By<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.createdBy
+                        ? (employees.createdBy | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-calendar-alt"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Created On<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.createdOn ? (employees.createdOn | date) : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"><i class="fas fa-user-tag"></i></span>
+                  <div class="label d-flex justify-content-between">
+                    Last Updated By<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.lastUpdatedBy
+                        ? (employees.lastUpdatedBy | capitalizeFirst)
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon"
+                    ><i class="fas fa-calendar-check"></i
+                  ></span>
+                  <div class="label d-flex justify-content-between">
+                    Last Updated On<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{
+                      employees.lastUpdatedOn
+                        ? (employees.lastUpdatedOn | date : "MMM d, y, h:mm a")
+                        : "-"
+                    }}
+                  </div>
+                </div>
+                <p-accordion
+                  class="custom-accordion"
+                  *ngIf="!capabilities.employee"
+                >
+                  <p-accordionTab header="Resignation">
+                    <div class="content">
+                      <form
+                        class="login-form"
+                        [formGroup]="resignationForm"
+                        novalidate
+                        (ngSubmit)="onSubmit(resignationForm.value)"
+                      >
+                        <div class=" ">
+                          <div class="py-2 px-2">
+                            <div class="row">
+                              <div class="col-md-12">
+                                <div class="row" *ngIf="resignationformFields">
+                                  <div
+                                    *ngFor="let field of resignationformFields"
+                                    [class.col-md-12]="
+                                      field.type === 'textarea'
+                                    "
+                                    [class.col-md-4]="field.type !== 'textarea'"
+                                    class="mt-2"
+                                  >
+                                    <div>
+                                      <div class="my-1">
+                                        <label>
+                                          {{ field.label }}
+                                          <span *ngIf="field.required"
+                                            >&nbsp;<sup class="text-danger"
+                                              >*</sup
+                                            ></span
+                                          >
+                                        </label>
+                                      </div>
+                                      <ng-container [ngSwitch]="field.type">
+                                        <input
+                                          *ngSwitchCase="'text'"
+                                          pInputText
+                                          [formControlName]="field.controlName"
+                                          [placeholder]="'Enter ' + field.label"
+                                          [maxlength]="field.maxLength"
+                                          [pattern]="field.pattern"
+                                          class="rounded-lg"
+                                          autocomplete="off"
+                                        />
+                                        <p-calendar
+                                          *ngSwitchCase="'calendar'"
+                                          [formControlName]="field.controlName"
+                                          [placeholder]="
+                                            'Select ' + field.label
+                                          "
+                                          [showIcon]="true"
+                                          dateFormat="yy-mm-dd"
+                                          appendTo="body"
+                                          [readonlyInput]="true"
+                                          styleClass="w-100"
+                                          [showButtonBar]="true"
+                                        ></p-calendar>
+                                        <textarea
+                                          *ngSwitchCase="'textarea'"
+                                          pInputTextarea
+                                          [formControlName]="field.controlName"
+                                          [placeholder]="'Enter ' + field.label"
+                                          rows="5"
+                                          class="rounded-lg w-100 custom-textarea"
+                                          [maxlength]="field.maxLength"
+                                        ></textarea>
+                                        <p-dropdown
+                                          *ngSwitchCase="'dropdown'"
+                                          [options]="this[field.options]"
+                                          [formControlName]="field.controlName"
+                                          [optionLabel]="field.optionLabel"
+                                          [optionValue]="field.optionValue"
+                                          [showClear]="true"
+                                          appendTo="body"
+                                          [placeholder]="
+                                            'Select ' + field.label
+                                          "
+                                          [dropdownIcon]="'fa fa-caret-down'"
+                                          styleClass="w-100"
+                                        ></p-dropdown>
+                                        <ng-container *ngSwitchCase="'file'">
+                                          <button
+                                            pButton
+                                            type="button"
+                                            icon="fa fa-cloud-arrow-up"
+                                            class="rightbtn me-2"
+                                            (click)="
+                                              uploadFiles(
+                                                field.controlName,
+                                                field.acceptedFileTypes
+                                              )
+                                            "
+                                          >
+                                            &nbsp;Upload
+                                          </button>
+                                          <div
+                                            *ngIf="
+                                              employees &&
+                                              employees[field.controlName] &&
+                                              employees[field.controlName]
+                                                .length > 0
+                                            "
+                                            class="mt-2"
+                                          >
+                                            <span
+                                              *ngFor="
+                                                let file of employees[
+                                                  field.controlName
+                                                ]
+                                              "
+                                              class="file-wrapper"
+                                            >
+                                              <a
+                                                [href]="'//' + file"
+                                                target="_blank"
+                                                class="file-link"
+                                              >
+                                                <i
+                                                  [ngClass]="
+                                                    getFileIcon(
+                                                      file.split('.').pop()
+                                                    )
+                                                  "
+                                                  class="file-icon me-2"
+                                                ></i>
+                                              </a>
+                                              <button
+                                                pButton
+                                                *ngIf="capabilities.delete"
+                                                type="button"
+                                                class="delete-btn p-button-danger p-button-sm"
+                                                (click)="
+                                                  confirmDelete(
+                                                    file,
+                                                    field.controlName
+                                                  )
+                                                "
+                                              >
+                                                <i class="pi pi-times"></i>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </ng-container>
+                                      </ng-container>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                          <div class="d-flex mt-3 mb-5">
+                            <button
+                              pButton
+                              pRipple
+                              type="button"
+                              class="p-button-info goback-button p-button-raised me-2"
+                              (click)="goBack()"
+                            >
+                              Go Back
+                            </button>
+                            <button
+                              pButton
+                              pRipple
+                              type="submit"
+                              [disabled]="!resignationForm.valid"
+                              class="p-button-primary p-button-raised"
+                            >
+                              Save
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </p-accordionTab>
+
+                  <p-accordionTab header="Termination">
+                    <div class="content">
+                      <form
+                        class="login-form"
+                        [formGroup]="terminationForm"
+                        novalidate
+                        (ngSubmit)="onSubmit(terminationForm.value)"
+                      >
+                        <div class=" ">
+                          <div class="py-2 px-2">
+                            <div class="row">
+                              <div class="col-md-12">
+                                <div class="row" *ngIf="terminationFormFields">
+                                  <div
+                                    *ngFor="let field of terminationFormFields"
+                                    [class.col-md-12]="
+                                      field.type === 'textarea'
+                                    "
+                                    [class.col-md-4]="field.type !== 'textarea'"
+                                    class="mt-2"
+                                  >
+                                    <div>
+                                      <div class="my-1">
+                                        <label>
+                                          {{ field.label }}
+                                          <span *ngIf="field.required"
+                                            >&nbsp;<sup class="text-danger"
+                                              >*</sup
+                                            ></span
+                                          >
+                                        </label>
+                                      </div>
+                                      <ng-container [ngSwitch]="field.type">
+                                        <input
+                                          *ngSwitchCase="'text'"
+                                          pInputText
+                                          [formControlName]="field.controlName"
+                                          [placeholder]="'Enter ' + field.label"
+                                          [maxlength]="field.maxLength"
+                                          [pattern]="field.pattern"
+                                          class="rounded-lg"
+                                          autocomplete="off"
+                                        />
+                                        <p-calendar
+                                          *ngSwitchCase="'calendar'"
+                                          [formControlName]="field.controlName"
+                                          [placeholder]="
+                                            'Select ' + field.label
+                                          "
+                                          [showIcon]="true"
+                                          dateFormat="yy-mm-dd"
+                                          appendTo="body"
+                                          [readonlyInput]="true"
+                                          [showButtonBar]="true"
+                                          styleClass="w-100"
+                                        ></p-calendar>
+                                        <textarea
+                                          *ngSwitchCase="'textarea'"
+                                          pInputTextarea
+                                          [formControlName]="field.controlName"
+                                          [placeholder]="'Enter ' + field.label"
+                                          rows="5"
+                                          class="rounded-lg w-100 custom-textarea"
+                                          [maxlength]="field.maxLength"
+                                        ></textarea>
+                                        <p-dropdown
+                                          *ngSwitchCase="'dropdown'"
+                                          [options]="this[field.options]"
+                                          [formControlName]="field.controlName"
+                                          [optionLabel]="field.optionLabel"
+                                          [optionValue]="field.optionValue"
+                                          [showClear]="true"
+                                          appendTo="body"
+                                          [placeholder]="
+                                            'Select ' + field.label
+                                          "
+                                          [dropdownIcon]="'fa fa-caret-down'"
+                                          styleClass="w-100"
+                                        ></p-dropdown>
+                                        <ng-container *ngSwitchCase="'file'">
+                                          <button
+                                            pButton
+                                            type="button"
+                                            icon="fa fa-cloud-arrow-up"
+                                            class="rightbtn me-2"
+                                            (click)="
+                                              uploadFiles(
+                                                field.controlName,
+                                                field.acceptedFileTypes
+                                              )
+                                            "
+                                          >
+                                            &nbsp;Upload
+                                          </button>
+                                          <div
+                                            *ngIf="
+                                              employees &&
+                                              employees[field.controlName] &&
+                                              employees[field.controlName]
+                                                .length > 0
+                                            "
+                                            class="mt-2"
+                                          >
+                                            <span
+                                              *ngFor="
+                                                let file of employees[
+                                                  field.controlName
+                                                ]
+                                              "
+                                              class="file-wrapper"
+                                            >
+                                              <a
+                                                [href]="'//' + file"
+                                                target="_blank"
+                                                class="file-link"
+                                              >
+                                                <i
+                                                  [ngClass]="
+                                                    getFileIcon(
+                                                      file.split('.').pop()
+                                                    )
+                                                  "
+                                                  class="file-icon me-2"
+                                                ></i>
+                                              </a>
+                                              <button
+                                                pButton
+                                                *ngIf="capabilities.delete"
+                                                type="button"
+                                                class="delete-btn p-button-danger p-button-sm"
+                                                (click)="
+                                                  confirmDelete(
+                                                    file,
+                                                    field.controlName
+                                                  )
+                                                "
+                                              >
+                                                <i class="pi pi-times"></i>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </ng-container>
+                                      </ng-container>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                          <div class="d-flex mt-3 mb-5">
+                            <button
+                              pButton
+                              pRipple
+                              type="button"
+                              class="p-button-info goback-button p-button-raised me-2"
+                              (click)="goBack()"
+                            >
+                              Go Back
+                            </button>
+                            <button
+                              pButton
+                              pRipple
+                              type="submit"
+                              [disabled]="!terminationForm.valid"
+                              class="p-button-primary p-button-raised"
+                            >
+                              Save
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                      <!-- <button
+                        pButton
+                        pRipple
+                        type="button"
+                        icon="fa fa-pen-to-square"
+                        (click)="sendEmail(employees)"
+                      >
+                        Send to Mail
+                      </button> -->
+                    </div>
+                  </p-accordionTab>
+                </p-accordion>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngSwitchCase="'attendanceDetails'">
+          <div class="card detailscard">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <span>Attendance Details</span>
+            </div>
+            <div class="card-body" *ngIf="attendanceStatusCounts">
+              <div class="row">
+                <div class="d-flex justify-content-end mb-4">
+                  <p-calendar
+                    [(ngModel)]="displayMonth"
+                    [showIcon]="true"
+                    view="month"
+                    [style]="{ width: '200px' }"
+                    [yearNavigator]="true"
+                    [yearRange]="'-10:+10'"
+                    dateFormat="MM yy"
+                    appendTo="body"
+                    [readonlyInput]="true"
+                    styleClass="w-100"
+                    (ngModelChange)="onDateChange($event)"
+                    placeholder="Select Month and Year"
+                  ></p-calendar>
+                </div>
+                <div class="info-line">
+                  <span class="icon text-success"
+                    ><i class="fas fa-check"></i
+                  ></span>
+                  <div class="label d-flex justify-content-between">
+                    Present<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{ attendanceStatusCounts["Present"] }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon text-primary"
+                    ><i class="fas fa-circle-exclamation"></i
+                  ></span>
+                  <div class="label d-flex justify-content-between">
+                    Late<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{ attendanceStatusCounts["Late"] }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon text-warning"
+                    ><i class="fas fa-circle-half-stroke"></i
+                  ></span>
+                  <div class="label d-flex justify-content-between">
+                    Half-day<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{ attendanceStatusCounts["Half-day"] }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <span class="icon text-danger"
+                    ><i class="fas fa-xmark"></i
+                  ></span>
+                  <div class="label d-flex justify-content-between">
+                    Absent<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{ attendanceStatusCounts["Absent"] }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngSwitchCase="'leaves'">
+          <div class="card detailscard">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <span>Leaves</span>
+            </div>
+            <div class="card-body text-capitalize table-card">
+              <p-table
+                #leavesTable
+                [value]="leaves"
+                [sortOrder]="-1"
+                [sortField]="'createdOn'"
+                [lazy]="true"
+                (onLazyLoad)="loadLeaves($event)"
+                dataKey="id"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                [paginator]="true"
+                [rows]="10"
+                class="p-datatable-striped table"
+                [totalRecords]="totalLeavesCount"
+                [loading]="apiLoading"
+                responsiveLayout="scroll"
+                scrollHeight="flex"
+                [globalFilterFields]="[
+                  'referenceNo',
+                  'customer.firstName',
+                  'partner.partnerName',
+                  'status'
+                ]"
+                styleClass="p-datatable-customers"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Leaves"
+              >
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th pSortableColumn="leaveId">
+                      Leave Id <p-sortIcon field="leaveId"></p-sortIcon>
+                    </th>
+
+                    <th pSortableColumn="leaveType">
+                      Leave Type
+                      <p-sortIcon field="leaveType"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="leaveFrom">
+                      Leave From
+                      <p-sortIcon field="leaveFrom"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="leaveTo">
+                      Leave To <p-sortIcon field="leaveTo"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="noOfDays">
+                      No Of Days<p-sortIcon field="noOfDays"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="durationType">
+                      Duration Type<p-sortIcon
+                        field="durationType"
+                      ></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="reason">
+                      Reason
+                      <p-sortIcon field="reason"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="leaveInternalStatus">
+                      Status
+                      <p-sortIcon field="leaveInternalStatus"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-leave>
+                  <tr>
+                    <td>
+                      <span
+                        class="table-column-data"
+                        *ngIf="leave.leaveId; else noData"
+                        >{{ leave.leaveId }}</span
+                      >
+                    </td>
+
+                    <td>
+                      <span
+                        class="table-column-data"
+                        *ngIf="leave.leaveType; else noData"
+                        >{{ leave.leaveType | capitalizeFirst }}</span
+                      >
+                    </td>
+                    <td>
+                      <span
+                        class="table-column-data"
+                        *ngIf="leave.leaveFrom; else noData"
+                        >{{ leave.leaveFrom | date }}</span
+                      >
+                    </td>
+                    <td>
+                      <span
+                        class="table-column-data"
+                        *ngIf="leave.leaveTo; else noData"
+                        >{{ leave.leaveTo | date : "mediumDate" }}</span
+                      >
+                    </td>
+                    <td>
+                      <span
+                        class="table-column-data"
+                        *ngIf="leave.noOfDays; else noData"
+                        >{{ leave.noOfDays }}</span
+                      >
+                    </td>
+                    <td>
+                      <span
+                        class="table-column-data"
+                        *ngIf="leave.durationType; else noData"
+                        >{{ leave.durationType }}</span
+                      >
+                    </td>
+                    <td>
+                      <span
+                        class="table-column-data"
+                        *ngIf="leave.reason; else noData"
+                        >{{ leave.reason | capitalizeFirst }}</span
+                      >
+                    </td>
+                    <td>
+                      <span
+                        class="table-column-data fw-bold statusdata"
+                        *ngIf="leave.leaveInternalStatus; else noData"
+                        [ngStyle]="{
+                          color: getLeavesStatusColor(
+                            getLeavesStatusName(leave.leaveInternalStatus)
+                          ).textColor,
+                          'background-color': getLeavesStatusColor(
+                            getLeavesStatusName(leave.leaveInternalStatus)
+                          ).backgroundColor
+                        }"
+                      >
+                        {{ getLeavesStatusName(leave.leaveInternalStatus) }}
+                      </span>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr class="text-center">
+                    <td colspan="10" class="text-center fw-bold">
+                      <img
+                        src="../../../assets/images/menu/nodata.gif"
+                        width="200"
+                        height="200"
+                      />
+                      <p>No Leaves Found</p>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </div>
+        <div *ngSwitchCase="'incentiveDetails'">
+          <div class="card detailscard">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <span>Incentive Details</span>
+            </div>
+            <div class="card-body text-capitalize table-card">
+              <p-table
+                #incentivesTable
+                [value]="incentives"
+                [sortOrder]="-1"
+                [sortField]="'createdOn'"
+                [lazy]="true"
+                (onLazyLoad)="loadIncentives($event)"
+                dataKey="id"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                [paginator]="true"
+                [rows]="10"
+                class="p-datatable-striped table"
+                [totalRecords]="totalIncentivesCount"
+                [loading]="apiLoading"
+                responsiveLayout="scroll"
+                scrollHeight="flex"
+                styleClass="p-datatable-customers"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Incentives"
+              >
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th pSortableColumn="incentiveId">
+                      Incentive Id <p-sortIcon field="incentiveId"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="incentiveApplicableMonth">
+                      Applicable Month
+                      <p-sortIcon field="incentiveApplicableMonth"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="incentiveAmount">
+                      Incentive Amount
+                      <p-sortIcon field="incentiveAmount"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-incentive>
+                  <tr>
+                    <td>
+                      <span
+                        class="table-column-data"
+                        *ngIf="incentive.incentiveId; else noData"
+                        >{{ incentive.incentiveId }}</span
+                      >
+                    </td>
+
+                    <td>
+                      <span
+                        class="table-column-data"
+                        *ngIf="incentive.incentiveApplicableMonth; else noData"
+                        >{{
+                          incentive.incentiveApplicableMonth | date : "MMM yyyy"
+                        }}</span
+                      >
+                    </td>
+                    <td>
+                      <span
+                        class="table-column-data"
+                        *ngIf="incentive.incentiveAmount; else noData"
+                        >{{ incentive.incentiveAmount | capitalizeFirst }}</span
+                      >
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr class="text-center">
+                    <td colspan="10" class="text-center fw-bold">
+                      <img
+                        src="../../../assets/images/menu/nodata.gif"
+                        width="200"
+                        height="200"
+                      />
+                      <p>No incentives Found</p>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </div>
+        <div *ngSwitchCase="'payrollDetails'">
+          <div class="card detailscard">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <span>Payroll Details</span>
+            </div>
+            <div class="card-body text-capitalize table-card">
+              <p-table
+                #payrollTable
+                [value]="payroll"
+                [sortOrder]="-1"
+                [sortField]="'payrollMonth'"
+                [lazy]="true"
+                (onLazyLoad)="loadPayslips($event)"
+                dataKey="id"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                [paginator]="true"
+                [rows]="10"
+                class="p-datatable-striped table"
+                [totalRecords]="totalPayrollCount"
+                [loading]="apiLoading"
+                responsiveLayout="scroll"
+                scrollHeight="flex"
+                [globalFilterFields]="[
+                  'referenceNo',
+                  'customer.firstName',
+                  'partner.partnerName',
+                  'status'
+                ]"
+                styleClass="p-datatable-customers"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Payroll"
+              >
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th pSortableColumn="payslipId">
+                      Payroll Id <p-sortIcon field="payslipId"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="payrollMonth">
+                      Payroll Month
+                      <p-sortIcon field="payrollMonth"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="salary">
+                      Salary <p-sortIcon field="salary"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="deductions">
+                      Deductions <p-sortIcon field="deductions"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="netSalary">
+                      Net Salary <p-sortIcon field="netSalary"></p-sortIcon>
+                    </th>
+                    <th>Payslip</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-payslip>
+                  <tr>
+                    <td>
+                      <span
+                        class="table-column-data"
+                        *ngIf="payslip.payslipId; else noData"
+                        >{{ payslip.payslipId }}</span
+                      >
+                    </td>
+                    <td>
+                      <span
+                        class="table-column-data"
+                        *ngIf="payslip.payrollMonth; else noData"
+                        >{{ payslip.payrollMonth | date : "MMMM yyyy" }}</span
+                      >
+                    </td>
+                    <td>
+                      <span
+                        class="table-column-data"
+                        *ngIf="payslip.salary; else noData"
+                        >Rs.{{ payslip.salary }}</span
+                      >
+                    </td>
+                    <td>
+                      <span class="table-column-data">
+                        Rs.{{ payslip.deductions }}
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        class="table-column-data"
+                        *ngIf="payslip.netSalary; else noData"
+                      >
+                        Rs.{{ payslip.netSalary }}</span
+                      >
+                    </td>
+
+                    <td>
+                      <div class="text-center">
+                        <div class="d-flex">
+                          <button
+                            pButton
+                            pRipple
+                            type="button"
+                            pTooltip="Payslip"
+                            class="p-button-info me-2 view-btn"
+                            icon="fa fa-file"
+                            (click)="ViewPayslip(payslip.payslipId)"
+                          ></button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr class="text-center">
+                    <td colspan="10" class="text-center fw-bold">
+                      <img
+                        src="../../../assets/images/menu/nodata.gif"
+                        width="200"
+                        height="200"
+                      />
+                      <p>No Payroll Found</p>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<ng-template #noData> - </ng-template>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>

@@ -1,0 +1,33 @@
+.view-btn{
+  height: 30px;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+}
+.delete-btn {
+  height: 30px;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+}
+.p-inputtext {
+  color: #333;
+
+  padding: 10px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.p-inputtext:hover {
+  border: 1px solid #33009c !important;
+}
+.p-inputtext:focus {
+  border: 1px solid #33009c !important;
+  box-shadow: 0 0 5px #9b8db5 !important;
+  outline: none;
+}
+
+.p-inputtext::placeholder {
+  color: #888;
+}
+
+.p-button:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.2rem #abc6f7;
+}

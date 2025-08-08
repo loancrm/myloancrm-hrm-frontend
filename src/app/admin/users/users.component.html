@@ -1,0 +1,522 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">Users</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../assets/images/menu/users.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+
+<p-dialog
+  [(visible)]="isDialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [responsive]="true"
+  class="dialogbox"
+  header="User Details"
+  (onHide)="clearDialog()"
+>
+  <div *ngIf="selectedUser" class="text-capitalize">
+    <div class="profilebg"></div>
+    <div
+      class="d-flex profile-img-container flex-column align-items-center justify-content-center"
+      style="height: 270px"
+    >
+      <div
+        *ngIf="
+          selectedUser &&
+          selectedUser.userImage &&
+          selectedUser.userImage.length > 0
+        "
+        class="d-flex justify-content-center"
+      >
+        <ng-container>
+          <a [href]="'//' + selectedUser.userImage[0]" target="_blank">
+            <img
+              [src]="'//' + selectedUser.userImage[0]"
+              alt="Profile"
+              class="profileimg mb-3"
+              style="width: 190px; height: 190px"
+            />
+          </a>
+        </ng-container>
+      </div>
+      <div
+        *ngIf="selectedUser && selectedUser.userImage == null"
+        class="d-flex justify-content-center"
+      >
+        <tr class="text-center">
+          <img
+            src="../../../assets/images/profile/profile.png"
+            alt="Profile"
+            class="profileimg mb-3"
+            style="width: 190px; height: 190px"
+          />
+        </tr>
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-id-badge"></i></span>
+      <div class="label d-flex justify-content-between">
+        User Id<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{ selectedUser.userId ? selectedUser.userId : "-" }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-user-alt"></i></span>
+      <div class="label d-flex justify-content-between">
+        First Name<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedUser.firstName
+            ? (selectedUser.firstName | capitalizeFirst)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-user-tie"></i></span>
+      <div class="label d-flex justify-content-between">
+        Last Name<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedUser.lastName
+            ? (selectedUser.lastName | capitalizeFirst)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-user-circle"></i></span>
+      <div class="label d-flex justify-content-between">
+        Username<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedUser.username
+            ? (selectedUser.username | capitalizeFirst)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line" *ngIf="capabilities.passwordView">
+      <span class="icon">
+        <i class="fas fa-lock"></i>
+      </span>
+      <div class="label d-flex justify-content-between">
+        Password<b>:&nbsp;</b>
+      </div>
+      <div class="value d-flex align-items-center">
+        <span *ngIf="isPasswordVisible; else maskedPassword">{{
+          selectedUser.password
+        }}</span>
+        <ng-template #maskedPassword>
+          {{ maskPassword(selectedUser.password) }}
+        </ng-template>
+        <i
+          class="fas"
+          [ngClass]="{
+            'fa-eye': !isPasswordVisible,
+            'fa-eye-slash': isPasswordVisible
+          }"
+          (click)="togglePasswordVisibility()"
+          style="cursor: pointer; margin-left: 10px"
+        ></i>
+      </div>
+    </div>
+
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-building"></i></span>
+      <div class="label d-flex justify-content-between">
+        Designation<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        <span
+          class="designationstatus"
+          [ngStyle]="{
+            color: getStatusColor(selectedUser.designationName).textColor,
+            'background-color': getStatusColor(selectedUser.designationName)
+              .backgroundColor
+          }"
+        >
+          {{
+            selectedUser.designationName ? selectedUser.designationName : "-"
+          }}</span
+        >
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-phone"></i></span>
+      <div class="label d-flex justify-content-between">
+        Phone Number<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{ selectedUser.phoneNumber ? selectedUser.phoneNumber : "-" }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-envelope"></i></span>
+      <div class="label d-flex justify-content-between">
+        Email Address<b>:&nbsp;</b>
+      </div>
+      <div class="value text-lowercase">
+        {{ selectedUser.email ? selectedUser.email : "-" }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-user"></i></span>
+      <div class="label d-flex justify-content-between">
+        Created By<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedUser.createdBy
+            ? (selectedUser.createdBy | capitalizeFirst)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-calendar-alt"></i></span>
+      <div class="label d-flex justify-content-between">
+        Created On<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{ selectedUser.createdOn ? (selectedUser.createdOn | date) : "-" }}
+      </div>
+    </div>
+
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-user-tag"></i></span>
+      <div class="label d-flex justify-content-between">
+        Last Updated By<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedUser.lastUpdatedBy
+            ? (selectedUser.lastUpdatedBy | capitalizeFirst)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-calendar-check"></i></span>
+      <div class="label d-flex justify-content-between">
+        Last Updated On<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedUser.lastUpdatedOn
+            ? (selectedUser.lastUpdatedOn | date : "MMM d, y, h:mm a")
+            : "-"
+        }}
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<div class="text-capitalize table-card">
+  <p-table
+    #usersTable
+    [value]="users"
+    [sortOrder]="-1"
+    [sortField]="'createdOn'"
+    [lazy]="true"
+    (onLazyLoad)="loadUsers($event)"
+    dataKey="id"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [paginator]="true"
+    [rows]="10"
+    class="p-datatable-striped table"
+    [totalRecords]="totalUsersCount"
+    [loading]="apiLoading"
+    responsiveLayout="scroll"
+    scrollHeight="flex"
+    [globalFilterFields]="[
+      'referenceNo',
+      'customer.firstName',
+      'partner.partnerName',
+      'status'
+    ]"
+    styleClass="p-datatable-customers"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Users"
+  >
+    <ng-template pTemplate="caption">
+      <div class="row">
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <div class="p-inputgroup">
+            <input
+              type="text"
+              pInputText
+              placeholder="Search with User Name"
+              [(ngModel)]="userNameToSearch"
+              (ngModelChange)="
+                inputValueChangeEvent('userId', userNameToSearch)
+              "
+              (keyup.enter)="filterWithUserName()"
+            />
+            <button
+              type="button"
+              pButton
+              icon="pi pi-search"
+              class="p-button-primary"
+              [disabled]="!userNameToSearch"
+              (click)="filterWithUserName()"
+            ></button>
+          </div>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <p-dropdown
+          styleClass="text-left"
+          [style]="{ width: '100%' }"
+          [options]="userInternalStatusList"
+          (onChange)="statusChange($event)"
+          appendTo="body"
+          [dropdownIcon]="'fa fa-caret-down'"
+          [(ngModel)]="selectedUserStatus"
+          optionLabel="displayName"
+          dataKey="name"
+        >
+        </p-dropdown>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
+          <div class="d-flex">
+            <div class="flex-grow-1 me-2"></div>
+            <div class="d-flex align-items-center pointer-cursor">
+              <app-filter
+                [position]="'right'"
+                [iconColor]="'#33009C'"
+                class="me-2"
+                [iconSize]="'28px!important'"
+                (filterEvent)="applyConfigFilters($event)"
+                [filterConfig]="filterConfig"
+                [showFilterIndication]="appliedFilter"
+              >
+              </app-filter>
+              <button
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Add User"
+                tooltipPosition="top"
+                class="p-button-primary"
+                icon="fa fa-plus"
+                (click)="createUser()"
+              >
+                &nbsp;Add User
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th pSortableColumn="userId" class="text-nowrap">
+          User Id <p-sortIcon field="userId"></p-sortIcon>
+        </th>
+        <th pSortableColumn="username" class="text-nowrap">
+          User Name <p-sortIcon field="username"></p-sortIcon>
+        </th>
+        <th pSortableColumn="designationName" class="text-nowrap">
+          Designation <p-sortIcon field="designationName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="phoneNumber" class="text-nowrap">
+          Phone Number <p-sortIcon field="phoneNumber"></p-sortIcon>
+        </th>
+        <th pSortableColumn="createdOn" class="text-nowrap">
+          Created Date <p-sortIcon field="createdOn"></p-sortIcon>
+        </th>
+        <th pSortableColumn="userInternalStatus" class="text-nowrap">
+          Status <p-sortIcon [field]="'userInternalStatus'"></p-sortIcon>
+        </th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-user>
+      <tr>
+        <td>
+          <span class="table-column-data" *ngIf="user.userId; else noData">{{
+            user.userId
+          }}</span>
+        </td>
+        <td class="text-nowrap">
+          <div class="d-flex align-items-center">
+            <span class="me-2">
+              <ng-container
+                *ngIf="
+                  user && user.userImage && user.userImage.length > 0;
+                  else defaultImage
+                "
+              >
+                <a [href]="'//' + user.userImage[0]" target="_blank">
+                  <img
+                    [src]="'//' + user.userImage[0]"
+                    alt="Image"
+                    class="employeeImage"
+                    style="height: 40px; width: 40px"
+                  />
+                </a>
+              </ng-container>
+              <ng-template #defaultImage>
+                <img
+                  src="../../../assets/images/profile/user.png"
+                  alt="Default Image"
+                  class="employeeImage"
+                  style="height: 40px; width: 40px"
+                />
+              </ng-template>
+            </span>
+            <b>
+              <span
+                *ngIf="user.username; else noData"
+                class="table-column-data"
+              >
+                {{ user.username | capitalizeFirst }}
+              </span>
+            </b>
+          </div>
+        </td>
+        <td class="text-nowrap">
+          <span
+            class="table-column-data designationstatus"
+            *ngIf="user.designationName; else noData"
+            [ngStyle]="{
+              color: getStatusColor(user.designationName).textColor,
+              'background-color': getStatusColor(user.designationName)
+                .backgroundColor
+            }"
+            >{{ user.designationName }}</span
+          >
+        </td>
+        <td class="text-nowrap">
+          <span class="table-column-data" *ngIf="user.phoneNumber; else noData">
+            <i class="fa fa-phone"></i> &nbsp;{{ user.phoneNumber }}</span
+          >
+        </td>
+        <td>
+          <span class="table-column-data" *ngIf="user.createdOn; else noData">{{
+            user.createdOn | date : "mediumDate"
+          }}</span>
+        </td>
+        <td class="text-nowrap">
+          <span
+            class="table-column-data fw-bold statusdata"
+            *ngIf="user.userInternalStatus; else noData"
+            [ngStyle]="{
+              color: getUserStatusColor(
+                getStatusName(user.userInternalStatus)
+              ).textColor,
+              'background-color': getUserStatusColor(
+                getStatusName(user.userInternalStatus)
+              ).backgroundColor
+            }"
+          >
+            {{ getStatusName(user.userInternalStatus) }}
+          </span>
+        </td>
+        <!-- <td>
+          <div class="text-center">
+            <div class="d-flex">
+              <button
+                pButton
+                pRipple
+                type="button"
+                pTooltip="View"
+                class="p-button-info me-2 view-btn"
+                icon="fa fa-eye"
+                (click)="showUserDetails(user)"
+              ></button>
+              <button
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Update"
+                class="p-button-success me-2 update-btn"
+                icon="fa fa-pen-to-square"
+                (click)="updateUser(user.userId)"
+              ></button>
+              <button
+                *ngIf="capabilities.delete"
+                pButton
+                type="button"
+                icon="fa fa-trash"
+                pTooltip="Delete"
+                class="p-button-danger me-2 delete-btn"
+                (click)="confirmDelete(user)"
+              ></button>
+            </div>
+          </div>
+        </td> -->
+        <td>
+          <div class="text-center">
+            <div class="d-flex">
+              <p-menu
+                appendTo="body"
+                #menu
+                [model]="actionItems(user)"
+                [popup]="true"
+              ></p-menu>
+              <button
+                pButton
+                type="button"
+                class="custom-btn"
+                (click)="menu.toggle($event)"
+                icon="pi pi-ellipsis-h"
+              ></button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr class="text-center">
+        <td colspan="10" class="text-center fw-bold">
+          <img
+            src="../../../assets/images/menu/nodata.gif"
+            width="200"
+            height="200"
+          />
+          <p>No Users Found</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<ng-template #noData> - </ng-template>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>

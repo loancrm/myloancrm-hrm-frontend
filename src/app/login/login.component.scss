@@ -1,0 +1,179 @@
+.bg-glass {
+  background-color: #f8f0e5;
+  backdrop-filter: saturate(200%) blur(25px);
+}
+
+.center-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.contact-links {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.contact-links img {
+  width: 50px;
+  height: 50px;
+  transition: transform 0.3s;
+}
+
+.contact-links img:hover {
+  transform: scale(1.35);
+}
+
+.link {
+  margin-right: 15px;
+}
+
+.link:last-child {
+  margin-right: 0;
+}
+
+.card-logo {
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+// .typing-text-container {
+//   // overflow: hidden;
+//   border-right: 0.1em solid hsl(218, 41%, 19%);
+//   white-space: nowrap;
+//   animation: typing-animation 5s steps(40, end) infinite;
+// }
+
+@keyframes typing-animation {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.background-img {
+  width: 100%;
+  min-height: 100vh;
+  animation: changeBackgroundColor 6s infinite;
+}
+
+@keyframes changeBackgroundColor {
+  0% {
+    background-color: #fae5e6;
+  }
+  50% {
+    background-color: #e5f0f4;
+  }
+  100% {
+    background-color: #fffde3;
+  }
+}
+
+.login-form,
+.text-large {
+  margin: 0 80px;
+}
+
+.shadow-image {
+  width: 400px;
+  height: 400px;
+}
+
+@media screen and (max-width: 620px) {
+  .login-form,
+  .text-large {
+    margin: 0;
+  }
+
+  .carouselimg {
+    display: none !important;
+  }
+
+  .signinform {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+}
+
+.logo-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.logo {
+  width: 80px;
+  height: 40px;
+  margin-right: 5px;
+}
+
+.logo-left {
+  color: #1e4079;
+  font-size: 30px;
+  margin-top: 5px;
+}
+
+.logo-right {
+  color: #51c297;
+}
+
+.form-label {
+  font-weight: bold;
+}
+.center-button {
+  background-color: #33009c !important;
+  border-color: #33009c !important;
+}
+.p-inputtext {
+  color: #333;
+  padding: 10px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.p-inputtext:hover {
+  border: 1px solid #33009c !important;
+}
+.p-inputtext:focus {
+  border: 1px solid #33009c !important;
+  box-shadow: 0 0 5px #9b8db5 !important;
+  outline: none;
+}
+.p-inputtext::placeholder {
+  color: #888;
+}
+
+
+// login.component.scss
+
+.login-container {
+
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+
+}
+
+.user-type-text {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.toggle-link {
+  color: #007bff;
+  font-size: 16px;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: #0056b3;
+  }
+}

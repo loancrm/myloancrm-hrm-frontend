@@ -1,0 +1,315 @@
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"
+      ><div class="d-flex">
+        <div class="me-1">
+          <img src="../../assets/images/logo.png" width="60" height="40" />
+        </div>
+        <div class="title d-flex align-items-center">
+          The&nbsp; <strong style="color: #51c297">Fintalk</strong>
+        </div>
+      </div></a
+    >
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarContent"
+      aria-controls="navbarContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/user']">
+            <!-- <button pButton pRipple type="button" class="btn btn-primary">
+              Login
+            </button> -->
+            <button pButton pRipple type="button" class="loginbtn">
+              Login
+            </button>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- <section
+  class="row welcome-section d-flex flex-column flex-lg-row align-items-center justify-content-between py-5"
+>
+  <div class="col-md-6 welcome-text">
+    <h1>
+      <div class="">The Fintalk HRM – Redefining Workforce Management</div>
+    </h1>
+    <p>
+      Your Comprehensive HR Solution! Optimize workforce management, streamline
+      attendance tracking, automate payroll processing, and efficiently handle
+      leave, incentives, and performance appraisals—all within a unified,
+      cutting-edge platform tailored for modern enterprises.
+    </p>
+    <button class="btn btn-primary">Get Started</button>
+  </div>
+  <div class="col-md-6 welcome-image">
+    <img
+      src="../../assets/images/slider/slider1"
+      alt="HRMS Welcome"
+      class="img-fluid"
+    />
+  </div>
+</section> -->
+
+<section class="container-fluid py-5 welcome-section">
+  <div class="row align-items-center">
+    <div class="col-12 col-md-6 text-center text-md-start">
+      <h1 class="fw-bold">The Fintalk HRM – Redefining Workforce Management</h1>
+      <p class="mt-3 justify-text">
+        Your Comprehensive HR Solution! Optimize workforce management,
+        streamline attendance tracking, automate payroll processing, and
+        efficiently handle leave, incentives, and performance appraisals—all
+        within a unified, cutting-edge platform tailored for modern enterprises.
+      </p>
+      <button pButton pRipple type="button" class="getstartedbtn">
+        Get Started <i class="pi pi-arrow-right ms-2"></i>
+      </button>
+    </div>
+    <div class="col-12 col-md-6 text-center mt-4 mt-md-0 welcome-image">
+      <img
+        src="../../assets/images/home/dash.png"
+        alt="HRMS Welcome"
+        class="img-fluid d-block mx-auto"
+      />
+    </div>
+  </div>
+</section>
+<div class="area">
+  <ul class="circles">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ul>
+</div>
+
+<div class="features-section">
+  <div class="container-fluid">
+    <div class="feature p-5">
+      <div class="heading">Features</div>
+      <div class="row align-items-center">
+        <div class="col-12 col-md-6 text-center mt-4 mt-md-0 welcome-image">
+          <img
+            src="../../assets/images/home/employee.png"
+            alt="Employee Management"
+            class="img-fluid d-block mx-auto"
+          />
+        </div>
+        <div class="col-12 col-md-6 text-center text-md-start">
+          <div class="feature-text">
+            <h2 class="fw-bold">Employee Management</h2>
+            <p class="justify-text">
+              Manage your workforce effortlessly with our all-in-one Employee
+              Management System. From onboarding new employees to updating
+              profiles, issuing offer letters, and removing employees, every HR
+              task is streamlined. Automate your HR processes, save time, and
+              improve data accuracy. Handle everything from employee records to
+              compliance tracking in a single platform. Enhance efficiency and
+              focus on what matters most—your people.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attendance Management -->
+    <div class="feature row align-items-center mb-5 p-5">
+      <div class="col-12 col-md-6 text-center text-md-start">
+        <div class="feature-text">
+          <h2 class="fw-bold">Attendance Management</h2>
+          <p class="justify-text">
+            Track and manage employee attendance seamlessly with our Attendance
+            Management System. Easily mark attendance, update records, and
+            monitor absences, leaves, and late entries in real time. If an
+            employee's status changes, update it instantly for accurate payroll
+            processing. Ensure smooth workforce management with a system
+            designed for efficiency and accuracy.
+          </p>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 text-center mt-4 mt-md-0 feature-image">
+        <img
+          src="../../assets/images/slider/attendance.jpg"
+          alt="Attendance Management"
+          class="img-fluid d-block mx-auto"
+        />
+      </div>
+    </div>
+
+    <div class="row feature align-items-center p-5">
+      <div class="col-12 col-md-6 text-center mt-4 mt-md-0 feature-image">
+        <img
+          src="../../assets/images/slider/interview.jpg"
+          alt="Employee Management"
+          class="img-fluid d-block mx-auto"
+        />
+      </div>
+      <div class="col-12 col-md-6 text-center text-md-start">
+        <div class="feature-text">
+          <h2 class="fw-bold">Interview Management</h2>
+          <p class="justify-text">
+            Effortlessly schedule interviews, update interview details, and
+            manage candidate status with our Interview Management System. If a
+            candidate needs to be postponed, simply select a new date, and the
+            system will automatically update the interview status. Send
+            automatic notifications to candidates and interviewers for any
+            changes. Track progress with real-time status updates, including
+            selection, rejection, or postponement. Simplify your hiring process
+            and ensure smooth coordination for every interview.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="row feature align-items-center p-5">
+      <div class="col-12 col-md-6 text-center text-md-start">
+        <div class="feature-text">
+          <h2 class="fw-bold">Payroll Management</h2>
+          <p class="justify-text">
+            Manage employee salaries, deductions, and bonuses effortlessly with
+            our Payroll Management System. Automate salary calculations, tax
+            deductions, and overtime payments for accuracy and compliance.
+            Generate detailed pay slips and process payroll with seamless bank
+            integrations. Easily update salary structures and track payment
+            history in real time. Ensure timely and error-free payroll
+            processing for a smooth financial workflow.
+          </p>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 text-center mt-4 mt-md-0 feature-image">
+        <img
+          src="../../assets/images/slider/payroll.png"
+          alt="Payroll Management"
+          class="img-fluid d-block mx-auto"
+        />
+      </div>
+    </div>
+
+    <div class="row feature align-items-center p-5">
+      <div class="col-12 col-md-6 text-center mt-4 mt-md-0 feature-image">
+        <img
+          src="../../assets/images/slider/leave.jpg"
+          alt="Leave Management"
+          class="img-fluid d-block mx-auto"
+        />
+      </div>
+      <div class="col-12 col-md-6 text-center text-md-start">
+        <div class="feature-text">
+          <h2 class="fw-bold">Leave Management</h2>
+          <p class="justify-text">
+            Efficiently manage employee leaves with our Leave Management System.
+            Employees can apply for leave, track approvals, and check leave
+            balances in real time. Automate leave approvals, rejections, and
+            notifications to streamline workflows. Maintain accurate records for
+            paid, unpaid, and sick leaves with seamless integration into
+            payroll. Simplify leave tracking and ensure smooth workforce
+            planning.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row feature align-items-center p-5">
+      <div class="col-12 col-md-6 text-center text-md-start">
+        <div class="feature-text">
+          <h2 class="fw-bold">Incentive Management</h2>
+          <p class="justify-text">
+            Motivate your employees with our Incentives Management System.
+            Easily track performance metrics and assign bonuses, commissions, or
+            rewards based on achievements. Automate incentive calculations and
+            ensure timely disbursement with seamless integration into payroll.
+            Generate detailed reports to analyze incentive distribution and
+            impact. Boost productivity and morale by recognizing and rewarding
+            excellence effortlessly.
+          </p>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 text-center mt-4 mt-md-0 feature-image">
+        <img
+          src="../../assets/images/slider/incentive.jpg"
+          alt="Incentive Management"
+          class="img-fluid d-block mx-auto"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="text-center text-lg-start">
+  <section class="footerbg">
+    <div class="container text-center text-md-start">
+      <div class="row pt-4">
+        <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+          <h6 class="text-uppercase fw-bold">The Fintalk</h6>
+          <hr
+            class="mb-4 mt-0 d-inline-block mx-auto"
+            style="width: 60px; background-color: #b0a5cf; height: 2px"
+          />
+          <p style="text-align: justify">
+            The Fintalk Empowering your business to build more intelligent and
+            engaging relationships with your customers using finance technology.
+          </p>
+        </div>
+        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+          <h6 class="text-uppercase fw-bold">Address</h6>
+          <hr
+            class="mb-4 mt-0 d-inline-block mx-auto"
+            style="width: 60px; background-color: #7c4dff; height: 2px"
+          />
+          <p>
+            #506, 5th Floor, MGR Estates, <br />
+            Punjagutta, Hyderabad - 500082
+          </p>
+        </div>
+        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+          <h6 class="text-uppercase fw-bold">Contact</h6>
+          <hr
+            class="mb-4 mt-0 d-inline-block mx-auto"
+            style="width: 60px; background-color: #7c4dff; height: 2px"
+          />
+          <p>
+            <i class="fas fa-envelope me-3"></i>
+            <a
+              href="mailto:info@thefintalk.in"
+              style="text-decoration: none; color: inherit"
+              >info&#64;thefintalk.in</a
+            >
+          </p>
+          <p>
+            <i class="fas fa-phone-alt me-3"></i>
+            <a
+              href="tel:+910252635415"
+              style="text-decoration: none; color: inherit"
+              >+91 0252635415</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+    <div class="text-center mb-2 fw-bold">
+      © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+        style="color: #51c297"
+        >Fintalk</b
+      >. | All Rights Reserved
+    </div>
+  </div>
+</footer>

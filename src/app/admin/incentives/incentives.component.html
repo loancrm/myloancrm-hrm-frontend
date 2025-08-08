@@ -1,0 +1,449 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">Incentives</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../assets/images/menu/incentives.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+<p-dialog
+  [(visible)]="isDialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [responsive]="true"
+  class="dialogbox"
+  header="Incentive Details"
+  (onHide)="clearDialog()"
+>
+  <div *ngIf="selectedIncentive" class="text-capitalize">
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-id-badge"></i></span>
+      <div class="label d-flex justify-content-between">
+        Incentive Id<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedIncentive.incentiveId ? selectedIncentive.incentiveId : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-user-alt"></i></span>
+      <div class="label d-flex justify-content-between">
+        Employee Name<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        <b>
+          {{
+            selectedIncentive.employeeName
+              ? (selectedIncentive.employeeName | capitalizeFirst)
+              : "-"
+          }}
+        </b>
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-calendar-alt"></i></span>
+      <div class="label d-flex justify-content-between">
+        Incentive Applicable Month<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{ selectedIncentive.incentiveApplicableMonth | date : "MMMM yyyy" }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-money-bill-wave"></i></span>
+      <div class="label d-flex justify-content-between">
+        Incentive Amount<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        Rs.{{
+          selectedIncentive.incentiveAmount
+            ? selectedIncentive.incentiveAmount
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-user"></i></span>
+      <div class="label d-flex justify-content-between">
+        Created By<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedIncentive.createdBy
+            ? (selectedIncentive.createdBy | capitalizeFirst)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-calendar-alt"></i></span>
+      <div class="label d-flex justify-content-between">
+        Created On<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedIncentive.createdOn
+            ? (selectedIncentive.createdOn | date)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-user-tag"></i></span>
+      <div class="label d-flex justify-content-between">
+        Last Updated By<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedIncentive.lastUpdatedBy
+            ? (selectedIncentive.lastUpdatedBy | capitalizeFirst)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-calendar-check"></i></span>
+      <div class="label d-flex justify-content-between">
+        Last Updated On<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedIncentive.lastUpdatedOn
+            ? (selectedIncentive.lastUpdatedOn | date : "MMM d, y, h:mm a")
+            : "-"
+        }}
+      </div>
+    </div>
+    <p-tabMenu
+      [model]="items"
+      class="tabmenudesign"
+      [activeItem]="activeItem"
+      (activeItemChange)="onActiveItemChange($event)"
+    >
+    </p-tabMenu>
+    <ng-container *ngIf="selectedIncentive">
+      <div *ngIf="getFilesForActiveTab().length > 0; else noFilesFound">
+        <div
+          *ngFor="let loan of getFilesForActiveTab(); let i = index"
+          class="business-details mt-3"
+        >
+          <div class="label mb-2" style="text-decoration: underline">
+            <b>Disbursed File {{ i + 1 }}</b>
+          </div>
+          <div class="info-line">
+            <div class="label d-flex justify-content-between">
+              Disbursed File Name <b>:</b>
+            </div>
+            <div class="value">{{ loan.fileName | capitalizeFirst }}</div>
+          </div>
+          <div class="info-line">
+            <div class="label d-flex justify-content-between">
+              Disbursed Amount <b>:</b>
+            </div>
+            <div class="value">{{ loan.disbursedAmount }}</div>
+          </div>
+          <div class="info-line">
+            <div class="label d-flex justify-content-between">
+              Disbursed Month <b>:</b>
+            </div>
+            <div class="value">
+              {{ loan.disbursedMonth | date : "MMMM yyyy" }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #noFilesFound>
+        <div class="text-center">
+          <img
+            src="assets/images/menu/nodata.gif"
+            alt="No Data"
+            width="200"
+            height="200"
+            class="no-data-image"
+          />
+          <p>No Files Found</p>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</p-dialog>
+<div class="text-capitalize table-card">
+  <p-table
+    #incentivesTable
+    [value]="incentives"
+    [sortOrder]="-1"
+    [sortField]="
+      capabilities.employeeIncentives ? 'incentiveApplicableMonth' : 'createdOn'
+    "
+    [lazy]="true"
+    (onLazyLoad)="loadIncentives($event)"
+    dataKey="id"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [paginator]="true"
+    [rows]="10"
+    class="p-datatable-striped table"
+    [totalRecords]="totalIncentivesCount"
+    [loading]="apiLoading"
+    responsiveLayout="scroll"
+    scrollHeight="flex"
+    styleClass="p-datatable-customers"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Incentives"
+  >
+    <ng-template pTemplate="caption" *ngIf="capabilities.adminIncentives">
+      <div class="row">
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <div class="p-inputgroup">
+            <input
+              type="text"
+              pInputText
+              placeholder="Search with Employee Name"
+              [(ngModel)]="employeeNameToSearch"
+              (ngModelChange)="
+                inputValueChangeEvent('employeeId', employeeNameToSearch)
+              "
+              (keyup.enter)="filterWithEmployeeName()"
+            />
+            <button
+              type="button"
+              pButton
+              icon="pi pi-search"
+              class="p-button-primary"
+              [disabled]="!employeeNameToSearch"
+              (click)="filterWithEmployeeName()"
+            ></button>
+          </div>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <p-calendar
+            [(ngModel)]="displayMonth"
+            [showIcon]="true"
+            view="month"
+            [monthNavigator]="true"
+            [yearNavigator]="true"
+            [yearRange]="'-10:+10'"
+            dateFormat="MM yy"
+            appendTo="body"
+            [style]="{ width: '100%' }"
+            [readonlyInput]="true"
+            (ngModelChange)="onDateChange($event)"
+            [placeholder]="'Select Month and Year'"
+          ></p-calendar>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
+          <div class="d-flex">
+            <div class="flex-grow-1 me-2"></div>
+            <div class="d-flex align-items-center pointer-cursor">
+              <button
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Add Incentive"
+                tooltipPosition="top"
+                class="p-button-primary"
+                icon="fa fa-plus"
+                (click)="addIncentive()"
+              >
+                &nbsp;Add Incentive
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th pSortableColumn="incentiveId" class="text-nowrap">
+          Incentive Id <p-sortIcon field="incentiveId"></p-sortIcon>
+        </th>
+        <th
+          pSortableColumn="employeeName"
+          *ngIf="capabilities.adminIncentives"
+          class="text-nowrap"
+        >
+          Employee Name <p-sortIcon field="employeeName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="incentiveApplicableMonth" class="text-nowrap">
+          Applicable Month
+          <p-sortIcon field="incentiveApplicableMonth"></p-sortIcon>
+        </th>
+        <th pSortableColumn="incentiveAmount" class="text-nowrap">
+          Incentive Amount <p-sortIcon field="incentiveAmount"></p-sortIcon>
+        </th>
+        <th pSortableColumn="createdBy" class="text-nowrap">
+          created By <p-sortIcon field="createdBy"></p-sortIcon>
+        </th>
+        <th pSortableColumn="createdOn" class="text-nowrap">
+          created Date <p-sortIcon field="createdOn"></p-sortIcon>
+        </th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-incentive>
+      <tr>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="incentive.incentiveId; else noData"
+            >{{ incentive.incentiveId }}</span
+          >
+        </td>
+        <!-- <td>
+          <b>
+            <span
+              class="table-column-data"
+              *ngIf="incentive.employeeName; else noData"
+              >{{ incentive.employeeName | capitalizeFirst }}</span
+            >
+          </b>
+        </td> -->
+        <td *ngIf="capabilities.adminIncentives" class="text-nowrap">
+          <div class="d-flex align-items-center">
+            <span class="me-2">
+              <ng-container
+                *ngIf="
+                  incentive &&
+                    incentive.passPhoto &&
+                    incentive.passPhoto.length > 0;
+                  else defaultImage
+                "
+              >
+                <a [href]="'//' + incentive.passPhoto[0]" target="_blank">
+                  <img
+                    [src]="'//' + incentive.passPhoto[0]"
+                    alt="Image"
+                    class="employeeImage"
+                    style="height: 40px; width: 40px"
+                  />
+                </a>
+              </ng-container>
+              <ng-template #defaultImage>
+                <img
+                  src="../../../assets/images/profile/user.png"
+                  alt="Default Image"
+                  class="employeeImage"
+                  style="height: 40px; width: 40px"
+                />
+              </ng-template>
+            </span>
+            <b>
+              <span
+                *ngIf="incentive.employeeName; else noData"
+                class="table-column-data"
+              >
+                {{ incentive.employeeName | capitalizeFirst }}
+              </span>
+            </b>
+          </div>
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="incentive.incentiveApplicableMonth; else noData"
+            >{{ incentive.incentiveApplicableMonth | date : "MMM yyyy" }}</span
+          >
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="incentive.incentiveAmount; else noData"
+            >Rs.{{ incentive.incentiveAmount | capitalizeFirst }}</span
+          >
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="incentive.createdBy; else noData"
+            >{{ incentive.createdBy | capitalizeFirst }}</span
+          >
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="incentive.createdOn; else noData"
+            >{{ incentive.createdOn | date }}</span
+          >
+        </td>
+        <td>
+          <div class="text-center">
+            <div class="d-flex">
+              <button
+                pButton
+                pRipple
+                type="button"
+                pTooltip="View"
+                class="p-button-info me-2 view-btn"
+                icon="fa fa-eye"
+                (click)="showUserDetails(incentive)"
+              ></button>
+              <button
+                *ngIf="capabilities.adminIncentives"
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Update"
+                class="p-button-success me-2 update-btn"
+                icon="fa fa-pen-to-square"
+                (click)="updateIncentive(incentive.incentiveId)"
+              ></button>
+              <button
+                *ngIf="capabilities.delete"
+                pButton
+                type="button"
+                icon="fa fa-trash"
+                pTooltip="Delete"
+                class="p-button-danger me-2 delete-btn"
+                (click)="confirmDelete(incentive)"
+              ></button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr class="text-center">
+        <td colspan="10" class="text-center fw-bold">
+          <img
+            src="../../../assets/images/menu/nodata.gif"
+            width="200"
+            height="200"
+          />
+          <p>No incentives Found</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<ng-template #noData> - </ng-template>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>

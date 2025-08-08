@@ -1,0 +1,14 @@
+<p-toast
+  [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"
+></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<router-outlet></router-outlet>
+<button
+  type="button"
+  (click)="scrollToTop()"
+  class="scroll-top-button"
+  [ngClass]="{ show: isScrolled }"
+>
+  <i class="fas fa-arrow-up"></i>
+</button>

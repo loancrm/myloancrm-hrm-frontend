@@ -1,0 +1,146 @@
+<div class="container-fluid mt-2" *ngIf="employees">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">{{
+              employees.employeeName | capitalizeFirst
+            }}</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../../assets/images/menu/experience.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+<div class="card-container" *ngIf="!apiLoading">
+  <div class="card hikeletter-card" *ngIf="employees">
+    <div id="content" class="card-body">
+      <div class="page">
+        <div class="header">
+          <img
+            src="../../assets/images/pdf/winway icon.png"
+            alt="Company Logo"
+            width="200"
+            height="100"
+          />
+        </div>
+        <div class="hikeletter-title">Relieving Letter</div>
+        <div class="hikeletter-date">
+          Date:
+          {{
+            employees.resignedDate || employees.terminationDate
+              | date : "dd-MM-yyyy"
+          }}
+        </div>
+        <div class="fromdetails text-capitalize">
+          <p>To,</p>
+          <p>{{ employees.employeeName | capitalizeFirst }}</p>
+          <p>{{ getDesignationName(employees.designation) }}</p>
+        </div>
+        <div>
+          <p class="para firstpara indented-paragraph">
+            We acknowledge your resignation and confirm that you were employed
+            with Winway Creators India Private Limited, as a
+            {{ getDesignationName(employees.designation) }} from
+            {{ employees.joiningDate | date : "dd-MM-yyyy" }} to
+            {{
+              employees.resignedDate || employees.terminationDate
+                | date : "dd-MM-yyyy"
+            }}.
+          </p>
+          <p class="para indented-paragraph" *ngIf="employees.designation == 4">
+            Your expertise in frontend and backend technologies, along with your
+            problem-solving skills, has contributed immensely to our projects.
+            Your dedication to delivering high-quality applications and
+            innovative solutions has been greatly valued.
+          </p>
+          <p class="para indented-paragraph" *ngIf="employees.designation == 1">
+            Your expertise in lead generation, client engagement, and persuasive
+            communication has contributed immensely to our organization's
+            growth. Your dedication to understanding customer needs, building
+            strong relationships, and effectively closing sales has been greatly
+            valued.
+          </p>
+          <p class="para indented-paragraph" *ngIf="employees.designation == 2">
+            During your time with us, your contributions to sales operations,
+            customer engagement, and revenue growth have been invaluable. Your
+            dedication and persistence in meeting sales targets have played a
+            vital role in our success.
+          </p>
+          <p class="para indented-paragraph" *ngIf="employees.designation == 3">
+            Your contributions in talent acquisition, employee relations, and HR
+            policies have greatly strengthened our workforce. Your dedication to
+            employee engagement and organizational development has been truly
+            commendable.
+          </p>
+          <p class="para indented-paragraph">
+            As of
+            {{
+              employees.resignedDate || employees.terminationDate
+                | date : "dd-MM-yyyy"
+            }}, you have been officially relieved from your duties, and all
+            necessary exit formalities have been completed.
+          </p>
+          <p class="para indented-paragraph">
+            We sincerely appreciate your hard work and wish you success in all
+            your future endeavors.
+          </p>
+        </div>
+        <div class="regards">
+          <div>
+            <br />
+            <b> Regards,</b>
+          </div>
+          <div class="text-capitalize">
+            <b>{{ employees.createdBy | capitalizeFirst }} </b>
+          </div>
+          <div>(HR Executive)</div>
+          <div>Mobile: +91 9030227331</div>
+          <div><b>WINWAY CREATORS INDIA PRIVATE LIMITED</b></div>
+          <div>#506, 5th Floor,</div>
+          <div>MGR Estates, Dwarakapuri Colony,</div>
+          <div>Punjagutta, Hyderabad- 82</div>
+          <div>www.winwaycreators.com</div>
+        </div>
+      </div>
+    </div>
+    <hr class="separator" />
+    <div class="btn-container">
+      <button
+        pButton
+        type="button"
+        (click)="generatePDF()"
+        label="Download Relieving Letter"
+        icon="fa fa-download"
+        [disabled]="loading"
+        class="download-btn"
+      ></button>
+    </div>
+  </div>
+</div>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>

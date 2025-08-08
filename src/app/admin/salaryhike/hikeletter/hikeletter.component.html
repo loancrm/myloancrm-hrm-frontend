@@ -1,0 +1,240 @@
+<div class="container-fluid mt-2" *ngIf="employees">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">{{
+              employees.employeeName | capitalizeFirst
+            }}</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../../assets/images/menu/hike.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="apiLoading">
+  <app-preloader></app-preloader>
+</div>
+<div class="card-container" *ngIf="!apiLoading">
+  <div class="card hikeletter-card" *ngIf="employees">
+    <div id="content" class="card-body">
+      <div class="page">
+        <div class="header">
+          <img
+            src="../../assets/images/pdf/winway icon.png"
+            alt="Company Logo"
+            width="200"
+            height="100"
+          />
+        </div>
+        <div class="hikeletter-title">Letter of Increment</div>
+        <div class="hikeletter-date" *ngIf="salaryHikes">
+          Date: {{ salaryHikes.hikeDate | date : "dd-MM-yyyy" }}
+        </div>
+        <div class="fromdetails text-capitalize">
+          <p>{{ employees.employeeName | capitalizeFirst }}</p>
+          <p>{{ getDesignationName(employees.designation) }}</p>
+          <p>Congratulations</p>
+        </div>
+        <div>
+          <p class="para firstpara indented-paragraph" *ngIf="salaryHikes">
+            In recognition of your previous performance, we are glad to inform
+            you that the company has decided to give you an increment of
+            {{
+              calculateHikePercentage(
+                salaryHikes.basicSalary,
+                salaryHikes.totalSalary
+              )
+            }}, and your restructured salary shall be Rs.
+            {{ roundToLPA(salaryHikes.totalSalary * 12) }}. Consequently, your
+            compensation has been revised, and the new enhanced compensation
+            will be effective from
+            {{ getOfferLetterDate(salaryHikes.hikeDate) | date }}.
+          </p>
+          <p class="para firstpara indented-paragraph">
+            We would like to take this opportunity to express our appreciation
+            for your contribution to the organization and hope that you will
+            continue to strive for better results. We hope you will shoulder
+            your responsibility with full dedication and sincerity.
+          </p>
+        </div>
+        <p class="para">Wishing you a great career ahead.</p>
+        <div class="regards">
+          <div>
+            <br />
+            <b> Regards,</b>
+          </div>
+          <div class="text-capitalize">
+            <b>{{ salaryHikes.createdBy | capitalizeFirst }} </b>
+          </div>
+          <div>(HR Executive)</div>
+          <div>Mobile: +91 9030227331</div>
+          <div><b>WINWAY CREATORS INDIA PRIVATE LIMITED</b></div>
+          <div>#506, 5th Floor,</div>
+          <div>MGR Estates, Dwarakapuri Colony,</div>
+          <div>Punjagutta, Hyderabad- 82</div>
+          <div>www.winwaycreators.com</div>
+        </div>
+      </div>
+    </div>
+    <hr class="separator" />
+    <div class="btn-container">
+      <button
+        pButton
+        type="button"
+        (click)="generatePDF()"
+        label="Download Increment Letter"
+        icon="fa fa-download"
+        [disabled]="loading"
+        class="download-btn"
+      ></button>
+    </div>
+  </div>
+</div>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>
+
+<!--
+
+OLD CODE
+<div class="container-fluid mt-2" *ngIf="employees">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">{{
+              employees.employeeName | capitalizeFirst
+            }}</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../../assets/images/menu/hike.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+<div class="card-container">
+  <div class="card hikeletter-card" *ngIf="employees">
+    <div #pdfContent>
+      <div class="page">
+        <div class="header">
+          <img
+            src="../../assets/images/pdf/winway icon.png"
+            alt="Company Logo"
+            width="270"
+            height="150"
+          />
+        </div>
+        <div class="hikeletter-title">Letter of Increment</div>
+        <div class="hikeletter-date" *ngIf="salaryHikes">
+          Date: {{ salaryHikes.hikeDate | date : "dd-MM-yyyy" }}
+        </div>
+        <div class="fromdetails text-capitalize">
+          <p>{{ employees.employeeName | capitalizeFirst }}</p>
+          <p>{{ getDesignationName(employees.designation) }}</p>
+          <p>Congratulations</p>
+        </div>
+        <div>
+          <p class="para firstpara indented-paragraph" *ngIf="salaryHikes">
+            In recognition of your previous performance, we are glad to inform
+            you that the company has decided to give you an increment of
+            {{
+              calculateHikePercentage(
+                salaryHikes.basicSalary,
+                salaryHikes.totalSalary
+              )
+            }}, and your restructured salary shall be Rs.
+            {{ roundToLPA(salaryHikes.totalSalary * 12) }}. Consequently, your
+            compensation has been revised, and the new enhanced compensation
+            will be effective from
+            {{ getOfferLetterDate(salaryHikes.hikeDate) | date }}.
+          </p>
+          <p class="para firstpara indented-paragraph">
+            We would like to take this opportunity to express our appreciation
+            for your contribution to the organization and hope that you will
+            continue to strive for better results. We hope you will shoulder
+            your responsibility with full dedication and sincerity.
+          </p>
+        </div>
+        <p class="para mt-5">Wishing you a great career ahead.</p>
+        <div class="regards">
+          <div>
+            <br />
+            <br />
+            <b> Regards,</b>
+          </div>
+          <div>
+            <b
+              >{{ userDetails.firstName | capitalizeFirst }}
+              {{ userDetails.lastName | capitalizeFirst }}</b
+            >
+          </div>
+          <div>(HR Executive)</div>
+          <div>Mobile: +91 {{ userDetails.phoneNumber }}</div>
+          <div><b>WINWAY CREATORS INDIA PRIVATE LIMITED</b></div>
+          <div>#506, 5th Floor,</div>
+          <div>MGR Estates, Dwarakapuri Colony,</div>
+          <div>Punjagutta, Hyderabad- 82</div>
+          <div>www.winwaycreators.com</div>
+        </div>
+      </div>
+    </div>
+    <hr class="separator" />
+    <div class="btn-container">
+      <button
+        pButton
+        type="button"
+        (click)="generatePDF()"
+        label="Download Increment Letter"
+        icon="fa fa-download"
+        [disabled]="loading"
+        class="download-btn"
+      ></button>
+    </div>
+  </div>
+</div>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © 2024 <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer> -->

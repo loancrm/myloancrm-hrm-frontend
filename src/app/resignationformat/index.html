@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Termination letter</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 35px;
+        line-height: 1.6;
+        font-size: 12px;
+        padding: 35px;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 10px;
+        font-size: 14px;
+      }
+
+      .offerletter-title {
+        text-align: center;
+        font-size: 18px;
+        margin: 20px 0;
+        font-weight: bold;
+      }
+      .offerletter-date {
+        text-align: right;
+      }
+
+      .page {
+        page-break-after: always;
+      }
+      .page:last-child {
+        page-break-after: auto;
+      }
+
+      .para {
+        text-align: justify;
+        text-align-last: left;
+        margin: 0;
+        line-height: 2;
+      }
+
+      .indented-paragraph {
+        text-indent: 30px;
+      }
+      .firstpara {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="header">
+        <img
+          src="../../assets/images/pdf/winway icon.png"
+          alt="Company Logo"
+          width="200"
+          height="100"
+        />
+      </div>
+      <div class="offerletter-title">Termination Letter</div>
+      <div class="offerletter-date">Date : {{date}}</div>
+
+      <div>Dear {{name}}</div>
+      <div>
+        <p class="para firstpara indented-paragraph">
+          I am writing to formally notify you of the termination of your
+          employment with our company, effective immediately as of
+          {{dateoftermination}}
+        </p>
+
+        <p class="para firstpara indented-paragraph">
+          {{Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit harum
+          dolorem at qui quos nihil minus omnis, fuga deserunt vel ex iure
+          magnam rem distinctio sunt sapiente id. Culpa, modi. Lorem ipsum dolor
+          sit amet consectetur, adipisicing elit. Obcaecati, necessitatibus.
+          Facilis, quas voluptas adipisci laboriosam libero, pariatur facere, et
+          itaque neque aut hic Architecto ex ullam quisquam, rem fugiat
+          officiis}}
+        </p>
+        <p class="para firstpara indented-paragraph">
+          As a result of this termination, you will not entitled to any salary
+          or compensation for the month of {{month}}
+        </p>
+        <p class="para firstpara indented-paragraph">
+          We wish you the best in your future endeavors, If you have any
+          questions please contact our human resource Team at
+          hr@winwaycreators.com.
+        </p>
+      </div>
+      <div>
+        <br />
+        <br />
+        <b> Regards,</b>
+        <div>Team -HR Dept</div>
+        <div>{{telephone}}</div>
+        <div>{{email}}</div>
+        <div><b>WINWAY CREATORS INDIA PRIVATE LIMITED</b></div>
+        <div>#506, 5th Floor,</div>
+        <div>MGR Estates, Dwarakapuri</div>
+        <div>Colony, Punjagutta, Hyderabad</div>
+        <div>- 82 www.winwaycreators.com</div>
+      </div>
+    </div>
+  </body>
+</html>

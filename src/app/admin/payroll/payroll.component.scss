@@ -1,0 +1,89 @@
+.view-btn {
+  height: 30px;
+  border-radius: 50px;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+}
+.designationstatus {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-radius: 5px;
+  padding-left: 5px;
+  cursor: pointer;
+  padding-right: 5px;
+}
+.p-button:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.2rem #abc6f7;
+}
+.icon {
+  width: 35px;
+  margin-right: 13px;
+  color: #31425e;
+  background-color: #f2f7fe;
+  border-radius: 50%;
+  padding: 8px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.info-line {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.label {
+  flex: 0 0 250px;
+  font-weight: bold;
+}
+
+.value {
+  color: grey;
+  flex: 1;
+  margin-left: 5px;
+}
+@media screen and (max-width: 620px) {
+  .info-line {
+    display: block;
+  }
+  .icon {
+    display: none;
+  }
+  .value {
+    margin-left: 0;
+  }
+}
+.custom-btn {
+  height: 30px;
+  background-color: #2e4374 !important;
+  border: #2e4374;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.cardicons .fa {
+  font-size: 25px;
+  padding: 10px;
+}
+.cardicons {
+  border-radius: 70px;
+}
+.card {
+  border: none;
+  box-shadow: 0 0 10px 1px rgba(80, 82, 106, 0.25);
+}
+.count-sub-title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #878a99;
+}
+.count-title {
+  font-size: 17px;
+  color: #31425e;
+  font-weight: bold;
+}
+.cards {
+  border-left: 5px solid #31425e;
+}

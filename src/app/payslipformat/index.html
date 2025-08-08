@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payslip</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        padding: 30px;
+      }
+      .payslip-card {
+        margin: 13px;
+        padding: 25px;
+        border: none !important;
+        border-radius: 5px;
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+      }
+      .companyaddress {
+        font-size: 15px;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 10px;
+        font-size: 14px;
+        border-bottom: 2px solid #000;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 14px;
+      }
+      .header p {
+        margin: 0;
+        font-size: 12px;
+        text-align: left;
+      }
+      .details {
+        display: flex;
+        font-size: 15px;
+        flex-direction: column;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+      .info-line {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+      .label {
+        flex: 0 0 150px;
+        font-weight: bold;
+      }
+      .value {
+        flex: 1;
+      }
+      .section {
+        margin: 10px 0;
+      }
+      .section-title {
+        font-weight: bold;
+        flex: 0 0 200px;
+      }
+      .footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.9em;
+      }
+      .payslip-title {
+        text-align: center;
+        font-size: 22px;
+        margin: 10px;
+        font-weight: bold;
+      }
+      .totalnet {
+        text-align: center;
+        font-size: 14px;
+        margin: 20px 0;
+        font-weight: bold;
+      }
+      .table {
+        width: 100%;
+
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th {
+        background-color: #f2f2f2;
+        border-bottom: 1px solid #000;
+        height: 40px;
+        font-size: 20px;
+        text-align: left;
+        padding-left: 10px;
+      }
+      td {
+        padding: 10px;
+        font-size: 15px;
+        text-align: right; /* Align text to the right */
+      }
+      .total-row {
+        font-weight: bold;
+      }
+      .net-payable {
+        font-weight: bold;
+        font-size: 20px;
+        margin-top: 20px;
+        margin-bottom: 5px;
+      }
+      .disclaimer {
+        margin-top: 20px;
+        font-size: 15px;
+        text-align: left;
+        font-weight: bold;
+      }
+
+      .companyheading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .companyname {
+        font-weight: bold;
+        color: #035d81;
+        font-size: 35px !important;
+      }
+      .amount {
+        text-align: right !important;
+      }
+      .earnings {
+        text-align: left;
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+      }
+      .col-md-6 {
+        width: 48%;
+      }
+      .info-line {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+      .d-flex {
+        display: flex;
+        justify-content: space-between;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="header">
+      <img
+        src="../../assets/images/pdf/winway icon.png"
+        alt="Company Logo"
+        width="250"
+        height="100"
+      />
+      <div class="companyheading">
+        <p class="companyname">WINWAY CREATORS INDIA PVT LTD</p>
+        <div class="companyaddress">
+          506, 5th Floor, MGR Estates,<br />
+          Punjagutta, Hyderabad, Telangana 500082
+        </div>
+      </div>
+    </div>
+    <div class="payslip-title">
+      Salary Slip for the Month of {{ getMonthNameAndYear(payroll.payrollMonth)
+      }}
+    </div>
+    <div class="details">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="info-line">
+            <div class="label d-flex justify-content-between">
+              Employee Name <b>:&nbsp;</b>
+            </div>
+            <div class="value">
+              {{ payroll.employeeName | capitalizeFirst }}
+            </div>
+          </div>
+          <div class="info-line">
+            <div class="label d-flex justify-content-between">
+              Designation <b>:&nbsp;</b>
+            </div>
+            <div class="value">{{ payroll.designationName }}</div>
+          </div>
+          <div class="info-line">
+            <div class="label d-flex justify-content-between">
+              Date of Joining <b>:&nbsp;</b>
+            </div>
+            <div class="value">{{ payroll.joiningDate | date }}</div>
+          </div>
+          <div class="info-line">
+            <div class="label d-flex justify-content-between">
+              IFSC Code<b>:&nbsp;</b>
+            </div>
+            <div class="value">{{ payroll.ifscCode }}</div>
+          </div>
+          <div class="info-line">
+            <div class="label d-flex justify-content-between">
+              Employee AC<b>:&nbsp;</b>
+            </div>
+            <div class="value">{{ payroll.accountNumber }}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-line">
+            <div class="label d-flex justify-content-between">
+              Payroll Days <b>:&nbsp;</b>
+            </div>
+            <div class="value">{{ payroll.workingDays }}</div>
+          </div>
+          <div class="info-line">
+            <div class="label d-flex justify-content-between">
+              Present Days<b>:&nbsp;</b>
+            </div>
+            <div class="value">{{ payroll.presentDays }}</div>
+          </div>
+          <div class="info-line">
+            <div class="label d-flex justify-content-between">
+              Paid Days<b>:&nbsp;</b>
+            </div>
+            <div class="value">{{ payroll.paidDays }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Earnings</th>
+          <th class="amount">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="earnings">Basic Salary</td>
+          <td>{{ payroll.salary }}</td>
+        </tr>
+        <tr>
+          <td class="earnings">HRA</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td class="earnings">Other Allowances</td>
+          <td>{{ payroll.petrolExpenses }}</td>
+        </tr>
+        <tr class="total-row">
+          <td class="earnings">Gross Earnings</td>
+          <td>₹ {{ payroll.salary + payroll.petrolExpenses }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Deductions</th>
+          <th class="amount">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="earnings">ESI</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td class="earnings">Professional Tax</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td class="earnings">LOP</td>
+          <td>{{ payroll.deductions }}</td>
+        </tr>
+        <tr class="total-row">
+          <td class="earnings">Total Deductions</td>
+          <td>₹ {{ payroll.deductions }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="totalnet">
+      <div class="net-payable">
+        Net Salary: ₹ {{ payroll.netSalaryWithoutDoubleLop }}
+      </div>
+      <div class="">
+        {{ convertAmountToWords(payroll.netSalaryWithoutDoubleLop) }} Rupees
+        Only
+      </div>
+    </div>
+    <div class="disclaimer">
+      *This is a computer-generated slip and does not require a signature.<br />
+      *For any information on your payslip, please contact
+      hr@winwaycreators.com.
+    </div>
+  </body>
+</html>

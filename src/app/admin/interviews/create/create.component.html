@@ -1,0 +1,193 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">{{
+              heading
+            }}</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../../assets/images/menu/createinterview.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+<div class="bg-color custom-steps-card" *ngIf="!loading">
+  <form
+    class="login-form mt-3"
+    [formGroup]="interviewsForm"
+    novalidate
+    (ngSubmit)="onSubmit(interviewsForm.value)"
+  >
+    <div class="py-3 px-4">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row mt-3" *ngIf="formFields">
+            <div
+              *ngFor="let field of formFields"
+              class="mt-2"
+              [class.col-md-12]="field.controlName === 'remarks'"
+              [class.col-md-4]="field.controlName !== 'remarks'"
+            >
+              <div>
+                <label>
+                  {{ field.label }}
+                  <span *ngIf="field.required">
+                    &nbsp;<sup class="text-danger">*</sup>
+                  </span>
+                </label>
+                <ng-container [ngSwitch]="field.type">
+                  <input
+                    *ngSwitchCase="'text'"
+                    pInputText
+                    [formControlName]="field.controlName"
+                    [placeholder]="'Enter ' + field.label"
+                    [maxlength]="field.maxLength"
+                    [pattern]="field.pattern"
+                    class="rounded-lg"
+                    autocomplete="off"
+                  />
+                  <p-calendar
+                    *ngSwitchCase="'calendar'"
+                    [formControlName]="field.controlName"
+                    [placeholder]="'Select ' + field.label"
+                    [showIcon]="true"
+                    appendTo="body"
+                    dateFormat="yy-mm-dd"
+                    styleClass="w-100"
+                    [readonlyInput]="true"
+                    [showButtonBar]="true"
+                  ></p-calendar>
+                  <p-dropdown
+                    *ngSwitchCase="'dropdown'"
+                    [options]="this[field.options]"
+                    [formControlName]="field.controlName"
+                    [optionLabel]="field.optionLabel"
+                    [optionValue]="field.optionValue"
+                    [showClear]="true"
+                    appendTo="body"
+                    [placeholder]="'Select ' + field.label"
+                    [dropdownIcon]="'fa fa-caret-down'"
+                    styleClass="w-100"
+                  ></p-dropdown>
+                  <ng-container *ngSwitchCase="'file'">
+                    <div>
+                      <button
+                        pButton
+                        type="button"
+                        icon="fa fa-cloud-arrow-up"
+                        class="rightbtn me-2"
+                        (click)="
+                          uploadFiles(
+                            field.controlName,
+                            field.acceptedFileTypes
+                          )
+                        "
+                      >
+                        &nbsp;Upload {{ field.label }}
+                      </button>
+                      <div
+                        *ngIf="
+                          interviewsData &&
+                          interviewsData[field.controlName] &&
+                          interviewsData[field.controlName].length > 0
+                        "
+                        class="mt-2"
+                      >
+                        <span
+                          *ngFor="let file of interviewsData[field.controlName]"
+                          class="file-wrapper"
+                        >
+                          <a
+                            [href]="'//' + file"
+                            target="_blank"
+                            class="file-link"
+                          >
+                            <i
+                              [ngClass]="getFileIcon(file.split('.').pop())"
+                              class="file-icon me-2"
+                            ></i>
+                          </a>
+                          <button
+                            pButton
+                            *ngIf="capabilities.delete"
+                            type="button"
+                            class="delete-btn p-button-danger p-button-sm"
+                            (click)="confirmDelete(file, field.controlName)"
+                          >
+                            <i class="pi pi-times"></i>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'textarea'">
+                    <textarea
+                      pInputTextarea
+                      class="rounded-lg"
+                      autocomplete="off"
+                      [formControlName]="field.controlName"
+                      [placeholder]="'Enter ' + field.label"
+                      [cols]="30"
+                      [autoResize]="true"
+                    ></textarea>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <div class="d-flex mt-3 mb-5">
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="p-button-info goback-button p-button-raised me-2"
+          (click)="goBack()"
+        >
+          Go Back
+        </button>
+        <button
+          pButton
+          pRipple
+          type="submit"
+          [disabled]="!interviewsForm.valid"
+          class="p-button-primary p-button-raised"
+        >
+          {{ actionType == "create" ? "Create" : "Update" }} Interview
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>

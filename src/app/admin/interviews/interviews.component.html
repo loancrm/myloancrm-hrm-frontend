@@ -1,0 +1,628 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">Interviews</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../assets/images/menu/interviewsticker.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+<p-dialog
+  [(visible)]="isDialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [responsive]="true"
+  class="dialogbox"
+  [style]="{ width: '50vw' }"
+  header="Interview Details"
+  (onHide)="clearDialog()"
+>
+  <div *ngIf="selectedInterviewDetails" class="text-capitalize">
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-id-badge"></i></span>
+      <div class="label d-flex justify-content-between">
+        Interview Id<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.interviewId
+            ? selectedInterviewDetails.interviewId
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-bullseye"></i></span>
+      <div class="label d-flex justify-content-between">
+        Interview Status<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        <span
+          class="fw-bold statusdata"
+          [ngStyle]="{
+            color: getStatusColor(
+              getStatusName(selectedInterviewDetails.interviewInternalStatus)
+            ).textColor,
+            'background-color': getStatusColor(
+              getStatusName(selectedInterviewDetails.interviewInternalStatus)
+            ).backgroundColor
+          }"
+        >
+          {{ getStatusName(selectedInterviewDetails.interviewInternalStatus) }}
+        </span>
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-user-alt"></i></span>
+      <div class="label d-flex justify-content-between">
+        Candidate Name<b>:&nbsp;</b>
+      </div>
+      <b
+        ><div class="value">
+          {{
+            selectedInterviewDetails.candidateName
+              ? (selectedInterviewDetails.candidateName | capitalizeFirst)
+              : "-"
+          }}
+        </div></b
+      >
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-calendar-alt"></i></span>
+      <div class="label d-flex justify-content-between">
+        Date Of Birth <b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.dateOfBirth
+            ? (selectedInterviewDetails.dateOfBirth | date)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-phone"></i></span>
+      <div class="label d-flex justify-content-between">
+        Phone Number<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.primaryPhone
+            ? selectedInterviewDetails.primaryPhone
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-user-graduate"></i></span>
+      <div class="label d-flex justify-content-between">
+        Qualification<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.qualification
+            ? (selectedInterviewDetails.qualification | capitalizeFirst)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-business-time"></i></span>
+      <div class="label d-flex justify-content-between">
+        Experience<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{ selectedInterviewDetails.experience | capitalizeFirst }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-location-dot"></i></span>
+      <div class="label d-flex justify-content-between">
+        Scheduled Location<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.scheduledLocationName
+            ? selectedInterviewDetails.scheduledLocationName
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-calendar-alt"></i></span>
+      <div class="label d-flex justify-content-between">
+        Scheduled Date <b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.scheduledDate
+            ? (selectedInterviewDetails.scheduledDate | date)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-calendar-check"></i></span>
+      <div class="label d-flex justify-content-between">
+        Attended Interview? <b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.attendedInterviewName
+            ? selectedInterviewDetails.attendedInterviewName
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-calendar"></i></span>
+      <div class="label d-flex justify-content-between">
+        Postponed Date<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.postponedDate
+            ? (selectedInterviewDetails.postponedDate | date)
+            : "-"
+        }}
+      </div>
+    </div>
+    <!-- <div class="info-line">
+      <span class="icon"><i class="fas fa-file"></i></span>
+      <div class="label d-flex justify-content-between">
+        Resume<b>:&nbsp;</b>
+      </div>
+      <div class="value m-2">
+        <div
+          *ngIf="
+            selectedInterviewDetails &&
+            selectedInterviewDetails.resume &&
+            selectedInterviewDetails.resume.length > 0
+          "
+          class="files-container"
+        >
+          <div
+            *ngFor="let file of selectedInterviewDetails.resume"
+            class="file-item"
+          >
+            <ng-container>
+              <a [href]="'//' + file" target="_blank">
+                <i
+                  [class]="getFileIcon(file.split('.').pop())"
+                  class="file-icon"
+                ></i>
+              </a>
+            </ng-container>
+          </div>
+        </div>
+        <ng-container *ngIf="selectedInterviewDetails?.resume == null"
+          >-</ng-container
+        >
+      </div>
+    </div> -->
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-file"></i></span>
+      <div class="label d-flex justify-content-between">
+        Resume<b>:&nbsp;</b>
+      </div>
+      <div class="value mt-2">
+        <div
+          *ngIf="
+            selectedInterviewDetails &&
+            selectedInterviewDetails.resume &&
+            selectedInterviewDetails.resume.length > 0
+          "
+          class="files-container d-flex flex-wrap gap-2"
+        >
+          <div
+            *ngFor="let file of selectedInterviewDetails.resume"
+            class="file-item"
+          >
+            <a
+              [href]="'//' + file"
+              target="_blank"
+              class="d-flex align-items-center"
+            >
+              <i
+                [class]="getFileIcon(file.split('.').pop())"
+                class="file-icon me-2"
+              ></i>
+            </a>
+          </div>
+        </div>
+        <ng-container *ngIf="selectedInterviewDetails?.resume == null"
+          >-</ng-container
+        >
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-comments"></i></span>
+      <div class="label d-flex justify-content-between">
+        Remarks <b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.remarks
+            ? (selectedInterviewDetails.remarks | capitalizeFirst)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
+      <div class="label d-flex justify-content-between">
+        Current Address<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.currentAddress
+            ? (selectedInterviewDetails.currentAddress | capitalizeFirst)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-home"></i></span>
+      <div class="label d-flex justify-content-between">
+        Permanent Address<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.permanentAddress
+            ? (selectedInterviewDetails.permanentAddress | capitalizeFirst)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-circle-user"></i></span>
+      <div class="label d-flex justify-content-between">
+        Created By<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.createdBy
+            ? (selectedInterviewDetails.createdBy | capitalizeFirst)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-calendar-alt"></i></span>
+      <div class="label d-flex justify-content-between">
+        Created On<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.createdOn
+            ? (selectedInterviewDetails.createdOn | date)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-user-tag"></i></span>
+      <div class="label d-flex justify-content-between">
+        Last Updated By<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.lastUpdatedBy
+            ? (selectedInterviewDetails.lastUpdatedBy | capitalizeFirst)
+            : "-"
+        }}
+      </div>
+    </div>
+    <div class="info-line">
+      <span class="icon"><i class="fas fa-calendar-check"></i></span>
+      <div class="label d-flex justify-content-between">
+        Last Updated On<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        {{
+          selectedInterviewDetails.lastUpdatedOn
+            ? (selectedInterviewDetails.lastUpdatedOn
+              | date : "MMM d, y, h:mm a")
+            : "-"
+        }}
+      </div>
+    </div>
+  </div>
+</p-dialog>
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-flex flex-wrap justify-content-start">
+      <ng-container *ngFor="let item of countsAnalytics">
+        <div
+          class="col-lg-3 col-md-3 col-sm-6 col-12 mt-2"
+          (click)="cardClick(item)"
+        >
+          <div
+            class="card p-3 shadow-sm pointer-cursor m-2 cards"
+            [ngClass]="{
+              'active-card': this.selectedInterviewStatus?.name === item?.name
+            }"
+          >
+            <div class="d-flex justify-content-between">
+              <div class="d-flex align-items-center">
+                <div>
+                  <div class="count-sub-title">
+                    {{ item.displayName }}
+                  </div>
+                  <div class="count-title">
+                    {{ item.count }}
+                  </div>
+                </div>
+              </div>
+              <div
+                class="cardicons"
+                [ngStyle]="{
+                  color: item.textcolor,
+                  'background-color': item.backgroundcolor
+                }"
+              >
+                <i class="fa fa-{{ item.icon }}"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<div class="text-capitalize table-card">
+  <p-table
+    #interviewsTable
+    [value]="interviews"
+    [sortOrder]="-1"
+    [sortField]="'scheduledDate'"
+    [lazy]="true"
+    (onLazyLoad)="loadInterviews($event)"
+    dataKey="id"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [paginator]="true"
+    [rows]="10"
+    class="p-datatable-striped table"
+    [totalRecords]="totalInterviewsCount"
+    [loading]="apiLoading"
+    responsiveLayout="scroll"
+    scrollHeight="flex"
+    [globalFilterFields]="[
+      'referenceNo',
+      'customer.firstName',
+      'partner.partnerName',
+      'status'
+    ]"
+    styleClass="p-datatable-customers"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Interviews"
+  >
+    <ng-template pTemplate="caption">
+      <div class="row">
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <div class="p-inputgroup">
+            <input
+              type="text"
+              pInputText
+              placeholder="Search with Candidate Name"
+              [(ngModel)]="candidateNameToSearch"
+              (ngModelChange)="
+                inputValueChangeEvent('interviewId', candidateNameToSearch)
+              "
+              (keyup.enter)="filterWithCandidateName()"
+            />
+            <button
+              type="button"
+              pButton
+              icon="pi pi-search"
+              class="p-button-primary"
+              [disabled]="!candidateNameToSearch"
+              (click)="filterWithCandidateName()"
+            ></button>
+          </div>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <p-dropdown
+            styleClass="text-left"
+            [style]="{ width: '100%' }"
+            [options]="interviewInternalStatusList"
+            (onChange)="statusChange($event)"
+            [dropdownIcon]="'fa fa-caret-down'"
+            [(ngModel)]="selectedInterviewStatus"
+            optionLabel="displayName"
+            dataKey="name"
+            appendTo="body"
+          >
+          </p-dropdown>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
+          <div class="d-flex">
+            <div class="flex-grow-1 me-2"></div>
+            <div class="d-flex align-items-center pointer-cursor">
+              <app-filter
+                [position]="'right'"
+                [iconColor]="'#33009C'"
+                [iconSize]="'28px!important'"
+                class="me-2"
+                (filterEvent)="applyConfigFilters($event)"
+                [filterConfig]="filterConfig"
+                [showFilterIndication]="appliedFilter"
+              >
+              </app-filter>
+              <button
+                pButton
+                pRipple
+                pTooltip="Add Interview"
+                tooltipPosition="top"
+                type="button"
+                class="p-button-primary"
+                icon="fa fa-plus"
+                (click)="createInterview()"
+              >
+                &nbsp;Add Interview
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th pSortableColumn="interviewId" class="text-nowrap">
+          Interview Id <p-sortIcon field="interviewId"></p-sortIcon>
+        </th>
+        <th pSortableColumn="candidateName" class="text-nowrap">
+          Candidate Name <p-sortIcon field="candidateName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="scheduledLocationName" class="text-nowrap">
+          Scheduled Location
+          <p-sortIcon field="scheduledLocationName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="scheduledDate" class="text-nowrap">
+          Scheduled Date <p-sortIcon field="scheduledDate"></p-sortIcon>
+        </th>
+        <th pSortableColumn="attendedInterviewName" class="text-nowrap">
+          Attended Interview
+          <p-sortIcon field="attendedInterviewName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="createdOn" class="text-nowrap">
+          Created Date <p-sortIcon field="createdOn"></p-sortIcon>
+        </th>
+        <th pSortableColumn="interviewInternalStatus" class="text-nowrap">
+          Status <p-sortIcon field="interviewInternalStatus"></p-sortIcon>
+        </th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-interview>
+      <tr>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="interview.interviewId; else noData"
+            >{{ interview.interviewId }}</span
+          >
+        </td>
+        <td>
+          <b>
+            <span
+              class="table-column-data"
+              *ngIf="interview.candidateName; else noData"
+              >{{ interview.candidateName | capitalizeFirst }}</span
+            >
+          </b>
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="interview.scheduledLocationName; else noData"
+            >{{ interview.scheduledLocationName | capitalizeFirst }}</span
+          >
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="interview.scheduledDate; else noData"
+            >{{ interview.scheduledDate | date : "mediumDate" }}</span
+          >
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="interview.attendedInterviewName; else noData"
+            >{{ interview.attendedInterviewName }}</span
+          >
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="interview.createdOn; else noData"
+            >{{ interview.createdOn | date : "mediumDate" }}</span
+          >
+        </td>
+        <td>
+          <span
+            class="table-column-data fw-bold statusdata"
+            [pTooltip]="
+              interview?.referenceNo
+                ? 'Employee Id: ' + interview.referenceNo
+                : ''
+            "
+            *ngIf="interview.interviewInternalStatus"
+            [ngStyle]="{
+              color: getStatusColor(
+                getStatusName(interview.interviewInternalStatus)
+              ).textColor,
+              'background-color': getStatusColor(
+                getStatusName(interview.interviewInternalStatus)
+              ).backgroundColor
+            }"
+          >
+            {{ getStatusName(interview.interviewInternalStatus) }}
+          </span>
+        </td>
+        <td>
+          <div class="text-center">
+            <div class="d-flex">
+              <p-menu
+                appendTo="body"
+                #menu
+                [model]="actionItems(interview)"
+                [popup]="true"
+              ></p-menu>
+              <button
+                pButton
+                type="button"
+                class="custom-btn"
+                (click)="menu.toggle($event)"
+                icon="pi pi-ellipsis-h"
+              ></button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr class="text-center">
+        <td colspan="10" class="text-center fw-bold">
+          <img
+            src="../../../assets/images/menu/nodata.gif"
+            width="200"
+            height="200"
+          />
+          <p>No Interviews Found</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<ng-template #noData> - </ng-template>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>

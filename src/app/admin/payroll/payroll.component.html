@@ -1,0 +1,689 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">Payroll</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../assets/images/menu/payroll.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+<div class="container-fluid" *ngIf="!loading">
+  <div class="row">
+    <div class="d-flex flex-wrap justify-content-start">
+      <ng-container *ngFor="let item of countsAnalytics">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-12 mt-2">
+          <div class="card p-3 shadow-sm pointer-cursor m-2 cards">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex align-items-center">
+                <div>
+                  <div class="count-sub-title">
+                    {{ item.displayName }}
+                  </div>
+                  <div class="count-title">
+                    {{ item.count }}
+                  </div>
+                </div>
+              </div>
+              <div
+                class="cardicons"
+                [ngStyle]="{
+                  color: item.textcolor,
+                  'background-color': item.backgroundcolor
+                }"
+              >
+                <i class="fa fa-{{ item.name }}"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<p-dialog
+  [(visible)]="isDialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [responsive]="true"
+  class="dialogbox"
+  header="Payroll Details"
+  (onHide)="clearDialog()"
+>
+  <div *ngIf="selectedPayrollDetails" class="text-capitalize">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-id-badge"></i></span>
+          <div class="label d-flex justify-content-between">
+            Payroll Id<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{
+              selectedPayrollDetails.payslipId
+                ? selectedPayrollDetails.payslipId
+                : "-"
+            }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-calendar-alt"></i></span>
+          <div class="label d-flex justify-content-between">
+            Payroll Month <b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{
+              selectedPayrollDetails.payrollMonth
+                ? (selectedPayrollDetails.payrollMonth | date : "MMMM yyyy")
+                : "-"
+            }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-user-alt"></i></span>
+          <div class="label d-flex justify-content-between">
+            Employee Name<b>:&nbsp;</b>
+          </div>
+          <b
+            ><div class="value">
+              {{
+                selectedPayrollDetails.employeeName
+                  ? (selectedPayrollDetails.employeeName | capitalizeFirst)
+                  : "-"
+              }}
+            </div></b
+          >
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-id-card-clip"></i></span>
+          <div class="label d-flex justify-content-between">
+            Custom Employee Id<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{
+              selectedPayrollDetails.customEmployeeId
+                ? (selectedPayrollDetails.customEmployeeId)
+                : "-"
+            }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-calendar-week"></i></span>
+          <div class="label d-flex justify-content-between">
+            Joining Date <b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{
+              selectedPayrollDetails.joiningDate
+                ? (selectedPayrollDetails.joiningDate | date)
+                : "-"
+            }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-university"></i></span>
+          <div class="label d-flex justify-content-between">
+            Account Number<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{
+              selectedPayrollDetails.accountNumber
+                ? selectedPayrollDetails.accountNumber
+                : "-"
+            }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-code-branch"></i></span>
+          <div class="label d-flex justify-content-between">
+            IFSC Code<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{
+              selectedPayrollDetails.ifscCode
+                ? selectedPayrollDetails.ifscCode
+                : "-"
+            }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-building"></i></span>
+          <div class="label d-flex justify-content-between">
+            Bank Branch<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{
+              selectedPayrollDetails.bankBranch
+                ? (selectedPayrollDetails.bankBranch | capitalizeFirst)
+                : "-"
+            }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-sliders-h"></i></span>
+          <div class="label d-flex justify-content-between">
+            LOP Option<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{
+              selectedPayrollDetails.lopOption
+                ? selectedPayrollDetails.lopOption
+                : "-"
+            }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-gas-pump"></i></span>
+          <div class="label d-flex justify-content-between">
+            Petrol Expenses<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{ selectedPayrollDetails.petrolExpenses }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-circle-user"></i></span>
+          <div class="label d-flex justify-content-between">
+            Created By<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{
+              selectedPayrollDetails.createdBy
+                ? (selectedPayrollDetails.createdBy | capitalizeFirst)
+                : "-"
+            }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-calendar-alt"></i></span>
+          <div class="label d-flex justify-content-between">
+            Created On<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{
+              selectedPayrollDetails.createdOn
+                ? (selectedPayrollDetails.createdOn | date)
+                : "-"
+            }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-user-tag"></i></span>
+          <div class="label d-flex justify-content-between">
+            Last Updated By<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{
+              selectedPayrollDetails.lastUpdatedBy
+                ? (selectedPayrollDetails.lastUpdatedBy | capitalizeFirst)
+                : "-"
+            }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-calendar-check"></i></span>
+          <div class="label d-flex justify-content-between">
+            Last Updated On<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{
+              selectedPayrollDetails.lastUpdatedOn
+                ? (selectedPayrollDetails.lastUpdatedOn
+                  | date : "MMM d, y, h:mm a")
+                : "-"
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-calendar-check"></i></span>
+          <div class="label d-flex justify-content-between">
+            Working Days<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{ selectedPayrollDetails.workingDays }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-user-clock"></i></span>
+          <div class="label d-flex justify-content-between">
+            Present Days<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{ selectedPayrollDetails.presentDays }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-hand-holding-usd"></i></span>
+          <div class="label d-flex justify-content-between">
+            Paid Days<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{ selectedPayrollDetails.paidDays }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-user-minus"></i></span>
+          <div class="label d-flex justify-content-between">
+            Absent Days <b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{ selectedPayrollDetails.absentDays }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-umbrella-beach"></i></span>
+          <div class="label d-flex justify-content-between">
+            Casual Days <b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{ selectedPayrollDetails.casualDays }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-times-circle"></i></span>
+          <div class="label d-flex justify-content-between">
+            Double Lop Days <b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{ selectedPayrollDetails.doubleLopDays }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-clock"></i></span>
+          <div class="label d-flex justify-content-between">
+            Late LOP Days<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            {{ selectedPayrollDetails.lateLopDays }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-money-bill-wave"></i></span>
+          <div class="label d-flex justify-content-between">
+            Salary <b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            Rs.
+            {{ selectedPayrollDetails.salary }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-coins"></i></span>
+          <div class="label d-flex justify-content-between">
+            Day Salary<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            Rs.
+            {{ selectedPayrollDetails.daySalary }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-minus-circle"></i></span>
+          <div class="label d-flex justify-content-between">
+            Deductions<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            Rs.
+            {{ selectedPayrollDetails.deductions }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-file-invoice-dollar"></i></span>
+          <div class="label d-flex justify-content-between">
+            Professional Tax<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            Rs.
+            {{ selectedPayrollDetails.professionalTax }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-chart-line"></i></span>
+          <div class="label d-flex justify-content-between">
+            Net Salary Without Double LOP<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            Rs.
+            {{ selectedPayrollDetails.netSalaryWithoutDoubleLop }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-chart-bar"></i></span>
+          <div class="label d-flex justify-content-between">
+            Net Salary With Double LOP<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            Rs.
+            {{ selectedPayrollDetails.netSalaryWithDoubleLop }}
+          </div>
+        </div>
+        <div class="info-line">
+          <span class="icon"><i class="fas fa-wallet"></i></span>
+          <div class="label d-flex justify-content-between">
+            Net Salary<b>:&nbsp;</b>
+          </div>
+          <div class="value">
+            Rs.
+            {{ selectedPayrollDetails.netSalary }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+<div class="text-capitalize table-card" *ngIf="!loading">
+  <p-table
+    #payrollTable
+    [value]="payroll"
+    [sortOrder]="capabilities.employeePayroll ? -1 : 1"
+    [sortField]="capabilities.employeePayroll ? 'payrollMonth' : 'joiningDate'"
+    [lazy]="true"
+    (onLazyLoad)="loadPayslips($event)"
+    dataKey="id"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [paginator]="true"
+    [rows]="10"
+    class="p-datatable-striped table"
+    [totalRecords]="totalPayrollCount"
+    [loading]="apiLoading"
+    responsiveLayout="scroll"
+    scrollHeight="flex"
+    [globalFilterFields]="[
+      'referenceNo',
+      'customer.firstName',
+      'partner.partnerName',
+      'status'
+    ]"
+    styleClass="p-datatable-customers"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Payroll"
+  >
+    <ng-template pTemplate="caption">
+      <div class="row">
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <p-calendar
+            *ngIf="capabilities.adminPayroll"
+            [(ngModel)]="displayMonth"
+            [showIcon]="true"
+            view="month"
+            [monthNavigator]="true"
+            [yearNavigator]="true"
+            [yearRange]="'-10:+10'"
+            [readonlyInput]="true"
+            dateFormat="MM yy"
+            appendTo="body"
+            [style]="{ width: '100%' }"
+            (ngModelChange)="onDateChange($event)"
+            [placeholder]="'Select Month and Year'"
+          ></p-calendar>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <p-dropdown
+            *ngIf="capabilities.adminPayroll"
+            styleClass="text-left"
+            [style]="{ width: '100%' }"
+            [options]="employees"
+            (onChange)="statusChange($event)"
+            [dropdownIcon]="'fa fa-caret-down'"
+            [(ngModel)]="selectedEmployee"
+            optionLabel="employeeName"
+            [filter]="true"
+            appendTo="body"
+            [showClear]="true"
+            filterPlaceholder="Search..."
+            dataKey="id"
+          >
+          </p-dropdown>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
+          <div class="d-flex">
+            <div class="flex-grow-1 me-2"></div>
+            <div class="d-flex align-items-center pointer-cursor">
+              <app-filter
+                [position]="'right'"
+                [iconColor]="'#33009C'"
+                class="me-2"
+                [iconSize]="'28px!important'"
+                (filterEvent)="applyConfigFilters($event)"
+                [filterConfig]="filterConfig"
+                [showFilterIndication]="appliedFilter"
+              >
+              </app-filter>
+              <button
+                *ngIf="capabilities.adminPayroll"
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Employee Payroll"
+                tooltipPosition="top"
+                class="p-button-primary me-2"
+                icon="fa fa-plus"
+                (click)="createPayroll()"
+              >
+                &nbsp;Add Payroll
+              </button>
+              <button
+                *ngIf="capabilities.adminPayroll"
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Last Month Payroll"
+                tooltipPosition="top"
+                class="p-button-primary"
+                icon="fa fa-plus"
+                (click)="confirmCalculate()"
+              >
+                &nbsp;Calculate
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th pSortableColumn="payslipId" class="text-nowrap">
+          Payroll Id <p-sortIcon field="payslipId"></p-sortIcon>
+        </th>
+        <th
+          pSortableColumn="employeeName"
+          *ngIf="!capabilities.employeePayroll"
+          class="text-nowrap"
+        >
+          Employee Name <p-sortIcon field="employeeName"></p-sortIcon>
+        </th>
+        <th
+          pSortableColumn="payrollMonth"
+          *ngIf="capabilities.employeePayroll"
+          class="text-nowrap"
+        >
+          Payroll Month
+          <p-sortIcon field="payrollMonth"></p-sortIcon>
+        </th>
+        <th pSortableColumn="joiningDate" class="text-nowrap">
+          Date of Joining <p-sortIcon field="joiningDate"></p-sortIcon>
+        </th>
+        <th pSortableColumn="salary" class="text-nowrap">
+          Salary <p-sortIcon field="salary"></p-sortIcon>
+        </th>
+        <th pSortableColumn="deductions" class="text-nowrap">
+          Deductions <p-sortIcon field="deductions"></p-sortIcon>
+        </th>
+        <th pSortableColumn="netSalary" class="text-nowrap">
+          Net Salary <p-sortIcon field="netSalary"></p-sortIcon>
+        </th>
+        <th pSortableColumn="createdOn" class="text-nowrap">
+          Created Date <p-sortIcon field="createdOn"></p-sortIcon>
+        </th>
+        <th class="text-nowrap">Payslip</th>
+        <th class="text-nowrap">Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-payslip>
+      <tr>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="payslip.payslipId; else noData"
+            >{{ payslip.payslipId }}</span
+          >
+        </td>
+        <td *ngIf="!capabilities.employeePayroll" class="text-nowrap">
+          <div class="d-flex align-items-center">
+            <span class="me-2">
+              <ng-container
+                *ngIf="
+                  payslip && payslip.passPhoto && payslip.passPhoto.length > 0;
+                  else defaultImage
+                "
+              >
+                <a [href]="'//' + payslip.passPhoto[0]" target="_blank">
+                  <img
+                    [src]="'//' + payslip.passPhoto[0]"
+                    alt="Image"
+                    class="employeeImage"
+                    style="height: 40px; width: 40px"
+                  />
+                </a>
+              </ng-container>
+              <ng-template #defaultImage>
+                <img
+                  src="../../../assets/images/profile/user.png"
+                  alt="Default Image"
+                  class="employeeImage"
+                  style="height: 40px; width: 40px"
+                />
+              </ng-template>
+            </span>
+            <b>
+              <span
+                *ngIf="payslip.employeeName; else noData"
+                class="table-column-data"
+              >
+                {{ payslip.employeeName | capitalizeFirst }}
+              </span>
+            </b>
+          </div>
+        </td>
+        <td *ngIf="capabilities.employeePayroll" class="text-nowrap">
+          <span
+            class="table-column-data"
+            *ngIf="payslip.payrollMonth; else noData"
+            >{{ payslip.payrollMonth | date : "MMMM yyyy" }}</span
+          >
+        </td>
+        <td class="text-nowrap">
+          <span
+            class="table-column-data"
+            *ngIf="payslip.joiningDate; else noData"
+            >{{ payslip.joiningDate | date }}</span
+          >
+        </td>
+        <td>
+          <span class="table-column-data" *ngIf="payslip.salary; else noData"
+            >Rs.{{ payslip.salary }}</span
+          >
+        </td>
+        <td>
+          <span class="table-column-data">
+            Rs.{{ payslip.deductions + payslip.professionalTax }}
+          </span>
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="payslip.netSalary; else noData"
+          >
+            Rs.{{ payslip.netSalary }}</span
+          >
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="payslip.createdOn; else noData"
+            >{{ payslip.createdOn | date : "mediumDate" }}</span
+          >
+        </td>
+        <td>
+          <div class="text-center">
+            <div class="d-flex">
+              <button
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Payslip"
+                class="p-button-info me-2 view-btn"
+                icon="fa fa-file"
+                (click)="ViewPayslip(payslip.payslipId)"
+              ></button>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="text-center">
+            <div class="d-flex">
+              <p-menu
+                appendTo="body"
+                #menu
+                [model]="actionItems(payslip)"
+                [popup]="true"
+              ></p-menu>
+              <button
+                pButton
+                type="button"
+                class="custom-btn"
+                (click)="menu.toggle($event)"
+                icon="pi pi-ellipsis-h"
+              ></button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr class="text-center">
+        <td colspan="10" class="text-center fw-bold">
+          <img
+            src="../../../assets/images/menu/nodata.gif"
+            width="200"
+            height="200"
+          />
+          <p>No Payroll Found</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<ng-template #noData> - </ng-template>
+
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>

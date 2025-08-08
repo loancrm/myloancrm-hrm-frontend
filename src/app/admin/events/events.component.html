@@ -1,0 +1,60 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">Events</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../assets/images/menu/events.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+<!-- <div class="calendar-container" *ngIf="calendarOptions">
+  <div class="calendar-card">
+    <full-calendar #calendar [options]="calendarOptions"> </full-calendar>
+  </div>
+</div> -->
+<div class="calendar-container" *ngIf="birthdayEvents?.length > 0; else noData">
+  <div class="calendar-card">
+    <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+  </div>
+</div>
+
+<ng-template #noData>
+  <div class="nodata-container mt-5">
+    <img
+      [lazyLoad]="'../../../assets/images/menu/nodata.gif'"
+      alt="No Data Available"
+      class="nodata"
+    />
+    <p>No Events Available</p>
+  </div>
+</ng-template>
+
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>

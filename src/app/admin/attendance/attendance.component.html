@@ -1,0 +1,295 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">Attendance</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../assets/images/menu/attendance.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+<div class="text-capitalize table-card">
+  <p-table
+    #employeesTable
+    [value]="attendance"
+    [sortOrder]="-1"
+    [sortField]="'attendanceDate'"
+    [lazy]="true"
+    (onLazyLoad)="loadAttendance($event)"
+    dataKey="id"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [paginator]="true"
+    [rows]="10"
+    class="p-datatable-striped table"
+    [totalRecords]="totalAttendanceCount"
+    [loading]="apiLoading"
+    responsiveLayout="scroll"
+    scrollHeight="flex"
+    [globalFilterFields]="[
+      'referenceNo',
+      'customer.firstName',
+      'partner.partnerName',
+      'status'
+    ]"
+    styleClass="p-datatable-customers"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Attendance"
+  >
+    <ng-template pTemplate="caption">
+      <div class="row">
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <div class="p-inputgroup">
+            <p-calendar
+              [(ngModel)]="selectedDate"
+              [showIcon]="true"
+              dateFormat="yy-mm-dd"
+              [style]="{ width: '100%' }"
+              placeholder="Select Date"
+              appendTo="body"
+              [readonlyInput]="true"
+              [showButtonBar]="true"
+              (ngModelChange)="filterByDate()"
+            >
+            </p-calendar>
+          </div>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <p-calendar
+            [(ngModel)]="displayMonth"
+            [showIcon]="true"
+            view="month"
+            [monthNavigator]="true"
+            [yearNavigator]="true"
+            [yearRange]="'-10:+10'"
+            dateFormat="MM yy"
+            appendTo="body"
+            [style]="{ width: '100%' }"
+            [readonlyInput]="true"
+            (ngModelChange)="onDateChange($event)"
+            [placeholder]="'Select Month and Year'"
+          ></p-calendar>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
+          <div class="d-flex">
+            <div class="flex-grow-1 me-2"></div>
+            <div class="d-flex align-items-center pointer-cursor">
+              <button
+                *ngIf="capabilities.adminAttendance"
+                pButton
+                pRipple
+                type="button"
+                class="p-button-primary me-2"
+                icon="fa fa-eye"
+                (click)="monthAttendance()"
+              >
+                &nbsp;Month-wise Attendance
+              </button>
+              <button
+                *ngIf="capabilities.adminAttendance"
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Add Attendance"
+                tooltipPosition="top"
+                class="p-button-primary"
+                icon="fa fa-plus"
+                (click)="createAttendance()"
+              >
+                &nbsp;Add
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr *ngIf="capabilities.adminAttendance">
+        <th pSortableColumn="attendanceId" class="text-nowrap">
+          Attendance Id <p-sortIcon [field]="'attendanceId'"></p-sortIcon>
+        </th>
+        <th pSortableColumn="attendanceDate" class="text-nowrap">
+          Attendance Date <p-sortIcon [field]="'attendanceDate'"></p-sortIcon>
+        </th>
+        <th>Pesent</th>
+        <th>Late</th>
+        <th class="text-nowrap">Half Day</th>
+        <th>Leave</th>
+        <th pSortableColumn="createdBy" class="text-nowrap">
+          Created By <p-sortIcon [field]="'createdBy'"></p-sortIcon>
+        </th>
+        <th pSortableColumn="createdOn" class="text-nowrap">
+          Created On <p-sortIcon [field]="'createdOn'"></p-sortIcon>
+        </th>
+        <th class="text-nowrap">Status</th>
+      </tr>
+      <tr *ngIf="capabilities.employeeAttendance">
+        <th pSortableColumn="attendanceId">
+          Attendance Id <p-sortIcon [field]="'attendanceId'"></p-sortIcon>
+        </th>
+        <th pSortableColumn="attendanceDate">
+          Attendance Date <p-sortIcon [field]="'attendanceDate'"></p-sortIcon>
+        </th>
+        <th>Status</th>
+        <th>Check in Time</th>
+        <th>Check Out Time</th>
+        <th pSortableColumn="createdBy">
+          Created By <p-sortIcon [field]="'createdBy'"></p-sortIcon>
+        </th>
+        <th pSortableColumn="createdOn">
+          Created On <p-sortIcon [field]="'createdOn'"></p-sortIcon>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template
+      pTemplate="body"
+      let-attendance
+      *ngIf="capabilities.adminAttendance"
+    >
+      <tr>
+        <td>{{ attendance.attendanceId }}</td>
+        <td>
+          {{ attendance.attendanceDate | date }}
+        </td>
+        <td>
+          {{ attendance.presentCount }}
+        </td>
+        <td>
+          {{ attendance.lateCount }}
+        </td>
+        <td>
+          {{ attendance.halfDayCount }}
+        </td>
+        <td>
+          {{ attendance.absentCount }}
+        </td>
+        <td>
+          {{ attendance.createdBy | capitalizeFirst }}
+        </td>
+        <td>
+          {{ attendance.createdOn | date }}
+        </td>
+        <td>
+          <div class="text-center">
+            <div class="d-flex">
+              <button
+                pButton
+                pRipple
+                type="button"
+                pTooltip="View"
+                class="p-button-info me-2 view-btn"
+                icon="fa fa-eye"
+                (click)="ViewAttendance(attendance.attendanceId)"
+              ></button>
+              <button
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Update"
+                class="p-button-success me-2 update-btn"
+                icon="fa fa-pen-to-square"
+                (click)="updateAttendance(attendance.attendanceId)"
+              ></button>
+              <button
+                *ngIf="capabilities.delete"
+                pButton
+                type="button"
+                icon="fa fa-trash"
+                pTooltip="Delete"
+                class="p-button-danger me-2 delete-btn"
+                (click)="confirmDelete(attendance)"
+              ></button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template
+      pTemplate="body"
+      let-employee
+      *ngIf="capabilities.employeeAttendance"
+    >
+      <tr>
+        <td>{{ employee.attendanceId }}</td>
+        <td>{{ employee.attendanceDate | date }}</td>
+        <td>
+          <ng-container [ngSwitch]="employee.status">
+            <i
+              *ngSwitchCase="'Present'"
+              pTooltip="Present"
+              class="fa fa-check-circle text-success"
+              title="Present"
+            ></i>
+            <i
+              *ngSwitchCase="'Absent'"
+              pTooltip="Absent"
+              class="fa fa-circle-xmark text-danger"
+              title="Absent"
+            ></i>
+            <i
+              *ngSwitchCase="'Half-day'"
+              pTooltip="Half-day"
+              class="fa fa-circle-half-stroke text-warning"
+              title="Half-day"
+            ></i>
+            <i
+              *ngSwitchCase="'Late'"
+              pTooltip="Late"
+              class="fa fa-circle-exclamation text-primary"
+              title="Late"
+            ></i>
+            <span *ngSwitchDefault>{{ employee.status }}</span>
+          </ng-container>
+        </td>
+        <td>{{ employee.checkInTime }}</td>
+        <td>{{ employee.checkOutTime }}</td>
+        <td>
+          {{ employee.createdBy | capitalizeFirst }}
+        </td>
+        <td>
+          {{ employee.createdOn | date }}
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="10" class="text-center fw-bold">
+          <img
+            src="../../../assets/images/menu/nodata.gif"
+            width="200"
+            height="200"
+          />
+          <p>No Attendance Found</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>

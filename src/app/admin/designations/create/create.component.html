@@ -1,0 +1,235 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">{{
+              heading
+            }}</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../../assets/images/menu/adddepartment.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+
+<!-- <form
+    class="login-form mt-3"
+    [formGroup]="departmentsForm"
+    novalidate
+    (ngSubmit)="onSubmit(departmentsForm.value)"
+  >
+    <div class="py-3 px-4">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row mt-3" *ngIf="formFields">
+            <div *ngFor="let field of formFields" class="mt-2 col-md-6">
+              <div>
+                <label>
+                  {{ field.label }}
+                  <span *ngIf="field.required">
+                    &nbsp;<sup class="text-danger">*</sup>
+                  </span>
+                </label>
+                <ng-container [ngSwitch]="field.type">
+                  <input
+                    *ngSwitchCase="'text'"
+                    pInputText
+                    [formControlName]="field.controlName"
+                    [placeholder]="'Enter ' + field.label"
+                    [maxlength]="field.maxLength"
+                    [style]="{ width: '100%' }"
+                    [pattern]="field.pattern"
+                    class="rounded-lg"
+                    autocomplete="off"
+                  />
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <div class="d-flex mt-3 mb-5">
+        <button
+          pButton
+          pRipple
+          type="submit"
+          [disabled]="!departmentsForm.valid"
+          class="p-button-primary p-button-raised"
+        >
+          {{ actionType == "create" ? "Create" : "Update" }} Department
+        </button>
+      </div>
+    </div>
+  </form> -->
+<div *ngIf="!loading">
+  <div class="bg-color custom-steps-card">
+    <form
+      class="login-form mt-3"
+      [formGroup]="departmentsForm"
+      novalidate
+      (ngSubmit)="onSubmit(departmentsForm.value)"
+    >
+      <div class="py-3 px-4">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row mt-3" *ngIf="formFields">
+              <div *ngFor="let field of formFields" class="mt-2 col-md-6">
+                <div>
+                  <label>
+                    {{ field.label }}
+                    <span *ngIf="field.required">
+                      &nbsp;<sup class="text-danger">*</sup>
+                    </span>
+                  </label>
+                  <ng-container [ngSwitch]="field.type">
+                    <input
+                      *ngSwitchCase="'text'"
+                      pInputText
+                      [formControlName]="field.controlName"
+                      [placeholder]="'Enter ' + field.label"
+                      [maxlength]="field.maxLength"
+                      [style]="{ width: '100%' }"
+                      [pattern]="field.pattern"
+                      class="rounded-lg"
+                      autocomplete="off"
+                    />
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="col-md-12">
+            <h3 class="mt-4">Role Selection</h3>
+            <div
+              class="row"
+              formArrayName="rbac"
+              *ngFor="let module of modules; let i = index"
+            >
+              <ng-container [formGroupName]="i">
+                <div
+                  *ngIf="module.type === 'radio'"
+                  class="role-option-group col-md-6"
+                >
+                  <label>{{ module.name }}</label>
+                  <div *ngFor="let option of module.options">
+                    <input
+                      type="radio"
+                      [value]="option.value"
+                      class="custom-radio"
+                      formControlName="selectedOption"
+                    />
+                    <label>{{ option.label }}</label>
+                  </div>
+                </div>
+
+                <div
+                  *ngIf="module.type === 'checkbox'"
+                  class="role-option-group col-md-6"
+                >
+                  <label>{{ module.name }}</label>
+                  <div *ngFor="let option of module.options">
+                    <input
+                      type="checkbox"
+                      [formControlName]="option.value"
+                      class="custom-checkbox"
+                    />
+                    <label>{{ option.label }}</label>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div> -->
+
+          <div class="row">
+            <h3 class="mt-4">Role Selection</h3>
+            <div
+              class="d-flex flex-wrap justify-content-start"
+              formArrayName="rbac"
+            >
+              <ng-container
+                *ngFor="let module of modules; let i = index"
+                [formGroupName]="i"
+              >
+                <!-- Left Side - Radio buttons -->
+                <div class="role-option-group">
+                  <div *ngIf="module.type === 'radio'" class="flex-nowrap p-3">
+                    <label>{{ module.name }}</label>
+                    <div
+                      *ngFor="let option of module.options"
+                      class="option d-flex align-items-center  flex-nowrap m-2"
+                    >
+                      <input
+                        type="radio"
+                        [value]="option.value"
+                        class="custom-radio"
+                        formControlName="selectedOption"
+                      />
+                      <label class="custom-radio-label  ml-2">{{
+                        option.label
+                      }}</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="role-option-group me-2">
+                  <div *ngIf="module.type === 'checkbox'" class="flex-nowrap p-3">
+                    <!-- <label>{{ module.name }}</label> -->
+                    <div
+                      *ngFor="let option of module.options"
+                      class="option d-flex align-items-center  flex-nowrap"
+                    >
+                      <input
+                        type="checkbox"
+                        [formControlName]="option.value"
+                        class="custom-checkbox"
+                      />
+                      <label class="custom-checkbox-label ml-2">{{
+                        option.label
+                      }}</label>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center">
+        <div class="d-flex mt-3 mb-5">
+          <button
+            pButton
+            pRipple
+            type="submit"
+            [disabled]="!departmentsForm.valid"
+            class="p-button-primary p-button-raised"
+          >
+            {{ actionType == "create" ? "Create" : "Update" }} Department
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,228 @@
+.hikeletter-card {
+  margin: 20px 0;
+  // padding: 50px;
+  width: 250mm;
+  line-height: 2.5 !important;
+  border: none !important;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
+  // box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+}
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.d-flex {
+  display: flex;
+  justify-content: space-between;
+}
+.hikeletter-title {
+  text-align: center;
+  font-size: 30px;
+  color: #26334a !important;
+  margin: 20px 0;
+  font-weight: bold;
+}
+.hikeletter-date {
+  text-align: right;
+  font-size: 16px;
+}
+.fromdetails {
+  margin-top: 15px;
+  line-height: 2rem;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.para {
+  text-align: justify;
+  text-align-last: left;
+  line-height: 2;
+  font-size: 16px;
+  padding: 10px;
+  margin-left: 10px;
+}
+
+.indented-paragraph {
+  text-indent: 30px;
+}
+.firstpara {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.regards {
+  padding-left: 10px !important;
+  line-height: 1.5;
+  font-size: 18px;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+.download-btn {
+  background: linear-gradient(145deg, #035d81, #4a8fa3);
+  border-radius: 100px;
+  box-shadow: rgba(3, 93, 129, 0.2) 0 -25px 18px -14px inset,
+    rgba(3, 93, 129, 0.15) 0 1px 2px, rgba(3, 93, 129, 0.15) 0 2px 4px,
+    rgba(3, 93, 129, 0.15) 0 4px 8px, rgba(3, 93, 129, 0.15) 0 8px 16px,
+    rgba(3, 93, 129, 0.15) 0 16px 32px;
+  cursor: pointer;
+  color: white;
+  display: inline-block;
+  font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+  padding: 7px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  width: fit-content;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.download-btn:hover {
+  background: linear-gradient(145deg, #035d81, #4a8fa3);
+  box-shadow: rgba(3, 93, 129, 0.35) 0 -25px 18px -14px inset,
+    rgba(3, 93, 129, 0.25) 0 1px 2px, rgba(3, 93, 129, 0.25) 0 2px 4px,
+    rgba(3, 93, 129, 0.25) 0 4px 8px, rgba(3, 93, 129, 0.25) 0 8px 16px,
+    rgba(3, 93, 129, 0.25) 0 16px 32px;
+  transform: scale(1.05);
+}
+.card-body {
+  position: relative;
+  margin-right:35px;
+  border-left: 35px solid #265a7e;
+  min-height: 1122px;
+  padding-left: 30px; /* Adjust spacing to fit the second border */
+}
+/* Left Gradient Border */
+.card-body::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 25px; /* Thin strip beside border */
+  height: 100%;
+  border-left: 2px solid #fff;
+  background: linear-gradient(to bottom, lightgrey,lightgrey, #558B28);
+}
+
+
+
+// //OLD CODE
+// .hikeletter-card {
+//   margin: 20px;
+//   padding: 50px;
+//   width: 250mm;
+//   line-height: 2.5 !important;
+//   border: none !important;
+//   border-radius: 5px;
+//   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+// }
+// .card-container {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+// .header {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-bottom: 20px;
+//   padding: 10px;
+//   font-size: 14px;
+// }
+
+// .d-flex {
+//   display: flex;
+//   justify-content: space-between;
+// }
+// .hikeletter-title {
+//   text-align: center;
+//   font-size: 34px;
+//   color: #26334a !important;
+//   margin: 20px 0;
+//   font-weight: bold;
+// }
+// .hikeletter-date {
+//   text-align: right;
+//   font-size: 18px;
+// }
+// .fromdetails {
+//   margin-top: 15px;
+//   line-height: 2rem;
+//   padding: 10px;
+//   font-size: 18px;
+//   font-weight: bold;
+// }
+// .para {
+//   text-align: justify;
+//   text-align-last: left;
+//   line-height: 2;
+//   font-size: 18px;
+//   padding: 10px;
+//   margin-left: 10px;
+// }
+
+// .indented-paragraph {
+//   text-indent: 30px;
+// }
+// .firstpara {
+//   margin-top: 20px;
+//   margin-bottom: 20px;
+// }
+// .regards {
+//   line-height: 1.5;
+//   font-size: 20px;
+// }
+
+// .btn-container {
+//   display: flex;
+//   justify-content: center;
+// }
+
+// .download-btn {
+//   background: linear-gradient(145deg, #035d81, #4a8fa3);
+//   border-radius: 100px;
+//   box-shadow: rgba(3, 93, 129, 0.2) 0 -25px 18px -14px inset,
+//     rgba(3, 93, 129, 0.15) 0 1px 2px, rgba(3, 93, 129, 0.15) 0 2px 4px,
+//     rgba(3, 93, 129, 0.15) 0 4px 8px, rgba(3, 93, 129, 0.15) 0 8px 16px,
+//     rgba(3, 93, 129, 0.15) 0 16px 32px;
+//   cursor: pointer;
+//   color: white;
+//   display: inline-block;
+//   font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+//   padding: 7px 20px;
+//   text-align: center;
+//   text-decoration: none;
+//   transition: all 250ms;
+//   border: 0;
+//   width: fit-content;
+//   font-size: 16px;
+//   user-select: none;
+//   -webkit-user-select: none;
+//   touch-action: manipulation;
+// }
+
+// .download-btn:hover {
+//   background: linear-gradient(145deg, #035d81, #4a8fa3);
+//   box-shadow: rgba(3, 93, 129, 0.35) 0 -25px 18px -14px inset,
+//     rgba(3, 93, 129, 0.25) 0 1px 2px, rgba(3, 93, 129, 0.25) 0 2px 4px,
+//     rgba(3, 93, 129, 0.25) 0 4px 8px, rgba(3, 93, 129, 0.25) 0 8px 16px,
+//     rgba(3, 93, 129, 0.25) 0 16px 32px;
+//   transform: scale(1.05);
+// }

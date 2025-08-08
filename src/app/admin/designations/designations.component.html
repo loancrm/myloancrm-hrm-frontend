@@ -1,0 +1,389 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">Departments</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../assets/images/menu/departments.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+
+<!-- <p-dialog
+  [(visible)]="isDialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [responsive]="true"
+  class="dialogbox"
+  [style]="{ width: '50vw' }"
+  header="{{ heading }}"
+  (onHide)="clearDialog()"
+> -->
+  <!-- <form
+    class="login-form mt-3"
+    [formGroup]="departmentsForm"
+    novalidate
+    (ngSubmit)="onSubmit(departmentsForm.value)"
+  >
+    <div class="py-3 px-4">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row mt-3" *ngIf="formFields">
+            <div *ngFor="let field of formFields" class="mt-2 col-md-6">
+              <div>
+                <label>
+                  {{ field.label }}
+                  <span *ngIf="field.required">
+                    &nbsp;<sup class="text-danger">*</sup>
+                  </span>
+                </label>
+                <ng-container [ngSwitch]="field.type">
+                  <input
+                    *ngSwitchCase="'text'"
+                    pInputText
+                    [formControlName]="field.controlName"
+                    [placeholder]="'Enter ' + field.label"
+                    [maxlength]="field.maxLength"
+                    [style]="{ width: '100%' }"
+                    [pattern]="field.pattern"
+                    class="rounded-lg"
+                    autocomplete="off"
+                  />
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <div class="d-flex mt-3 mb-5">
+        <button
+          pButton
+          pRipple
+          type="submit"
+          [disabled]="!departmentsForm.valid"
+          class="p-button-primary p-button-raised"
+        >
+          {{ actionType == "create" ? "Create" : "Update" }} Department
+        </button>
+      </div>
+    </div>
+  </form> -->
+
+  <!-- <form
+    class="login-form mt-3"
+    [formGroup]="departmentsForm"
+    novalidate
+    (ngSubmit)="onSubmit(departmentsForm.value)"
+  >
+    <div class="py-3 px-4">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row mt-3" *ngIf="formFields">
+            <div *ngFor="let field of formFields" class="mt-2 col-md-6">
+              <div>
+                <label>
+                  {{ field.label }}
+                  <span *ngIf="field.required">
+                    &nbsp;<sup class="text-danger">*</sup>
+                  </span>
+                </label>
+                <ng-container [ngSwitch]="field.type">
+                  <input
+                    *ngSwitchCase="'text'"
+                    pInputText
+                    [formControlName]="field.controlName"
+                    [placeholder]="'Enter ' + field.label"
+                    [maxlength]="field.maxLength"
+                    [style]="{ width: '100%' }"
+                    [pattern]="field.pattern"
+                    class="rounded-lg"
+                    autocomplete="off"
+                  />
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <h3 class="mt-4">Role Selection</h3>
+          <div
+            *ngFor="let module of modules; let i = index"
+            formArrayName="rbac"
+          >
+            <div [formGroupName]="i" class="mt-3">
+              <ng-container *ngIf="module.type === 'radio'">
+                <h5>{{ module.name }}</h5>
+                <div *ngFor="let option of module.options" class="form-check">
+                  <input
+                    type="radio"
+                    [name]="option.id"
+                    [value]="option.value"
+                    [checked]="option.value"
+                    [formControlName]="option.value"
+                    class="form-check-input"
+                  />
+                  <label class="form-check-label">{{ option.label }}</label>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="module.type === 'checkbox'">
+                <div *ngFor="let option of module.options" class="form-check">
+                  <input
+                    type="checkbox"
+                    [formControlName]="option.value"
+                    class="form-check-input"
+                  />
+                  <label class="form-check-label">{{ option.label }}</label>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <div class="d-flex mt-3 mb-5">
+        <button
+          pButton
+          pRipple
+          type="submit"
+          [disabled]="!departmentsForm.valid"
+          class="p-button-primary p-button-raised"
+        >
+          {{ actionType == "create" ? "Create" : "Update" }} Department
+        </button>
+      </div>
+    </div>
+  </form>
+</p-dialog> -->
+<div class="text-capitalize table-card">
+  <p-table
+    #designationsTable
+    [value]="designations"
+    [sortOrder]="1"
+    [sortField]="'createdOn'"
+    [lazy]="true"
+    (onLazyLoad)="loadDesignations($event)"
+    dataKey="id"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [paginator]="true"
+    [rows]="10"
+    class="p-datatable-striped table"
+    [totalRecords]="totalDesignationsCount"
+    [loading]="apiLoading"
+    responsiveLayout="scroll"
+    scrollHeight="flex"
+    [globalFilterFields]="[
+      'referenceNo',
+      'customer.firstName',
+      'partner.partnerName',
+      'status'
+    ]"
+    styleClass="p-datatable-customers"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Departments"
+  >
+    <ng-template pTemplate="caption">
+      <div class="row">
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <div class="p-inputgroup">
+            <input
+              type="text"
+              pInputText
+              placeholder="Search with Designation Name"
+              [(ngModel)]="displayNameToSearch"
+              (ngModelChange)="
+                inputValueChangeEvent('designationId', displayNameToSearch)
+              "
+              (keyup.enter)="filterWithCandidateName()"
+            />
+            <button
+              type="button"
+              pButton
+              icon="pi pi-search"
+              class="p-button-primary"
+              [disabled]="!displayNameToSearch"
+              (click)="filterWithCandidateName()"
+            ></button>
+          </div>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <p-dropdown
+            styleClass="text-left"
+            [style]="{ width: '100%' }"
+            [options]="departmentInternalStatusList"
+            (onChange)="statusChange($event)"
+            [dropdownIcon]="'fa fa-caret-down'"
+            [(ngModel)]="selectedDepartmentStatus"
+            optionLabel="displayName"
+            dataKey="name"
+            appendTo="body"
+          >
+          </p-dropdown>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
+          <div class="d-flex">
+            <div class="flex-grow-1 me-2"></div>
+            <div class="d-flex align-items-center pointer-cursor">
+              <app-filter
+                [position]="'right'"
+                [iconColor]="'#33009C'"
+                [iconSize]="'28px!important'"
+                class="me-2"
+                (filterEvent)="applyConfigFilters($event)"
+                [filterConfig]="filterConfig"
+                [showFilterIndication]="appliedFilter"
+              >
+              </app-filter>
+              <button
+                pButton
+                pRipple
+                pTooltip="Add Department"
+                tooltipPosition="top"
+                type="button"
+                class="p-button-primary"
+                icon="fa fa-plus"
+                (click)="createDepartment()"
+              >
+                &nbsp;Add Department
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th pSortableColumn="designationId" class="text-nowrap">
+          Department Id <p-sortIcon field="designationId"></p-sortIcon>
+        </th>
+        <th pSortableColumn="displayName" class="text-nowrap">
+          Department Name <p-sortIcon field="displayName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="designation" class="text-nowrap">
+          Designation Name
+          <p-sortIcon field="designation"></p-sortIcon>
+        </th>
+        <th pSortableColumn="createdOn" class="text-nowrap">
+          Created Date <p-sortIcon field="createdOn"></p-sortIcon>
+        </th>
+        <th pSortableColumn="designationInternalStatus" class="text-nowrap">
+          Status <p-sortIcon field="designationInternalStatus"></p-sortIcon>
+        </th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-designation>
+      <tr>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="designation.designationId; else noData"
+            >{{ designation.designationId }}</span
+          >
+        </td>
+        <td>
+          <b>
+            <span
+              class="table-column-data"
+              *ngIf="designation.displayName; else noData"
+              >{{ designation.displayName | capitalizeFirst }}</span
+            >
+          </b>
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="designation.designation; else noData"
+            >{{ designation.designation | capitalizeFirst }}</span
+          >
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="designation.createdOn; else noData"
+            >{{ designation.createdOn | date : "mediumDate" }}</span
+          >
+        </td>
+        <td>
+          <span
+            class="table-column-data fw-bold statusdata"
+            *ngIf="designation.designationInternalStatus"
+            [ngStyle]="{
+              color: getStatusColor(
+                getStatusName(designation.designationInternalStatus)
+              ).textColor,
+              'background-color': getStatusColor(
+                getStatusName(designation.designationInternalStatus)
+              ).backgroundColor
+            }"
+          >
+            {{ getStatusName(designation.designationInternalStatus) }}
+          </span>
+        </td>
+        <td>
+          <div class="text-center">
+            <div class="d-flex">
+              <p-menu
+                appendTo="body"
+                #menu
+                [model]="actionItems(designation)"
+                [popup]="true"
+              ></p-menu>
+              <button
+                pButton
+                type="button"
+                class="custom-btn"
+                (click)="menu.toggle($event)"
+                icon="pi pi-ellipsis-h"
+              ></button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr class="text-center">
+        <td colspan="10" class="text-center fw-bold">
+          <img
+            src="../../../assets/images/menu/nodata.gif"
+            width="200"
+            height="200"
+          />
+          <p>No Departments Found</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<ng-template #noData> - </ng-template>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>

@@ -1,0 +1,45 @@
+.card {
+  border: none;
+}
+
+.p-inputtext {
+  width: 100% !important;
+}
+.p-button-primary {
+  background-color: #533dd5 !important;
+  font-weight: bold;
+}
+
+.p-inputtext {
+  color: #333;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.p-inputtext:hover {
+  border: 1px solid #33009c !important;
+}
+.p-inputtext:focus {
+  border: 1px solid #33009c !important;
+  box-shadow: 0 0 5px #9b8db5 !important;
+  outline: none;
+}
+
+.p-inputtext::placeholder {
+  color: #888;
+}
+
+label {
+  font-weight: 600;
+}
+
+.custom-steps-card {
+  border-radius: 10px;
+  padding: 20px;
+  margin: 12px;
+  color: #ffffff;
+  background-color: #31425e;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}

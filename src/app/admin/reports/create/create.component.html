@@ -1,0 +1,147 @@
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+
+<div
+  *ngIf="!loading && selectedReportConfig && selectedReportConfig.fields"
+  class="no-select"
+>
+  <div class="container-fluid mt-2">
+    <div class="card heading-card p-3">
+      <div class="row align-items-center">
+        <div class="col-md-10">
+          <div class="d-flex justify-content-start align-items-center mb-2">
+            <div
+              class="d-flex align-items-center pointer-cursor"
+              (click)="goBack()"
+            >
+              <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+              <span class="back-btn-text ms-2 text-capitalize"
+                ><span
+                  *ngIf="selectedReportConfig.reportName"
+                  class="back-btn-text fw-bold"
+                  >{{ selectedReportConfig.reportName }} Report</span
+                ></span
+              >
+            </div>
+          </div>
+          <div class="bread-crumb mt-3">
+            <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+          </div>
+        </div>
+        <div class="col-md-2 text-end">
+          <img
+            src="../../../../assets/images/menu/createreport.png"
+            width="100"
+            class="heading-image"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card report-fields">
+    <div class="row">
+      <ng-container
+        class="create mt-1"
+        *ngFor="let field of selectedReportConfig.fields; let i = index"
+      >
+        <div class="col-xl-3 col-md-4 col-sm-6 mt-2">
+          <label [htmlFor]="field.field" *ngIf="!field.disabled">{{
+            field.title
+          }}</label>
+          <input
+            pInputText
+            [id]="field.field"
+            [placeholder]="'Enter ' + field.title"
+            autocomplete="off"
+            [(ngModel)]="reportData[field.field + '-' + field.filterType]"
+            *ngIf="field && field.type == 'text'"
+            [style]="{ width: field.fieldWidth ? field.fieldWidth : '100%' }"
+          />
+          <input
+            pInputText
+            [id]="field.field"
+            [placeholder]="'Enter ' + field.title"
+            autocomplete="off"
+            [(ngModel)]="reportData[field.field + '-' + field.filterType]"
+            *ngIf="field && field.type == 'number'"
+            [style]="{ width: field.fieldWidth ? field.fieldWidth : '100%' }"
+            (keypress)="onNumberInputChange($event)"
+          />
+          <span *ngIf="field && field.type == 'date'">
+            <p-calendar
+              [placeholder]="'Select ' + field.title"
+              appendTo="body"
+              [showIcon]="true"
+              [style]="{ width: field.fieldWidth ? field.fieldWidth : '100%' }"
+              [dateFormat]="field.dateFormat ? field.dateFormat : 'yy-mm-dd'"
+              [(ngModel)]="reportData[field.field + '-' + field.filterType]"
+              [readonlyInput]="true"
+              [showButtonBar]="true"
+              [readonlyInput]="true"
+            ></p-calendar>
+          </span>
+          <span *ngIf="field && field.type == 'month'">
+            <p-calendar
+              [(ngModel)]="reportData[field.field + '-' + field.filterType]"
+              [showIcon]="true"
+              view="month"
+              [monthNavigator]="true"
+              [yearNavigator]="true"
+              [yearRange]="'-10:+10'"
+              [style]="{ width: field.fieldWidth ? field.fieldWidth : '100%' }"
+              dateFormat="yy-mm"
+              appendTo="body"
+              [showButtonBar]="true"
+              [readonlyInput]="true"
+              [placeholder]="'Select ' + field.title"
+            ></p-calendar>
+          </span>
+          <span *ngIf="field && field.type == 'dropdown'">
+            <p-dropdown
+              [placeholder]="'Select ' + field.title"
+              styleClass="text-left"
+              [style]="{ width: field.fieldWidth ? field.fieldWidth : '100%' }"
+              [options]="field.options"
+              [optionValue]="field.value"
+              [(ngModel)]="reportData[field.field + '-' + field.filterType]"
+              [optionLabel]="field.label"
+              appendTo="body"
+              [showClear]="true"
+              [dropdownIcon]="'fa fa-caret-down'"
+              [autoDisplayFirst]="field.autoDisplayFirst ? true : false"
+              [filter]="field.showFilter ? true : false"
+              [filter]="true"
+              filterPlaceholder="Search..."
+            >
+            </p-dropdown>
+          </span>
+        </div>
+      </ng-container>
+    </div>
+    <div class="mt-3 text-center">
+      <div class="d-md-flex justify-content-center">
+        <div class="mt-2">
+          <button
+            pButton
+            pRipple
+            class="p-button-info goback-button me-2 p-button-raised"
+            (click)="generateReport(selectedReportConfig.reportType)"
+          >
+            Generate Report
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>

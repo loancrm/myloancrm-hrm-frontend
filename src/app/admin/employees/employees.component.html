@@ -1,0 +1,327 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">Employees</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../assets/images/menu/employees.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+<div class="container-fluid" *ngIf="!loading">
+  <div class="row">
+    <div class="d-flex flex-wrap justify-content-start">
+      <ng-container *ngFor="let item of countsAnalytics">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-12 mt-2">
+          <div class="card p-3 shadow-sm pointer-cursor m-2 cards">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex align-items-center">
+                <div>
+                  <div class="count-sub-title">
+                    {{ item.displayName }}
+                  </div>
+                  <div class="count-title">
+                    {{ item.count }}
+                  </div>
+                </div>
+              </div>
+              <div
+                class="cardicons"
+                [ngStyle]="{
+                  color: item.textcolor,
+                  'background-color': item.backgroundcolor
+                }"
+              >
+                <i class="fa fa-{{ item.name }}"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<div class="text-capitalize table-card" *ngIf="!loading">
+  <p-table
+    #employeesTable
+    [value]="employees"
+    [sortOrder]="1"
+    [sortField]="'joiningDate'"
+    [lazy]="true"
+    (onLazyLoad)="loadEmployees($event)"
+    dataKey="id"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[5, 10, 25, 50]"
+    [paginator]="true"
+    [rows]="10"
+    class="p-datatable-striped table"
+    [totalRecords]="totalEmployeesCount"
+    [loading]="apiLoading"
+    responsiveLayout="scroll"
+    scrollHeight="flex"
+    [globalFilterFields]="[
+      'referenceNo',
+      'customer.firstName',
+      'partner.partnerName',
+      'status'
+    ]"
+    styleClass="p-datatable-customers"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Employees"
+  >
+    <ng-template pTemplate="caption">
+      <div class="row">
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <div class="p-inputgroup">
+            <input
+              type="text"
+              pInputText
+              placeholder="Search with Employee Name"
+              [(ngModel)]="employeeNameToSearch"
+              (ngModelChange)="
+                inputValueChangeEvent('employeeId', employeeNameToSearch)
+              "
+              (keyup.enter)="filterWithEmployeeName()"
+            />
+            <button
+              type="button"
+              pButton
+              icon="pi pi-search"
+              class="p-button-primary"
+              [disabled]="!employeeNameToSearch"
+              (click)="filterWithEmployeeName()"
+            ></button>
+          </div>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <p-dropdown
+            styleClass="text-left"
+            [style]="{ width: '100%' }"
+            [options]="employeeInternalStatusList"
+            (onChange)="statusChange($event)"
+            appendTo="body"
+            [dropdownIcon]="'fa fa-caret-down'"
+            [(ngModel)]="selectedEmployeeStatus"
+            optionLabel="displayName"
+            dataKey="name"
+          >
+          </p-dropdown>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
+          <div class="d-flex">
+            <div class="flex-grow-1 me-2"></div>
+            <div class="d-flex align-items-center pointer-cursor">
+              <app-filter
+                [position]="'right'"
+                [iconColor]="'#33009C'"
+                [iconSize]="'28px!important'"
+                class="me-2"
+                (filterEvent)="applyConfigFilters($event)"
+                [filterConfig]="filterConfig"
+                [showFilterIndication]="appliedFilter"
+              >
+              </app-filter>
+              <button
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Add Employee"
+                tooltipPosition="top"
+                class="p-button-primary"
+                icon="fa fa-plus"
+                (click)="createEmployee()"
+              >
+                &nbsp;Add Employee
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th pSortableColumn="employeeId" class="text-nowrap">
+          Employee Id <p-sortIcon [field]="'employeeId'"></p-sortIcon>
+        </th>
+        <th pSortableColumn="employeeName" class="text-nowrap">
+          Name <p-sortIcon [field]="'employeeName'"></p-sortIcon>
+        </th>
+        <th pSortableColumn="designationName" class="text-nowrap">
+          Designation <p-sortIcon [field]="'designationName'"></p-sortIcon>
+        </th>
+        <th pSortableColumn="primaryPhone" class="text-nowrap">
+          Mobile <p-sortIcon [field]="'primaryPhone'"></p-sortIcon>
+        </th>
+        <th pSortableColumn="joiningDate" class="text-nowrap">
+          Joining Date <p-sortIcon [field]="'joiningDate'"></p-sortIcon>
+        </th>
+        <th pSortableColumn="ofcBranchName" class="text-nowrap">
+          Branch <p-sortIcon [field]="'ofcBranchName'"></p-sortIcon>
+        </th>
+        <th pSortableColumn="createdOn" class="text-nowrap">
+          Created Date <p-sortIcon [field]="'createdOn'"></p-sortIcon>
+        </th>
+        <th pSortableColumn="employeeInternalStatus" class="text-nowrap">
+          Status <p-sortIcon [field]="'employeeInternalStatus'"></p-sortIcon>
+        </th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-employee>
+      <tr>
+        <td>
+          <span class="table-column-data" *ngIf="employee.employeeId">{{
+            employee.employeeId
+          }}</span>
+        </td>
+        <td class="text-nowrap">
+          <div class="d-flex align-items-center">
+            <span class="me-2">
+              <ng-container
+                *ngIf="
+                  employee &&
+                    employee.passPhoto &&
+                    employee.passPhoto.length > 0;
+                  else defaultImage
+                "
+              >
+                <a [href]="'//' + employee.passPhoto[0]" target="_blank">
+                  <img
+                    [src]="'//' + employee.passPhoto[0]"
+                    alt="Image"
+                    class="employeeImage"
+                    style="height: 40px; width: 40px"
+                  />
+                </a>
+              </ng-container>
+              <ng-template #defaultImage>
+                <img
+                  src="../../../assets/images/profile/user.png"
+                  alt="Default Image"
+                  class="employeeImage"
+                  style="height: 40px; width: 40px"
+                />
+              </ng-template>
+            </span>
+            <b>
+              <span *ngIf="employee.employeeName" class="table-column-data">
+                {{ employee.employeeName | capitalizeFirst }}
+              </span>
+            </b>
+          </div>
+        </td>
+        <td class="text-nowrap">
+          <span
+            class="table-column-data"
+            *ngIf="employee.designationName; else noData"
+            >{{ employee.designationName }}</span
+          >
+        </td>
+        <td class="text-nowrap">
+          <span
+            class="table-column-data"
+            *ngIf="employee.primaryPhone; else noData"
+          >
+            <i class="fa fa-phone"></i> &nbsp;{{ employee.primaryPhone }}</span
+          >
+        </td>
+        <td class="text-nowrap">
+          <span
+            class="table-column-data"
+            *ngIf="employee.joiningDate; else noData"
+            >{{ employee.joiningDate | date : "mediumDate" }}</span
+          >
+        </td>
+        <td class="text-nowrap">
+          <span
+            class="table-column-data"
+            *ngIf="employee.ofcBranchName; else noData"
+            >{{ employee.ofcBranchName }}</span
+          >
+        </td>
+        <td class="text-nowrap">
+          <span
+            class="table-column-data"
+            *ngIf="employee.createdOn; else noData"
+            >{{ employee.createdOn | date : "mediumDate" }}</span
+          >
+        </td>
+        <td class="text-nowrap">
+          <span
+            class="table-column-data fw-bold statusdata"
+            *ngIf="employee.employeeInternalStatus; else noData"
+            [ngStyle]="{
+              color: getStatusColor(
+                getStatusName(employee.employeeInternalStatus)
+              ).textColor,
+              'background-color': getStatusColor(
+                getStatusName(employee.employeeInternalStatus)
+              ).backgroundColor
+            }"
+          >
+            {{ getStatusName(employee.employeeInternalStatus) }}
+          </span>
+        </td>
+        <td>
+          <div class="text-center">
+            <div class="d-flex">
+              <p-menu
+                appendTo="body"
+                #menu
+                [model]="actionItems(employee)"
+                [popup]="true"
+              ></p-menu>
+              <button
+                pButton
+                type="button"
+                class="custom-btn"
+                (click)="menu.toggle($event)"
+                icon="pi pi-ellipsis-h"
+              ></button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr class="text-center">
+        <td colspan="10" class="text-center fw-bold">
+          <img
+            src="../../../assets/images/menu/nodata.gif"
+            width="200"
+            height="200"
+          />
+          <p>No Employees Found</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<ng-template #noData> - </ng-template>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>

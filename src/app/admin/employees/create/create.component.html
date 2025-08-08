@@ -1,0 +1,681 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">{{
+              heading
+            }}</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../../assets/images/menu/createemployee.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+
+<div *ngIf="!loading">
+  <div class="bg-color custom-steps-card">
+    <!-- <p-steps
+      *ngIf="actionType === 'update'"
+      [model]="steps"
+      [(activeIndex)]="activeIndex"
+      [readonly]="false"
+      styleClass="custom-steps"
+    ></p-steps> -->
+    <div class="custom-steps" *ngIf="actionType === 'update'">
+      <div
+        class="step"
+        *ngFor="let step of steps; let i = index"
+        (click)="activeIndex = i"
+        [ngClass]="{ active: activeIndex === i }"
+      >
+        <span class="pi" [ngClass]="step.icon"></span>
+        <span class="p-steps-title">{{ step.label }}</span>
+        <div *ngIf="i < steps.length - 1" class="connector">
+          <i class="fa fa-angle-right"></i>
+        </div>
+      </div>
+    </div>
+    <form
+      class="login-form mt-3"
+      [formGroup]="employeeForm"
+      novalidate
+      (ngSubmit)="onSubmit(employeeForm.value)"
+    >
+      <div class="">
+        <div *ngIf="actionType === 'create' || activeIndex === 0">
+          <h3 class="cardheading">Employee Details</h3>
+          <div class="row mt-3" *ngIf="personalFields">
+            <div *ngFor="let field of personalFields" class="col-md-4 mt-2">
+              <div class="my-1">
+                <label
+                  >{{ field.label }}
+                  <sup *ngIf="field.required" class="text-danger">*</sup></label
+                >
+              </div>
+              <ng-container [ngSwitch]="field.type">
+                <input
+                  *ngSwitchCase="'text'"
+                  pInputText
+                  class="custom-input"
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  class="rounded-lg"
+                  [pattern]="field.pattern"
+                  [maxlength]="field.maxLength"
+                />
+                <input
+                  *ngSwitchCase="'number'"
+                  pInputText
+                  type="number"
+                  class="custom-input"
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  class="rounded-lg"
+                  [maxlength]="field.maxLength"
+                />
+                <input
+                  *ngSwitchCase="'email'"
+                  pInputText
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  type="email"
+                  class="rounded-lg"
+                />
+                <p-dropdown
+                  *ngSwitchCase="'dropdown'"
+                  [options]="this[field.options]"
+                  [formControlName]="field.controlName"
+                  [optionLabel]="field.optionLabel"
+                  [optionValue]="field.optionValue"
+                  [showClear]="true"
+                  appendTo="body"
+                  [placeholder]="'Select ' + field.label"
+                  [dropdownIcon]="'fa fa-caret-down'"
+                  styleClass="w-100"
+                ></p-dropdown>
+                <p-calendar
+                  *ngSwitchCase="'calendar'"
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Select ' + field.label"
+                  [showIcon]="true"
+                  appendTo="body"
+                  dateFormat="yy-mm-dd"
+                  [readonlyInput]="true"
+                  [showButtonBar]="true"
+                  styleClass="w-100"
+                ></p-calendar>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="activeIndex === 1">
+          <h3 class="cardheading">Employee Address</h3>
+          <div class="row mt-3" *ngIf="addressFields">
+            <div *ngFor="let field of addressFields" class="col-md-4 mt-2">
+              <div class="my-1">
+                <label
+                  >{{ field.label }}
+                  <sup *ngIf="field.required" class="text-danger">*</sup></label
+                >
+              </div>
+              <ng-container [ngSwitch]="field.type">
+                <input
+                  *ngSwitchCase="'text'"
+                  pInputText
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  class="rounded-lg"
+                  [pattern]="field.pattern"
+                  [maxlength]="field.maxLength"
+                />
+                <input
+                  *ngSwitchCase="'number'"
+                  pInputText
+                  type="number"
+                  class="custom-input"
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  class="rounded-lg"
+                  [pattern]="field.pattern"
+                  [maxlength]="field.maxLength"
+                />
+                <input
+                  *ngSwitchCase="'email'"
+                  pInputText
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  type="email"
+                  class="rounded-lg"
+                />
+                <p-dropdown
+                  *ngSwitchCase="'dropdown'"
+                  [options]="this[field.options]"
+                  [formControlName]="field.controlName"
+                  [optionLabel]="field.optionLabel"
+                  [optionValue]="field.optionValue"
+                  [showClear]="true"
+                  appendTo="body"
+                  [placeholder]="'Select ' + field.label"
+                  [dropdownIcon]="'fa fa-caret-down'"
+                  styleClass="w-100"
+                ></p-dropdown>
+                <p-calendar
+                  *ngSwitchCase="'calendar'"
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Select ' + field.label"
+                  [showIcon]="true"
+                  dateFormat="yy-mm-dd"
+                  appendTo="body"
+                  [readonlyInput]="true"
+                  [showButtonBar]="true"
+                ></p-calendar>
+                <textarea
+                  *ngSwitchCase="'textarea'"
+                  pInputTextarea
+                  class="rounded-lg"
+                  autocomplete="off"
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  [cols]="30"
+                  [autoResize]="true"
+                ></textarea>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="activeIndex === 2">
+          <h3 class="cardheading">Experience Details</h3>
+          <div class="row mt-3" *ngIf="experienceFields">
+            <div *ngFor="let field of experienceFields" class="col-md-4 mt-2">
+              <div class="my-1">
+                <label
+                  >{{ field.label }}
+                  <sup *ngIf="field.required" class="text-danger">*</sup></label
+                >
+              </div>
+              <ng-container [ngSwitch]="field.type">
+                <input
+                  *ngSwitchCase="'text'"
+                  pInputText
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  class="rounded-lg"
+                  [maxlength]="field.maxLength"
+                  [pattern]="field.pattern"
+                />
+                <input
+                  *ngSwitchCase="'number'"
+                  pInputText
+                  type="number"
+                  class="custom-input"
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  class="rounded-lg"
+                  [pattern]="field.pattern"
+                  [maxlength]="field.maxLength"
+                />
+              </ng-container>
+            </div>
+          </div>
+          <div>
+            <div class="my-1 text-start mt-4"></div>
+            <h3 class="cardheading">Education / Experience Documents</h3>
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-primary me-2"
+              (click)="addotherDocumentsRow()"
+            >
+              <i class="pi pi-plus"></i>&nbsp;Add Additional Documents
+            </button>
+            <div
+              class="row"
+              *ngFor="let attachments of otherDocuments; let i = index"
+            >
+              <div class="col-md-3 mt-2">
+                <div>
+                  <div class="my-1">
+                    <label>Document Name&nbsp; </label>
+                  </div>
+                  <input
+                    pInputText
+                    class="rounded-lg"
+                    [style]="{ width: '100%' }"
+                    type="text"
+                    placeholder="Enter Document Name"
+                    [ngModelOptions]="{ standalone: true }"
+                    [(ngModel)]="attachments['name']"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+              <div class="col-md-3 mt-2">
+                <div>
+                  <div class="my-1">
+                    <label style="color: #ffc107">Attachments</label>
+                  </div>
+                  <div class="d-flex">
+                    <button
+                      pButton
+                      pRipple
+                      icon="fa fa-cloud-arrow-up"
+                      type="button"
+                      class="me-2 rightbtn"
+                      (click)="uploadFiles('otherDocuments', '*/*', i)"
+                    >
+                      &nbsp;Upload Files
+                    </button>
+                    <button
+                      pButton
+                      pRipple
+                      type="button"
+                      class="p-button-danger row-delete ml-1"
+                      *ngIf="i > 0"
+                      (click)="deleteotherDocumentsRow(i)"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  *ngIf="
+                    employeeData &&
+                    employeeData.otherDocuments &&
+                    employeeData.otherDocuments[i] &&
+                    employeeData.otherDocuments[i].otherDocuments &&
+                    employeeData.otherDocuments[i].otherDocuments.length > 0
+                  "
+                  class="mt-2"
+                >
+                  <span
+                    *ngFor="
+                      let file of employeeData.otherDocuments[i].otherDocuments;
+                      let fileIndex = index
+                    "
+                    class="file-wrapper"
+                  >
+                    <a [href]="'//' + file" target="_blank" class="file-link">
+                      <i
+                        [class]="getFileIcon(file.split('.').pop())"
+                        class="file-icon me-2"
+                      ></i>
+                    </a>
+                    <button
+                      pButton
+                      *ngIf="capabilities.delete"
+                      type="button"
+                      class="delete-btn p-button-danger p-button-sm"
+                      (click)="
+                        confirmDelete(file, 'otherDocuments', i, fileIndex)
+                      "
+                    >
+                      <i class="pi pi-times"></i>
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="activeIndex === 3">
+          <h3 class="cardheading">KYC's Details</h3>
+          <div class="row mt-3" *ngIf="kycFields">
+            <div *ngFor="let field of kycFields" class="col-md-4 mt-2">
+              <div class="my-1">
+                <label
+                  >{{ field.label }}
+                  <sup *ngIf="field.required" class="text-danger">*</sup></label
+                >
+              </div>
+              <ng-container [ngSwitch]="field.type">
+                <input
+                  *ngSwitchCase="'text'"
+                  pInputText
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  class="rounded-lg"
+                  [maxlength]="field.maxLength"
+                  [pattern]="field.pattern"
+                />
+                <input
+                  *ngSwitchCase="'number'"
+                  pInputText
+                  type="number"
+                  class="custom-input"
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  class="rounded-lg"
+                  [maxlength]="field.maxLength"
+                />
+                <ng-container *ngSwitchCase="'file'">
+                  <div *ngIf="field.controlName === 'passPhoto'">
+                    <button
+                      *ngIf="
+                        !employeeData.passPhoto ||
+                        employeeData.passPhoto.length === 0
+                      "
+                      pButton
+                      type="button"
+                      icon="fa fa-cloud-arrow-up"
+                      class="rightbtn me-2"
+                      (click)="
+                        uploadFiles(field.controlName, field.acceptedFileTypes)
+                      "
+                    >
+                      &nbsp;Upload {{ field.label }}
+                    </button>
+                    <div
+                      *ngIf="
+                        employeeData &&
+                        employeeData.passPhoto &&
+                        employeeData.passPhoto.length > 0
+                      "
+                      class="mt-2 file-wrapper"
+                    >
+                      <a
+                        [href]="'//' + employeeData.passPhoto[0]"
+                        target="_blank"
+                      >
+                        <img
+                          [src]="'//' + employeeData.passPhoto[0]"
+                          alt="Profile"
+                          class="profileimg mb-3"
+                          style="width: 200px; height: 190px"
+                        />
+                      </a>
+                      <button
+                        pButton
+                        *ngIf="capabilities.delete"
+                        type="button"
+                        class="delete-btn p-button-danger p-button-sm ml-2"
+                        (click)="
+                          confirmDelete(
+                            employeeData.passPhoto[0],
+                            field.controlName
+                          )
+                        "
+                      >
+                        <i class="pi pi-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <ng-container *ngIf="field.controlName !== 'passPhoto'">
+                    <button
+                      pButton
+                      type="button"
+                      icon="fa fa-cloud-arrow-up"
+                      class="rightbtn me-2"
+                      (click)="
+                        uploadFiles(field.controlName, field.acceptedFileTypes)
+                      "
+                    >
+                      &nbsp;Upload {{ field.label }}
+                    </button>
+                    <div
+                      *ngIf="
+                        employeeData &&
+                        employeeData[field.controlName] &&
+                        employeeData[field.controlName].length > 0
+                      "
+                      class="mt-2"
+                    >
+                      <span
+                        *ngFor="let file of employeeData[field.controlName]"
+                        class="file-wrapper"
+                      >
+                        <a
+                          [href]="'//' + file"
+                          target="_blank"
+                          class="file-link"
+                        >
+                          <i
+                            [ngClass]="getFileIcon(file.split('.').pop())"
+                            class="file-icon me-2"
+                          ></i>
+                        </a>
+                        <button
+                          pButton
+                          *ngIf="capabilities.delete"
+                          type="button"
+                          class="delete-btn p-button-danger p-button-sm"
+                          (click)="confirmDelete(file, field.controlName)"
+                        >
+                          <i class="pi pi-times"></i>
+                        </button>
+                      </span>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="activeIndex === 4">
+          <h3 class="cardheading">Salary Account Details</h3>
+          <div class="row mt-3" *ngIf="salaryAccountFields">
+            <div
+              *ngFor="let field of salaryAccountFields"
+              class="col-md-4 mt-2"
+            >
+              <div class="my-1">
+                <label
+                  >{{ field.label }}
+                  <sup *ngIf="field.required" class="text-danger">*</sup></label
+                >
+              </div>
+              <ng-container [ngSwitch]="field.type">
+                <input
+                  *ngSwitchCase="'text'"
+                  pInputText
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  class="rounded-lg"
+                  [pattern]="field.pattern"
+                  [maxlength]="field.maxLength"
+                />
+                <input
+                  *ngSwitchCase="'number'"
+                  pInputText
+                  type="number"
+                  class="custom-input"
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  class="rounded-lg"
+                  [maxlength]="field.maxLength"
+                />
+                <input
+                  *ngSwitchCase="'email'"
+                  pInputText
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  type="email"
+                  class="rounded-lg"
+                />
+                <p-dropdown
+                  *ngSwitchCase="'dropdown'"
+                  [options]="this[field.options]"
+                  [formControlName]="field.controlName"
+                  [optionLabel]="field.optionLabel"
+                  [optionValue]="field.optionValue"
+                  [showClear]="true"
+                  appendTo="body"
+                  [placeholder]="'Select ' + field.label"
+                  [dropdownIcon]="'fa fa-caret-down'"
+                  styleClass="w-100"
+                ></p-dropdown>
+                <p-calendar
+                  *ngSwitchCase="'calendar'"
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Select ' + field.label"
+                  [showIcon]="true"
+                  dateFormat="yy-mm-dd"
+                  appendTo="body"
+                  [readonlyInput]="true"
+                  [showButtonBar]="true"
+                ></p-calendar>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="activeIndex === 5">
+          <h3 class="cardheading">Other Details</h3>
+          <div class="row mt-3" *ngIf="otherFields">
+            <div *ngFor="let field of otherFields" class="col-md-4 mt-2">
+              <div class="my-1">
+                <label
+                  >{{ field.label }}
+                  <sup *ngIf="field.required" class="text-danger">*</sup></label
+                >
+              </div>
+              <ng-container [ngSwitch]="field.type">
+                <input
+                  *ngSwitchCase="'text'"
+                  pInputText
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  class="rounded-lg"
+                  [maxlength]="field.maxLength"
+                  [pattern]="field.pattern"
+                />
+                <input
+                  *ngSwitchCase="'number'"
+                  pInputText
+                  type="number"
+                  class="custom-input"
+                  [formControlName]="field.controlName"
+                  [placeholder]="'Enter ' + field.label"
+                  class="rounded-lg"
+                  [maxlength]="field.maxLength"
+                />
+                <ng-container *ngSwitchCase="'file'">
+                  <ng-container>
+                    <button
+                      pButton
+                      type="button"
+                      icon="fa fa-cloud-arrow-up"
+                      class="rightbtn me-2"
+                      (click)="
+                        uploadFiles(field.controlName, field.acceptedFileTypes)
+                      "
+                    >
+                      &nbsp;Upload {{ field.label }}
+                    </button>
+                    <div
+                      *ngIf="
+                        employeeData &&
+                        employeeData[field.controlName] &&
+                        employeeData[field.controlName].length > 0
+                      "
+                      class="mt-2"
+                    >
+                      <span
+                        *ngFor="let file of employeeData[field.controlName]"
+                        class="file-wrapper"
+                      >
+                        <a
+                          [href]="'//' + file"
+                          target="_blank"
+                          class="file-link"
+                        >
+                          <i
+                            [ngClass]="getFileIcon(file.split('.').pop())"
+                            class="file-icon me-2"
+                          ></i>
+                        </a>
+                        <button
+                          pButton
+                          *ngIf="capabilities.delete"
+                          type="button"
+                          class="delete-btn p-button-danger p-button-sm"
+                          (click)="confirmDelete(file, field.controlName)"
+                        >
+                          <i class="pi pi-times"></i>
+                        </button>
+                      </span>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div
+          class="d-flex justify-content-end mt-3"
+          *ngIf="actionType === 'update'"
+        >
+          <button
+            pButton
+            pRipple
+            type="button"
+            label="Previous"
+            class="me-2 rightbtn"
+            (click)="activeIndex = activeIndex - 1"
+            [disabled]="activeIndex === 0"
+            iconPos="left"
+            icon="pi pi-angle-left"
+          ></button>
+          <button
+            pButton
+            pRipple
+            type="button"
+            label="Next"
+            class="rightbtn"
+            (click)="activeIndex = activeIndex + 1"
+            *ngIf="activeIndex < steps.length - 1"
+            iconPos="right"
+            icon="pi pi-angle-right"
+          ></button>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mt-3 mb-5">
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="p-button-info goback-button p-button-raised me-3"
+          (click)="goBack()"
+        >
+          Go Back
+        </button>
+        <button
+          pButton
+          pRipple
+          type="submit"
+          [disabled]="!employeeForm.valid"
+          class="p-button-primary p-button-raised"
+        >
+          {{ actionType === "create" ? "Add" : "Update" }} Employee
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>

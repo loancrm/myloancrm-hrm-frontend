@@ -1,0 +1,92 @@
+.button-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.indication-dot {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 10px;
+  height: 10px;
+  background-color: #ff4f8b;
+  border-radius: 50%;
+}
+
+.pi-filter-fill {
+  font-size: 15px !important;
+}
+
+.p-button-primary {
+  background-color: #1e4079 !important;
+  border-color: #1e4070 !important;
+  color: #fff !important;
+  font-weight: 100 !important;
+  border-radius: 3px !important;
+}
+
+.btn-heading {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  letter-spacing: 1px;
+}
+
+.main-heading {
+  font-size: 18px !important;
+  letter-spacing: 1px;
+  display: flex;
+  justify-content: center;
+}
+.filter-sidebar label {
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  margin-bottom: 0 !important;
+}
+
+.p-inputtext {
+  color: #333;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.p-inputtext:hover {
+  border: 1px solid #33009c !important;
+}
+.p-inputtext:focus {
+  border: 1px solid #33009c !important;
+  box-shadow: 0 0 5px #9b8db5 !important;
+  outline: none;
+}
+
+.p-inputtext::placeholder {
+  color: #888;
+}
+
+.p-button-text {
+  font-weight: bold;
+  font-size: 15px;
+  border: 2px solid #33009c;
+}
+
+.p-button-text:enabled:hover {
+  border: 2px solid #33009c;
+}
+
+.p-button.p-button-secondary {
+  color: #ffffff;
+  background: #ff4081;
+  border: 1px solid #ff4081;
+}
+
+.p-button.p-button-secondary:hover {
+  color: #ffffff;
+  background: #ff4081;
+  border: 1px solid #ff4081;
+}
+
+.p-button.p-button-secondary:enabled:focus,
+.p-buttonset.p-button-secondary > .p-button:enabled:focus,
+.p-splitbutton.p-button-secondary > .p-button:enabled:focus {
+  box-shadow: 0 0 0 0.2rem #f7a4bf;
+}

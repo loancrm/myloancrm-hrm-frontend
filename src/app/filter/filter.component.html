@@ -1,0 +1,130 @@
+<div class="filter-sidebar text-start">
+  <p-sidebar [(visible)]="sidebarVisible" position="{{ position }}">
+    <div>
+      <div>
+        <span class="fw-bold main-heading">Filters</span>
+      </div>
+      <div class="d-flex justify-content-between mt-3">
+        <div>
+          <button
+            pButton
+            pRipple
+            label="Reset"
+            icon="pi pi-refresh"
+            class="p-button-raised p-button-secondary mr-2"
+            (click)="resetFilters()"
+          ></button>
+        </div>
+        <div>
+          <button
+            pButton
+            class="p-button-raised p-button-primary font-weight-bold"
+            pRipple
+            label="Apply"
+            icon="pi pi-check"
+            (click)="applyFilters()"
+          ></button>
+        </div>
+      </div>
+      <div class="mt-3" *ngFor="let tab of filterConfig; let i = index">
+        <div>
+          <p-accordion [activeIndex]="expandedAccordions[i] ? i : -1">
+            <p-accordionTab [header]="tab.header">
+              <span *ngFor="let field of tab.data; let i = index">
+                <label [htmlFor]="field.field">{{ field.title }}</label>
+                <input
+                  pInputText
+                  [id]="field.field"
+                  [placeholder]="'Enter ' + field.title"
+                  autocomplete="off"
+                  [(ngModel)]="filter[field.field + '-' + field.filterType]"
+                  *ngIf="field && field.type == 'text'"
+                  [style]="{
+                    width: field.fieldWidth ? field.fieldWidth : '100%'
+                  }"
+                />
+                <span *ngIf="field && field.type == 'date'">
+                  <p-calendar
+                    [placeholder]="'Select ' + field.title"
+                    appendTo="body"
+                    [style]="{
+                      width: field.fieldWidth ? field.fieldWidth : '100%'
+                    }"
+                    dateFormat="yy-mm-dd"
+                    [(ngModel)]="filter[field.field + '-' + field.filterType]"
+                    [showButtonBar]="true"
+                    [readonlyInput]="true"
+                  ></p-calendar>
+                </span>
+                <span *ngIf="field && field.type == 'dropdown'">
+                  <p-dropdown
+                    styleClass="text-left"
+                    [style]="{
+                      width: field.fieldWidth ? field.fieldWidth : '100%'
+                    }"
+                    [placeholder]="'Select ' + field.title"
+                    [options]="field.options"
+                    [optionValue]="field.value"
+                    [(ngModel)]="filter[field.field + '-' + field.filterType]"
+                    [optionLabel]="field.label"
+                    appendTo="body"
+                    [showClear]="true"
+                    [dropdownIcon]="'fa fa-caret-down'"
+                    [autoDisplayFirst]="false"
+                  >
+                  </p-dropdown>
+                </span>
+                <span *ngIf="field && field.type == 'month'">
+                  <p-calendar
+                    [(ngModel)]="filter[field.field + '-' + field.filterType]"
+                    [showIcon]="true"
+                    view="month"
+                    [monthNavigator]="true"
+                    [yearNavigator]="true"
+                    [yearRange]="'-10:+10'"
+                    [style]="{
+                      width: field.fieldWidth ? field.fieldWidth : '100%'
+                    }"
+                    dateFormat="yy-mm"
+                    appendTo="body"
+                    [showButtonBar]="true"
+                    [readonlyInput]="true"
+                    [placeholder]="'Select ' + field.title"
+                  ></p-calendar>
+                </span>
+                <span *ngIf="field && field.type == 'multiselect'">
+                  <p-multiSelect
+                    [placeholder]="'Select ' + field.title"
+                    styleClass="text-left"
+                    [style]="{
+                      width: field.fieldWidth ? field.fieldWidth : '100%'
+                    }"
+                    [(ngModel)]="filter[field.field + '-' + field.filterType]"
+                    [dropdownIcon]="'fa fa-caret-down'"
+                    [options]="field.options"
+                    appendTo="body"
+                    [optionValue]="field.value"
+                    [optionLabel]="field.label"
+                  ></p-multiSelect>
+                </span>
+              </span>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+      </div>
+    </div>
+  </p-sidebar>
+  <div class="button-wrapper position-relative">
+    <button
+      pButton
+      pRipple
+      iconPos="right"
+      (click)="sidebarVisible = true"
+      icon="fa fa-filter"
+      [style]="{ color: iconColor, fontSize: iconSize }"
+      label="Filters"
+      class="p-button-text"
+    ></button>
+    <span class="indication-dot" *ngIf="showIndicationIcon"></span>
+  </div>
+</div>

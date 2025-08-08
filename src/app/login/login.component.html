@@ -1,0 +1,129 @@
+<div class="container-fluid">
+  <div class="row align-items-center">
+    <div class="col-md-6 p-0">
+      <div class="text-left d-flex align-items-center logo-container">
+        <img src="../../assets/images/logo.png" alt="Logo" class="logo" />
+        <b class="logo-left"> The <span class="logo-right">Fintalk</span> </b>
+      </div>
+      <div
+        class="background-img d-flex justify-content-center align-items-center carouselimg"
+      >
+        <div class="text-center my-3 login-page-carousal">
+          <p-carousel
+            [value]="carousalImages"
+            [showNavigators]="false"
+            styleClass="custom-carousel"
+            [numVisible]="1"
+            [numScroll]="1"
+            [circular]="true"
+            [autoplayInterval]="4000"
+            [showIndicators]="true"
+          >
+            <ng-template let-image pTemplate="item">
+              <div class="carousal-item">
+                <div class="carousal-item-content">
+                  <div>
+                    <h4 class="p-mb-1">
+                      <img
+                        class="img-fluid shadow-image rounded-3"
+                        src="{{ image.url }}"
+                      />
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </p-carousel>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-5 text-capitalize">
+      <div class="signinform">
+        <div class="px-4 py-5 px-md-5">
+          <div class="card-logo">
+            <div class="d-flex">
+              <div class="d-flex align-items-center" style="font-size: 25px">
+                <!-- <span class="fw-bold" style="color: #1e4079">Sign In</span> -->
+                <span class="fw-bold" style="color: #1e4079"
+                  >Sign In As {{ userType }}</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="text-large text-left fw-bolder mb-3">
+            <b>
+              <span class="text-capitalize" style="font-size: 20px"
+                >Hi, Welcome to
+                <span class="fw-bold" style="color: #1e4079"
+                  >The <strong style="color: #51c297">Fintalk!</strong></span
+                >👋</span
+              >
+            </b>
+          </div>
+          <form
+            class="login-form"
+            [formGroup]="loginForm"
+            novalidate
+            (ngSubmit)="onSubmit(loginForm.value)"
+          >
+            <div data-mdb-input-init class="form-outline mb-4">
+              <label class="form-label" for="form3Example3">Username</label>
+              <input
+                pInputText
+                class="rounded-lg w-100"
+                type="text"
+                id="username"
+                formControlName="username"
+                placeholder="Username"
+                autocomplete="off"
+              />
+            </div>
+            <div data-mdb-input-init class="form-outline mb-4">
+              <label class="form-label" for="form3Example4">Password</label>
+              <div class="p-inputgroup">
+                <input
+                  pInputText
+                  class="rounded-lg w-100"
+                  [type]="isPasswordVisible ? 'text' : 'password'"
+                  id="password"
+                  placeholder="Enter Password"
+                  formControlName="encryptedPassword"
+                  autocomplete="off"
+                />
+                <span
+                  class="p-inputgroup-addon"
+                  (click)="togglePasswordVisibility()"
+                >
+                  <i
+                    class="fa custom-icon"
+                    [ngClass]="isPasswordVisible ? 'fa-eye-slash' : 'fa-eye'"
+                  ></i>
+                </span>
+              </div>
+            </div>
+            <div class="login-container">
+              <div class="form-label">
+                Login As {{ userType === "user" ? "employee" : "user" }} ?
+                <span class="toggle-link" (click)="toggleUserType()"
+                  >Click Here!</span
+                >
+              </div>
+            </div>
+            <button
+              pButton
+              pRipple
+              style="width: 100%"
+              type="submit"
+              class="p-button-primary center-button text-capitalize"
+              [disabled]="!loginForm.valid || clicked"
+              (click)="onSignIn()"
+            >
+              <!-- Sign In -->
+              Sign In as {{ userType }}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

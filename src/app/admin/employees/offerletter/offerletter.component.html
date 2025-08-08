@@ -1,0 +1,909 @@
+<div class="container-fluid mt-2" *ngIf="employees">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">{{
+              employees.employeeName | capitalizeFirst
+            }}</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../../assets/images/menu/offerletter.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+<div class="card-container">
+  <div class="card offerletter-card" *ngIf="employees">
+    <div id="content" class="card-body">
+      <div class="page">
+        <div class="header">
+          <img
+            src="../../assets/images/pdf/winway icon.png"
+            alt="Company Logo"
+            width="200"
+            height="100"
+          />
+        </div>
+        <div class="offerletter-title">Offer Letter</div>
+        <div class="offerletter-date">
+          Date :
+          {{ getOfferLetterDate(employees.joiningDate) | date : "dd-MM-yyyy" }}
+        </div>
+        <div class="fromdetails text-capitalize">
+          <p>To,</p>
+          <b>
+            <p>{{ employees.employeeName | capitalizeFirst }},</p></b
+          >
+          <p>{{ employees.city | capitalizeFirst }},</p>
+          <p>{{ employees.district | capitalizeFirst }},</p>
+          <p>{{ employees.state | capitalizeFirst }}.</p>
+        </div>
+        <div class="subject text-capitalize">
+          Dear <b>{{ employees.employeeName | capitalizeFirst }},</b>
+        </div>
+        <div>
+          <p class="para firstpara indented-paragraph">
+            This is a reference to your application and subsequent interview you
+            had with us; we are pleased to offer you a position in our
+            company,<b> Winway Creators India Pvt. Ltd.</b>, subjected to the
+            following employment terms and conditions.
+          </p>
+          <div class="details text-capitalize">
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Designation <b>:&nbsp;</b>
+              </div>
+              <div class="value">
+                {{ getDesignationName(employees.designation) }}
+              </div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Date of Joining <b>:&nbsp;</b>
+              </div>
+              <div class="value">
+                {{ employees.joiningDate | date : "dd-MM-yyyy" }}
+              </div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Salary<b>:&nbsp;</b>
+              </div>
+              <div class="value">{{ roundToLPA(employees.salary * 12) }}</div>
+            </div>
+          </div>
+          <p class="para firstpara indented-paragraph">
+            Any kind of damage caused by you to the company assests you will be
+            responsible for it and the amount will be deducted from your salary.
+          </p>
+          <p class="para indented-paragraph">
+            Please carry the below mentioned documents on the date of your
+            joining and submit the same to the Company Human Resource Manager
+          </p>
+        </div>
+        <div class="para">
+          <b
+            ><p>List of documents required to submit on the day of joining.</p>
+            <p>Also share the soft copies to hr&#64;winwaycreators.com</p></b
+          >
+        </div>
+        <ol class="para">
+          <li>&nbsp;&nbsp; Pan card Xerox Copy</li>
+          <li>&nbsp;&nbsp; Aadhaar card Xerox copy</li>
+          <li>&nbsp;&nbsp; 3 Passport Size photos</li>
+          <li>
+            &nbsp;&nbsp; Qualification certificates Xerox copies(SSC,
+            Intermediate, Graduate and Post Graduate)
+          </li>
+        </ol>
+        <div class="para">
+          IF ANY EXPERIENCE
+          <li class="mt-3">
+            Relieving letter & latest month pay slips of previous job previous
+            job manager name & number
+          </li>
+        </div>
+        <p class="para mt-2">
+          We are happy to welcome you to Winway Creators India Pvt Ltd.
+        </p>
+      </div>
+      <div class="page">
+        <div class="policyheading">
+          Winway Creators India Private Limited Policies
+        </div>
+        <div>
+          <p class="para indented-paragraph">
+            This is to acknowledge all the staff members of Winway Creators.
+            Private Limited, to hereby abide by the below-mentioned Rules, Terms
+            and Conditions of the company.
+          </p>
+        </div>
+
+        <ol>
+          <li class="policysubHeading">&nbsp;&nbsp;Probation:</li>
+          <ul>
+            <li>
+              <p class="para">
+                You will be under a probation period of three months from the
+                date of joining. Winway Creators India Pvt Ltd will monitor your
+                daily activities. After the successful completion of probation
+                Period, you will be considered a regular employee of Winway.
+                Creators India Pvt. Ltd.
+              </p>
+            </li>
+          </ul>
+          <li class="policysubHeading">&nbsp;&nbsp;Timings:</li>
+          <ul>
+            <li>
+              <p class="para">
+                The office operates from 10:00 a.m. to 6.30 p.m. (Subject to:
+                every day, the team should contribute efficiently; else you are
+                bound to continue your work for half an hour additionally).
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                All the staff members should settle down and start their work by
+                10:05am, who ever are reaching office post 10:05am, 3 late
+                Comings will be marked as 1 LOP (check-in timings should be
+                relevant to biometrics.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                No staff members are allowed to have their breakfast after
+                reaching office. You can have your breakfast at the office if
+                You’re able to come back to your respective workstations by
+                10.00 am sharp.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Lunch Hour starts from 1:30 pm till 2:10 pm, and every staff
+                member should and must settle down in their workstation sharp by
+                the said time.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Since Winway is operating at two branches (Begumpet, Hyderabad &
+                Punjagutta, Hyderabad) Candidates are bound to work in branch,
+                other than their respective working branch, as per the
+                management decision, which will be temporary or permanent due to
+                Unavoidable business operation conditions.
+              </p>
+            </li>
+          </ul>
+          <li class="policysubHeading">&nbsp;&nbsp;Leaves and Permissions:</li>
+          <ul>
+            <li>
+              <p class="para">
+                Candidate is not entitled to any kind of leave for the first 3
+                months from their date of joining. If management feels their
+                Their presence in the office seems very irregular in their first
+                3 months of service, they will take matters into their hands and
+                terminate the candidate, and he/she is not entitled to any kind
+                of salary or incentives.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                All the staff members should and must take permission from the
+                HR about their leaves and permissions before any staff member
+                who is informing about their permissions and leaves in the
+                morning hours, they are entitled to face one and a half days LOP
+                for Leave and Half-Day LOP for Permissions.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                If candidates have to take long leave, i.e., leave for more than
+                1 day, he/she has to take permission from the HR through mail.
+                communication only. If mail has not been sent about their
+                leaves, candidate has to face 2 day LOP for single day leave.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Casual leaves are allowed to candidates, to only those who have
+                completed 3 months in their assigned job role. If any candidate
+                who is not eligible for casual leaves will have to face 1 day
+                LOP.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Staff members who are eligible for casual leaves will be
+                assigned 1 casual leave per month, which should be utilized in
+                The same month. Casual leaves will not be carried forward or can
+                not be encased.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                No candidate is allowed to take leave before day and after day.
+                of the company declared holiday or any festival or any public
+                holiday. Candidate is entitled to face the LOP's decided by the
+                management, if he/she has not followed the above rule.
+              </p>
+            </li>
+          </ul>
+        </ol>
+      </div>
+      <div class="page thirdpage">
+        <ol start="4">
+          <li class="policysubHeading">&nbsp;&nbsp;Discipline:</li>
+          <ul>
+            <li>
+              <p class="para">
+                No staff members are allowed to roam around office premises or
+                chatting with fellow workers during working hours. Discipline
+                and obedience to the company’s management is  Using your
+                Personal mobile phones and using office phones for personal use
+                is strictly not allowed; if found, the instrument will be
+                confiscated, and the candidate will be terminated on the
+                disciplinary grounds, and he/she will not be entitled to any
+                Kind of salary and incentive.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Any damage caused to the office equipment will be recovered.
+                from the responsible staff member’s salary.
+              </p>
+            </li>
+
+            <li>
+              <p class="para">
+                The candidate should not bring his/her personal issues to the
+                office. and should not willingly involve office staff into their
+                personal matters. If found so, candidate will be terminated.
+                immediately, and he/she will not be entitled to any kind of
+                salary or incentive.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                If any candidate is found communicating office matters and
+                office data to anyone outside the office, he/she will have to
+                face legal proceedings and will be terminated immediately and
+                will not be entitled to any kind of salary or incentive.
+              </p>
+            </li>
+          </ul>
+          <li class="policysubHeading">&nbsp;&nbsp;Salary:</li>
+          <ul>
+            <li>
+              <p class="para">
+                The company will process the salaries on the 10th of every month
+                for all The staff members.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Salary hikes will be decided by the management as and when it is
+                seemed required by the management.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                If any candidate claims that he/she has experience and the The
+                salary offered or demanded is based on their previous
+                employment. package and experience, should and must prove their
+                experience in their role at the company. By failing to do so,
+                management will have the right to reduce their salary package
+                from the salary offered at the time of joining as and how much
+                it is felt appropriate.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                The candidate is entitled to the salary and incentives only if
+                He/she has worked in the company for a whole month, I.e., 31
+                days. The company will not encourage DAILY WAGES. Any candidate
+                who resign or gets terminated from their services before 31 days
+                from the date of their joining will not be entitled to any
+                salary and Incentives for the duration they worked in the
+                company.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Your increments/promotions and demotions will depend at the sole
+                discretion of the management depending upon your efficiency,
+                intelligence, regular attendance, sense of discipline, loyalty
+                and good behavior and also subject to the prosperity of the
+                organization.
+              </p>
+            </li>
+          </ul>
+          <li class="policysubHeading">&nbsp;&nbsp;Resignation policy:</li>
+          <ul>
+            <li>
+              <p class="para">
+                Candidate should intimate the human resources manager before 1
+                month before the date of the resignation. Full and final
+                Settlement will be processed, if applicable, only after 45 days.
+                from the date of the resignation submitted to the Human Resource
+                Manager.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Post Resignation, Full and final settlement will be processed to
+                the candidate only if there are a good number of files for
+                login. and based on the business output of that particular
+                month. Also, candidate needs to be regular during that
+                particular month or during the period observed as the notice
+                period.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Any candidate who has absconded from the company or who has not
+                submitted or intimated about their resignation, according to the
+                company policy, he/she will not be entitled to any kind of
+                salary or incentive.
+              </p>
+            </li>
+          </ul>
+        </ol>
+      </div>
+      <div class="page fourthpage">
+        <ol start="7">
+          <li class="policysubHeading">&nbsp;&nbsp;Termination Policy</li>
+          <ul>
+            <li>
+              <p class="para">
+                If any candidate’s performance seems unsatisfactory to their
+                assigned roles, or if the candidate presence in the office seems
+                irregular, or if any of the above policies (Para 2 to 6) has not
+                been followed by the candidate, he/she will be terminated.
+                immediately and will not be entitled for any kind of salary or
+                Incentive.
+              </p>
+            </li>
+          </ul>
+          <li class="policysubHeading">&nbsp;&nbsp;Declaration</li>
+          <ul>
+            <li>
+              <p class="para">
+                I have read and understood the above-mentioned terms and
+                conditions and accept the terms and conditions of employment.
+                agreement with Winway Creators India Pvt. Ltd.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Please signify your acceptance of the above terms and
+                conditions. of this offer by signing the duplicate copy of this
+                letter.
+              </p>
+            </li>
+          </ul>
+        </ol>
+        <div>
+          <p class="para indented-paragraph">
+            The company policies are designed and implemented by the management.
+            to treat all the candidates equally without any difference and to
+            run the business operations smoothly. Hence it is applicable to all
+            the candidates who had acknowledged the above policies. For any
+            details Please contact our Human Resource Team at
+            hr&#64;winwaycreators.com.
+          </p>
+        </div>
+        <div class="regards">
+          <div>
+            <br />
+            <br />
+            <b> Regards,</b>
+          </div>
+          <div class="text-capitalize">
+            <b>{{ employees.createdBy | capitalizeFirst }} </b>
+          </div>
+          <div>(HR Executive)</div>
+          <div>Mobile: +91 9030227331</div>
+          <div><b>WINWAY CREATORS INDIA PRIVATE LIMITED</b></div>
+          <div>#506, 5th Floor,</div>
+          <div>MGR Estates, Dwarakapuri Colony,</div>
+          <div>Punjagutta, Hyderabad- 82</div>
+          <div>www.winwaycreators.com</div>
+        </div>
+      </div>
+    </div>
+    <hr class="separator" />
+    <div class="btn-container">
+      <button
+        pButton
+        type="button"
+        (click)="generatePDF()"
+        label="Download Offer Letter"
+        icon="fa fa-download"
+        [disabled]="loading"
+        class="download-btn"
+      ></button>
+    </div>
+  </div>
+</div>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>
+
+<!--
+//OLD CODE
+<div class="container-fluid mt-2" *ngIf="employees">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">{{
+              employees.employeeName | capitalizeFirst
+            }}</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../../assets/images/menu/offerletter.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+<div class="card-container">
+  <div class="card offerletter-card" *ngIf="employees">
+    <div #pdfContent>
+      <div class="page">
+        <div class="header">
+          <img
+            src="../../assets/images/pdf/winway icon.png"
+            alt="Company Logo"
+            width="270"
+            height="150"
+          />
+        </div>
+        <div class="offerletter-title">Offer Letter</div>
+        <div class="offerletter-date">
+          Date : {{ getOfferLetterDate(employees.joiningDate) |  date : "dd-MM-yyyy" }}
+        </div>
+        <div class="fromdetails text-capitalize">
+          <p>To,</p>
+          <b>
+            <p>{{ employees.employeeName | capitalizeFirst }},</p></b
+          >
+          <p>{{ employees.city | capitalizeFirst }},</p>
+          <p>{{ employees.district | capitalizeFirst }},</p>
+          <p>{{ employees.state | capitalizeFirst }}.</p>
+        </div>
+        <div class="subject text-capitalize">
+          Dear <b>{{ employees.employeeName | capitalizeFirst }},</b>
+        </div>
+        <div>
+          <p class="para firstpara indented-paragraph">
+            This is a reference to your application and subsequent interview you
+            had with us; we are pleased to offer you a position in our
+            company,<b> Winway Creators India Pvt. Ltd.</b>, subjected to the
+            following employment terms and conditions.
+          </p>
+          <div class="details text-capitalize">
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Designation <b>:&nbsp;</b>
+              </div>
+              <div class="value">
+                {{ getDesignationName(employees.designation) }}
+              </div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Date of Joining <b>:&nbsp;</b>
+              </div>
+              <div class="value">{{ employees.joiningDate | date: "dd-MM-yyyy" }}</div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Salary<b>:&nbsp;</b>
+              </div>
+              <div class="value">{{ roundToLPA(employees.salary * 12) }}</div>
+            </div>
+          </div>
+          <p class="para firstpara indented-paragraph">
+            Any kind of damage caused by you to the company assests you will be
+            responsible for it and the amount will be deducted from your salary.
+          </p>
+          <p class="para indented-paragraph">
+            Please carry the below mentioned documents on the date of your
+            joining and submit the same to the Company Human Resource Manager
+          </p>
+        </div>
+        <div class="para">
+          <b
+            ><p>List of documents required to submit on the day of joining.</p>
+            <p>Also share the soft copies to hr&#64;winwaycreators.com</p></b
+          >
+        </div>
+        <ol class="para">
+          <li>&nbsp;&nbsp; Pan card Xerox Copy</li>
+          <li>&nbsp;&nbsp; Aadhar card Xerox copy</li>
+          <li>&nbsp;&nbsp; 3 Passport Size photos</li>
+          <li>
+            &nbsp;&nbsp; Qualification certificates Xerox copies(SSC,
+            Intermediate, Graduate and Post Graduate)
+          </li>
+        </ol>
+        <div class="para">
+          IF ANY EXPERIENCE
+          <li class="mt-3">
+            Relieving letter & latest month pay slips of previous job previous
+            job manager name & number
+          </li>
+        </div>
+        <p class="para mt-5">
+          We are happy to welcome you to Winway Creators India Pvt Ltd.
+        </p>
+      </div>
+      <div class="page">
+        <div class="policyheading">
+          Winway Creators India Private Limited Policies
+        </div>
+        <div>
+          <p class="para indented-paragraph">
+            This is to acknowledge all the staff members of Winway Creators.
+            Private Limited, to hereby abide by the below-mentioned Rules, Terms
+            and Conditions of the company.
+          </p>
+        </div>
+
+        <ol>
+          <li class="policysubHeading">&nbsp;&nbsp;Probation:</li>
+          <ul>
+            <li>
+              <p class="para">
+                You will be under a probation period of three months from the
+                date of joining. Winway Creators India Pvt Ltd will monitor your
+                daily activities. After the successful completion of probation
+                Period, you will be considered a regular employee of Winway.
+                Creators India Pvt. Ltd.
+              </p>
+            </li>
+          </ul>
+          <li class="policysubHeading">&nbsp;&nbsp;Timings:</li>
+          <ul>
+            <li>
+              <p class="para">
+                The office operates from 10:00 a.m. to 6.30 p.m. (Subject to:
+                every day, the team should contribute efficiently; else you are
+                bound to continue your work for half an hour additionally).
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                All the staff members should settle down and start their work by
+                10:05am, who ever are reaching office post 10:05am, 3 late
+                Comings will be marked as 1 LOP (check-in timings should be
+                relevant to biometrics.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                No staff members are allowed to have their breakfast after
+                reaching office. You can have your breakfast at the office if
+                You’re able to come back to your respective workstations by
+                10.00 am sharp.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Lunch Hour starts from 1:30 pm till 2:10 pm, and every staff
+                member should and must settle down in their workstation sharp by
+                the said time.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Since Winway is operating at two branches (Begumpet, Hyderabad &
+                Punjagutta, Hyderabad) Candidates are bound to work in branch,
+                other than their respective working branch, as per the
+                management decision, which will be temporary or permanent due to
+                Unavoidable business operation conditions.
+              </p>
+            </li>
+          </ul>
+          <li class="policysubHeading">&nbsp;&nbsp;Leaves and Permissions:</li>
+          <ul>
+            <li>
+              <p class="para">
+                Candidate is not entitled to any kind of leave for the first 3
+                months from their date of joining. If management feels their
+                Their presence in the office seems very irregular in their first
+                3 months of service, they will take matters into their hands and
+                terminate the candidate, and he/she is not entitled to any kind
+                of salary or incentives.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                All the staff members should and must take permission from the
+                HR about their leaves and permissions before any staff member
+                who is informing about their permissions and leaves in the
+                morning hours, they are entitled to face one and a half days LOP
+                for Leave and Half-Day LOP for Permissions.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                If candidates have to take long leave, i.e., leave for more than
+                1 day, he/she has to take permission from the HR through mail.
+                communication only. If mail has not been sent about their
+                leaves, candidate has to face 2 day LOP for single day leave.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Casual leaves are allowed to candidates, to only those who have
+                completed 3 months in their assigned job role. If any candidate
+                who is not eligible for casual leaves will have to face 1 day
+                LOP.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Staff members who are eligible for casual leaves will be
+                assigned 1 casual leave per month, which should be utilized in
+                The same month. Casual leaves will not be carried forward or can
+                not be encased.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                No candidate is allowed to take leave before day and after day.
+                of the company declared holiday or any festival or any public
+                holiday. Candidate is entitled to face the LOP's decided by the
+                management, if he/she has not followed the above rule.
+              </p>
+            </li>
+          </ul>
+        </ol>
+      </div>
+      <div class="page thirdpage">
+        <ol start="4">
+          <li class="policysubHeading">&nbsp;&nbsp;Discipline:</li>
+          <ul>
+            <li>
+              <p class="para">
+                No staff members are allowed to roam around office premises or
+                chatting with fellow workers during working hours. Discipline
+                and obedience to the company’s management is  Using your
+                Personal mobile phones and using office phones for personal use
+                is strictly not allowed; if found, the instrument will be
+                confiscated, and the candidate will be terminated on the
+                disciplinary grounds, and he/she will not be entitled to any
+                Kind of salary and incentive.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Any damage caused to the office equipment will be recovered.
+                from the responsible staff member’s salary.
+              </p>
+            </li>
+
+            <li>
+              <p class="para">
+                The candidate should not bring his/her personal issues to the
+                office. and should not willingly involve office staff into their
+                personal matters. If found so, candidate will be terminated.
+                immediately, and he/she will not be entitled to any kind of
+                salary or incentive.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                If any candidate is found communicating office matters and
+                office data to anyone outside the office, he/she will have to
+                face legal proceedings and will be terminated immediately and
+                will not be entitled to any kind of salary or incentive.
+              </p>
+            </li>
+          </ul>
+          <li class="policysubHeading">&nbsp;&nbsp;Salary:</li>
+          <ul>
+            <li>
+              <p class="para">
+                The company will process the salaries on the 10th of every month
+                for all The staff members.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Salary hikes will be decided by the management as and when it is
+                seemed required by the management.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                If any candidate claims that he/she has experience and the The
+                salary offered or demanded is based on their previous
+                employment. package and experience, should and must prove their
+                experience in their role at the company. By failing to do so,
+                management will have the right to reduce their salary package
+                from the salary offered at the time of joining as and how much
+                it is felt appropriate.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                The candidate is entitled to the salary and incentives only if
+                He/she has worked in the company for a whole month, I.e., 31
+                days. The company will not encourage DAILY WAGES. Any candidate
+                who resign or gets terminated from their services before 31 days
+                from the date of their joining will not be entitled to any
+                salary and Incentives for the duration they worked in the
+                company.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Your increments/promotions and demotions will depend at the sole
+                discretion of the management depending upon your efficiency,
+                intelligence, regular attendance, sense of discipline, loyalty
+                and good behavior and also subject to the prosperity of the
+                organization.
+              </p>
+            </li>
+          </ul>
+          <li class="policysubHeading">&nbsp;&nbsp;Resignation policy:</li>
+          <ul>
+            <li>
+              <p class="para">
+                Candidate should intimate the human resources manager before 1
+                month before the date of the resignation. Full and final
+                Settlement will be processed, if applicable, only after 45 days.
+                from the date of the resignation submitted to the Human Resource
+                Manager.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Post Resignation, Full and final settlement will be processed to
+                the candidate only if there are a good number of files for
+                login. and based on the business output of that particular
+                month. Also, candidate needs to be regular during that
+                particular month or during the period observed as the notice
+                period.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Any candidate who has absconded from the company or who has not
+                submitted or intimated about their resignation, according to the
+                company policy, he/she will not be entitled to any kind of
+                salary or incentive.
+              </p>
+            </li>
+          </ul>
+        </ol>
+      </div>
+      <div class="page fourthpage">
+        <ol start="7">
+          <li class="policysubHeading">&nbsp;&nbsp;Termination Policy</li>
+          <ul>
+            <li>
+              <p class="para">
+                If any candidate’s performance seems unsatisfactory to their
+                assigned roles, or if the candidate presence in the office seems
+                irregular, or if any of the above policies (Para 2 to 6) has not
+                been followed by the candidate, he/she will be terminated.
+                immediately and will not be entitled for any kind of salary or
+                Incentive.
+              </p>
+            </li>
+          </ul>
+          <li class="policysubHeading">&nbsp;&nbsp;Declaration</li>
+          <ul>
+            <li>
+              <p class="para">
+                I have read and understood the above-mentioned terms and
+                conditions and accept the terms and conditions of employment.
+                agreement with Winway Creators India Pvt. Ltd.
+              </p>
+            </li>
+            <li>
+              <p class="para">
+                Please signify your acceptance of the above terms and
+                conditions. of this offer by signing the duplicate copy of this
+                letter.
+              </p>
+            </li>
+          </ul>
+        </ol>
+        <div>
+          <p class="para indented-paragraph">
+            The company policies are designed and implemented by the management.
+            to treat all the candidates equally without any difference and to
+            run the business operations smoothly. Hence it is applicable to all
+            the candidates who had acknowledged the above policies. For any
+            details Please contact our Human Resource Team at
+            hr&#64;winwaycreators.com.
+          </p>
+        </div>
+        <div class="regards">
+          <div>
+            <br />
+            <br />
+            <b> Regards,</b>
+          </div>
+          <div>
+            <b
+              >{{ userDetails.firstName | capitalizeFirst }}
+              {{ userDetails.lastName | capitalizeFirst }}</b
+            >
+          </div>
+          <div>(HR Executive)</div>
+          <div>Mobile: +91 {{ userDetails.phoneNumber }}</div>
+          <div><b>WINWAY CREATORS INDIA PRIVATE LIMITED</b></div>
+          <div>#506, 5th Floor,</div>
+          <div>MGR Estates, Dwarakapuri Colony,</div>
+          <div>Punjagutta, Hyderabad- 82</div>
+          <div>www.winwaycreators.com</div>
+        </div>
+      </div>
+    </div>
+    <hr class="separator" />
+    <div class="btn-container">
+      <button
+        pButton
+        type="button"
+        (click)="generatePDF()"
+        label="Download Offer Letter"
+        icon="fa fa-download"
+        [disabled]="loading"
+        class="download-btn"
+      ></button>
+    </div>
+  </div>
+</div>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © 2024 <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer> -->

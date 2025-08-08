@@ -1,0 +1,18 @@
+<div
+  class="wrapper b-home"
+  style="height: auto; min-height: 100%; background: white"
+>
+  <app-sidebar-menu></app-sidebar-menu>
+  <div
+    id="kt_header"
+    class="header"
+    [class.header-fixed]="!iswiz"
+    [class.mgn-lt-70]="smallMenuSection"
+  >
+    <app-header></app-header>
+    <div class="body-section" [ngStyle]="{ 'height.px': bodyHeight }">
+      <router-outlet></router-outlet>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div>

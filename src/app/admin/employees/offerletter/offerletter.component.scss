@@ -1,0 +1,315 @@
+.offerletter-card {
+  margin: 20px 0;
+  // padding: 30px;
+  width: 250mm;
+  line-height: 2.5 !important;
+  border: none !important;
+  border-radius: 5px;
+  // box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
+}
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  font-size: 12px;
+}
+.details {
+  margin-top: 20px;
+  font-size: 14px !important;
+  margin-bottom: 20px;
+}
+.info-line {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.label {
+  flex: 0 0 150px;
+  text-align: left;
+  font-weight: bold;
+}
+.value {
+  flex: 1;
+}
+.d-flex {
+  display: flex;
+  justify-content: space-between;
+}
+.offerletter-title {
+  text-align: center;
+  font-size: 30px;
+  margin: 20px 0;
+  font-weight: bold;
+}
+.offerletter-date {
+  text-align: right;
+  font-size: 14px;
+}
+.fromdetails {
+  text-align: left;
+  font-size: 14px;
+}
+.subject {
+  font-size: 14px;
+}
+.page {
+  page-break-after: always;
+}
+.page:last-child {
+  page-break-after: auto;
+}
+.policyheading {
+  display: flex;
+  justify-content: center;
+  text-decoration: underline;
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.para {
+  text-align: justify;
+  text-align-last: left;
+  line-height: 1.5;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.policysubHeading {
+  font-weight: bold;
+  padding: 5px;
+  font-size: 14px;
+}
+.indented-paragraph {
+  text-indent: 30px;
+}
+.firstpara {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.regards {
+  line-height: 1.5;
+  font-size: 14px;
+}
+.thirdpage {
+  margin-top: 20px;
+}
+.fourthpage {
+  margin-top: 20px;
+}
+.btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+.card-body {
+  margin: 28px;
+}
+// @page {
+//   size: A4; /* Adjust for different page sizes */
+//   margin: 1in;
+// }
+
+// /* Apply the style to every page */
+// .card-body {
+//   position: relative;
+//   margin-right: 28px;
+//   border-left: 35px solid #265a7e;
+//   padding-left: 30px;
+// }
+
+// /* Left Gradient Border on Every Page */
+// .card-body::before {
+//   content: "";
+//   position: absolute;
+//   left: 0;
+//   top: 0;
+//   width: 25px; /* Thin strip beside border */
+//   height: 100%;
+//   border-left: 2px solid #fff;
+//   background: linear-gradient(to bottom, lightgrey, lightgrey, #558B28);
+// }
+
+.download-btn {
+  background: linear-gradient(145deg, #035d81, #4a8fa3);
+  border-radius: 100px;
+  box-shadow: rgba(3, 93, 129, 0.2) 0 -25px 18px -14px inset,
+    rgba(3, 93, 129, 0.15) 0 1px 2px, rgba(3, 93, 129, 0.15) 0 2px 4px,
+    rgba(3, 93, 129, 0.15) 0 4px 8px, rgba(3, 93, 129, 0.15) 0 8px 16px,
+    rgba(3, 93, 129, 0.15) 0 16px 32px;
+  cursor: pointer;
+  color: white;
+  display: inline-block;
+  font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+  padding: 7px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  width: fit-content;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.download-btn:hover {
+  background: linear-gradient(145deg, #035d81, #4a8fa3);
+  box-shadow: rgba(3, 93, 129, 0.35) 0 -25px 18px -14px inset,
+    rgba(3, 93, 129, 0.25) 0 1px 2px, rgba(3, 93, 129, 0.25) 0 2px 4px,
+    rgba(3, 93, 129, 0.25) 0 4px 8px, rgba(3, 93, 129, 0.25) 0 8px 16px,
+    rgba(3, 93, 129, 0.25) 0 16px 32px;
+  transform: scale(1.05);
+}
+
+//OLD STYLES
+// .offerletter-card {
+//   margin: 20px;
+//   padding: 30px;
+//   width: 250mm;
+//   line-height: 2.5 !important;
+//   border: none !important;
+//   border-radius: 5px;
+//   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+// }
+// .card-container {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+// .header {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-bottom: 20px;
+//   padding: 10px;
+//   font-size: 14px;
+// }
+// .details {
+//   margin-top: 20px;
+//   font-size: 18px !important;
+//   margin-bottom: 20px;
+// }
+// .info-line {
+//   display: flex;
+//   align-items: center;
+//   margin-bottom: 5px;
+// }
+// .label {
+//   flex: 0 0 150px;
+//   text-align: left;
+//   font-weight: bold;
+// }
+// .value {
+//   flex: 1;
+// }
+// .d-flex {
+//   display: flex;
+//   justify-content: space-between;
+// }
+// .offerletter-title {
+//   text-align: center;
+//   font-size: 38px;
+//   margin: 20px 0;
+//   font-weight: bold;
+// }
+// .offerletter-date {
+//   text-align: right;
+//   font-size: 18px;
+// }
+// .fromdetails {
+//   text-align: left;
+//   font-size: 18px;
+// }
+// .subject {
+//   font-size: 18px;
+// }
+// .page {
+//   page-break-after: always;
+// }
+// .page:last-child {
+//   page-break-after: auto;
+// }
+// .policyheading {
+//   display: flex;
+//   justify-content: center;
+//   text-decoration: underline;
+//   font-weight: bold;
+//   font-size: 22px;
+//   margin-top: 50px;
+//   margin-bottom: 30px;
+// }
+// .para {
+//   text-align: justify;
+//   text-align-last: left;
+//   line-height: 1.5;
+//   font-size: 18px;
+//   margin-left: 10px;
+// }
+
+// .policysubHeading {
+//   font-weight: bold;
+//   padding: 5px;
+//   font-size: 20px;
+// }
+// .indented-paragraph {
+//   text-indent: 30px;
+// }
+// .firstpara {
+//   margin-top: 20px;
+//   margin-bottom: 20px;
+// }
+// .regards {
+//   line-height: 1.5;
+//   font-size: 20px;
+// }
+// .thirdpage {
+//   margin-top: 50px;
+// }
+// .fourthpage {
+//   margin-top: 50px;
+// }
+// .btn-container {
+//   display: flex;
+//   justify-content: center;
+// }
+
+// .download-btn {
+//   background: linear-gradient(145deg, #035d81, #4a8fa3);
+//   border-radius: 100px;
+//   box-shadow: rgba(3, 93, 129, 0.2) 0 -25px 18px -14px inset,
+//     rgba(3, 93, 129, 0.15) 0 1px 2px, rgba(3, 93, 129, 0.15) 0 2px 4px,
+//     rgba(3, 93, 129, 0.15) 0 4px 8px, rgba(3, 93, 129, 0.15) 0 8px 16px,
+//     rgba(3, 93, 129, 0.15) 0 16px 32px;
+//   cursor: pointer;
+//   color: white;
+//   display: inline-block;
+//   font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+//   padding: 7px 20px;
+//   text-align: center;
+//   text-decoration: none;
+//   transition: all 250ms;
+//   border: 0;
+//   width: fit-content;
+//   font-size: 16px;
+//   user-select: none;
+//   -webkit-user-select: none;
+//   touch-action: manipulation;
+// }
+
+// .download-btn:hover {
+//   background: linear-gradient(145deg, #035d81, #4a8fa3);
+//   box-shadow: rgba(3, 93, 129, 0.35) 0 -25px 18px -14px inset,
+//     rgba(3, 93, 129, 0.25) 0 1px 2px, rgba(3, 93, 129, 0.25) 0 2px 4px,
+//     rgba(3, 93, 129, 0.25) 0 4px 8px, rgba(3, 93, 129, 0.25) 0 8px 16px,
+//     rgba(3, 93, 129, 0.25) 0 16px 32px;
+//   transform: scale(1.05);
+// }

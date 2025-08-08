@@ -1,0 +1,526 @@
+<div class="container-fluid mt-2" *ngIf="payroll">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">{{
+              payroll.employeeName | capitalizeFirst
+            }}</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../../assets/images/menu/payslip.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="apiLoading">
+  <app-preloader></app-preloader>
+</div>
+<div class="card-container" *ngIf="!apiLoading">
+  <div class="card payslip-card" *ngIf="payroll">
+    <div #pdfContent class="card-body">
+      <div class="header">
+        <div class="leftheading">
+          <img
+            src="../../assets/images/pdf/winway icon.png"
+            alt="Company Logo"
+            class="companylogo"
+          />
+          <div class="companyheading">
+            <div class="companyname">WINWAY CREATORS INDIA PVT LTD</div>
+            <div class="companyaddress">
+              506, 5th Floor, MGR Estates, Punjagutta, Hyderabad, Telangana
+              500082
+            </div>
+          </div>
+        </div>
+        <div class="rightheading ml-2">
+          Payslip for the Month <br />
+          <b>
+            <span class="rightamount">{{
+              getMonthNameAndYear(payroll.payrollMonth)
+            }}</span></b
+          >
+        </div>
+      </div>
+
+      <div class="details text-capitalize">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="info-line">
+              <div class="employeesummary">EMPLOYEE SUMMARY</div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Employee Name <b>:&nbsp;</b>
+              </div>
+              <div class="value">
+                {{ payroll.employeeName | capitalizeFirst }}
+              </div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Employee ID <b>:&nbsp;</b>
+              </div>
+              <div class="value">
+                {{ payroll.customEmployeeId }}
+              </div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Designation <b>:&nbsp;</b>
+              </div>
+              <div class="value">
+                {{ getDesignationName(payroll.designation) }}
+              </div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Date of Joining <b>:&nbsp;</b>
+              </div>
+              <div class="value">
+                {{ payroll.joiningDate | date : "dd-MM-yyyy" }}
+              </div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Account Number<b>:&nbsp;</b>
+              </div>
+              <div class="value">{{ payroll.accountNumber }}</div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                IFSC Code<b>:&nbsp;</b>
+              </div>
+              <div class="value">{{ payroll.ifscCode }}</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="salarycard">
+                <div class="netsalary">Rs. {{ payroll.netSalary }}</div>
+                <div class="salarytext">Employee Net Pay</div>
+              </div>
+              <div class="info-line">
+                <div class="label d-flex justify-content-between">
+                  Payroll Days <b>:&nbsp;</b>
+                </div>
+                <div class="value">{{ payroll.workingDays }}</div>
+              </div>
+              <div class="info-line">
+                <div class="label d-flex justify-content-between">
+                  Present Days<b>:&nbsp;</b>
+                </div>
+                <div class="value">{{ payroll.presentDays }}</div>
+              </div>
+              <div class="info-line">
+                <div class="label d-flex justify-content-between">
+                  Paid Days<b>:&nbsp;</b>
+                </div>
+                <div class="value">{{ payroll.paidDays }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tablecard">
+        <div class="card">
+          <div class="row">
+            <div class="col-md-6">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Earnings</th>
+                    <th class="amount">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="earnings">Basic Salary</td>
+                    <td>Rs. {{ payroll.salary * 0.4 | roundOff }}</td>
+                  </tr>
+                  <tr>
+                    <td class="earnings">House Rent Allowance</td>
+                    <td>Rs. {{ payroll.salary * 0.2 | roundOff }}</td>
+                  </tr>
+                  <tr>
+                    <td class="earnings">Conveyance Allowance</td>
+                    <td>Rs. {{ payroll.salary * 0.1 | roundOff }}</td>
+                  </tr>
+                  <tr>
+                    <td class="earnings">Special Allowance</td>
+                    <td>Rs. {{ payroll.salary * 0.25 | roundOff }}</td>
+                  </tr>
+                  <tr>
+                    <td class="earnings">Medical Allowance</td>
+                    <td>Rs. {{ payroll.salary * 0.05 | roundOff }}</td>
+                  </tr>
+                  <tr>
+                    <td class="earnings">Other Allowances</td>
+                    <td>Rs. {{ payroll.petrolExpenses }}</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td class="earnings">Gross Earnings</td>
+                    <td>Rs. {{ payroll.salary + payroll.petrolExpenses }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Deductions</th>
+                    <th class="amount">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="earnings">Professional Tax</td>
+                    <td>Rs. {{ payroll.professionalTax }}</td>
+                  </tr>
+                  <tr>
+                    <td class="earnings">Income Tax (TDS)</td>
+                    <td>Rs. 0</td>
+                  </tr>
+                  <tr>
+                    <td class="earnings">LOP</td>
+                    <td>Rs. {{ payroll.deductions }}</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td class="earnings">Total Deductions</td>
+                    <td>
+                      Rs. {{ payroll.deductions + payroll.professionalTax }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footercard">
+        <div class="card netsalarycard">
+          <div class="totalnet">
+            <div class="net-payable">
+              <div>TOTAL NET PAYABLE:</div>
+              <div class="formula">Gross Earnings - Total Deductions</div>
+            </div>
+            <div class="totalnetamount">Rs. {{ payroll.netSalary }}</div>
+          </div>
+        </div>
+        <div class="netinwords text-end">
+          <span class="netinwordsheading"> Amount in Words:</span>
+          {{ convertAmountToWords(payroll.netSalary) }} Rupees Only
+        </div>
+        <div class="disclaimer">
+          *This is a computer-generated slip and does not require a
+          signature.<br />
+          *For any information on your payslip, please contact
+          hr&#64;winwaycreators.com.
+        </div>
+      </div>
+    </div>
+    <hr class="separator" />
+    <div class="btn-container">
+      <button
+        pButton
+        type="button"
+        (click)="generatePDF()"
+        label="Download Payslip"
+        icon="fa fa-download"
+        [disabled]="loading"
+        class="download-btn"
+      ></button>
+    </div>
+  </div>
+</div>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>
+
+<!--
+OLD CODE
+<div class="container-fluid mt-2" *ngIf="payroll">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">{{
+              payroll.employeeName | capitalizeFirst
+            }}</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../../assets/images/menu/payslip.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+<div class="card-container" *ngIf="!loading">
+  <div class="card payslip-card" *ngIf="payroll">
+    <div #pdfContent>
+      <div class="header">
+        <div class="leftheading">
+          <img
+            src="../../assets/images/pdf/winway icon.png"
+            alt="Company Logo"
+            width="200"
+            height="100"
+          />
+          <div class="companyheading">
+            <p class="companyname">WINWAY CREATORS INDIA PVT LTD</p>
+            <div class="companyaddress">
+              506, 5th Floor, MGR Estates, Punjagutta, Hyderabad, Telangana
+              500082
+            </div>
+          </div>
+        </div>
+        <div class="rightheading">
+          Payslip for the Month <br />
+          <b>
+            <span class="rightamount">{{
+              getMonthNameAndYear(payroll.payrollMonth)
+            }}</span></b
+          >
+        </div>
+      </div>
+
+      <div class="details text-capitalize">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                EMPLOYEE SUMMARY
+              </div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Employee Name <b>:&nbsp;</b>
+              </div>
+              <div class="value">
+                {{ payroll.employeeName | capitalizeFirst }}
+              </div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Employee ID <b>:&nbsp;</b>
+              </div>
+              <div class="value">
+                {{ payroll.customEmployeeId  }}
+              </div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Designation <b>:&nbsp;</b>
+              </div>
+              <div class="value">
+                {{ getDesignationName(payroll.designation) }}
+              </div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Date of Joining <b>:&nbsp;</b>
+              </div>
+              <div class="value">
+                {{ payroll.joiningDate | date : "dd-MM-yyyy" }}
+              </div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                Account Number<b>:&nbsp;</b>
+              </div>
+              <div class="value">{{ payroll.accountNumber }}</div>
+            </div>
+            <div class="info-line">
+              <div class="label d-flex justify-content-between">
+                IFSC Code<b>:&nbsp;</b>
+              </div>
+              <div class="value">{{ payroll.ifscCode }}</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="salarycard">
+                <div class="netsalary">Rs. {{ payroll.netSalary }}</div>
+                <div class="salarytext">Employee Net Pay</div>
+              </div>
+              <div class="info-line">
+                <div class="label d-flex justify-content-between">
+                  Payroll Days <b>:&nbsp;</b>
+                </div>
+                <div class="value">{{ payroll.workingDays }}</div>
+              </div>
+              <div class="info-line">
+                <div class="label d-flex justify-content-between">
+                  Present Days<b>:&nbsp;</b>
+                </div>
+                <div class="value">{{ payroll.presentDays }}</div>
+              </div>
+              <div class="info-line">
+                <div class="label d-flex justify-content-between">
+                  Paid Days<b>:&nbsp;</b>
+                </div>
+                <div class="value">{{ payroll.paidDays }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tablecard">
+        <div class="card">
+          <div class="row">
+            <div class="col-md-6">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Earnings</th>
+                    <th class="amount">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="earnings">Basic Salary</td>
+                    <td>Rs. {{ payroll.salary * 0.4 | roundOff }}</td>
+                  </tr>
+                  <tr>
+                    <td class="earnings">House Rent Allowance</td>
+                    <td>Rs. {{ payroll.salary * 0.2 | roundOff }}</td>
+                  </tr>
+                  <tr>
+                    <td class="earnings">Conveyance Allowance</td>
+                    <td>Rs. {{ payroll.salary * 0.1 | roundOff }}</td>
+                  </tr>
+                  <tr>
+                    <td class="earnings">Special Allowance</td>
+                    <td>Rs. {{ payroll.salary * 0.25 | roundOff }}</td>
+                  </tr>
+                  <tr>
+                    <td class="earnings">Medical Allowance</td>
+                    <td>Rs. {{ payroll.salary * 0.05 | roundOff }}</td>
+                  </tr>
+                  <tr>
+                    <td class="earnings">Other Allowances</td>
+                    <td>Rs. {{ payroll.petrolExpenses }}</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td class="earnings">Gross Earnings</td>
+                    <td>Rs. {{ payroll.salary + payroll.petrolExpenses }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Deductions</th>
+                    <th class="amount">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="earnings">Professional Tax</td>
+                    <td>Rs. 0</td>
+                  </tr>
+                  <tr>
+                    <td class="earnings">Provident Fund</td>
+                    <td>Rs. 0</td>
+                  </tr>
+                  <tr>
+                    <td class="earnings">LOP</td>
+                    <td>Rs. {{ payroll.deductions }}</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td class="earnings">Total Deductions</td>
+                    <td>Rs. {{ payroll.deductions }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footercard">
+        <div class="card netsalarycard">
+          <div class="totalnet">
+            <div class="net-payable">
+              <div>TOTAL NET PAYABLE:</div>
+              <div class="formula">Gross Earnings - Total Deductions</div>
+            </div>
+            <div class="totalnetamount">Rs. {{ payroll.netSalary }}</div>
+          </div>
+        </div>
+        <div class="netinwords text-end">
+          <span class="netinwordsheading"> Amount in Words:</span>
+          {{ convertAmountToWords(payroll.netSalary) }} Rupees Only
+        </div>
+        <div class="disclaimer">
+          *This is a computer-generated slip and does not require a
+          signature.<br />
+          *For any information on your payslip, please contact
+          hr&#64;winwaycreators.com.
+        </div>
+      </div>
+    </div>
+    <hr class="separator" />
+
+    <div class="btn-container">
+      <button
+        pButton
+        type="button"
+        (click)="generatePDF()"
+        label="Download Payslip"
+        icon="fa fa-download"
+        class="download-btn"
+      ></button>
+    </div>
+  </div>
+</div>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © 2024 <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer> -->

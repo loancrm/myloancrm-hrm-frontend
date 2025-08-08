@@ -1,0 +1,468 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">Salary Hikes</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../assets/images/menu/salaryhike.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+
+<p-dialog
+  [(visible)]="isDialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [responsive]="true"
+  class="dialogbox"
+  [style]="{ width: '50vw' }"
+  header="{{ heading }}"
+  (onHide)="clearDialog()"
+>
+  <div *ngIf="dataLoading" class="preloader-container">
+    <app-preloader></app-preloader>
+  </div>
+  <form
+    *ngIf="!dataLoading"
+    class="login-form mt-3"
+    [formGroup]="salaryHikeForm"
+    novalidate
+    (ngSubmit)="onSubmit(salaryHikeForm.value)"
+  >
+    <div class="py-3 px-4">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row mt-3" *ngIf="formFields">
+            <div *ngFor="let field of formFields" class="mt-2 col-md-6">
+              <div>
+                <label>
+                  {{ field.label }}
+                  <span *ngIf="field.required">
+                    &nbsp;<sup class="text-danger">*</sup>
+                  </span>
+                </label>
+                <ng-container [ngSwitch]="field.type">
+                  <input
+                    *ngSwitchCase="'text'"
+                    pInputText
+                    [formControlName]="field.controlName"
+                    [placeholder]="'Enter ' + field.label"
+                    [maxlength]="field.maxLength"
+                    [style]="{ width: '100%' }"
+                    [pattern]="field.pattern"
+                    class="rounded-lg"
+                    autocomplete="off"
+                  />
+                  <input
+                    *ngSwitchCase="'number'"
+                    pInputText
+                    type="number"
+                    [formControlName]="field.controlName"
+                    [placeholder]="'Enter ' + field.label"
+                    [min]="field.min"
+                    [max]="field.max"
+                    [style]="{ width: '100%' }"
+                    [maxlength]="field.maxLength"
+                    class="rounded-lg"
+                    autocomplete="off"
+                  />
+                  <p-dropdown
+                    *ngSwitchCase="'dropdown'"
+                    [options]="this[field.options]"
+                    [formControlName]="field.controlName"
+                    [optionLabel]="field.optionLabel"
+                    [optionValue]="field.optionValue"
+                    [showClear]="true"
+                    appendTo="body"
+                    [placeholder]="'Select ' + field.label"
+                    [dropdownIcon]="'fa fa-caret-down'"
+                    styleClass="w-100"
+                    [filter]="true"
+                    filterPlaceholder="Search..."
+                  ></p-dropdown>
+                  <p-calendar
+                    *ngSwitchCase="'calendar'"
+                    [formControlName]="field.controlName"
+                    [placeholder]="'Select ' + field.label"
+                    [showIcon]="true"
+                    dateFormat="yy-mm-dd"
+                    appendTo="body"
+                    [showButtonBar]="true"
+                    [readonlyInput]="true"
+                    styleClass="w-100"
+                  ></p-calendar>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <div class="d-flex mt-3 mb-5">
+        <button
+          pButton
+          pRipple
+          type="submit"
+          [disabled]="!salaryHikeForm.valid"
+          class="p-button-primary p-button-raised"
+        >
+          {{ actionType == "create" ? "Create" : "Update" }} Salary Hike
+        </button>
+      </div>
+    </div>
+  </form>
+</p-dialog>
+<div class="text-capitalize table-card" *ngIf="!loading">
+  <p-table
+    #salaryHikeTable
+    [value]="salaryHikes"
+    [sortOrder]="-1"
+    [sortField]="'createdOn'"
+    [lazy]="true"
+    (onLazyLoad)="loadSalaryHikes($event)"
+    dataKey="id"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [paginator]="true"
+    [rows]="10"
+    class="p-datatable-striped table"
+    [totalRecords]="totalSalaryHikesCount"
+    [loading]="apiLoading"
+    responsiveLayout="scroll"
+    scrollHeight="flex"
+    [globalFilterFields]="[
+      'referenceNo',
+      'customer.firstName',
+      'partner.partnerName',
+      'status'
+    ]"
+    styleClass="p-datatable-customers"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Salary Hikes"
+  >
+    <ng-template pTemplate="caption">
+      <div class="row">
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <p-dropdown
+            styleClass="text-left"
+            [style]="{ width: '100%' }"
+            [options]="hikeInternalStatusList"
+            (onChange)="statusChange($event)"
+            appendTo="body"
+            [dropdownIcon]="'fa fa-caret-down'"
+            [(ngModel)]="selectedHikeStatus"
+            optionLabel="displayName"
+            dataKey="name"
+          >
+          </p-dropdown>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <div class="p-inputgroup" *ngIf="capabilities.adminSalaryHikes">
+            <input
+              type="text"
+              pInputText
+              placeholder="Search with Employee Name"
+              [(ngModel)]="employeeeNameToSearch"
+              (ngModelChange)="
+                inputValueChangeEvent('employeeId', employeeeNameToSearch)
+              "
+              (keyup.enter)="filterWithEmployeeName()"
+            />
+            <button
+              type="button"
+              pButton
+              icon="pi pi-search"
+              class="p-button-primary"
+              [disabled]="!employeeeNameToSearch"
+              (click)="filterWithEmployeeName()"
+            ></button>
+          </div>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
+          <div class="d-flex">
+            <div class="flex-grow-1 me-2"></div>
+            <div class="d-flex align-items-center pointer-cursor">
+              <app-filter
+                [position]="'right'"
+                [iconColor]="'#33009C'"
+                [iconSize]="'28px!important'"
+                class="me-2"
+                (filterEvent)="applyConfigFilters($event)"
+                [filterConfig]="filterConfig"
+                [showFilterIndication]="appliedFilter"
+              >
+              </app-filter>
+              <button
+                *ngIf="capabilities.adminSalaryHikes"
+                pButton
+                pRipple
+                pTooltip="Add Salary Hike"
+                tooltipPosition="top"
+                type="button"
+                class="p-button-primary"
+                icon="fa fa-plus"
+                (click)="createSalaryHike()"
+              >
+                &nbsp;Add Salary Hike
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th pSortableColumn="hikeId" class="text-nowrap">
+          Salary Hike Id <p-sortIcon field="hikeId"></p-sortIcon>
+        </th>
+        <th
+          pSortableColumn="employeeName"
+          *ngIf="capabilities.adminSalaryHikes"
+          class="text-nowrap"
+        >
+          Employee Name <p-sortIcon field="employeeName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="basicSalary" class="text-nowrap">
+          Base Salary <p-sortIcon field="basicSalary"></p-sortIcon>
+        </th>
+        <th pSortableColumn="monthlyHike" class="text-nowrap">
+          Monthly Hike
+          <p-sortIcon field="monthlyHike"></p-sortIcon>
+        </th>
+        <th pSortableColumn="totalSalary" class="text-nowrap">
+          Total Salary
+          <p-sortIcon field="totalSalary"></p-sortIcon>
+        </th>
+        <th pSortableColumn="hikeDate" class="text-nowrap">
+          Hike Date <p-sortIcon field="hikeDate"></p-sortIcon>
+        </th>
+        <!-- <th pSortableColumn="createdBy">
+          Created By <p-sortIcon field="createdBy"></p-sortIcon>
+        </th> -->
+        <th pSortableColumn="createdOn" class="text-nowrap">
+          Created Date <p-sortIcon field="createdOn"></p-sortIcon>
+        </th>
+        <th *ngIf="capabilities.adminSalaryHikes" class="text-nowrap">
+          Hike Letter
+        </th>
+        <th pSortableColumn="hikeInternalStatus" class="text-nowrap">
+          Status <p-sortIcon [field]="'hikeInternalStatus'"></p-sortIcon>
+        </th>
+        <th *ngIf="capabilities.adminSalaryHikes">Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-salaryHike>
+      <tr>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="salaryHike.hikeId; else noData"
+            >{{ salaryHike.hikeId }}</span
+          >
+        </td>
+        <!-- <td>
+          <b>
+            <span
+              class="table-column-data"
+              *ngIf="salaryHike.employeeName; else noData"
+              >{{ salaryHike.employeeName | capitalizeFirst }}</span
+            >
+          </b>
+        </td> -->
+        <td *ngIf="capabilities.adminSalaryHikes">
+          <div class="d-flex align-items-center">
+            <span class="me-2">
+              <ng-container
+                *ngIf="
+                  salaryHike &&
+                    salaryHike.passPhoto &&
+                    salaryHike.passPhoto.length > 0;
+                  else defaultImage
+                "
+              >
+                <a [href]="'//' + salaryHike.passPhoto[0]" target="_blank">
+                  <img
+                    [src]="'//' + salaryHike.passPhoto[0]"
+                    alt="Image"
+                    class="employeeImage"
+                    style="height: 40px; width: 40px"
+                  />
+                </a>
+              </ng-container>
+              <ng-template #defaultImage>
+                <img
+                  src="../../../assets/images/profile/user.png"
+                  alt="Default Image"
+                  class="employeeImage"
+                  style="height: 40px; width: 40px"
+                />
+              </ng-template>
+            </span>
+            <b>
+              <span
+                *ngIf="salaryHike.employeeName; else noData"
+                class="table-column-data"
+              >
+                {{ salaryHike.employeeName | capitalizeFirst }}
+              </span>
+            </b>
+          </div>
+        </td>
+        <td>
+          <span class="table-column-data"
+            >Rs.{{ salaryHike.basicSalary | capitalizeFirst }}</span
+          >
+        </td>
+        <td>
+          <span class="table-column-data"
+            >Rs.{{ salaryHike.monthlyHike | capitalizeFirst }}</span
+          >
+        </td>
+        <td>
+          <span class="table-column-data"
+            >Rs.{{ salaryHike.totalSalary | capitalizeFirst }}</span
+          >
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="salaryHike.hikeDate; else noData"
+            >{{ salaryHike.hikeDate | date : "mediumDate" }}</span
+          >
+        </td>
+        <!-- <td>
+          <span
+            class="table-column-data"
+            *ngIf="salaryHike.createdBy; else noData"
+            >{{ salaryHike.createdBy | capitalizeFirst }}</span
+          >
+        </td> -->
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="salaryHike.createdOn; else noData"
+            >{{ salaryHike.createdOn | date : "mediumDate" }}</span
+          >
+        </td>
+        <td *ngIf="capabilities.adminSalaryHikes">
+          <div class="text-center">
+            <div class="d-flex">
+              <button
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Hike Letter"
+                tooltipPosition="left"
+                class="p-button-info me-2 view-btn"
+                icon="fa fa-file"
+                (click)="ViewHikeletter(salaryHike.hikeId)"
+              ></button>
+            </div>
+          </div>
+        </td>
+        <td class="text-nowrap">
+          <span
+            class="table-column-data fw-bold statusdata"
+            *ngIf="salaryHike.hikeInternalStatus; else noData"
+            [ngStyle]="{
+              color: getStatusColor(
+                getStatusName(salaryHike.hikeInternalStatus)
+              ).textColor,
+              'background-color': getStatusColor(
+                getStatusName(salaryHike.hikeInternalStatus)
+              ).backgroundColor
+            }"
+          >
+            {{ getStatusName(salaryHike.hikeInternalStatus) }}
+          </span>
+        </td>
+        <td *ngIf="capabilities.adminSalaryHikes">
+          <div class="text-center">
+            <div class="d-flex">
+              <p-menu
+                appendTo="body"
+                #menu
+                [model]="actionItems(salaryHike)"
+                [popup]="true"
+              ></p-menu>
+              <button
+                pButton
+                type="button"
+                class="custom-btn"
+                (click)="menu.toggle($event)"
+                icon="pi pi-ellipsis-h"
+              ></button>
+            </div>
+          </div>
+        </td>
+        <!-- <td *ngIf="capabilities.adminSalaryHikes">
+          <div class="text-center">
+            <div class="d-flex">
+              <button
+                pButton
+                pRipple
+                type="button"
+                tooltipPosition="left"
+                pTooltip="Update"
+                class="p-button-success me-2 update-btn"
+                icon="fa fa-pen-to-square"
+                (click)="updateSalaryHike(salaryHike)"
+              ></button>
+              <button
+                *ngIf="capabilities.delete"
+                pButton
+                type="button"
+                icon="fa fa-trash"
+                tooltipPosition="left"
+                pTooltip="Delete"
+                class="p-button-danger me-2 delete-btn"
+                (click)="confirmDelete(salaryHike)"
+              ></button>
+            </div>
+          </div>
+        </td> -->
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr class="text-center">
+        <td colspan="10" class="text-center fw-bold">
+          <img
+            src="../../../assets/images/menu/nodata.gif"
+            width="200"
+            height="200"
+          />
+          <p>No Salary Hikes Found</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<ng-template #noData> - </ng-template>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>

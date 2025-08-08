@@ -1,0 +1,41 @@
+.cardicons .fa {
+  font-size: 25px;
+  padding: 10px;
+}
+.cardicons {
+  border-radius: 70px;
+}
+.card {
+  border: none;
+  box-shadow: 0 0 10px 1px rgba(80, 82, 106, 0.25);
+}
+.cards {
+  border-left: 5px solid #31425e;
+}
+.count-sub-title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #878a99;
+}
+.count-title {
+  font-size: 17px;
+  color: #31425e;
+  font-weight: bold;
+}
+.p-inputtext {
+  color: #333;
+  padding: 10px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.p-inputtext:hover {
+  border: 1px solid #33009c !important;
+}
+.p-inputtext:focus {
+  border: 1px solid #33009c !important;
+  box-shadow: 0 0 5px #9b8db5 !important;
+  outline: none;
+}
+.p-inputtext::placeholder {
+  color: #888;
+}

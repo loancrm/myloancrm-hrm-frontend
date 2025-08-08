@@ -1,0 +1,30 @@
+<p-fileUpload
+  name="myfile[]"
+  (uploadHandler)="onUpload($event)"
+  [multiple]="true"
+  [accept]="acceptableTypes != '*/*' ? acceptableTypes : false"
+  [customUpload]="true"
+>
+  <ng-template pTemplate="content">
+    <div *ngIf="uploadedFiles.length">
+      <span *ngFor="let file of uploadedFiles"
+        >{{ file.name }} - {{ file.size }} bytes</span
+      >
+    </div>
+    <div *ngIf="previouslyUploadedFiles.length">
+      <div class="fw-bold">
+        <span>Previously Uploaded Files</span>
+      </div>
+      <div class="mt-2">
+        <span class="me-2" *ngFor="let file of previouslyUploadedFiles">
+          <a [href]="'//' + file" target="_blank">
+            <i
+              [class]="getFileIcon(file.split('.').pop())"
+              class="file-icon"
+            ></i>
+          </a>
+        </span>
+      </div>
+    </div>
+  </ng-template>
+</p-fileUpload>

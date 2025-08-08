@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Experience letter</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 35px;
+        line-height: 1.6;
+        font-size: 12px;
+        padding: 35px;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 10px;
+        font-size: 14px;
+      }
+
+      .offerletter-title {
+        text-align: center;
+        font-size: 18px;
+        margin: 20px 0;
+        font-weight: bold;
+      }
+      .offerletter-date {
+        text-align: right;
+      }
+
+      .page {
+        page-break-after: always;
+      }
+      .page:last-child {
+        page-break-after: auto;
+      }
+
+      .para {
+        text-align: justify;
+        text-align-last: left;
+        margin: 0;
+        line-height: 2;
+      }
+
+      .indented-paragraph {
+        text-indent: 30px;
+      }
+      .firstpara {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="header">
+        <img
+          src="../../assets/images/pdf/winway icon.png"
+          alt="Company Logo"
+          width="200"
+          height="100"
+        />
+      </div>
+      <div class="offerletter-title">Experience Letter</div>
+      <div class="offerletter-date">Date : {{date}}</div>
+
+      <div>
+        <p class="para firstpara indented-paragraph">
+          It is certified that <b>{{name}}</b> D/O <b>{{careofname}}</b> was
+          under the employer of Winway creators India (Pvt.) Limited as a
+          <b>{{role}}</b> from {{dateofjoining}} to {{dateofresignation}}.
+        </p>
+
+        <p class="para firstpara indented-paragraph">
+          During her/his stay we observed her/his obedient, honest and dedicated
+          to her/his assignment.
+        </p>
+        <p class="para firstpara indented-paragraph">
+          We hope and pray bright and good future in her/his career.
+        </p>
+      </div>
+      <div>
+        <br />
+        <br />
+        <b> Regards,</b>
+        <div>Team -HR Dept</div>
+        <div>{{telephone}}</div>
+        <div>{{email}}</div>
+        <div><b>WINWAY CREATORS INDIA PRIVATE LIMITED</b></div>
+        <div>#506, 5th Floor,</div>
+        <div>MGR Estates, Dwarakapuri</div>
+        <div>Colony, Punjagutta, Hyderabad</div>
+        <div>- 82 www.winwaycreators.com</div>
+      </div>
+    </div>
+  </body>
+</html>

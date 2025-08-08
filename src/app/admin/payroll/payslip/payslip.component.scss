@@ -1,0 +1,629 @@
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.payslip-card {
+  margin: 30px;
+  padding: 30px;
+  width: 330mm;
+  border: none !important;
+  border-radius: 5px;
+  // box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
+}
+.companylogo {
+  width: 200px;
+  height: 100px;
+}
+.companyaddress {
+  font-size: 17px;
+  color: #808080;
+  font-weight: bold;
+}
+.leftheading {
+  display: flex;
+  justify-content: center;
+}
+.rightheading {
+  font-size: 20px;
+  color: #808080;
+}
+.rightamount {
+  font-size: 20px;
+  color: black;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  font-size: 16px;
+  border-bottom: 2px solid #808080;
+}
+.header h1 {
+  margin: 0;
+  font-size: 16px;
+}
+.header p {
+  margin: 0;
+  font-size: 12px;
+  text-align: left;
+}
+.details {
+  display: flex;
+  font-size: 18px;
+  flex-direction: column;
+  margin-top: 20px;
+  padding: 20px;
+  line-height: 2;
+  margin-bottom: 20px;
+}
+.info-line {
+  margin: 2px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.label {
+  flex: 0 0 220px;
+  font-weight: bold;
+  color: #808080;
+}
+.employeesummary {
+  color: #808080;
+  font-weight: bold;
+}
+.value {
+  flex: 1;
+  color: black;
+  font-weight: bold;
+}
+.section {
+  margin: 10px 0;
+}
+.salarycard {
+  padding: 10px;
+  border-left: 5px solid lightgreen;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  margin-bottom: 10px;
+  background-color: rgb(225, 250, 225);
+}
+
+.netsalary {
+  font-size: 30px;
+  font-weight: bold;
+}
+.section-title {
+  font-weight: bold;
+  flex: 0 0 200px;
+}
+.footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9em;
+}
+.payslip-title {
+  padding: 5px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.totalnet {
+  display: flex;
+  justify-content: space-between;
+
+  font-size: 14px;
+  font-weight: bold;
+}
+.table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.table td {
+  border: none;
+}
+.tablecard {
+  margin: 5px;
+  padding: 20px;
+}
+.footercard {
+  margin: 5px;
+  padding: 20px;
+}
+th {
+  border-bottom: 2px solid #000;
+  height: 40px;
+  font-size: 20px;
+  text-align: left;
+  padding-left: 10px;
+}
+td {
+  padding: 10px;
+  font-size: 18px;
+  text-align: right;
+}
+.total-row td {
+  font-weight: bold;
+  background-color: #f2f2f2;
+}
+.net-payable {
+  font-weight: bold;
+  font-size: 18px;
+}
+.totalnetamount {
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.formula {
+  font-size: 18px;
+  color: #808080;
+}
+.netinwordsheading {
+  color: #808080;
+}
+.salarytext {
+  font-size: 18px;
+  color: green;
+}
+.disclaimer {
+  margin-top: 30px;
+
+  font-size: 16px;
+  color: #808080;
+  text-align: left;
+  font-weight: bold;
+}
+
+.companyheading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.companyname {
+  font-weight: bold;
+  color: #035d81;
+  font-size: 38px !important;
+}
+.amount {
+  text-align: right !important;
+}
+.earnings {
+  text-align: left;
+}
+.netinwords {
+  font-weight: bold;
+  margin-top: 15px;
+  font-size: 18px;
+}
+.netsalarycard {
+  margin-top: 20px;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+.col-md-6 {
+  width: 48%;
+}
+.info-line {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+.d-flex {
+  display: flex;
+  justify-content: space-between;
+}
+.btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+.download-btn {
+  background: linear-gradient(145deg, #035d81, #4a8fa3);
+  border-radius: 100px;
+  box-shadow: rgba(3, 93, 129, 0.2) 0 -25px 18px -14px inset,
+    rgba(3, 93, 129, 0.15) 0 1px 2px, rgba(3, 93, 129, 0.15) 0 2px 4px,
+    rgba(3, 93, 129, 0.15) 0 4px 8px, rgba(3, 93, 129, 0.15) 0 8px 16px,
+    rgba(3, 93, 129, 0.15) 0 16px 32px;
+  cursor: pointer;
+  color: white;
+  display: inline-block;
+  font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+  padding: 7px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  width: fit-content;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.download-btn:hover {
+  background: linear-gradient(145deg, #035d81, #4a8fa3);
+  box-shadow: rgba(3, 93, 129, 0.35) 0 -25px 18px -14px inset,
+    rgba(3, 93, 129, 0.25) 0 1px 2px, rgba(3, 93, 129, 0.25) 0 2px 4px,
+    rgba(3, 93, 129, 0.25) 0 4px 8px, rgba(3, 93, 129, 0.25) 0 8px 16px,
+    rgba(3, 93, 129, 0.25) 0 16px 32px;
+  transform: scale(1.05);
+}
+@media (max-width: 768px) {
+  /* Adjust the width of the card */
+  .payslip-card {
+    width: 100%; /* Make the card fit the mobile screen */
+    margin: 2px; /* Reduce margin for mobile view */
+    padding: 5px; /* Adjust padding for smaller screens */
+  }
+
+  .companylogo {
+    width: 50px;
+    height: 50px;
+  }
+  /* Adjust the font sizes for better readability on mobile */
+  .rightheading,
+  .rightamount,
+  .header h1,
+  .header p,
+  .details,
+  .info-line,
+  .label,
+  .value,
+  .section-title,
+  .footer,
+  .payslip-title,
+  .totalnet,
+  .formula,
+  .salarytext,
+  .disclaimer,
+  .netinwords,
+  .netsalary,
+  .totalnetamount {
+    font-size: 7px; /* Reduce font size for mobile */
+  }
+  .companyaddress{
+    font-size: 6px;
+  }
+
+  .companyname , .net-payable{
+    font-size: 11px !important; /* Adjust heading font size */
+  }
+
+  .details .row {
+    display: flex;
+    gap: 0;
+    flex-wrap: nowrap; /* Prevent columns from wrapping */
+  }
+
+  .details {
+    margin-top: 2px;
+    padding: 2px;
+    line-height: 1;
+    margin-bottom: 1px;
+  }
+  .info-line {
+    margin: 2px;
+    padding: 2px;
+    margin-bottom: 1px;
+  }
+  .label {
+    flex: 0 0 70px;
+  }
+
+  .card {
+    padding: 2px;
+  }
+
+  /* Adjust table and layout for mobile view */
+  .table {
+    font-size: 14px; /* Smaller table font size */
+  }
+
+  th,
+  td {
+    font-size: 7px;
+    padding: 1px; /* Reduce padding in table cells */
+  }
+  th{
+    height: 12px;
+  }
+
+  .footercard {
+    margin: 2px;
+    padding: 3px;
+  }
+  .tablecard {
+    margin: 2px;
+    padding: 1px;
+  }
+  .tablecard .row{
+    margin: 0 0px;
+    padding: 2px;
+  }
+  .tablecard .row .col-md-6{
+    padding: 0 0px;
+  }
+  /* Adjust button styling for smaller screens */
+  .download-btn {
+    font-size: 14px; /* Smaller button font size */
+    padding: 5px 15px; /* Adjust padding for mobile */
+  }
+}
+
+// OLD CODE
+// .card-container {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+// .payslip-card {
+//   margin: 30px;
+//   padding: 30px;
+//   width: 330mm;
+//   border: none !important;
+//   border-radius: 5px;
+//   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+// }
+// .companyaddress {
+//   font-size: 17px;
+//   color: #808080;
+//   font-weight: bold;
+// }
+// .leftheading {
+//   display: flex;
+//   justify-content: center;
+// }
+// .rightheading {
+//   font-size: 20px;
+//   color: #808080;
+// }
+// .rightamount {
+//   font-size: 20px;
+//   color: black;
+// }
+// .header {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-bottom: 20px;
+//   padding: 10px;
+//   font-size: 16px;
+//   border-bottom: 2px solid #808080;
+// }
+// .header h1 {
+//   margin: 0;
+//   font-size: 16px;
+// }
+// .header p {
+//   margin: 0;
+//   font-size: 12px;
+//   text-align: left;
+// }
+// .details {
+//   display: flex;
+//   font-size: 18px;
+//   flex-direction: column;
+//   margin-top: 20px;
+//   padding: 20px;
+//   line-height: 2;
+//   margin-bottom: 20px;
+// }
+// .info-line {
+//   margin: 2px;
+//   padding: 5px;
+//   display: flex;
+//   align-items: center;
+//   margin-bottom: 5px;
+// }
+// .label {
+//   flex: 0 0 220px;
+//   font-weight: bold;
+//   color: #808080;
+// }
+// .value {
+//   flex: 1;
+//   color: black;
+//   font-weight: bold;
+// }
+// .section {
+//   margin: 10px 0;
+// }
+// .salarycard {
+//   padding: 10px;
+//   border-left: 5px solid lightgreen;
+//   border-top-left-radius: 5px;
+//   border-bottom-left-radius: 5px;
+//   margin-bottom: 10px;
+//   background-color: rgb(225, 250, 225);
+// }
+
+// .netsalary {
+//   font-size: 30px;
+//   font-weight: bold;
+// }
+// .section-title {
+//   font-weight: bold;
+//   flex: 0 0 200px;
+// }
+// .footer {
+//   text-align: center;
+//   margin-top: 20px;
+//   font-size: 0.9em;
+// }
+// .payslip-title {
+//   padding: 5px;
+//   font-size: 18px;
+//   font-weight: bold;
+// }
+// .totalnet {
+//   display: flex;
+//   justify-content: space-between;
+
+//   font-size: 14px;
+//   font-weight: bold;
+// }
+// .table {
+//   width: 100%;
+
+//   border-collapse: collapse;
+
+//   margin-bottom: 20px;
+//   margin-top: 20px;
+// }
+
+// .table td {
+//   border: none;
+// }
+// .tablecard {
+//   margin: 5px;
+
+//   padding: 20px;
+// }
+// .footercard {
+//   margin: 5px;
+//   padding: 20px;
+// }
+// th {
+//   border-bottom: 2px solid #000;
+//   height: 40px;
+//   font-size: 20px;
+//   text-align: left;
+//   padding-left: 10px;
+// }
+// td {
+//   padding: 10px;
+//   font-size: 18px;
+//   text-align: right;
+// }
+// .total-row td {
+//   font-weight: bold;
+//   background-color: #f2f2f2;
+// }
+// .net-payable {
+//   font-weight: bold;
+//   font-size: 18px;
+// }
+// .totalnetamount {
+//   font-size: 20px;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   text-align: center;
+// }
+
+// .formula {
+//   font-size: 18px;
+//   color: #808080;
+// }
+// .netinwordsheading {
+//   color: #808080;
+// }
+// .salarytext {
+//   font-size: 18px;
+//   color: green;
+// }
+// .disclaimer {
+//   margin-top: 30px;
+
+//   font-size: 16px;
+//   color: #808080;
+//   text-align: left;
+//   font-weight: bold;
+// }
+
+// .companyheading {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: center;
+//   text-align: center;
+// }
+
+// .companyname {
+//   font-weight: bold;
+//   color: #035d81;
+//   font-size: 38px !important;
+// }
+// .amount {
+//   text-align: right !important;
+// }
+// .earnings {
+//   text-align: left;
+// }
+// .netinwords {
+//   font-weight: bold;
+//   margin-top: 15px;
+//   font-size: 18px;
+// }
+// .netsalarycard {
+//   margin-top: 20px;
+// }
+// .row {
+//   display: flex;
+//   justify-content: space-between;
+// }
+// .col-md-6 {
+//   width: 48%;
+// }
+// .info-line {
+//   display: flex;
+//   justify-content: space-between;
+//   margin-bottom: 5px;
+// }
+// .d-flex {
+//   display: flex;
+//   justify-content: space-between;
+// }
+// .btn-container {
+//   display: flex;
+//   justify-content: center;
+// }
+
+// .download-btn {
+//   background: linear-gradient(145deg, #035d81, #4a8fa3);
+//   border-radius: 100px;
+//   box-shadow: rgba(3, 93, 129, 0.2) 0 -25px 18px -14px inset,
+//     rgba(3, 93, 129, 0.15) 0 1px 2px, rgba(3, 93, 129, 0.15) 0 2px 4px,
+//     rgba(3, 93, 129, 0.15) 0 4px 8px, rgba(3, 93, 129, 0.15) 0 8px 16px,
+//     rgba(3, 93, 129, 0.15) 0 16px 32px;
+//   cursor: pointer;
+//   color: white;
+//   display: inline-block;
+//   font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+//   padding: 7px 20px;
+//   text-align: center;
+//   text-decoration: none;
+//   transition: all 250ms;
+//   border: 0;
+//   width: fit-content;
+//   font-size: 16px;
+//   user-select: none;
+//   -webkit-user-select: none;
+//   touch-action: manipulation;
+// }
+
+// .download-btn:hover {
+//   background: linear-gradient(145deg, #035d81, #4a8fa3);
+//   box-shadow: rgba(3, 93, 129, 0.35) 0 -25px 18px -14px inset,
+//     rgba(3, 93, 129, 0.25) 0 1px 2px, rgba(3, 93, 129, 0.25) 0 2px 4px,
+//     rgba(3, 93, 129, 0.25) 0 4px 8px, rgba(3, 93, 129, 0.25) 0 8px 16px,
+//     rgba(3, 93, 129, 0.25) 0 16px 32px;
+//   transform: scale(1.05);
+// }

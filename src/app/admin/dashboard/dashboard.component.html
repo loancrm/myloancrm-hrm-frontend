@@ -1,0 +1,534 @@
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+
+<div class="container-fluid mb-3" *ngIf="!loading">
+  <div class="row">
+    <div class="col-md-8 mt-3">
+      <div class="card welcome-card" *ngIf="userDetails">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="card-content text-capitalize">
+            <h4>
+              Welcome Back,
+              <span style="color: #8cb5fe"
+                ><b>
+                  {{
+                    capabilities.employee
+                      ? (userDetails?.employeeName | capitalizeFirst)
+                      : (userDetails?.firstName + " " + userDetails?.lastName
+                        | capitalizeFirst)
+                  }}
+                </b></span
+              >
+            </h4>
+            <p>
+              Get Familier with the dashboard, here are some ways to get
+              Started.
+            </p>
+          </div>
+          <div class="image-container desktop-only">
+            <p-skeleton
+              *ngIf="isLoading"
+              width="160px"
+              height="160px"
+              shape="circle"
+            >
+            </p-skeleton>
+            <img
+              class="card-icon"
+              [hidden]="isLoading"
+              src="../../../assets/images/dashboard/welcome.png"
+              alt="Welcome Icon"
+              (load)="onImageLoad1()"
+              (error)="onImageError1()"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="bg-color" *ngIf="!loading">
+        <div class="row">
+          <div class="d-flex flex-wrap justify-content-start">
+            <ng-container *ngFor="let item of countsAnalytics">
+              <ng-container *ngIf="item.condition">
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12 mt-2">
+                  <div
+                    class="card p-3 shadow-sm pointer-cursor m-2 cards"
+                    (click)="goToRoute(item.routerLink)"
+                  >
+                    <div class="d-flex justify-content-between">
+                      <div class="d-flex align-items-center">
+                        <div>
+                          <div
+                            class="count-sub-title"
+                            *ngIf="!capabilities.employee"
+                          >
+                            {{ item.displayName }}
+                          </div>
+                          <div
+                            class="count-sub-title-employee"
+                            *ngIf="capabilities.employee"
+                          >
+                            {{ item.displayName }}
+                          </div>
+                          <div
+                            class="count-title"
+                            *ngIf="!capabilities.employee"
+                          >
+                            {{ item.count }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="image-container">
+                        <p-skeleton
+                          *ngIf="item.isLoading"
+                          width="70px"
+                          height="70px"
+                          shape="circle"
+                        ></p-skeleton>
+                        <img
+                          src="
+                            assets/images/menu/{{ item.name }}.png
+                          "
+                          width="70"
+                          height="70"
+                          alt="{{ item.displayName }} icon"
+                          [hidden]="item.isLoading"
+                          (load)="onImageLoad(item)"
+                          (error)="onImageError(item)"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mt-3">
+      <div class="card attendancecard" *ngIf="!capabilities.employee">
+        <div class="text-center d-flex justify-content-between mobile-only">
+          <h4 class="attendance-heading">Today Attendance</h4>
+          <p-calendar
+            [(ngModel)]="selectedDate"
+            dateFormat="yy-mm-dd"
+            [showIcon]="true"
+            [style]="{ width: '200px' }"
+            appendTo="body"
+            [showButtonBar]="true"
+            [readonlyInput]="true"
+            (ngModelChange)="onDateChange($event)"
+            placeholder="Select a date"
+          >
+          </p-calendar>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-6">
+            <div class="info-line">
+              <span class="icon text-success"
+                ><i class="fas fa-check"></i
+              ></span>
+              <div class="label d-flex justify-content-between">
+                Present<b>:&nbsp;</b>
+              </div>
+              <div class="value">{{ totalPresentCount }}</div>
+            </div>
+            <div class="info-line">
+              <span class="icon text-danger"><i class="fas fa-xmark"></i></span>
+              <div class="label d-flex justify-content-between">
+                Absent<b>:&nbsp;</b>
+              </div>
+              <div class="value">{{ totalAbsentCount }}</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-line">
+              <span class="icon text-warning"
+                ><i class="fas fa-circle-half-stroke"></i
+              ></span>
+              <div class="label d-flex justify-content-between">
+                Half-day<b>:&nbsp;</b>
+              </div>
+              <div class="value">{{ totalHalfDayCount }}</div>
+            </div>
+            <div class="info-line">
+              <span class="icon text-primary"
+                ><i class="fas fa-circle-exclamation"></i
+              ></span>
+              <div class="label d-flex justify-content-between">
+                Late<b>:&nbsp;</b>
+              </div>
+              <div class="value">{{ totalLateCount }}</div>
+            </div>
+          </div>
+        </div>
+        <h5>Absent Employees:</h5>
+        <div class="custom-scroll-container text-capitalize">
+          <p-table
+            #employeesTable
+            [value]="employeeDetails"
+            [sortOrder]="1"
+            [sortField]="'joiningDate'"
+            [lazy]="true"
+            (onLazyLoad)="loadEmployees($event)"
+            dataKey="id"
+            [showCurrentPageReport]="true"
+            class="p-datatable-striped table"
+            [totalRecords]="totalEmployeesCount"
+            [loading]="apiLoading"
+            responsiveLayout="scroll"
+            [globalFilterFields]="[
+              'referenceNo',
+              'customer.firstName',
+              'partner.partnerName',
+              'status'
+            ]"
+            styleClass="p-datatable-customers absenttable"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Employees"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>#</th>
+                <th>Employee</th>
+                <th>Status</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-employee let-i="rowIndex">
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <span class="me-2">
+                      <ng-container
+                        *ngIf="
+                          employee &&
+                            employee.passPhoto &&
+                            employee.passPhoto.length > 0;
+                          else defaultImage
+                        "
+                      >
+                        <a
+                          [href]="'//' + employee.passPhoto[0]"
+                          target="_blank"
+                        >
+                          <img
+                            [src]="'//' + employee.passPhoto[0]"
+                            alt="Image"
+                            class="employeeImage"
+                            style="height: 40px; width: 40px"
+                          />
+                        </a>
+                      </ng-container>
+                      <ng-template #defaultImage>
+                        <img
+                          src="../../../assets/images/profile/user.png"
+                          alt="Default Image"
+                          class="employeeImage"
+                          style="height: 40px; width: 40px"
+                        />
+                      </ng-template>
+                    </span>
+                    <b>
+                      <span
+                        *ngIf="employee.employeeName"
+                        class="table-column-data"
+                      >
+                        {{ employee.employeeName | capitalizeFirst }}
+                      </span>
+                    </b>
+                  </div>
+                </td>
+                <td>Absent</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr class="text-center">
+                <td colspan="10" class="text-center fw-bold">
+                  <img
+                    [lazyLoad]="'../../../assets/images/menu/nodata.gif'"
+                    width="200"
+                    height="200"
+                  />
+                  <p>No Absent Data Found</p>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+      <div class="card p-2 employeeProfile" *ngIf="capabilities.employee">
+        <div class="card-body text-capitalize" *ngIf="employeeData">
+          <!-- <div class="row">
+            <div class="employee-info-line">
+              <span class="icon"><i class="fas fa-user"></i></span>
+              <div class="employee-label d-flex justify-content-between">
+                Name<b>:&nbsp;</b>
+              </div>
+              <div class="employee-value">
+                {{
+                  employeeData?.employeeName
+                    ? (employeeData?.employeeName | capitalizeFirst)
+                    : "-"
+                }}
+              </div>
+            </div>
+            <div class="employee-info-line">
+              <span class="icon"><i class="fas fa-id-badge"></i></span>
+              <div class="employee-label d-flex justify-content-between">
+                Custom Employee Id<b>:&nbsp;</b>
+              </div>
+              <div class="employee-value">
+                {{
+                  employeeData.customEmployeeId
+                    ? (employeeData.customEmployeeId )
+                    : "-"
+                }}
+              </div>
+            </div>
+            <div class="employee-info-line">
+              <span class="icon"><i class="fas fa-building"></i></span>
+              <div class="employee-label d-flex justify-content-between">
+                Department<b>:&nbsp;</b>
+              </div>
+              <div class="employee-value">
+                {{
+                  employeeData.designationName
+                    ? employeeData.designationName
+                    : "-"
+                }}
+              </div>
+            </div>
+            <div class="employee-info-line">
+              <span class="icon"><i class="fas fa-calendar-alt"></i></span>
+              <div class="employee-label d-flex justify-content-between">
+                Date Of Joining<b>:&nbsp;</b>
+              </div>
+              <div class="employee-value">
+                {{
+                  employeeData.joiningDate
+                    ? (employeeData.joiningDate | date)
+                    : "-"
+                }}
+              </div>
+            </div>
+            <div class="employee-info-line">
+              <span class="icon"><i class="fas fa-briefcase"></i></span>
+              <div class="employee-label d-flex justify-content-between">
+                Office Branch<b>:&nbsp;</b>
+              </div>
+              <div class="employee-value">
+                {{
+                  employeeData.ofcBranchName ? employeeData.ofcBranchName : "-"
+                }}
+              </div>
+            </div>
+            <div class="employee-info-line">
+              <span class="icon"><i class="fas fa-money-bill-wave"></i></span>
+              <div class="employee-label d-flex justify-content-between">
+                CTC<b>:&nbsp;</b>
+              </div>
+              <div class="employee-value">
+                Rs.
+                {{
+                  employeeData.salary
+                    ? roundToLPA(employeeData.salary * 12)
+                    : "-"
+                }}
+              </div>
+            </div>
+            <div class="employee-info-line" *ngIf="employeeData.totalSalary">
+              <span class="icon">
+                <i class="fas fa-wallet"></i>
+              </span>
+              <div class="employee-label d-flex justify-content-between">
+                Salary With Hike<b>:&nbsp;</b>
+              </div>
+              <div class="employee-value">
+                Rs.
+                {{
+                  employeeData.totalSalary
+                    ? roundToLPA(employeeData.totalSalary * 12)
+                    : "-"
+                }}
+              </div>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button
+                pButton
+                pRipple
+                icon="fa fa-cloud-arrow-up"
+                type="button"
+                class="me-2 rightbtn"
+                (click)="employeeProfile(this.userDetails.employeeId)"
+              >
+                &nbsp;View Profile
+              </button>
+            </div>
+          </div> -->
+          <!-- <div class="attendance-container p-4 "> -->
+          <h3 class="attendance-heading text-center mb-3">
+            Mark Your Attendance
+          </h3>
+          <div
+            *ngIf="checkIpAccess()"
+            class="d-flex justify-content-center gap-3"
+          >
+            <button
+              pButton
+              pRipple
+              label="Check In"
+              icon="pi pi-sign-in"
+              class="p-button-success"
+              (click)="checkIn()"
+              [disabled]="checkInTime !== null"
+            ></button>
+            <button
+              pButton
+              pRipple
+              label="Check Out"
+              icon="pi pi-sign-out"
+              class="p-button-danger"
+              (click)="checkOut()"
+              [disabled]="checkInTime === null || checkOutTime !== null"
+            ></button>
+          </div>
+          <div class="details-container mt-4 p-3 rounded fw-bold">
+            <div class="employee-info-line" *ngIf="status">
+              <span class="icon text-dark-emphasis"
+                ><i class="fa fa-user-check"></i
+              ></span>
+              <div
+                class="text-dark-emphasis employee-label d-flex justify-content-between"
+              >
+                Status<b>:&nbsp;</b>
+              </div>
+              <div class="employee-value text-dark-emphasis">
+                {{ status }}
+              </div>
+            </div>
+            <div class="employee-info-line" *ngIf="checkInTime">
+              <span class="icon text-success"
+                ><i class="fa fa-sign-in-alt"></i
+              ></span>
+              <div
+                class="text-success employee-label d-flex justify-content-between"
+              >
+                Checked In Time<b>:&nbsp;</b>
+              </div>
+              <div class="employee-value text-success">
+                {{ checkInTime }}
+              </div>
+            </div>
+            <div class="employee-info-line" *ngIf="checkOutTime">
+              <span class="icon text-danger"
+                ><i class="fa fa-sign-out-alt"></i
+              ></span>
+              <div
+                class="text-danger employee-label d-flex justify-content-between"
+              >
+                Checked Out Time<b>:&nbsp;</b>
+              </div>
+              <div class="employee-value text-danger">
+                {{ checkOutTime }}
+              </div>
+            </div>
+            <div class="text-center mt-3" *ngIf="loggedHours">
+              <!-- <span class="icon text-primary"><i class="fa fa-clock"></i></span> -->
+              <div class="text-primary-emphasis">
+                Total Logged Hours<b>&nbsp;</b>
+              </div>
+              <div class="loggedin-value mt-2 text-primary-emphasis">
+                {{ loggedHours }}
+              </div>
+            </div>
+          </div>
+          <!-- <div class="d-flex justify-content-center">
+              <button
+                pButton
+                pRipple
+                icon="fa fa-cloud-arrow-up"
+                type="button"
+                class="me-2 rightbtn"
+                (click)="employeeProfile(this.userDetails.employeeId)"
+              >
+                &nbsp;View Profile
+              </button>
+            </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="!capabilities.employee">
+    <div class="col-md-12 col-12">
+      <div class="row mt-3">
+        <ng-container>
+          <div class="col-md-4 col-12" *ngIf="DepartmentChartOptions">
+            <br class="d-lg-none d-md-none" />
+            <div class="card p-2 chart-container" style="height: 420px">
+              <app-apex-charts
+                [chartOptions]="DepartmentChartOptions"
+              ></app-apex-charts>
+              <div class="nodata-container" *ngIf="isAllZeros()">
+                <img
+                  [lazyLoad]="'../../../assets/images/menu/nodata.gif'"
+                  alt="No Data Available"
+                  class="nodata"
+                />
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <div class="col-md-4 col-12" *ngIf="pieChartOptions">
+          <br class="d-lg-none d-md-none" />
+          <div class="card p-2" style="height: 420px; position: relative">
+            <div>
+              <app-apex-charts
+                [chartOptions]="pieChartOptions"
+              ></app-apex-charts>
+              <div
+                class="nodata-container"
+                *ngIf="maleCount == 0 && femaleCount == 0"
+              >
+                <img
+                  [lazyLoad]="'../../../assets/images/menu/nodata.gif'"
+                  alt="No Data Available"
+                  class="nodata"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-12" *ngIf="branchpieChartOptions">
+          <br class="d-lg-none d-md-none" />
+          <div class="card p-2" style="height: 420px; position: relative">
+            <div>
+              <app-apex-charts
+                [chartOptions]="branchpieChartOptions"
+              ></app-apex-charts>
+              <div
+                class="nodata-container"
+                *ngIf="panjaguttaCount == 0 && BegumpetCount == 0"
+              >
+                <img
+                  [lazyLoad]="'../../../assets/images/menu/nodata.gif'"
+                  alt="No Data Available"
+                  class="nodata"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+  </div>
+  <footer class="bg-light card text-center text-lg-start mt-3">
+    <div class="text-center fw-bold">
+      © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+        style="color: #51c297"
+        >Fintalk</b
+      >. | All Rights Reserved
+    </div>
+  </footer>
+</div>

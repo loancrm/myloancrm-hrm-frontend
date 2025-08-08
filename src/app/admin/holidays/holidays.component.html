@@ -1,0 +1,232 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">Holidays</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <img
+          src="../../../assets/images/menu/holidays.png"
+          width="100"
+          class="heading-image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+<div class="text-capitalize table-card">
+  <p-table
+    #holidaysTable
+    [value]="holidays"
+    [sortOrder]="1"
+    [sortField]="'date'"
+    [lazy]="true"
+    (onLazyLoad)="loadHolidays($event)"
+    dataKey="id"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [paginator]="true"
+    [rows]="10"
+    class="p-datatable-striped table"
+    [totalRecords]="totalHolidaysCount"
+    [loading]="apiLoading"
+    responsiveLayout="scroll"
+    scrollHeight="flex"
+    styleClass="p-datatable-customers"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Holidays"
+  >
+    <ng-template pTemplate="caption">
+      <div class="row">
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <div class="p-inputgroup">
+            <input
+              type="text"
+              pInputText
+              placeholder="Search with Holiday Name"
+              [(ngModel)]="holidayNameToSearch"
+              (ngModelChange)="
+                inputValueChangeEvent('holidayId', holidayNameToSearch)
+              "
+              (keyup.enter)="filterWithHolidayName()"
+            />
+            <button
+              type="button"
+              pButton
+              icon="pi pi-search"
+              class="p-button-primary"
+              [disabled]="!holidayNameToSearch"
+              (click)="filterWithHolidayName()"
+            ></button>
+          </div>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <p-dropdown
+            [options]="years"
+            [(ngModel)]="selectedYear"
+            [style]="{ width: '100%' }"
+            appendTo="body"
+            (onChange)="loadHolidaysByYear()"
+            placeholder="Select Year"
+          >
+          </p-dropdown>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
+          <div class="d-flex">
+            <div class="flex-grow-1 me-2"></div>
+            <div class="d-flex align-items-center pointer-cursor">
+              <app-filter
+                [position]="'right'"
+                [iconColor]="'#33009C'"
+                class="me-2"
+                [iconSize]="'28px!important'"
+                (filterEvent)="applyConfigFilters($event)"
+                [filterConfig]="filterConfig"
+                [showFilterIndication]="appliedFilter"
+              >
+              </app-filter>
+              <button
+                *ngIf="!capabilities.employee"
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Add Holiday"
+                tooltipPosition="top"
+                class="p-button-primary"
+                icon="fa fa-plus"
+                (click)="addHoliday()"
+              >
+                &nbsp;Add Holiday
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th pSortableColumn="holidayId" class="text-nowrap">
+          Holiday Id <p-sortIcon field="holidayId"></p-sortIcon>
+        </th>
+        <th pSortableColumn="holidayName" class="text-nowrap">
+          Holiday Name <p-sortIcon field="holidayName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="date" class="text-nowrap">
+          Holiday Date <p-sortIcon field="date"></p-sortIcon>
+        </th>
+        <th pSortableColumn="day" class="text-nowrap">
+          Day <p-sortIcon field="day"></p-sortIcon>
+        </th>
+        <th pSortableColumn="description" class="text-nowrap">
+          Description <p-sortIcon field="description"></p-sortIcon>
+        </th>
+        <th pSortableColumn="createdOn" class="text-nowrap">
+          created Date <p-sortIcon field="createdOn"></p-sortIcon>
+        </th>
+        <th *ngIf="!capabilities.employee">Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-holiday>
+      <tr>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="holiday.holidayId; else noData"
+            >{{ holiday.holidayId }}</span
+          >
+        </td>
+        <td>
+          <b>
+            <span
+              class="table-column-data"
+              *ngIf="holiday.holidayName; else noData"
+              >{{ holiday.holidayName | capitalizeFirst }}</span
+            >
+          </b>
+        </td>
+        <td>
+          <span class="table-column-data" *ngIf="holiday.date; else noData">{{
+            holiday.date | date
+          }}</span>
+        </td>
+        <td>
+          <span class="table-column-data" *ngIf="holiday.day; else noData">{{
+            holiday.day | capitalizeFirst
+          }}</span>
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="holiday.description; else noData"
+            >{{ holiday.description | capitalizeFirst }}</span
+          >
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="holiday.createdOn; else noData"
+            >{{ holiday.createdOn | date }}</span
+          >
+        </td>
+        <td *ngIf="!capabilities.employee">
+          <div class="text-center">
+            <div class="d-flex">
+              <button
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Update"
+                class="p-button-info me-2 update-btn"
+                icon="fa fa-pen-to-square"
+                (click)="updateHoliday(holiday.holidayId)"
+              ></button>
+              <button
+                *ngIf="capabilities.delete"
+                pButton
+                type="button"
+                icon="fa fa-trash"
+                pTooltip="Delete"
+                class="p-button-danger me-2 delete-btn"
+                (click)="confirmDelete(holiday)"
+              ></button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr class="text-center">
+        <td colspan="10" class="text-center fw-bold">
+          <img
+            src="../../../assets/images/menu/nodata.gif"
+            width="200"
+            height="200"
+          />
+          <p>No Holidays Found</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<ng-template #noData> - </ng-template>
+<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+  <div class="text-center mb-3 fw-bold">
+    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
+      style="color: #51c297"
+      >Fintalk</b
+    >. | All Rights Reserved
+  </div>
+</footer>
