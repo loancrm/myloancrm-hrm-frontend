@@ -479,14 +479,16 @@ export class DesignationsComponent implements OnInit {
   getStatusColor(status: string): {
     textColor: string;
     backgroundColor: string;
+    dotColor: string;
+    width: string;
   } {
     switch (status) {
       case 'Active':
-        return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6' };
+        return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6',dotColor: '#14BA6D',width: '100px'  };
       case 'InActive':
-        return { textColor: '#FF555A', backgroundColor: '#FFE2E3' };
+        return { textColor: '#FF555A', backgroundColor: '#FFE2E3', dotColor: '#FF555A',width: '100px'  };
       default:
-        return { textColor: 'black', backgroundColor: 'white' };
+        return { textColor: 'black', backgroundColor: 'white', dotColor: '#14BA6D',width: '100px' };
     }
   }
 

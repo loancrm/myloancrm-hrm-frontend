@@ -1,6 +1,6 @@
 .title {
   font-size: 24px !important;
-  color: #1e4079 !important;
+  color: #8e89d0 !important;
   font-weight: bold !important;
 }
 .pi-bars {
@@ -33,7 +33,7 @@
   justify-content: center;
   font-weight: bold;
   font-size: 20px;
-  color: #5b0888;
+  color: #535ab4;
   margin: 0px 8px 0px 0px;
 }
 
@@ -59,6 +59,12 @@
   .desktop-only .alerticon {
     display: block;
   }
+  .icon-container .alerticon {
+    display: none !important;
+  }
+  .badge {
+    display: none !important;
+  }
 }
 
 .header-card {
@@ -69,7 +75,7 @@
   font-size: 14px;
 }
 .value {
-  color: #33009c;
+  color: #535ab4;
 }
 
 .info-line {
@@ -102,7 +108,7 @@
   position: absolute;
   top: -5px;
   right: -5px;
-  background-color: #6565ff;
+  background-color: #535ab4;
   color: white;
   font-size: 12px;
   padding: 3px 5px;

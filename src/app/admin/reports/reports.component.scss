@@ -1,15 +1,16 @@
 .reportscard {
   margin: 10px;
-  border: none !important;
+  // border: none !important;
+  border: 1px solid #e4e4e7;
   border-radius: 5px;
   box-shadow: 0 0 10px 1px rgba(80, 82, 106, 0.25);
 }
 
 .create i.fa {
-  color: #31425e;
+  color: #8e89d0;
   font-size: 22px;
 }
 .report-name {
-  color: #31425e;
+  color: #333333;
   font-size: 18px;
 }

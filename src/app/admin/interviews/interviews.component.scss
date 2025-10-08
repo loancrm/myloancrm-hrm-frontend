@@ -1,7 +1,7 @@
 .custom-btn {
   height: 30px;
-  background-color: #2e4374 !important;
-  border: #2e4374;
+  background-color: #706ec4 !important;
+  border: #c7c2e8;
   box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
 }
 .cardicons .fa {
@@ -23,10 +23,10 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #33009c !important;
+  border: 1px solid #c7c2e8 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #33009c !important;
+  border: 1px solid #c7c2e8 !important;
   box-shadow: 0 0 5px #9b8db5 !important;
   outline: none;
 }
@@ -41,7 +41,7 @@
 }
 .count-title {
   font-size: 17px;
-  color: #31425e;
+  color: #333333;
   font-weight: bold;
 }
 
@@ -53,7 +53,7 @@
 .icon {
   width: 35px;
   margin-right: 13px;
-  color: #31425e;
+  color: #535ab4;
   background-color: #f2f7fe;
   border-radius: 50%;
   padding: 8px;
@@ -74,7 +74,8 @@
   font-weight: bold;
 }
 .cards {
-  border-left: 5px solid #31425e;
+  box-shadow: 5px solid #c7c2e8;
+  border: 1px solid #e4e4e7;
 }
 
 .value {
@@ -93,6 +94,6 @@
     margin-left: 0;
   }
 }
-.active-card {
-  box-shadow: 0 0 15px rgba(38, 32, 104, 0.5) !important;
-}
+// .active-card {
+//   box-shadow: 0 0 15px #535AB4 !important;
+// }

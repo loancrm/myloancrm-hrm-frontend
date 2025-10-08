@@ -81,34 +81,34 @@ export class EmployeesComponent implements OnInit {
   updateCountsAnalytics() {
     this.countsAnalytics = [
       {
-        name: 'user-group',
+        name: 'allemp',
         displayName: 'All Employees',
         count:
           this.employeeStatusCount.statusCount['1'] +
           this.employeeStatusCount.statusCount['2'],
-        textcolor: '#6C5FFC',
-        backgroundcolor: '#F0EFFF',
+        textcolor: '#C7C2E8',
+        boxShadow: '#C7C2E8',
       },
       {
-        name: 'circle-user',
+        name: 'newemploye',
         displayName: 'New Employees',
         count: this.employeeStatusCount.newEmployeeCount['new'],
-        textcolor: '#2980B9',
-        backgroundcolor: '#D5E8F7',
+        textcolor: '#C7C2E8',
+        boxShadow: '#C7C2E8',
       },
       {
-        name: 'check-circle',
+        name: 'activeemp',
         displayName: 'Active Employees',
         count: this.employeeStatusCount.statusCount['1'],
         textcolor: '#2ECC71',
-        backgroundcolor: '#F0F9E8',
+        boxShadow: '#C7C2E8',
       },
       {
-        name: 'circle-xmark',
+        name: 'inactivemp',
         displayName: 'InActive Employees',
         count: this.employeeStatusCount.statusCount['2'],
         textcolor: '#DC3545',
-        backgroundcolor: '#F8D7DA',
+        boxShadow: '#C7C2E8',
       },
     ];
   }
@@ -717,14 +717,16 @@ export class EmployeesComponent implements OnInit {
   getStatusColor(status: string): {
     textColor: string;
     backgroundColor: string;
+    dotColor: string;
+    width: string;
   } {
     switch (status) {
       case 'Active':
-        return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6' };
+        return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6', dotColor: '#14BA6D',width: '100%' };
       case 'InActive':
-        return { textColor: '#FF555A', backgroundColor: '#FFE2E3' };
+        return { textColor: '#FF555A', backgroundColor: '#FFE2E3', dotColor: '#FF555A',width: '100%' };
       default:
-        return { textColor: 'black', backgroundColor: 'white' };
+        return { textColor: 'black', backgroundColor: 'white', dotColor: '#14BA6D',width: '100%' };
     }
   }
   createEmployee() {

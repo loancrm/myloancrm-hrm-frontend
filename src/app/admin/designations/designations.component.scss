@@ -1,8 +1,8 @@
 .custom-btn {
   height: 30px;
-  background-color: #2e4374 !important;
-  border: #2e4374;
-  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+  background-color: #c7c2e8 !important;
+  border: #c7c2e8;
+  // box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
 }
 .cardicons .fa {
   font-size: 25px;
@@ -13,7 +13,7 @@
 }
 .card {
   border: none;
-  box-shadow: 0 0 10px 1px rgba(80, 82, 106, 0.25);
+  // box-shadow: 0 0 10px 1px rgba(80, 82, 106, 0.25);
 }
 
 .p-inputtext {
@@ -23,11 +23,11 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #33009c !important;
+  border: 1px solid #c7c2e8 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #33009c !important;
-  box-shadow: 0 0 5px #9b8db5 !important;
+  border: 1px solid #c7c2e8 !important;
+  // box-shadow: 0 0 5px #C7C2E8 !important;
   outline: none;
 }
 
@@ -37,30 +37,30 @@
 .count-sub-title {
   font-size: 15px;
   font-weight: bold;
-  color: #878a99;
+  color: #c7c2e8;
 }
 .count-title {
   font-size: 17px;
-  color: #31425e;
+  color: #535ab4;
   font-weight: bold;
 }
 
 .p-button:focus {
   outline: 0 none;
   outline-offset: 0;
-  box-shadow: 0 0 0 0.2rem #abc6f7;
+  // box-shadow: 0 0 0 0.2rem #abc6f7;
 }
 .icon {
   width: 35px;
   margin-right: 13px;
-  color: #31425e;
+  color: #535ab4;
   background-color: #f2f7fe;
   border-radius: 50%;
   padding: 8px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+  // box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
 }
 
 .info-line {
@@ -74,7 +74,7 @@
   font-weight: bold;
 }
 .cards {
-  border-left: 5px solid #31425e;
+  border-left: 5px solid #535ab4;
 }
 
 .value {

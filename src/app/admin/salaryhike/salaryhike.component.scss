@@ -11,15 +11,21 @@
 }
 .custom-btn {
   height: 30px;
-  background-color: #2e4374 !important;
-  border: #2e4374;
+  background-color: #535ab4 !important;
+  border: #c7c2e8;
   box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
 }
-.view-btn {
-  height: 30px;
-  border-radius: 50px;
-  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
-}
+// .view-btn {
+//   height: 30px;
+//   border-radius: 50px;
+//   box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+//   // color: #535AB4;
+//   background-color: #535AB4;
+//   border-color: #535AB4;
+// }
+// .view-btn :hover{
+//   background-color: #535AB4 !important;
+// }
 .p-inputtext {
   color: #333;
   padding: 10px;
@@ -27,10 +33,10 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #33009c !important;
+  border: 1px solid #c7c2e8 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #33009c !important;
+  border: 1px solid #c7c2e8 !important;
   box-shadow: 0 0 5px #9b8db5 !important;
   outline: none;
 }
@@ -45,7 +51,7 @@
 }
 .count-title {
   font-size: 17px;
-  color: #31425e;
+  color: #535ab4;
   font-weight: bold;
 }
 
@@ -57,14 +63,14 @@
 .icon {
   width: 35px;
   margin-right: 13px;
-  color: #31425e;
+  color: #535ab4;
   background-color: #f2f7fe;
   border-radius: 50%;
   padding: 8px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+  // box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
 }
 
 .info-line {
@@ -78,7 +84,7 @@
   font-weight: bold;
 }
 .cards {
-  border-left: 5px solid #31425e;
+  box-shadow: 5px solid #c7c2e8;
 }
 
 .value {

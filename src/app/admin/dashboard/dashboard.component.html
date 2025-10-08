@@ -10,7 +10,7 @@
           <div class="card-content text-capitalize">
             <h4>
               Welcome Back,
-              <span style="color: #8cb5fe"
+              <span style="color: #535ab5"
                 ><b>
                   {{
                     capabilities.employee
@@ -52,17 +52,17 @@
               <ng-container *ngIf="item.condition">
                 <div class="col-lg-4 col-md-6 col-sm-6 col-12 mt-2">
                   <div
-                    class="card p-3 shadow-sm pointer-cursor m-2 cards"
+                    class="card p-3 shadow-sm pointer-cursor m-2 cards cardkname"
                     (click)="goToRoute(item.routerLink)"
                   >
                     <div class="d-flex justify-content-between">
                       <div class="d-flex align-items-center">
                         <div>
                           <div
-                            class="count-sub-title"
+                            class="count-sub-title cardsdisplayname"
                             *ngIf="!capabilities.employee"
                           >
-                            {{ item.displayName }}
+                            {{ item.displayName | uppercase }}
                           </div>
                           <div
                             class="count-sub-title-employee"
@@ -81,16 +81,18 @@
                       <div class="image-container">
                         <p-skeleton
                           *ngIf="item.isLoading"
-                          width="70px"
-                          height="70px"
+                          width="35px"
+                          height="35px"
                           shape="circle"
                         ></p-skeleton>
                         <img
+                          class="imagico"
+                          style="width: 40px"
                           src="
-                            assets/images/menu/{{ item.name }}.png
+                            assets/images/menu/{{ item.name }}.svg
                           "
-                          width="70"
-                          height="70"
+                          width="50"
+                          height="50"
                           alt="{{ item.displayName }} icon"
                           [hidden]="item.isLoading"
                           (load)="onImageLoad(item)"
@@ -126,38 +128,47 @@
         <div class="row mt-2">
           <div class="col-md-6">
             <div class="info-line">
-              <span class="icon text-success"
-                ><i class="fas fa-check"></i
-              ></span>
+              <span class="text-success">
+                <!-- <i class="fas fa-check"></i> -->
+                <img src="../../../assets/images/presenthrmicon.svg" alt="" />
+              </span>
               <div class="label d-flex justify-content-between">
-                Present<b>:&nbsp;</b>
+                TOTAL PRESENT<b>:&nbsp;</b>
               </div>
               <div class="value">{{ totalPresentCount }}</div>
             </div>
             <div class="info-line">
-              <span class="icon text-danger"><i class="fas fa-xmark"></i></span>
+              <span class="text-danger">
+                <!-- <i class="fas fa-xmark"></i> -->
+                <img src="../../../assets/images/onleaveicon.svg" alt="" />
+              </span>
               <div class="label d-flex justify-content-between">
-                Absent<b>:&nbsp;</b>
+                ON LEAVE<b>:&nbsp;</b>
               </div>
               <div class="value">{{ totalAbsentCount }}</div>
             </div>
           </div>
           <div class="col-md-6">
             <div class="info-line">
-              <span class="icon text-warning"
-                ><i class="fas fa-circle-half-stroke"></i
-              ></span>
+              <span class="text-warning">
+                <!-- <i class="fas fa-circle-half-stroke"></i> -->
+                <img src="../../../assets/images/halfdayicon.svg" alt="" />
+              </span>
               <div class="label d-flex justify-content-between">
-                Half-day<b>:&nbsp;</b>
+                HALF-DAY<b>:&nbsp;</b>
               </div>
               <div class="value">{{ totalHalfDayCount }}</div>
             </div>
             <div class="info-line">
-              <span class="icon text-primary"
-                ><i class="fas fa-circle-exclamation"></i
-              ></span>
+              <span class="text-primary">
+                <!-- <i class="fas fa-circle-exclamation"></i> -->
+                <img
+                  src="../../../assets/images/lateloginicon (2).svg"
+                  alt=""
+                />
+              </span>
               <div class="label d-flex justify-content-between">
-                Late<b>:&nbsp;</b>
+                LATE LOGIN<b>:&nbsp;</b>
               </div>
               <div class="value">{{ totalLateCount }}</div>
             </div>
@@ -189,7 +200,7 @@
           >
             <ng-template pTemplate="header">
               <tr>
-                <th>#</th>
+                <th>Emp Id</th>
                 <th>Employee</th>
                 <th>Status</th>
               </tr>
@@ -246,11 +257,11 @@
               <tr class="text-center">
                 <td colspan="10" class="text-center fw-bold">
                   <img
-                    [lazyLoad]="'../../../assets/images/menu/nodata.gif'"
+                    [lazyLoad]="'../../../assets/images/menu/no data found.svg'"
                     width="200"
                     height="200"
                   />
-                  <p>No Absent Data Found</p>
+                  <!-- <p style="font-size: 20px; color: #535AB4; text-align: center;">No Absent Data Found</p> -->
                 </td>
               </tr>
             </ng-template>
@@ -511,7 +522,7 @@
                 *ngIf="panjaguttaCount == 0 && BegumpetCount == 0"
               >
                 <img
-                  [lazyLoad]="'../../../assets/images/menu/nodata.gif'"
+                  [lazyLoad]="'../../../assets/images/menu/no data found.svg'"
                   alt="No Data Available"
                   class="nodata"
                 />
@@ -524,10 +535,10 @@
     <br />
   </div>
   <footer class="bg-light card text-center text-lg-start mt-3">
-    <div class="text-center fw-bold">
-      © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
-        style="color: #51c297"
-        >Fintalk</b
+    <div class="text-center">
+      © {{ currentYear }} <span style="color: #c7c2e8">My</span>&nbsp;<b
+        style="color: #535ab4"
+        >HRMS</b
       >. | All Rights Reserved
     </div>
   </footer>

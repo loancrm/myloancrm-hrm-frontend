@@ -382,29 +382,31 @@ export class UsersComponent implements OnInit {
   } {
     switch (status) {
       case 'Super Admin':
-        return { textColor: '#FFFFFF', backgroundColor: '#18BADD' };
+        return { textColor: '#FFFFFF', backgroundColor: '#18BADD',};
       case 'Admin':
-        return { textColor: '#FFFFFF', backgroundColor: '#2A328F' };
+        return { textColor: '#FFFFFF', backgroundColor: '#2A328F'};
       case 'HR Admin':
-        return { textColor: '#FFFFFF', backgroundColor: '#9367B4' };
+        return { textColor: '#FFFFFF', backgroundColor: '#9367B4'};
       case 'Support Team':
-        return { textColor: '#FFFFFF', backgroundColor: '#F78181' };
+        return { textColor: '#FFFFFF', backgroundColor: '#F78181'};
       default:
-        return { textColor: 'black', backgroundColor: 'white' };
+        return { textColor: 'black', backgroundColor: 'white'};
     }
   }
 
   getUserStatusColor(status: string): {
-    textColor: string;
+   textColor: string;
     backgroundColor: string;
+    dotColor: string;
+    width: string;
   } {
     switch (status) {
       case 'Active':
-        return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6' };
+        return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6', dotColor: '#14BA6D',width: '100%'  };
       case 'InActive':
-        return { textColor: '#FF555A', backgroundColor: '#FFE2E3' };
+        return { textColor: '#FF555A', backgroundColor: '#FFE2E3', dotColor: '#FF555A',width: '100%'  };
       default:
-        return { textColor: 'black', backgroundColor: 'white' };
+        return { textColor: 'black', backgroundColor: 'white', dotColor: '#14BA6D',width: '100%'  };
     }
   }
 

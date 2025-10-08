@@ -17,13 +17,13 @@
           <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
         </div>
       </div>
-      <div class="col-md-2 text-end">
+      <!-- <div class="col-md-2 text-end">
         <img
           src="../../../../assets/images/menu/createemployee.png"
           width="100"
           class="heading-image"
         />
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
@@ -273,7 +273,7 @@
               <div class="col-md-3 mt-2">
                 <div>
                   <div class="my-1">
-                    <label style="color: #ffc107">Attachments</label>
+                    <label>Attachments</label>
                   </div>
                   <div class="d-flex">
                     <button
@@ -664,6 +664,7 @@
           type="submit"
           [disabled]="!employeeForm.valid"
           class="p-button-primary p-button-raised"
+          style="background-color: #535ab4"
         >
           {{ actionType === "create" ? "Add" : "Update" }} Employee
         </button>
@@ -672,10 +673,10 @@
   </div>
 </div>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
-  <div class="text-center mb-3 fw-bold">
-    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
-      style="color: #51c297"
-      >Fintalk</b
+  <div class="text-center mb-3">
+    © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b
+      style="color: #535ab4"
+      >HRMS</b
     >. | All Rights Reserved
   </div>
 </footer>

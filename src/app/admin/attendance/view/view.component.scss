@@ -10,7 +10,7 @@
   box-shadow: 0 0 10px 1px rgba(80, 82, 106, 0.25);
 }
 .cards {
-  border-left: 5px solid #31425e;
+  border-color: 1px solid #878a99;
 }
 .count-sub-title {
   font-size: 15px;
@@ -19,7 +19,7 @@
 }
 .count-title {
   font-size: 17px;
-  color: #31425e;
+  color: #535ab4;
   font-weight: bold;
 }
 .p-inputtext {
@@ -29,10 +29,10 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #33009c !important;
+  border: 1px solid #c7c2e8 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #33009c !important;
+  border: 1px solid #c7c2e8 !important;
   box-shadow: 0 0 5px #9b8db5 !important;
   outline: none;
 }

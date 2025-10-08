@@ -12,10 +12,10 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #33009c !important;
+  border: 1px solid #c7c2e8 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #33009c !important;
+  border: 1px solid #c7c2e8 !important;
   box-shadow: 0 0 5px #9b8db5 !important;
   outline: none;
 }
@@ -29,9 +29,9 @@ label {
   border-radius: 10px;
   padding: 20px;
   margin: 12px;
-  color: white;
-  background-color: #31425e;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #333333;
+  // background-color: #31425e;
+  // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 .file-wrapper {
@@ -43,11 +43,11 @@ label {
   text-decoration: none;
 }
 .p-button-primary {
-  background-color: #533dd5 !important;
+  background-color: #535ab4 !important;
   font-weight: bold;
 }
 .file-icon {
-  color: #8cb5ff;
+  color: #535ab4;
   font-size: 40px;
   transition: color 0.3s;
 }
@@ -74,7 +74,7 @@ label {
 .rightbtn {
   background: linear-gradient(
     90deg,
-    rgba(77, 54, 208, 1) 0%,
+    rgb(150, 139, 211) 0%,
     rgba(132, 116, 254, 1) 100%
   );
   border: 0;
@@ -98,7 +98,7 @@ label {
 .rightbtn:not([disabled]):hover {
   background: linear-gradient(
     90deg,
-    rgba(77, 54, 208, 1) 0%,
+    rgb(150, 139, 211) 0%,
     rgba(132, 116, 254, 1) 100%
   );
   box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.5),

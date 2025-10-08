@@ -263,39 +263,39 @@ export class InterviewsComponent implements OnInit {
   updateCountsAnalytics() {
     this.countsAnalytics = [
       {
-        icon: 'circle-user',
-        name:'all',
+        icon: 'allinterviews',
+        name: 'all',
         displayName: 'All Interviews',
         count:
           this.interviewStatusCount[1] +
           this.interviewStatusCount[2] +
           this.interviewStatusCount[3],
-        textcolor: '#6C5FFC',
-        backgroundcolor: '#F0EFFF',
+        // textcolor: '#6C5FFC',
+
       },
       {
-        icon: 'circle-half-stroke',
-        name:'pending',
+        icon: 'pendingintervies',
+        name: 'pending',
         displayName: 'Pending Interviews',
         count: this.interviewStatusCount[1],
-        textcolor: '#FFC107',
-        backgroundcolor: '#FFF3D6',
+        // textcolor: '#FFC107',
+        // backgroundcolor: '#FFF3D6',
       },
       {
-        icon: 'check-circle',
-        name:'selected',
+        icon: 'selectedinterves',
+        name: 'selected',
         displayName: 'Selected Interviews',
         count: this.interviewStatusCount[2],
-        textcolor: '#2ECC71',
-        backgroundcolor: '#F0F9E8',
+        // textcolor: '#2ECC71',
+        // backgroundcolor: '#F0F9E8',
       },
       {
-        icon: 'circle-xmark',
-        name:'rejected',
+        icon: 'rejectintrvs',
+        name: 'rejected',
         displayName: 'Rejected Interviews',
         count: this.interviewStatusCount[3],
-        textcolor: '#DC3545',
-        backgroundcolor: '#F8D7DA',
+        // textcolor: '#DC3545',
+        // backgroundcolor: '#F8D7DA',
       },
     ];
   }
@@ -627,19 +627,21 @@ export class InterviewsComponent implements OnInit {
     return this.employeesService.getFileIcon(fileType);
   }
 
-  getStatusColor(status: string): {
+getStatusColor(status: string): {
     textColor: string;
     backgroundColor: string;
+    dotColor: string;
+    width: string;
   } {
     switch (status) {
       case 'selected':
-        return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6' };
+        return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6', dotColor: '#14BA6D', width: '100%' };
       case 'pending':
-        return { textColor: '#FFBA15', backgroundColor: '#FFF3D6' };
+        return { textColor: '#FF555A', backgroundColor: '#FFE2E3', dotColor: '#FF555A', width: '100%' };
       case 'rejected':
-        return { textColor: '#FF555A', backgroundColor: '#FFE2E3' };
+        return { textColor: '#FF555A', backgroundColor: '#FFE2E3', dotColor: '#FF555A', width: '100%' };
       default:
-        return { textColor: 'black', backgroundColor: 'white' };
+        return { textColor: 'black', backgroundColor: 'white', dotColor: '#14BA6D', width: '100%' };
     }
   }
 

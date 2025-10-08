@@ -15,13 +15,13 @@
           <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
         </div>
       </div>
-      <div class="col-md-2 text-end">
+      <!-- <div class="col-md-2 text-end">
         <img
           src="../../../assets/images/menu/interviewsticker.png"
           width="100"
           class="heading-image"
         />
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
@@ -78,14 +78,15 @@
       <div class="label d-flex justify-content-between">
         Candidate Name<b>:&nbsp;</b>
       </div>
-      <b
-        ><div class="value">
-          {{
-            selectedInterviewDetails.candidateName
-              ? (selectedInterviewDetails.candidateName | capitalizeFirst)
-              : "-"
-          }}
-        </div></b
+
+      >
+      <div class="value">
+        {{
+          selectedInterviewDetails.candidateName
+            ? (selectedInterviewDetails.candidateName | capitalizeFirst)
+            : "-"
+        }}
+      </div>
       >
     </div>
     <div class="info-line">
@@ -382,7 +383,8 @@
                   'background-color': item.backgroundcolor
                 }"
               >
-                <i class="fa fa-{{ item.icon }}"></i>
+                <img src="../../../assets/images/{{ item.icon }}.svg" alt="" />
+                <!-- <i class="fa fa-{{ item.icon }}"></i> -->
               </div>
             </div>
           </div>
@@ -518,20 +520,20 @@
     <ng-template pTemplate="body" let-interview>
       <tr>
         <td>
-          <span
-            class="table-column-data"
-            *ngIf="interview.interviewId; else noData"
-            >{{ interview.interviewId }}</span
-          >
-        </td>
-        <td>
           <b>
             <span
               class="table-column-data"
-              *ngIf="interview.candidateName; else noData"
-              >{{ interview.candidateName | capitalizeFirst }}</span
+              *ngIf="interview.interviewId; else noData"
+              >{{ interview.interviewId }}</span
             >
           </b>
+        </td>
+        <td>
+          <span
+            class="table-column-data"
+            *ngIf="interview.candidateName; else noData"
+            >{{ interview.candidateName | capitalizeFirst }}</span
+          >
         </td>
         <td>
           <span
@@ -563,7 +565,7 @@
         </td>
         <td>
           <span
-            class="table-column-data fw-bold statusdata"
+            class="d-inline-flex align-items-center justify-content-start gap-2 text-nowrap"
             [pTooltip]="
               interview?.referenceNo
                 ? 'Employee Id: ' + interview.referenceNo
@@ -571,33 +573,66 @@
             "
             *ngIf="interview.interviewInternalStatus"
             [ngStyle]="{
+              backgroundColor: getStatusColor(
+                getStatusName(interview.interviewInternalStatus)
+              ).backgroundColor,
               color: getStatusColor(
                 getStatusName(interview.interviewInternalStatus)
               ).textColor,
-              'background-color': getStatusColor(
+              height: '22px',
+              width: getStatusColor(
                 getStatusName(interview.interviewInternalStatus)
-              ).backgroundColor
+              ).width,
+              borderRadius: '16px',
+              fontSize: '12px',
+              fontWeight: 500,
+              paddingLeft: '8px'
             }"
           >
+            <!-- Dot -->
+            <span
+              class="rounded-circle"
+              [ngStyle]="{
+                backgroundColor: getStatusColor(
+                  getStatusName(interview.interviewInternalStatus)
+                ).dotColor,
+                width: '8px',
+                height: '8px',
+                display: 'inline-block'
+              }"
+            ></span>
+
+            <!-- Status Text -->
             {{ getStatusName(interview.interviewInternalStatus) }}
           </span>
         </td>
         <td>
           <div class="text-center">
-            <div class="d-flex">
+            <div class="d-flex tableimage">
               <p-menu
                 appendTo="body"
                 #menu
                 [model]="actionItems(interview)"
                 [popup]="true"
               ></p-menu>
-              <button
+                 <!-- <button
                 pButton
                 type="button"
                 class="custom-btn"
                 (click)="menu.toggle($event)"
                 icon="pi pi-ellipsis-h"
-              ></button>
+              ></button> -->
+              <img
+                class="pointer-cursor"
+                style="color: #878a99 !important"
+                alt="Actions"
+                src="../../../assets/images/menu/menu.svg"
+                width="24px"
+                height="24px"
+                pTooltip="Actions"
+                tooltipPosition="top"
+                (click)="menu.toggle($event); $event.stopPropagation()"
+              />
             </div>
           </div>
         </td>
@@ -607,11 +642,11 @@
       <tr class="text-center">
         <td colspan="10" class="text-center fw-bold">
           <img
-            src="../../../assets/images/menu/nodata.gif"
-            width="200"
-            height="200"
+            src="../../../assets/images/menu/no data found.svg"
+            width="300"
+            height="300"
           />
-          <p>No Interviews Found</p>
+          <!-- <p>No Interviews Found</p> -->
         </td>
       </tr>
     </ng-template>
@@ -619,10 +654,10 @@
 </div>
 <ng-template #noData> - </ng-template>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
-  <div class="text-center mb-3 fw-bold">
-    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
-      style="color: #51c297"
-      >Fintalk</b
+  <div class="text-center mb-3">
+    © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b
+      style="color: #535ab4"
+      >HRMS</b
     >. | All Rights Reserved
   </div>
 </footer>

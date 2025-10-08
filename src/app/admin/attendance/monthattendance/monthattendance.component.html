@@ -17,13 +17,13 @@
           <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
         </div>
       </div>
-      <div class="col-md-2 text-end">
+      <!-- <div class="col-md-2 text-end">
         <img
           src="../../../../assets/images/menu/createattendance.png"
           width="100"
           class="heading-image"
         />
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
@@ -200,37 +200,67 @@
             <ng-container
               [ngSwitch]="getAttendanceForDate(employee.employeeId, date)"
             >
-              <i
+              <!-- <img src="../../../../assets/images/presenthrmicon.svg" alt=""> -->
+              <!-- <i
                 *ngSwitchCase="'Present'"
                 pTooltip="Present"
                 class="fa fa-check-circle text-success"
                 title="Present"
-              ></i>
-              <i
+              ></i> -->
+              <img
+                src="../../../../assets/images/presenthrmicon.svg"
+                alt=""
+                *ngSwitchCase="'Present'"
+                title="Present"
+                pTooltip="Present"
+              />
+              <!-- <img src="../../../../assets/images/onleaveicon.svg" alt=""> -->
+              <!-- <i
                 *ngSwitchCase="'Absent'"
                 pTooltip="Absent"
                 class="fa fa-circle-xmark text-danger"
                 title="Absent"
-              ></i>
+              ></i> -->
+              <img
+                src="../../../../assets/images/onleaveicon.svg"
+                alt=""
+                *ngSwitchCase="'Absent'"
+                title="Absent"
+                pTooltip="Absent"
+              />
               <ng-container *ngSwitchCase="'Half-day'">
-                <i
+                <!-- <i
                   pTooltip="{{
                     getCheckinTimeCheckOutTime(employee.employeeId, date)
                   }}"
                   pTooltipPosition="top"
                   class="fa fa-circle-half-stroke text-warning"
                   title="Half-day"
-                ></i>
+                ></i> -->
+                <img
+                  src="../../../../assets/images/halfdayicon.svg"
+                  alt=""
+                  *ngSwitchCase="'Half-day'"
+                  title="Half-day"
+                  pTooltip="Half-day"
+                />
               </ng-container>
               <ng-container *ngSwitchCase="'Late'">
-                <i
+                <!-- <i
                   pTooltip="{{
                     getCheckinTimeCheckOutTime(employee.employeeId, date)
                   }}"
                   pTooltipPosition="top"
                   class="fa fa-circle-exclamation text-primary"
                   title="Late"
-                ></i>
+                ></i> -->
+                <img
+                  src="../../../../assets/images/lateloginicon (2).svg"
+                  alt=""
+                  *ngSwitchCase="'Late'"
+                  title="Late"
+                  pTooltip="Late"
+                />
               </ng-container>
               <span *ngSwitchDefault>{{
                 getAttendanceForDate(employee.employeeId, date)
@@ -238,11 +268,18 @@
             </ng-container>
           </td>
           <td *ngIf="!isAttendanceMatched(employee.employeeId, date)">
-            <i
+            <!-- <i
               pTooltip="Holiday"
               class="fa fa-star text-muted"
               title="Holiday"
-            ></i>
+            ></i> -->
+            <img
+              src="../../../../assets/images/menu/holidayhrmlogo.svg"
+              alt=""
+              title="Holiday"
+              pTooltip="Holiday"
+              style="size: 5px"
+            />
           </td>
         </ng-container>
       </tr>
@@ -251,11 +288,11 @@
       <tr class="text-center">
         <td colspan="30" class="text-center fw-bold">
           <img
-            src="../../../assets/images/menu/nodata.gif"
-            width="200"
-            height="200"
+            src="../../../assets/images/menu/no data found.svg"
+            width="300"
+            height="300"
           />
-          <p>No Employees Found</p>
+          <!-- <p>No Employees Found</p> -->
         </td>
       </tr>
     </ng-template>
@@ -263,18 +300,25 @@
 </div>
 <div class="status-legend m-3">
   <u>Note:</u>
-  <i class="fa fa-star text-muted" title="Holiday"></i> Holiday |
-  <i class="fa fa-check-circle text-success" title="Present"></i> Present |
-  <i class="fa fa-circle-half-stroke text-warning" title="Half-day"></i>
+  <!-- <i class="fa fa-star text-muted" title="Holiday"></i>  -->
+  <img src="../../../../assets/images/menu/holidayhrmlogo.svg" alt="" />
+  Holiday |
+  <img src="../../../../assets/images/presenthrmicon.svg" alt="" /> Present |
+  <!-- <i class="fa fa-circle-half-stroke text-warning" title="Half-day"></i> -->
+  <img src="../../../../assets/images/halfdayicon.svg" alt="" />
   Half-Day |
-  <i class="fa fa-circle-exclamation text-primary" title="Late"></i> Late |
-  <i class="fa fa-circle-xmark text-danger" title="Absent"></i> Absent
+  <!-- <i class="fa fa-circle-exclamation text-primary" title="Late"></i> -->
+  <img src="../../../../assets/images/lateloginicon (2).svg" alt="" />
+  Late |
+  <!-- <i class="fa fa-circle-xmark text-danger" title="Absent"></i> -->
+  <img src="../../../../assets/images/onleaveicon.svg" alt="" />
+  Absent
 </div>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
-  <div class="text-center mb-3 fw-bold">
-    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
-      style="color: #51c297"
-      >Fintalk</b
+  <div class="text-center mb-3">
+    © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b
+      style="color: #535ab4"
+      >HRMS</b
     >. | All Rights Reserved
   </div>
 </footer>

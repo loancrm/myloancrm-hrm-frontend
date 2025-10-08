@@ -11,13 +11,13 @@ label {
   border-radius: 10px;
   padding: 20px;
   margin: 12px;
-  color: white;
-  background-color: #31425e;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #2e2e2e;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px #c7c2e8;
   margin-bottom: 20px;
 }
 .p-button-primary {
-  background-color: #533dd5 !important;
+  // background-color: #535AB4 !important;
   font-weight: bold;
 }
 .p-inputtext {
@@ -28,10 +28,10 @@ label {
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #33009c !important;
+  border: 1px solid #c7c2e8 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #33009c !important;
+  border: 1px solid #c7c2e8 !important;
   box-shadow: 0 0 5px #9b8db5 !important;
   outline: none;
 }
@@ -65,7 +65,7 @@ label {
   margin-bottom: 5px;
   background: linear-gradient(
     90deg,
-    rgba(77, 54, 208, 1) 0%,
+    rgb(187, 179, 231) 0%,
     rgba(132, 116, 254, 1) 100%
   );
   padding: 20px;
@@ -89,7 +89,7 @@ label {
 }
 .connector .fa {
   font-size: 20px;
-  color: #543ed6;
+  color: #c7c2e8;
   transition: background-color 0.3s ease-in-out;
 }
 .step.active span.pi {
@@ -100,7 +100,7 @@ label {
 }
 .step.active .p-steps-title,
 .step.active .p-steps-num {
-  color: #543ed6;
+  color: #b2a9e3;
   font-weight: bold;
 }
 .step:not(.active) span.pi {
@@ -125,7 +125,7 @@ label {
 }
 .cardheading {
   font-weight: bold;
-  color: #8cb5ff;
+  color: #706ec4;
 }
 .delete-btn {
   position: absolute;
@@ -157,7 +157,7 @@ label {
 .rightbtn {
   background: linear-gradient(
     90deg,
-    rgba(77, 54, 208, 1) 0%,
+    rgb(184, 177, 226) 0%,
     rgba(132, 116, 254, 1) 100%
   );
   border: 0;
@@ -175,13 +175,13 @@ label {
 }
 .rightbtn:not([disabled]):focus {
   box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.5),
-    -0.125rem -0.125rem 1rem rgba(140, 106, 241, 0.514),
+    -0.125rem -0.125rem 1rem rgba(195, 182, 233, 0.514),
     0.125rem 0.125rem 1rem rgba(192, 139, 241, 0.5);
 }
 .rightbtn:not([disabled]):hover {
   background: linear-gradient(
     90deg,
-    rgba(77, 54, 208, 1) 0%,
+    rgb(168, 159, 221) 0%,
     rgba(132, 116, 254, 1) 100%
   );
   box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.5),

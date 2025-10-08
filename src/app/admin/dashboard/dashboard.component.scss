@@ -1,39 +1,47 @@
 .welcome-card {
   border: none;
-  background-color: #31425e;
+  // background-color:#C7C2E8;
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  // box-shadow: 0 4px 10px #C7C2E8;
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 10px;
 }
 .card-content {
-  color: white;
+  color: #878784;
+  // font-weight: 500 !important;
 }
 .card-icon {
   width: 250px;
 }
+.cardsdisplayname {
+  letter-spacing: 1px !important;
+}
+
 .cards {
   cursor: pointer;
-  border-left: 5px solid #31425e !important;
+  box-shadow: 5px solid #b2a9e3 !important;
+  border: 1px solid #e4e4e7;
 }
 .count-title {
   font-size: 25px !important;
   font-weight: bold !important;
-  color: #31425e;
+  color: #333333;
 }
 .count-sub-title {
-  font-size: 15px !important;
-  font-weight: bold !important;
+  font-size: 12px !important;
+  // font-weight: bold !important;
+  color: #878784;
 }
 .count-sub-title-employee {
-  font-size: 20px !important;
+  font-size: 12px !important;
   font-weight: bold !important;
-  color: #26334a;
+  color: #535ab4;
 }
 .card {
   border: none;
-  box-shadow: 0 0 10px 1px rgba(80, 82, 106, 0.25);
+  // box-shadow: 0 0 10px 1px #C7C2E8;
+  border: 2px solid rgb(228, 226, 226);
 }
 .nodata-container {
   position: absolute;
@@ -56,37 +64,44 @@
   margin-bottom: 15px;
 }
 .label {
-  flex: 0 0 80px;
+  // flex: 0 0 80px;
   font-weight: bold;
+  font-size: 14px !important;
+  margin-left: 4px;
 }
 .value {
   color: grey;
   flex: 1;
 }
 .icon {
-  width: 35px;
+  width: 5px;
   margin-right: 13px;
-  background-color: #f2f7fe;
+  background-color: #e4e4e7;
   border-radius: 50%;
   padding: 8px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+  // box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+  border: 2px solid gray;
 }
 .attendance-heading {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
-  padding: 10px;
+  // padding: 10px;
 }
 .attendancecard {
-  height: 560px;
+  height: 525px;
   overflow: hidden;
 }
 .employeeProfile {
   min-height: 430px;
   // background-color: #31425e;
-  border-top: 5px solid #31425e;
+  // border-top: 5px solid #C7C2E8;
+  border: 2px solid gray;
+}
+.cardkname {
+  height: 95px;
 }
 .custom-scroll-container {
   max-height: 330px;
@@ -96,7 +111,7 @@
   width: 6px;
 }
 .custom-scroll-container::-webkit-scrollbar-thumb {
-  background-color: #51c295;
+  background-color: #c7c2e8;
 }
 .custom-scroll-container::-webkit-scrollbar-track {
   background: #f1f1f1;
@@ -133,13 +148,30 @@
   .mobile-only {
     display: block !important;
   }
+  .card {
+    width: 100%;
+  }
+  .cardkname {
+    width: 100%;
+    height: 100%;
+  }
+  .cardsdisplayname {
+    letter-spacing: 1px !important;
+    font-size: 12px !important;
+  }
+  .imagico {
+    width: 80px;
+  }
+
+  .cards {
+    cursor: pointer;
+    box-shadow: 5px solid #b2a9e3 !important;
+    border: 1px solid #e4e4e7;
+    height: 110px !important;
+  }
 }
 .rightbtn {
-  background: linear-gradient(
-    90deg,
-    rgba(77, 54, 208, 1) 0%,
-    rgba(132, 116, 254, 1) 100%
-  );
+  background: linear-gradient(90deg, #b2a9e3 0%, #535ab4 100%);
   border: 0;
   border-radius: 12px;
   color: #ffffff;
@@ -152,22 +184,21 @@
   padding: 0.5rem 1rem;
   text-decoration: none;
   transition: box-shadow 0.2s ease-in-out;
+  border: 2px solid gray;
 }
-.rightbtn:not([disabled]):focus {
-  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.5),
-    -0.125rem -0.125rem 1rem rgba(140, 106, 241, 0.514),
-    0.125rem 0.125rem 1rem rgba(192, 139, 241, 0.5);
-}
+// .rightbtn:not([disabled]):focus {
+//   box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.5),
+//     -0.125rem -0.125rem 1rem #B2A9E3,
+//     0.125rem 0.125rem 1rem #B2A9E3;
+// }
 .rightbtn:not([disabled]):hover {
-  background: linear-gradient(
-    90deg,
-    rgba(77, 54, 208, 1) 0%,
-    rgba(132, 116, 254, 1) 100%
-  );
-  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.5),
-    -0.125rem -0.125rem 1rem rgba(140, 106, 241, 0.514),
-    0.125rem 0.125rem 1rem rgba(192, 139, 241, 0.5);
+  background: linear-gradient(90deg, #e9e7f7 0%, #c7c2e8 100%);
+  border: 2px solid gray;
+  //   box-shadow: 0 0 0.25rem #C7C2E8,
+  //     -0.125rem -0.125rem 1rem rgba(140, 106, 241, 0.514),
+  //     0.125rem 0.125rem 1rem rgba(192, 139, 241, 0.5);
+  // border-color: #333333;
 }
-.loggedin-value{
+.loggedin-value {
   font-size: 30px;
 }

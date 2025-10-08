@@ -15,13 +15,13 @@
           <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
         </div>
       </div>
-      <div class="col-md-2 text-end">
+      <!-- <div class="col-md-2 text-end">
         <img
           src="../../../assets/images/menu/attendance.png"
           width="100"
           class="heading-image"
         />
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
@@ -200,6 +200,7 @@
                 class="p-button-info me-2 view-btn"
                 icon="fa fa-eye"
                 (click)="ViewAttendance(attendance.attendanceId)"
+                style="background-color: #535ab4; border-color: #535ab4"
               ></button>
               <button
                 pButton
@@ -209,6 +210,7 @@
                 class="p-button-success me-2 update-btn"
                 icon="fa fa-pen-to-square"
                 (click)="updateAttendance(attendance.attendanceId)"
+                style="background-color: #8e89d0; border-color: #8e89d0"
               ></button>
               <button
                 *ngIf="capabilities.delete"
@@ -234,30 +236,74 @@
         <td>{{ employee.attendanceDate | date }}</td>
         <td>
           <ng-container [ngSwitch]="employee.status">
+            <!-- Present Status with Green Dot -->
+            <span
+              *ngSwitchCase="'Present'"
+              [ngStyle]="{
+                color: 'green',
+                'font-size': '20px',
+                'margin-right': '8px'
+              }"
+              >•</span
+            >
             <i
               *ngSwitchCase="'Present'"
               pTooltip="Present"
               class="fa fa-check-circle text-success"
               title="Present"
             ></i>
+            <!-- Absent Status with Red Dot -->
+            <span
+              *ngSwitchCase="'Absent'"
+              [ngStyle]="{
+                color: 'red',
+                'font-size': '20px',
+                'margin-right': '8px'
+              }"
+              >•</span
+            >
             <i
               *ngSwitchCase="'Absent'"
               pTooltip="Absent"
               class="fa fa-circle-xmark text-danger"
               title="Absent"
             ></i>
+
+            <!-- Half-day Status with Orange Dot -->
+            <span
+              *ngSwitchCase="'Half-day'"
+              [ngStyle]="{
+                color: 'orange',
+                'font-size': '20px',
+                'margin-right': '8px'
+              }"
+              >•</span
+            >
             <i
               *ngSwitchCase="'Half-day'"
               pTooltip="Half-day"
               class="fa fa-circle-half-stroke text-warning"
               title="Half-day"
             ></i>
+
+            <!-- Late Status with Blue Dot -->
+            <span
+              *ngSwitchCase="'Late'"
+              [ngStyle]="{
+                color: 'blue',
+                'font-size': '20px',
+                'margin-right': '8px'
+              }"
+              >•</span
+            >
             <i
               *ngSwitchCase="'Late'"
               pTooltip="Late"
               class="fa fa-circle-exclamation text-primary"
               title="Late"
             ></i>
+
+            <!-- Default Case for Other Statuses -->
             <span *ngSwitchDefault>{{ employee.status }}</span>
           </ng-container>
         </td>
@@ -275,21 +321,21 @@
       <tr>
         <td colspan="10" class="text-center fw-bold">
           <img
-            src="../../../assets/images/menu/nodata.gif"
-            width="200"
-            height="200"
+            src="../../../assets/images/menu/no data found.svg"
+            width="300"
+            height="300"
           />
-          <p>No Attendance Found</p>
+          <!-- <p>No Attendance Found</p> -->
         </td>
       </tr>
     </ng-template>
   </p-table>
 </div>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
-  <div class="text-center mb-3 fw-bold">
-    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
-      style="color: #51c297"
-      >Fintalk</b
+  <div class="text-center mb-3">
+    © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b
+      style="color: #535ab4"
+      >HRMS</b
     >. | All Rights Reserved
   </div>
 </footer>

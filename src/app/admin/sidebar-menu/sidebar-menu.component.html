@@ -1,266 +1,101 @@
-<ng-container class="sidemenu-sidebar">
-  <p-sidebar [(visible)]="sidebarVisible" class="sidemenu-sidebar" #sidebarMenu>
-    <ng-template pTemplate="header" class="shadow-sm">
-      <div class="custom-sidebar-header">
-        <div class="d-flex">
-          <div class="me-2">
-            <img
-              src="../../../assets/images/logo.png"
-              alt="Business Logo"
-              width="50"
-              loading="lazy"
-              height="40"
-              class="rounded-circle"
-            />
-          </div>
-          <div class="d-flex align-items-center">
-            <span class="fw-bold" style="font-size: 25px"
-              >The <strong style="color: #51c297">Fintalk</strong></span
-            >
-          </div>
-        </div>
-      </div>
-    </ng-template>
-    <div class="sidebar-menu">
-      <div class="row">
-        <ng-container *ngFor="let item of subFeatureMenuItems">
-          <div class="pointer-cursor" *ngIf="item.condition">
-            <div
-              class="card shadow-lg text-start mt-2"
-              (click)="showMenuSection()"
-              routerLink="{{ item.routerLink }}"
-              [queryParams]="{ v: version }"
-            >
-              <div
-                class="d-flex justify-content-between"
-                routerLinkActive="active-menu-sidebar"
-              >
-                <div class="d-flex">
-                  <div class="me-3">
-                    <img
-                      [lazyLoad]="'assets/images/menu/' + item.image"
-                      width="30"
-                      height="30"
-                    />
-                  </div>
-                  <div class="menu-subfeatures-text mt-1 text-capitalize">
-                    {{ item.name }}
-                  </div>
-                </div>
-                <div class="angleicon fw-bold d-flex align-items-center">
-                  <i class="pi pi-angle-right"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-      </div>
-    </div>
-    <ng-template pTemplate="footer" *ngIf="userDetails">
-      <div class="row m-2">
-        <ng-container>
-          <div class="card px-3 py-0 shadow">
-            <div>
-              <div class="fw-bold account-title">My Account</div>
-            </div>
-            <div
-              class="light-blue-background p-2 mt-2 pointer-cursor"
-              (click)="gotoAccountProfile()"
-            >
-              <div class="d-flex">
-                <div class="me-2">
-                  <!-- <div class="d-flex justify-content-center align-items-center">
-                    <ng-container
-                      *ngIf="
-                        userDetails &&
-                        userDetails.userImage &&
-                        userDetails.userImage.length > 0
-                      "
-                    >
-                      <ng-container>
-                        <a
-                          [href]="'//' + userDetails.userImage[0]"
-                          target="_blank"
-                        >
-                          <img
-                            [src]="'//' + userDetails.userImage[0]"
-                            alt="Image"
-                            class="employeeImage"
-                            style="height: 50px; width: 50px"
-                          />
-                        </a>
-                      </ng-container>
-                    </ng-container>
-                    <div *ngIf="userDetails && userDetails.userImage == null">
-                      <tr class="text-center">
-                        <img
-                          class="employeeImage"
-                          style="height: 50px; width: 50px"
-                          src="../../../assets/images/profile/user.png"
-                        />
-                      </tr>
-                    </div>
-                  </div> -->
-                  <div class="d-flex justify-content-center align-items-center">
-                    <ng-container>
-                      <ng-container
-                        *ngIf="
-                          capabilities.employee
-                            ? userDetails?.passPhoto
-                            : userDetails?.userImage?.length > 0;
-                          else defaultImage
-                        "
-                      >
-                        <a
-                          [href]="
-                            capabilities.employee
-                              ? '//' + userDetails.passPhoto
-                              : '//' + userDetails.userImage[0]
-                          "
-                          target="_blank"
-                        >
-                          <img
-                            [src]="
-                              capabilities.employee
-                                ? '//' + userDetails.passPhoto
-                                : '//' + userDetails.userImage[0]
-                            "
-                            alt="Image"
-                            class="employeeImage"
-                            style="height: 50px; width: 50px"
-                          />
-                        </a>
-                      </ng-container>
-                    </ng-container>
-
-                    <ng-template #defaultImage>
-                      <img
-                        class="employeeImage"
-                        style="height: 50px; width: 50px"
-                        src="../../../assets/images/profile/user.png"
-                      />
-                    </ng-template>
-                  </div>
-                </div>
-                <div>
-                  <div class="text-primary fw-bold text-capitalize">
-                    {{
-                      capabilities.employee
-                        ? (userDetails?.employeeName | capitalizeFirst)
-                        : (userDetails?.username | capitalizeFirst)
-                    }}
-                  </div>
-                  <div class="text-capitalize">
-                    {{ userDetails.designationName }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="pointer-cursor">
-              <div
-                class="card shadow-lg text-start mt-2 background-colorful-red"
-                (click)="userLogout()"
-              >
-                <div class="d-flex justify-content-between">
-                  <div class="d-flex">
-                    <div class="me-3">
-                      <img
-                        src="../../../assets/images/menu/home.png"
-                        width="20"
-                        height="20"
-                      />
-                    </div>
-                    <div
-                      class="menu-features-text mt-1 text-capitalize text-light"
-                    >
-                      Logout
-                    </div>
-                  </div>
-                  <div class="text-light fw-bold d-flex align-items-center">
-                    <i class="pi pi-angle-right"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-      </div>
-    </ng-template>
-  </p-sidebar>
-</ng-container>
-
 <div
-  *ngIf="!iswiz"
-  class="aside aside-left aside-fixed d-flex flex-column flex-row-auto aside-minimize"
-  [class.aside-on]="showMenu"
+  class="sidebar-overlay"
+  *ngIf="sidebarVisible && isMobile"
+  (click)="closeSidebar()"
+></div>
+
+<!-- 🧭 Sidebar -->
+<div
+  class="sidebar d-flex flex-column"
+  [ngClass]="{
+    collapsed: !isSidebarVisible,
+    'mobile-visible': sidebarVisible
+  }"
 >
-  <div class="brand flex-column-auto">
-    <a (click)="gotoActiveHome()" class="brand-logo img-section mgn-up-10">
-      <img class="Logo" src="assets/images/menu/home.png" alt="Home" />
-    </a>
-    <button
-      class="brand-toggle btn btn-sm px-0 pointer-cursor"
-      (click)="sidebarVisible = true"
-    >
-      <span class="svg-icon svg-icon svg-icon-xl">
-        <i class="pi pi-bars text-light"></i>
-      </span>
-    </button>
-  </div>
-  <div id="kt_aside_menu_wrapper" class="aside-menu-wrapper flex-column-fluid">
+  <!-- Sidebar Header -->
+  <div class="sidebar-header text-center py-3 position-relative">
+    <!-- Logo (full or icon based on collapse) -->
+    <img
+      src="../../../assets/images/logo.svg"
+      alt="MyLoanCRM"
+      class="logo"
+      *ngIf="isSidebarVisible"
+    />
+    <!-- <img
+      src="../../../assets/fav_icon.svg"
+      alt="MyLoanCRM"
+      width="40"
+      *ngIf="!isSidebarVisible"
+    /> -->
+
+    <!-- Sidebar Toggle Button -->
     <div
-      id="kt_aside_menu"
-      data-menu-vertical="1"
-      data-menu-scroll="1"
-      data-menu-dropdown-timeout="500"
-      class="aside-menu"
+      class="position-absolute top-0 end-0 pointer-cursor"
+      (click)="toggleSidebar()"
     >
-      <ul class="menu-nav">
-        <ng-container *ngFor="let item of subFeatureMenuItems">
-          <li
-            aria-haspopup="true"
-            data-menu-toggle="hover"
-            class="menu-item menu-item-submenu mt-3"
-            (click)="showMenuSection()"
-            *ngIf="item.condition && item.showOutside"
-          >
-            <a
-              routerLink="{{ item.routerLink }}"
-              [queryParams]="{ v: version }"
-              class="menu-link menu-toggle"
-            >
-              <div routerLinkActive="active-menu">
-                <span *ngIf="!item.displayNameConditions">
-                  <span class="svg-icon menu-icon" pTooltip="{{ item.name }}">
-                    <img
-                      src="assets/images/menu/{{ item.thumbnail }}"
-                      width="25"
-                      height="25"
-                    />
-                  </span>
-                </span>
-                <span *ngIf="item.displayNameConditions">
-                  <span
-                    *ngFor="let nameConditions of item.displayNameConditions"
-                  >
-                    <span
-                      class="svg-icon menu-icon"
-                      *ngIf="nameConditions.condition"
-                      pTooltip="{{ nameConditions.name }}"
-                    >
-                      <img
-                        src="assets/images/menu/{{ item.thumbnail }}"
-                        width="25"
-                        height="25"
-                      />
-                    </span>
-                  </span>
-                </span>
-              </div>
-            </a>
-          </li>
-        </ng-container>
-      </ul>
+      <!-- Show arrow (right) when sidebar is collapsed -->
+      <!-- <img
+        *ngIf="!isSidebarVisible"
+        src="../../../assets/images/icons/rightarrow.svg"
+        alt="Expand"
+        style="width: 20px; height: 20px"
+      /> -->
+
+      <!-- Show cross when sidebar is visible -->
+      <!-- <img
+        *ngIf="isSidebarVisible"
+        src="../../../assets/images/icons/leftarrow.svg"
+        alt="Collapse"
+        style="width: 20px; height: 20px"
+      /> -->
     </div>
+  </div>
+
+  <!-- Search (only visible when expanded) -->
+
+  <!-- Sidebar Menu -->
+  <div class="flex-grow-1 sidebardiv overflow-auto" *ngIf="subFeatureMenuItems">
+    <ul class="nav flex-column sidebar-menu">
+      <li class="nav-item" *ngFor="let item of subFeatureMenuItems">
+        <a
+          class="nav-link d-flex align-items-center"
+          [ngClass]="{
+            'mx-4': isSidebarVisible,
+            'justify-content-center mx-2': !isSidebarVisible
+          }"
+          [routerLink]="item.routerLink"
+          routerLinkActive="active"
+          [queryParams]="{ v: version }"
+          [routerLinkActiveOptions]="{ exact: false }"
+          [pTooltip]="!isSidebarVisible ? item.name : null"
+          tooltipPosition="right"
+          (click)="showMenuSection()"
+          *ngIf="item.condition"
+        >
+          <img
+            [src]="'assets/images/menu/' + item.image"
+            class="sidebaricon"
+            width="24"
+            height="24"
+            alt="icon"
+          />
+          <span class="sidebar-label ms-2" *ngIf="isSidebarVisible">
+            {{ item.name }}
+          </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Footer -->
+  <div class="sidebar-footer px-4 mb-3 pointer-cursor" *ngIf="isSidebarVisible">
+    <a class="nav-link d-flex align-items-center" (click)="userLogout()">
+      <img
+        alt="Logout"
+        src="../../../assets/images/menu/logout.svg"
+        class="me-3 sidebaricon"
+      />
+      <span class="sidebar-label">Logout</span>
+    </a>
   </div>
 </div>

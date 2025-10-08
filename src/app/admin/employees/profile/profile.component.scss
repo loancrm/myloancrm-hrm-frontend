@@ -12,7 +12,7 @@
   overflow-x: hidden;
   padding: 15px;
   scrollbar-width: 3px !important;
-  scrollbar-color: #51c295 #f1f1f1;
+  scrollbar-color: #b2a9e3 #f1f1f1;
 }
 .detailscard {
   border: none !important;
@@ -23,11 +23,11 @@
   border-radius: 5px;
 }
 .tabcard h5 {
-  color: #8cb5ff;
+  color: #333333;
   margin: 0;
 }
 .active-card {
-  background-color: #31425e;
+  background-color: #b2a9e3;
 }
 .active-card h5 {
   color: #ffffff !important;
@@ -49,7 +49,7 @@
   font-weight: bold;
 }
 .card-header {
-  color: #2b3674;
+  color: #333333;
   font-weight: bold;
   font-size: 20px;
   border-bottom-color: #eef2f6;
@@ -58,7 +58,7 @@
 .icon {
   width: 35px;
   margin-right: 13px;
-  color: #31425e;
+  color: #b2a9e3;
   background-color: #f2f7fe;
   border-radius: 50%;
   padding: 8px;
@@ -70,19 +70,20 @@
 .editicon {
   border-radius: 50%;
   padding: 4px;
-  background-color: #31425e;
+  background-color: #b2a9e3;
   color: #f2f7fe;
-  border-color: #31425e;
+  border-color: #b2a9e3;
 }
 .editicon:hover {
-  border-color: #31425e;
-  color: #31425e;
-  background-color: #f2f7fe;
+  border-color: #b2a9e3;
+  color: #9b8db5;
+  background-color: #b2a9e3;
 }
 .info-line {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
+  gap: 8px;
 }
 .label {
   flex: 0 0 250px;
@@ -142,10 +143,10 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #33009c !important;
+  border: 1px solid #b2a9e3 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #33009c !important;
+  border: 1px solid #b2a9e3 !important;
   box-shadow: 0 0 5px #9b8db5 !important;
   outline: none;
 }
@@ -202,11 +203,11 @@ label {
 }
 .custom-textarea {
   scrollbar-width: thin;
-  scrollbar-color: #51c295 #f1f1f1;
+  scrollbar-color: #b2a9e3 #f1f1f1;
 }
 .profilebg {
   height: 140px;
-  background-color: #31425e;
+  background-color: #b2a9e3;
   width: 100%;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -220,7 +221,7 @@ label {
 .rightbtn {
   background: linear-gradient(
     90deg,
-    rgba(77, 54, 208, 1) 0%,
+    rgb(144, 130, 224) 0%,
     rgba(132, 116, 254, 1) 100%
   );
   border: 0;
@@ -244,7 +245,7 @@ label {
 .rightbtn:not([disabled]):hover {
   background: linear-gradient(
     90deg,
-    rgba(77, 54, 208, 1) 0%,
+    rgb(144, 130, 224) 0%,
     rgba(132, 116, 254, 1) 100%
   );
   box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.5),

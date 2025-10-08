@@ -15,13 +15,13 @@
           <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
         </div>
       </div>
-      <div class="col-md-2 text-end">
+      <!-- <div class="col-md-2 text-end">
         <img
           src="../../../assets/images/menu/payroll.png"
           width="100"
           class="heading-image"
         />
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
@@ -52,7 +52,8 @@
                   'background-color': item.backgroundcolor
                 }"
               >
-                <i class="fa fa-{{ item.name }}"></i>
+                <!-- <i class="fa fa-{{ item.name }}"></i> -->
+                <img src="../../../assets/images/{{ item.name }}.svg" alt="" />
               </div>
             </div>
           </div>
@@ -122,7 +123,7 @@
           <div class="value">
             {{
               selectedPayrollDetails.customEmployeeId
-                ? (selectedPayrollDetails.customEmployeeId)
+                ? selectedPayrollDetails.customEmployeeId
                 : "-"
             }}
           </div>
@@ -463,7 +464,7 @@
             <div class="d-flex align-items-center pointer-cursor">
               <app-filter
                 [position]="'right'"
-                [iconColor]="'#33009C'"
+                [iconColor]="'#535AB4'"
                 class="me-2"
                 [iconSize]="'28px!important'"
                 (filterEvent)="applyConfigFilters($event)"
@@ -637,26 +638,36 @@
                 class="p-button-info me-2 view-btn"
                 icon="fa fa-file"
                 (click)="ViewPayslip(payslip.payslipId)"
+                style="background-color: #535ab4; border-color: #b2a9e3"
               ></button>
             </div>
           </div>
         </td>
         <td>
           <div class="text-center">
-            <div class="d-flex">
+            <div class="d-flex tableimage">
               <p-menu
                 appendTo="body"
                 #menu
                 [model]="actionItems(payslip)"
                 [popup]="true"
               ></p-menu>
-              <button
+              <img
+                alt="Actions"
+                src="../../../assets/images/menu/menu.svg"
+                width="24px"
+                height="24px"
+                pTooltip="Actions"
+                tooltipPosition="top"
+                (click)="menu.toggle($event); $event.stopPropagation()"
+              />
+              <!-- <button
                 pButton
                 type="button"
                 class="custom-btn"
                 (click)="menu.toggle($event)"
                 icon="pi pi-ellipsis-h"
-              ></button>
+              ></button> -->
             </div>
           </div>
         </td>
@@ -666,11 +677,11 @@
       <tr class="text-center">
         <td colspan="10" class="text-center fw-bold">
           <img
-            src="../../../assets/images/menu/nodata.gif"
-            width="200"
-            height="200"
+            src="../../../assets/images/menu/no data found.svg"
+            width="300"
+            height="300"
           />
-          <p>No Payroll Found</p>
+          <!-- <p>No Payroll Found</p> -->
         </td>
       </tr>
     </ng-template>
@@ -680,10 +691,10 @@
 <ng-template #noData> - </ng-template>
 
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
-  <div class="text-center mb-3 fw-bold">
-    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
-      style="color: #51c297"
-      >Fintalk</b
+  <div class="text-center mb-3">
+    © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b
+      style="color: #535ab4"
+      >HRMS</b
     >. | All Rights Reserved
   </div>
 </footer>

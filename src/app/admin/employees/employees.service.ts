@@ -4,6 +4,8 @@ import { DateTimeProcessorService } from 'src/app/services/date-time-processor.s
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ServiceMeta } from 'src/app/services/service-meta';
 import axios from 'axios';
+import { BehaviorSubject } from 'rxjs';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -13,6 +15,8 @@ export class EmployeesService {
   // loading: any;
   private url = 'https://s3.thefintalk.in/offerletterformat/index.html';
   // designations: any = [];
+  private sidebarVisible = new BehaviorSubject<boolean>(true);
+  sidebarVisible$ = this.sidebarVisible.asObservable();
   constructor(
     private serviceMeta: ServiceMeta,
     private http: HttpClient,
@@ -59,6 +63,17 @@ export class EmployeesService {
       }
     });
     return tempDiv.innerHTML;
+  }
+   toggleSidebar() {
+    this.sidebarVisible.next(!this.sidebarVisible.value);
+  }
+
+  setSidebarVisibility(visible: boolean) {
+    this.sidebarVisible.next(visible);
+  }
+
+  getSidebarVisibility(): boolean {
+    return this.sidebarVisible.getValue();
   }
   getUserRbac() {
     let userDetails =

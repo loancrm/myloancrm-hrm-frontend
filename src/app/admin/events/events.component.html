@@ -15,13 +15,13 @@
           <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
         </div>
       </div>
-      <div class="col-md-2 text-end">
+      <!-- <div class="col-md-2 text-end">
         <img
           src="../../../assets/images/menu/events.png"
           width="100"
           class="heading-image"
         />
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
@@ -42,7 +42,7 @@
 <ng-template #noData>
   <div class="nodata-container mt-5">
     <img
-      [lazyLoad]="'../../../assets/images/menu/nodata.gif'"
+      [lazyLoad]="'../../../assets/images/menu/no data found.svg'"
       alt="No Data Available"
       class="nodata"
     />
@@ -51,10 +51,10 @@
 </ng-template>
 
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
-  <div class="text-center mb-3 fw-bold">
-    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
-      style="color: #51c297"
-      >Fintalk</b
+  <div class="text-center mb-3">
+    © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b
+      style="color: #535ab4"
+      >HRMS</b
     >. | All Rights Reserved
   </div>
 </footer>

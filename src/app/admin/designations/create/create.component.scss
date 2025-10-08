@@ -11,13 +11,13 @@ label {
   border-radius: 10px;
   padding: 20px;
   margin: 12px;
-  color: white;
-  background-color: #31425e;
+  // color: white;
+  // background-color: #31425e;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 .p-button-primary {
-  background-color: #533dd5 !important;
+  background-color: #535ab4 !important;
   font-weight: bold;
 }
 .p-inputtext {
@@ -28,11 +28,11 @@ label {
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #33009c !important;
+  border: 1px solid #c7c2e8 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #33009c !important;
-  box-shadow: 0 0 5px #9b8db5 !important;
+  border: 1px solid #c7c2e8 !important;
+  box-shadow: 0 0 5px #c7c2e8 !important;
   outline: none;
 }
 .p-inputtext::placeholder {
@@ -88,17 +88,17 @@ label {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: #33009c;
+  background-color: #535ab4;
 }
 
 .custom-radio:hover {
-  border-color: #0056b3;
+  border-color: #c7c2e8;
 }
 
 .custom-radio:focus {
   outline: none;
-  border-color: #0056b3;
-  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
+  border-color: #c7c2e8;
+  box-shadow: 0 0 0 3px #c7c2e8;
 }
 
 .custom-checkbox {
@@ -116,8 +116,8 @@ label {
 }
 
 .custom-checkbox:checked {
-  background-color: #33009c;
-  border-color: #007bff;
+  background-color: #535ab4;
+  border-color: #c7c2e8;
   box-shadow: 0 0 0 5px rgba(0, 123, 255, 0.2);
 }
 
@@ -134,7 +134,7 @@ label {
 }
 
 .custom-checkbox:hover {
-  border-color: #0056b3;
+  border-color: #c7c2e8;
 }
 
 .custom-checkbox:focus {

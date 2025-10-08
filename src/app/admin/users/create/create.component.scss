@@ -14,10 +14,10 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #33009c !important;
+  border: 1px solid #e9e7f7 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #33009c !important;
+  border: 1px solid #e9e7f7 !important;
   box-shadow: 0 0 5px #9b8db5 !important;
   outline: none;
 }
@@ -30,28 +30,24 @@ label {
   font-weight: 600;
 }
 .file-icon {
-  color: #8cb5ff;
+  color: #696fbb;
   font-size: 40px;
 }
 .p-button-primary {
-  background-color: #533dd5 !important;
+  background-color: #535ab4 !important;
   font-weight: bold;
 }
 .custom-steps-card {
   border-radius: 10px;
   padding: 20px;
   margin: 12px;
-  color: white;
-  background-color: #31425e;
+  color: #333333;
+  // background-color: #31425e;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 .rightbtn {
-  background: linear-gradient(
-    90deg,
-    rgba(77, 54, 208, 1) 0%,
-    rgba(132, 116, 254, 1) 100%
-  );
+  background: linear-gradient(90deg, #535ab4);
   border: 0;
   border-radius: 12px;
   color: #ffffff;
@@ -73,14 +69,10 @@ label {
 }
 
 .rightbtn:not([disabled]):hover {
-  background: linear-gradient(
-    90deg,
-    rgba(77, 54, 208, 1) 0%,
-    rgba(132, 116, 254, 1) 100%
-  );
-  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.5),
-    -0.125rem -0.125rem 1rem rgba(140, 106, 241, 0.514),
-    0.125rem 0.125rem 1rem rgba(192, 139, 241, 0.5);
+  background: linear-gradient(90deg, rgba(132, 116, 254, 1) 100%);
+  //   box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.5),
+  //     -0.125rem -0.125rem 1rem rgba(140, 106, 241, 0.514),
+  //     0.125rem 0.125rem 1rem rgba(192, 139, 241, 0.5);
 }
 
 .delete-btn {

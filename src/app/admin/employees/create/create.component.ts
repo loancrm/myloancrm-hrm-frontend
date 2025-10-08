@@ -718,18 +718,18 @@ export class CreateComponent {
               for (let i = 0; i < response['links'].length; i++) {
                 index || index == 0
                   ? this.selectedFiles[fileType][index]['links'].push(
-                      response['links'][i]
-                    )
+                    response['links'][i]
+                  )
                   : this.selectedFiles[fileType]['links'].push(
-                      response['links'][i]
-                    );
+                    response['links'][i]
+                  );
               }
               for (let i = 0; i < files.length; i++) {
                 files[i]['fileuploaded'] = true;
                 index || index == 0
                   ? this.selectedFiles[fileType][index]['filesData'].push(
-                      files[i]
-                    )
+                    files[i]
+                  )
                   : this.selectedFiles[fileType]['filesData'].push(files[i]);
               }
               console.log(

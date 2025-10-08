@@ -3,6 +3,7 @@ import { SubscriptionService } from '../services/subscription.service';
 import { RoutingService } from '../services/routing-service';
 import { Subscription } from 'rxjs';
 import { LocalStorageService } from '../services/local-storage.service';
+import { EmployeesService } from './employees/employees.service';
 
 @Component({
   selector: 'app-admin',
@@ -13,14 +14,19 @@ export class AdminComponent {
   subscription: Subscription;
   iswiz: any = false;
   smallMenuSection: any = false;
+  isSidebarVisible = true;
   bodyHeight: any;
   smallDeviceDisplay: any;
   userType: any;
   constructor(
     private localStorageService: LocalStorageService,
     private subscriptionService: SubscriptionService,
-    private routingService: RoutingService
+    private routingService: RoutingService,
+    private employeeService: EmployeesService
   ) {
+    this.employeeService.sidebarVisible$.subscribe((visible) => {
+      this.smallMenuSection = !visible;
+    });
     this.onResize();
     this.userType =
       this.localStorageService.getItemFromLocalStorage('userType');
@@ -59,5 +65,8 @@ export class AdminComponent {
         this.bodyHeight = screenHeight - 67;
       }
     }
+  }
+  onSidebarToggle(state: boolean) {
+    this.isSidebarVisible = state;
   }
 }

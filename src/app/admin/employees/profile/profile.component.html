@@ -17,13 +17,13 @@
           <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
         </div>
       </div>
-      <div class="col-md-2 text-end">
+      <!-- <div class="col-md-2 text-end">
         <img
           src="../../../../assets/images/menu/viewemployee.png"
           width="100"
           class="heading-image"
         />
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
@@ -148,7 +148,7 @@
                   <div class="value">
                     {{
                       employees.customEmployeeId
-                        ? (employees.customEmployeeId )
+                        ? employees.customEmployeeId
                         : "-"
                     }}
                   </div>
@@ -291,11 +291,11 @@
                       <div class="text-center">
                         <div colspan="10" class="fw-bold">
                           <img
-                            src="../../../../assets/images/menu/nodata.gif"
-                            width="150"
-                            height="150"
+                            src="../../../../assets/images/menu/no data found.svg"
+                            width="200"
+                            height="200"
                           />
-                          <p>No Files Uploaded</p>
+                          <!-- <p>No Files Uploaded</p> -->
                         </div>
                       </div>
                     </div>
@@ -606,11 +606,11 @@
                     <div class="text-center">
                       <div colspan="10" class="fw-bold">
                         <img
-                          src="../../../../assets/images/menu/nodata.gif"
-                          width="150"
-                          height="150"
+                          src="../../../../assets/images/menu/no data found.svg"
+                          width="200"
+                          height="200"
                         />
-                        <p>No Files Uploaded</p>
+                        <!-- <p>No Files Uploaded</p> -->
                       </div>
                     </div>
                   </div>
@@ -696,11 +696,11 @@
                       <div class="text-center">
                         <div colspan="10" class="fw-bold">
                           <img
-                            src="../../../../assets/images/menu/nodata.gif"
-                            width="150"
-                            height="150"
+                            src="../../../../assets/images/menu/no data found.svg"
+                            width="200"
+                            height="200"
                           />
-                          <p>No Files Uploaded</p>
+                          <!-- <p>No Files Uploaded</p> -->
                         </div>
                       </div>
                     </div>
@@ -746,11 +746,11 @@
                       <div class="text-center">
                         <div colspan="10" class="fw-bold">
                           <img
-                            src="../../../../assets/images/menu/nodata.gif"
-                            width="150"
-                            height="150"
+                            src="../../../../assets/images/menu/no data found.svg"
+                            width="200"
+                            height="200"
                           />
-                          <p>No Files Uploaded</p>
+                          <!-- <p>No Files Uploaded</p> -->
                         </div>
                       </div>
                     </div>
@@ -1306,9 +1306,13 @@
                   ></p-calendar>
                 </div>
                 <div class="info-line">
-                  <span class="icon text-success"
+                  <img
+                    src="../../../../assets/images/presenthrmicon.svg"
+                    alt=""
+                  />
+                  <!-- <span class="icon text-success"
                     ><i class="fas fa-check"></i
-                  ></span>
+                  ></span> -->
                   <div class="label d-flex justify-content-between">
                     Present<b>:&nbsp;</b>
                   </div>
@@ -1317,9 +1321,13 @@
                   </div>
                 </div>
                 <div class="info-line">
-                  <span class="icon text-primary"
+                  <img
+                    src="../../../../assets/images/lateloginicon (2).svg"
+                    alt=""
+                  />
+                  <!-- <span class="icon text-primary"
                     ><i class="fas fa-circle-exclamation"></i
-                  ></span>
+                  ></span> -->
                   <div class="label d-flex justify-content-between">
                     Late<b>:&nbsp;</b>
                   </div>
@@ -1328,9 +1336,10 @@
                   </div>
                 </div>
                 <div class="info-line">
-                  <span class="icon text-warning"
+                  <img src="../../../../assets/images/halfdayicon.svg" alt="" />
+                  <!-- <span class="icon text-warning"
                     ><i class="fas fa-circle-half-stroke"></i
-                  ></span>
+                  ></span> -->
                   <div class="label d-flex justify-content-between">
                     Half-day<b>:&nbsp;</b>
                   </div>
@@ -1339,9 +1348,10 @@
                   </div>
                 </div>
                 <div class="info-line">
-                  <span class="icon text-danger"
+                  <img src="../../../../assets/images/onleaveicon.svg" alt="" />
+                  <!-- <span class="icon text-danger"
                     ><i class="fas fa-xmark"></i
-                  ></span>
+                  ></span> -->
                   <div class="label d-flex justify-content-between">
                     Absent<b>:&nbsp;</b>
                   </div>
@@ -1496,11 +1506,11 @@
                   <tr class="text-center">
                     <td colspan="10" class="text-center fw-bold">
                       <img
-                        src="../../../assets/images/menu/nodata.gif"
+                        src="../../../assets/images/menu/no data found.svg"
                         width="200"
                         height="200"
                       />
-                      <p>No Leaves Found</p>
+                      <!-- <p>No Leaves Found</p> -->
                     </td>
                   </tr>
                 </ng-template>
@@ -1583,11 +1593,11 @@
                   <tr class="text-center">
                     <td colspan="10" class="text-center fw-bold">
                       <img
-                        src="../../../assets/images/menu/nodata.gif"
+                        src="../../../assets/images/menu/no data found.svg"
                         width="200"
                         height="200"
                       />
-                      <p>No incentives Found</p>
+                      <!-- <p>No incentives Found</p> -->
                     </td>
                   </tr>
                 </ng-template>
@@ -1698,6 +1708,10 @@
                             class="p-button-info me-2 view-btn"
                             icon="fa fa-file"
                             (click)="ViewPayslip(payslip.payslipId)"
+                            style="
+                              background-color: #535ab4;
+                              border-color: #535ab4;
+                            "
                           ></button>
                         </div>
                       </div>
@@ -1708,9 +1722,9 @@
                   <tr class="text-center">
                     <td colspan="10" class="text-center fw-bold">
                       <img
-                        src="../../../assets/images/menu/nodata.gif"
-                        width="200"
-                        height="200"
+                        src="../../../assets/images/menu/no data found.svg"
+                        width="300"
+                        height="300"
                       />
                       <p>No Payroll Found</p>
                     </td>
@@ -1726,10 +1740,10 @@
 </div>
 <ng-template #noData> - </ng-template>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
-  <div class="text-center mb-3 fw-bold">
-    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
-      style="color: #51c297"
-      >Fintalk</b
+  <div class="text-center mb-3">
+    © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b
+      style="color: #535ab4"
+      >HRMS</b
     >. | All Rights Reserved
   </div>
 </footer>

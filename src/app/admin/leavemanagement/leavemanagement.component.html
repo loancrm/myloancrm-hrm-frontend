@@ -17,13 +17,13 @@
           <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
         </div>
       </div>
-      <div class="col-md-2 text-end">
+      <!-- <div class="col-md-2 text-end">
         <img
           src="../../../assets/images/menu/leaves.png"
           width="100"
           class="heading-image"
         />
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
@@ -62,7 +62,8 @@
                   'background-color': item.backgroundcolor
                 }"
               >
-                <i class="fa fa-{{ item.icon }}"></i>
+                <!-- <i class="fa fa-{{ item.icon }}"></i> -->
+                <img src="../../../assets/images/{{ item.icon }}.svg" alt="" />
               </div>
             </div>
           </div>
@@ -366,7 +367,7 @@
             <div class="d-flex align-items-center pointer-cursor">
               <app-filter
                 [position]="'right'"
-                [iconColor]="'#33009C'"
+                [iconColor]="'#535AB4'"
                 class="me-2"
                 [iconSize]="'28px!important'"
                 (filterEvent)="applyConfigFilters($event)"
@@ -521,23 +522,6 @@
             leave.leaveTo | date : "mediumDate"
           }}</span>
         </td>
-        <!-- <td>
-          <span class="table-column-data" *ngIf="leave.noOfDays; else noData">{{
-            leave.noOfDays
-          }}</span>
-        </td> -->
-        <!-- <td>
-          <span
-            class="table-column-data"
-            *ngIf="leave.durationType; else noData"
-            >{{ leave.durationType }}</span
-          >
-        </td> -->
-        <!-- <td>
-          <span class="table-column-data" *ngIf="leave.reason; else noData">{{
-            leave.reason | capitalizeFirst
-          }}</span>
-        </td> -->
         <td>
           <span
             class="table-column-data"
@@ -547,16 +531,36 @@
         </td>
         <td>
           <span
-            class="table-column-data fw-bold statusdata"
+            class="d-inline-flex align-items-center justify-content-start gap-2 text-nowrap"
             *ngIf="leave.leaveInternalStatus; else noData"
             [ngStyle]="{
+              backgroundColor: getStatusColor(
+                getStatusName(leave.leaveInternalStatus)
+              ).backgroundColor,
               color: getStatusColor(getStatusName(leave.leaveInternalStatus))
                 .textColor,
-              'background-color': getStatusColor(
-                getStatusName(leave.leaveInternalStatus)
-              ).backgroundColor
+              height: '22px',
+              width: getStatusColor(getStatusName(leave.leaveInternalStatus))
+                .width,
+              borderRadius: '16px',
+              fontSize: '12px',
+              fontWeight: 500,
+              paddingLeft: '8px'
             }"
           >
+            <!-- Dot -->
+            <span
+              class="rounded-circle"
+              [ngStyle]="{
+                backgroundColor: getStatusColor(
+                  getStatusName(leave.leaveInternalStatus)
+                ).dotColor,
+                width: '8px',
+                height: '8px',
+                display: 'inline-block'
+              }"
+            ></span>
+
             {{ getStatusName(leave.leaveInternalStatus) }}
           </span>
         </td>
@@ -576,18 +580,18 @@
         </td>
         <td>
           <div class="text-center">
-            <div class="d-flex">
+            <div class="d-flex tableimage">
               <button
-              *ngIf="capabilities.employeeLeaves"
-              pButton
-              pRipple
-              type="button"
-              pTooltip="Leave Details"
-              tooltipPosition="left"
-              class="p-button-info me-2 view-btn"
-              icon="fa fa-eye"
-              (click)="showLeaveDetails(leave)"
-            ></button>
+                *ngIf="capabilities.employeeLeaves"
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Leave Details"
+                tooltipPosition="left"
+                class="p-button-info me-2 view-btn"
+                icon="fa fa-eye"
+                (click)="showLeaveDetails(leave)"
+              ></button>
               <button
                 *ngIf="capabilities.employeeLeaves"
                 pButton
@@ -609,14 +613,24 @@
                 [model]="actionItems(leave)"
                 [popup]="true"
               ></p-menu>
-              <button
+              <img
+                class="pointer-cursor"
+                alt="Actions"
+                src="../../../assets/images/menu/menu.svg"
+                width="24px"
+                height="24px"
+                pTooltip="Actions"
+                tooltipPosition="top"
+                (click)="menu.toggle($event); $event.stopPropagation()"
+              />
+              <!-- <button
                 *ngIf="capabilities.adminLeaves"
                 pButton
                 type="button"
                 class="custom-btn"
                 (click)="menu.toggle($event)"
                 icon="pi pi-ellipsis-h"
-              ></button>
+              ></button> -->
             </div>
           </div>
         </td>
@@ -635,11 +649,11 @@
       <tr class="text-center">
         <td colspan="10" class="text-center fw-bold">
           <img
-            src="../../../assets/images/menu/nodata.gif"
-            width="200"
-            height="200"
+            src="../../../assets/images/menu/no data found.svg"
+            width="300"
+            height="300"
           />
-          <p>No Leaves Found</p>
+          <!-- <p>No Leaves Found</p> -->
         </td>
       </tr>
     </ng-template>
@@ -647,10 +661,10 @@
 </div>
 <ng-template #noData> - </ng-template>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
-  <div class="text-center mb-3 fw-bold">
-    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
-      style="color: #51c297"
-      >Fintalk</b
+  <div class="text-center mb-3">
+    © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b
+      style="color: #535ab4"
+      >HRMS</b
     >. | All Rights Reserved
   </div>
 </footer>

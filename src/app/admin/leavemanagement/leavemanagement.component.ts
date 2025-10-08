@@ -125,29 +125,29 @@ export class LeavemanagementComponent {
       // },
       ...(this.capabilities.adminLeaves
         ? [
-            {
-              header: 'Employee Id',
-              data: [
-                {
-                  field: 'employeeId',
-                  title: 'Employee Id',
-                  type: 'text',
-                  filterType: 'like',
-                },
-              ],
-            },
-            {
-              header: 'Employee Name',
-              data: [
-                {
-                  field: 'employeeName',
-                  title: 'Employee Name',
-                  type: 'text',
-                  filterType: 'like',
-                },
-              ],
-            },
-          ]
+          {
+            header: 'Employee Id',
+            data: [
+              {
+                field: 'employeeId',
+                title: 'Employee Id',
+                type: 'text',
+                filterType: 'like',
+              },
+            ],
+          },
+          {
+            header: 'Employee Name',
+            data: [
+              {
+                field: 'employeeName',
+                title: 'Employee Name',
+                type: 'text',
+                filterType: 'like',
+              },
+            ],
+          },
+        ]
         : []),
       {
         header: 'Created Date Range',
@@ -229,39 +229,39 @@ export class LeavemanagementComponent {
   updateCountsAnalytics() {
     this.countsAnalytics = [
       {
-        icon: 'user',
-        name:'all',
+        icon: 'totlleaves',
+        name: 'all',
         displayName: 'Total Leaves',
         count:
           this.leavesStatusCount[1] +
           this.leavesStatusCount[2] +
           this.leavesStatusCount[3],
-        textcolor: '#6C5FFC',
-        backgroundcolor: '#F0EFFF',
+        // textcolor: '#6C5FFC',
+        // backgroundcolor: '#F0EFFF',
       },
       {
-        icon: 'circle-half-stroke',
-        name:'pending',
+        icon: 'pendingleaves',
+        name: 'pending',
         displayName: 'Pending Leaves',
         count: this.leavesStatusCount[1],
-        textcolor: '#FFC107',
-        backgroundcolor: '#FFF3D6',
+        // textcolor: '#FFC107',
+        // backgroundcolor: '#FFF3D6',
       },
       {
-        icon: 'check-circle',
-        name:'approved',
+        icon: 'aprovedleaves',
+        name: 'approved',
         displayName: 'Approved Leaves',
         count: this.leavesStatusCount[2],
-        textcolor: '#2ECC71',
-        backgroundcolor: '#F0F9E8',
+        // textcolor: '#2ECC71',
+        // backgroundcolor: '#F0F9E8',
       },
       {
-        icon: 'circle-xmark',
-        name:'rejected',
+        icon: 'rejectleaves',
+        name: 'rejected',
         displayName: 'Rejected Leaves',
         count: this.leavesStatusCount[3],
-        textcolor: '#DC3545',
-        backgroundcolor: '#F8D7DA',
+        // textcolor: '#DC3545',
+        // backgroundcolor: '#F8D7DA',
       },
     ];
   }
@@ -501,16 +501,18 @@ export class LeavemanagementComponent {
   getStatusColor(status: string): {
     textColor: string;
     backgroundColor: string;
+    dotColor: string;
+    width: string;
   } {
     switch (status) {
       case 'approved':
-        return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6' };
+        return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6', dotColor: '#14BA6D', width: '100%' };
       case 'pending':
-        return { textColor: '#FFBA15', backgroundColor: '#FFF3D6' };
+        return { textColor: '#FFBA15', backgroundColor: '#FFF3D6', dotColor: '#FFBA15', width: '100%' };
       case 'rejected':
-        return { textColor: '#FF555A', backgroundColor: '#FFE2E3' };
+        return { textColor: '#FF555A', backgroundColor: '#FFE2E3', dotColor: '#FF555A', width: '100%' };
       default:
-        return { textColor: 'black', backgroundColor: 'white' };
+        return { textColor: 'black', backgroundColor: 'white', dotColor: '#14BA6D', width: '100%' };
     }
   }
   getStatusName(statusId) {

@@ -103,38 +103,38 @@ export class PayrollComponent {
   updateCountsAnalytics() {
     this.countsAnalytics = [
       {
-        name: 'user', // Represents total employees in payroll
+        name: 'payrolemp', // Represents total employees in payroll
         displayName: 'Total Payroll Employees',
         count: `${this.payrollEmployees} `, // Assuming you have a variable for total employees
-        textcolor: '#3498DB', // Blue to represent a professional/business environment
-        backgroundcolor: '#D9EAF7',
+        // textcolor: '#3498DB', // Blue to represent a professional/business environment
+        // backgroundcolor: '#D9EAF7',
       },
       {
-        name: 'sack-dollar', // Represents total gross salary (big earnings)
+        name: 'totlgrosssalarly', // Represents total gross salary (big earnings)
         displayName: 'Total Gross Salary',
         count: `Rs. ${this.totalSalary} ( ${this.convertToReadableFormat(
           this.totalSalary
         )} )`,
-        textcolor: '#F39C12', // Warm golden yellow for money representation
-        backgroundcolor: '#FEF5E7',
+        // textcolor: '#F39C12', // Warm golden yellow for money representation
+        // backgroundcolor: '#FEF5E7',
       },
       {
-        name: 'file-invoice-dollar', // Represents deductions (taxes, deductions)
+        name: 'deduction', // Represents deductions (taxes, deductions)
         displayName: 'Total Deductions',
         count: `Rs. ${this.totalDeductions} ( ${this.convertToReadableFormat(
           this.totalDeductions
         )} )`,
-        textcolor: '#E74C3C', // Red for deductions (represents money going out)
-        backgroundcolor: '#FDEDEC',
+        // textcolor: '#E74C3C', // Red for deductions (represents money going out)
+        // backgroundcolor: '#FDEDEC',
       },
       {
-        name: 'piggy-bank', // Represents net salary (final savings or payout)
+        name: 'netsalary', // Represents net salary (final savings or payout)
         displayName: 'Total Net Salary',
         count: `Rs. ${this.totalNetSalary} ( ${this.convertToReadableFormat(
           this.totalNetSalary
         )} )`,
-        textcolor: '#27AE60', // Green to indicate received/savings amount
-        backgroundcolor: '#E9F7EF',
+        // textcolor: '#27AE60', // Green to indicate received/savings amount
+        // backgroundcolor: '#E9F7EF',
       },
     ];
   }
@@ -302,67 +302,67 @@ export class PayrollComponent {
 
       ...(this.capabilities.employeePayroll
         ? [
-            {
-              header: 'Payroll Month',
-              data: [
-                {
-                  field: 'payrollMonth',
-                  title: 'Payroll Month',
-                  type: 'month',
-                  filterType: 'eq',
-                },
-              ],
-            },
-          ]
+          {
+            header: 'Payroll Month',
+            data: [
+              {
+                field: 'payrollMonth',
+                title: 'Payroll Month',
+                type: 'month',
+                filterType: 'eq',
+              },
+            ],
+          },
+        ]
         : []),
 
       ...(this.capabilities.adminPayroll
         ? [
-            {
-              header: 'Employee Id',
-              data: [
-                {
-                  field: 'employeeId',
-                  title: 'Employee Id',
-                  type: 'text',
-                  filterType: 'like',
-                },
-              ],
-            },
-            {
-              header: 'Employee Name',
-              data: [
-                {
-                  field: 'employeeName',
-                  title: 'Employee Name',
-                  type: 'text',
-                  filterType: 'like',
-                },
-              ],
-            },
-            {
-              header: 'Custom Employee Id',
-              data: [
-                {
-                  field: 'customEmployeeId',
-                  title: 'Custom Employee Id',
-                  type: 'text',
-                  filterType: 'like',
-                },
-              ],
-            },
-            {
-              header: 'Joining Date',
-              data: [
-                {
-                  field: 'joiningDate',
-                  title: 'Joining Date ',
-                  type: 'date',
-                  filterType: 'like',
-                },
-              ],
-            },
-          ]
+          {
+            header: 'Employee Id',
+            data: [
+              {
+                field: 'employeeId',
+                title: 'Employee Id',
+                type: 'text',
+                filterType: 'like',
+              },
+            ],
+          },
+          {
+            header: 'Employee Name',
+            data: [
+              {
+                field: 'employeeName',
+                title: 'Employee Name',
+                type: 'text',
+                filterType: 'like',
+              },
+            ],
+          },
+          {
+            header: 'Custom Employee Id',
+            data: [
+              {
+                field: 'customEmployeeId',
+                title: 'Custom Employee Id',
+                type: 'text',
+                filterType: 'like',
+              },
+            ],
+          },
+          {
+            header: 'Joining Date',
+            data: [
+              {
+                field: 'joiningDate',
+                title: 'Joining Date ',
+                type: 'date',
+                filterType: 'like',
+              },
+            ],
+          },
+        ]
         : []),
       // {
       //   header: 'Custom Employee Id',
@@ -564,40 +564,40 @@ export class PayrollComponent {
       // },
       ...(this.capabilities.adminPayroll
         ? [
-            {
-              header: 'Account Number',
-              data: [
-                {
-                  field: 'accountNumber',
-                  title: 'Account Number',
-                  type: 'text',
-                  filterType: 'like',
-                },
-              ],
-            },
-            {
-              header: 'IFSC Code',
-              data: [
-                {
-                  field: 'ifscCode',
-                  title: 'IFSC Code',
-                  type: 'text',
-                  filterType: 'like',
-                },
-              ],
-            },
-            {
-              header: 'Bank Branch',
-              data: [
-                {
-                  field: 'bankBranch',
-                  title: 'Bank Branch',
-                  type: 'text',
-                  filterType: 'like',
-                },
-              ],
-            },
-          ]
+          {
+            header: 'Account Number',
+            data: [
+              {
+                field: 'accountNumber',
+                title: 'Account Number',
+                type: 'text',
+                filterType: 'like',
+              },
+            ],
+          },
+          {
+            header: 'IFSC Code',
+            data: [
+              {
+                field: 'ifscCode',
+                title: 'IFSC Code',
+                type: 'text',
+                filterType: 'like',
+              },
+            ],
+          },
+          {
+            header: 'Bank Branch',
+            data: [
+              {
+                field: 'bankBranch',
+                title: 'Bank Branch',
+                type: 'text',
+                filterType: 'like',
+              },
+            ],
+          },
+        ]
         : []),
       {
         header: 'Created Date Range',

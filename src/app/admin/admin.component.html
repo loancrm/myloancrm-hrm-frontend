@@ -1,4 +1,4 @@
-<div
+<!-- <div
   class="wrapper b-home"
   style="height: auto; min-height: 100%; background: white"
 >
@@ -8,6 +8,31 @@
     class="header"
     [class.header-fixed]="!iswiz"
     [class.mgn-lt-70]="smallMenuSection"
+  >
+    <app-header></app-header>
+    <div class="body-section" [ngStyle]="{ 'height.px': bodyHeight }">
+      <router-outlet></router-outlet>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div> -->
+
+<div
+  class="wrapper b-home d-flex"
+  [ngClass]="{ 'sidebar-collapsed': !isSidebarVisible }"
+>
+  <!-- Pass toggle control to Sidebar -->
+  <app-sidebar-menu
+    [isSidebarVisible]="isSidebarVisible"
+    (toggle)="onSidebarToggle($event)"
+  ></app-sidebar-menu>
+
+  <!-- Main Content -->
+  <div
+    id="kt_header"
+    class="header"
+    [class.header-fixed]="!iswiz"
+    [class.mgn-lt-70]="!isSidebarVisible"
   >
     <app-header></app-header>
     <div class="body-section" [ngStyle]="{ 'height.px': bodyHeight }">

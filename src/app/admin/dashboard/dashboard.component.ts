@@ -298,11 +298,11 @@ export class DashboardComponent implements OnInit {
                       employeeId: employee.employeeId,
                       status: leaveRecord
                         ? (leaveRecord.durationType == 'half-day'
-                        ? 'Half-day'
-                        : 'Absent')
+                          ? 'Half-day'
+                          : 'Absent')
                         : (employee.employeeId === this.employeeData.employeeId
-                        ? status
-                        : 'Absent'),
+                          ? status
+                          : 'Absent'),
                       checkInTime:
                         employee.employeeId === this.employeeData.employeeId
                           ? currentTime
@@ -834,7 +834,7 @@ export class DashboardComponent implements OnInit {
       this.totalAbsentCount =
       this.totalHalfDayCount =
       this.totalLateCount =
-        0;
+      0;
     this.attendanceData[0]?.attendanceData.forEach((attendance) => {
       switch (attendance.status) {
         case 'Present':
@@ -1139,7 +1139,7 @@ export class DashboardComponent implements OnInit {
       //   '#3D5A80',
       //   '#293241',
       // ],
-      colors: ['#18BADD', '#3039A1', '#8BBEE1', '#676A86'],
+      colors: ['#ABA5DC', '#8E89D0', '#706EC4', '#535AB4'],
       // colors: ['#18BADD', '#3039A1', ],
       dataLabels: {
         enabled: true,
@@ -1155,8 +1155,9 @@ export class DashboardComponent implements OnInit {
         text: 'Departments Analytics',
         align: 'left',
         style: {
-          fontSize: '18px',
-          color: '#33009C',
+          fontSize: '20px',
+          color: '#333333',
+          fontWeight: '500'
         },
       },
       grid: {
@@ -1200,11 +1201,11 @@ export class DashboardComponent implements OnInit {
         type: 'pie',
         toolbar: { show: true },
       },
-      colors: ['#FF9A76', '#69DCE4'],
+      colors: ['#ABA5DC', '#8E89D0'],
       title: {
         text: 'Employee Structure',
         align: 'left',
-        style: { fontSize: '18px', color: '#33009C' },
+        style: { fontSize: '20px', color: '#333333', fontWeight: '500' },
       },
       legend: {
         show: true,
@@ -1215,9 +1216,8 @@ export class DashboardComponent implements OnInit {
         offsetX: -5,
         formatter: (seriesName, opts) => {
           const customLabels = ['Male', 'Female'];
-          return `${customLabels[opts.seriesIndex]}: ${
-            opts.w.config.series[opts.seriesIndex]
-          }`;
+          return `${customLabels[opts.seriesIndex]}: ${opts.w.config.series[opts.seriesIndex]
+            }`;
         },
       },
       dataLabels: {
@@ -1251,11 +1251,11 @@ export class DashboardComponent implements OnInit {
         type: 'donut',
         toolbar: { show: true },
       },
-      colors: ['#3039A1', '#8BBEE1'],
+      colors: ['#ABA5DC', '#8E89D0'],
       title: {
         text: 'Branch Wise Employees Count',
         align: 'left',
-        style: { fontSize: '18px', color: '#33009C' },
+        style: { fontSize: '20px', color: '#333333', fontWeight: '500' },
       },
       legend: {
         show: true,
@@ -1266,9 +1266,8 @@ export class DashboardComponent implements OnInit {
         offsetX: -5,
         formatter: (seriesName, opts) => {
           const customLabels = ['Panjagutta', 'Begumpet'];
-          return `${customLabels[opts.seriesIndex]}: ${
-            opts.w.config.series[opts.seriesIndex]
-          }`;
+          return `${customLabels[opts.seriesIndex]}: ${opts.w.config.series[opts.seriesIndex]
+            }`;
         },
       },
       dataLabels: {

@@ -6,7 +6,7 @@
   width: 100% !important;
 }
 .p-button-primary {
-  background-color: #533dd5 !important;
+  background-color: #b2a9e3 !important;
   font-weight: bold;
 }
 
@@ -18,10 +18,10 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #33009c !important;
+  border: 1px solid #706ec4 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #33009c !important;
+  border: 1px solid #706ec4 !important;
   box-shadow: 0 0 5px #9b8db5 !important;
   outline: none;
 }
@@ -38,8 +38,8 @@ label {
   border-radius: 10px;
   padding: 20px;
   margin: 12px;
-  color: #ffffff;
-  background-color: #31425e;
+  // color: #ffffff;
+  // background-color: #31425e;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }

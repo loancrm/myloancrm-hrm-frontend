@@ -15,13 +15,13 @@
           <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
         </div>
       </div>
-      <div class="col-md-2 text-end">
+      <!-- <div class="col-md-2 text-end">
         <img
           src="../../../assets/images/menu/incentives.png"
           width="100"
           class="heading-image"
         />
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
@@ -398,7 +398,7 @@
                 pTooltip="View"
                 class="p-button-info me-2 view-btn"
                 icon="fa fa-eye"
-                (click)="showUserDetails(incentive)"
+                (click)="showUserDetails(incentive)" style="background-color: #535AB4; border-color: #535AB4;"
               ></button>
               <button
                 *ngIf="capabilities.adminIncentives"
@@ -408,7 +408,7 @@
                 pTooltip="Update"
                 class="p-button-success me-2 update-btn"
                 icon="fa fa-pen-to-square"
-                (click)="updateIncentive(incentive.incentiveId)"
+                (click)="updateIncentive(incentive.incentiveId)" style="background-color: #8E89D0; border-color: #8E89D0;"
               ></button>
               <button
                 *ngIf="capabilities.delete"
@@ -417,7 +417,7 @@
                 icon="fa fa-trash"
                 pTooltip="Delete"
                 class="p-button-danger me-2 delete-btn"
-                (click)="confirmDelete(incentive)"
+                (click)="confirmDelete(incentive)" 
               ></button>
             </div>
           </div>
@@ -428,9 +428,9 @@
       <tr class="text-center">
         <td colspan="10" class="text-center fw-bold">
           <img
-            src="../../../assets/images/menu/nodata.gif"
-            width="200"
-            height="200"
+            src="../../../assets/images/menu/no data found.svg"
+            width="300"
+            height="300"
           />
           <p>No incentives Found</p>
         </td>
@@ -440,10 +440,10 @@
 </div>
 <ng-template #noData> - </ng-template>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
-  <div class="text-center mb-3 fw-bold">
-    © {{ currentYear }} <span style="color: #1e4079">The</span>&nbsp;<b
-      style="color: #51c297"
-      >Fintalk</b
+  <div class="text-center mb-3">
+    © {{ currentYear }} <span style="color: #8E89D0">My</span>&nbsp;<b
+      style="color: #535AB4"
+      >HRMS</b
     >. | All Rights Reserved
   </div>
 </footer>

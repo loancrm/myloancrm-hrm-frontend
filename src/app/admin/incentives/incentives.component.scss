@@ -11,10 +11,10 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #33009c !important;
+  border: 1px solid #706ec4 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #33009c !important;
+  border: 1px solid #b2a9e3 !important;
   box-shadow: 0 0 5px #9b8db5 !important;
   outline: none;
 }
@@ -29,7 +29,7 @@
 .icon {
   width: 35px;
   margin-right: 13px;
-  color: #31425e;
+  color: #b2a9e3;
   background-color: #f2f7fe;
   border-radius: 50%;
   padding: 8px;

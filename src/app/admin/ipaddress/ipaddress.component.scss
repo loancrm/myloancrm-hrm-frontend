@@ -1,7 +1,7 @@
 .custom-btn {
   height: 30px;
-  background-color: #2e4374 !important;
-  border: #2e4374;
+  background-color: #b2a9e3 !important;
+  border: #b2a9e3;
   box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
 }
 .cardicons .fa {
@@ -15,6 +15,14 @@
   border: none;
   box-shadow: 0 0 10px 1px rgba(80, 82, 106, 0.25);
 }
+.updatecolor {
+  background-color: #8e89d0;
+  border-color: #8e89d0;
+}
+.updatecolor:hover {
+  background-color: #8e89d0;
+  border-color: #8e89d0;
+}
 
 .p-inputtext {
   color: #333;
@@ -23,10 +31,10 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #33009c !important;
+  border: 1px solid #8e89d0 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #33009c !important;
+  // border: 1px solid #8E89D0 !important;
   box-shadow: 0 0 5px #9b8db5 !important;
   outline: none;
 }
@@ -41,7 +49,7 @@
 }
 .count-title {
   font-size: 17px;
-  color: #31425e;
+  color: #333333;
   font-weight: bold;
 }
 
@@ -53,7 +61,7 @@
 .icon {
   width: 35px;
   margin-right: 13px;
-  color: #31425e;
+  color: #b2a9e3;
   background-color: #f2f7fe;
   border-radius: 50%;
   padding: 8px;
@@ -74,7 +82,7 @@
   font-weight: bold;
 }
 .cards {
-  border-left: 5px solid #31425e;
+  border-left: 5px solid #b2a9e3;
 }
 
 .value {
