@@ -58,21 +58,47 @@
 }
 
 .background-img {
-  width: 100%;
-  min-height: 100vh;
-  animation: changeBackgroundColor 6s infinite;
+  // width: 100%;
+  // min-height: 100vh;
+  // animation: changeBackgroundColor 6s infinite;
+ background-image: url("../../assets/images/menu/blackimg.svg");
+ background-repeat: no-repeat;
+ background-size: cover;
+ height: 600px;
+ width: 800px;
+ margin-top: 50px;
+//  margin-bottom: 50px;
+ margin-left: 50px;
+ margin-right: 50px;
+ border-radius: 50px;
+
 }
 
 @keyframes changeBackgroundColor {
-  0% {
-    background-color: #fae5e6;
+  0% 
+  {
+    // background-color:#e7e4f7;
+    background-image: url("../../assets/images/slider/blackimg1.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 0%;
   }
   50% {
-    background-color: #e5f0f4;
+    // background-color: #d4cff5;
+  background-image: url("../../assets/images/slider/blackimg1.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  
   }
   100% {
-    background-color: #fffde3;
+    // background-color: #e3e1ec;
+  background-image: url("../../assets/images/slider/blackimg1.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+ 
   }
+  
+ 
 }
 
 .login-form,
@@ -106,17 +132,17 @@
 .logo-container {
   position: absolute;
   top: 10px;
-  left: 10px;
+  right: 10px;
 }
 
 .logo {
   width: 80px;
   height: 40px;
   margin-right: 5px;
-}
+  }
 
-.logo-left {
-  color: #1e4079;
+.logo-right {
+  color: #535AB4;
   font-size: 30px;
   margin-top: 5px;
 }
@@ -129,8 +155,8 @@
   font-weight: bold;
 }
 .center-button {
-  background-color: #33009c !important;
-  border-color: #33009c !important;
+  background-color: #535AB4 !important;
+  border-color: #535AB4 !important;
 }
 .p-inputtext {
   color: #333;
@@ -139,10 +165,10 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #33009c !important;
+  border: 1px solid #C7C2E8 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #33009c !important;
+  border: 1px solid #C7C2E8 !important;
   box-shadow: 0 0 5px #9b8db5 !important;
   outline: none;
 }
@@ -168,12 +194,12 @@
 }
 
 .toggle-link {
-  color: #007bff;
+  color: #535AB4;
   font-size: 16px;
   text-decoration: underline;
   cursor: pointer;
 
   &:hover {
-    color: #0056b3;
+    color: #535AB4;
   }
 }

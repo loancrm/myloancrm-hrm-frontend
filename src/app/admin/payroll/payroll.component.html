@@ -592,7 +592,7 @@
           <span
             class="table-column-data"
             *ngIf="payslip.payrollMonth; else noData"
-            >{{ payslip.payrollMonth | date : "MMMM yyyy" }}</span
+            >{{ payslip?.payrollMonth ? (payslip.payrollMonth | date : "MMMM yyyy") : '' }}</span
           >
         </td>
         <td class="text-nowrap">

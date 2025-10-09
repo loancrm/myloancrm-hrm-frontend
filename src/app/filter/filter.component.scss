@@ -18,8 +18,8 @@
 }
 
 .p-button-primary {
-  background-color: #1e4079 !important;
-  border-color: #1e4070 !important;
+  background-color: #535AB4 !important;
+  border-color: #535AB4 !important;
   color: #fff !important;
   font-weight: 100 !important;
   border-radius: 3px !important;
@@ -51,10 +51,10 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #33009c !important;
+  border: 1px solid  #535AB4 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #33009c !important;
+  border: 1px solid #535AB4 !important;
   box-shadow: 0 0 5px #9b8db5 !important;
   outline: none;
 }
@@ -66,27 +66,27 @@
 .p-button-text {
   font-weight: bold;
   font-size: 15px;
-  border: 2px solid #33009c;
+  border: 2px solid #535AB4;
 }
 
 .p-button-text:enabled:hover {
-  border: 2px solid #33009c;
+  border: 2px solid  #535AB4;
 }
 
 .p-button.p-button-secondary {
   color: #ffffff;
-  background: #ff4081;
-  border: 1px solid #ff4081;
+  background: #C7C2E8;
+  border: 1px solid #C7C2E8;
 }
 
 .p-button.p-button-secondary:hover {
   color: #ffffff;
-  background: #ff4081;
-  border: 1px solid #ff4081;
+  background: #979ad1;
+  border: 1px solid  #C7C2E8;
 }
 
 .p-button.p-button-secondary:enabled:focus,
 .p-buttonset.p-button-secondary > .p-button:enabled:focus,
 .p-splitbutton.p-button-secondary > .p-button:enabled:focus {
-  box-shadow: 0 0 0 0.2rem #f7a4bf;
+  box-shadow: 0 0 0 0.2rem #979ad1;
 }

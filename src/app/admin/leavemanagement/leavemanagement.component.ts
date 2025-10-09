@@ -506,13 +506,13 @@ export class LeavemanagementComponent {
   } {
     switch (status) {
       case 'approved':
-        return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6', dotColor: '#14BA6D', width: '100%' };
+        return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6', dotColor: '#14BA6D', width: '85px' };
       case 'pending':
-        return { textColor: '#FFBA15', backgroundColor: '#FFF3D6', dotColor: '#FFBA15', width: '100%' };
+        return { textColor: '#FFBA15', backgroundColor: '#FFF3D6', dotColor: '#FFBA15', width: '85px' };
       case 'rejected':
-        return { textColor: '#FF555A', backgroundColor: '#FFE2E3', dotColor: '#FF555A', width: '100%' };
+        return { textColor: '#FF555A', backgroundColor: '#FFE2E3', dotColor: '#FF555A', width: '85px' };
       default:
-        return { textColor: 'black', backgroundColor: 'white', dotColor: '#14BA6D', width: '100%' };
+        return { textColor: 'black', backgroundColor: 'white', dotColor: '#14BA6D', width: '100px' };
     }
   }
   getStatusName(statusId) {

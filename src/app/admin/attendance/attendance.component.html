@@ -244,14 +244,16 @@
                 'font-size': '20px',
                 'margin-right': '8px'
               }"
-              >•</span
+              ></span
             >
-            <i
+            <!-- <i
               *ngSwitchCase="'Present'"
               pTooltip="Present"
               class="fa fa-check-circle text-success"
               title="Present"
-            ></i>
+            ></i> -->
+            <img src="../../../assets/images/presenthrmicon.svg" alt="" *ngSwitchCase="'Present'"
+              pTooltip="Present" title="Present">
             <!-- Absent Status with Red Dot -->
             <span
               *ngSwitchCase="'Absent'"
@@ -260,15 +262,16 @@
                 'font-size': '20px',
                 'margin-right': '8px'
               }"
-              >•</span
+              ></span
             >
-            <i
+            <!-- <i
               *ngSwitchCase="'Absent'"
               pTooltip="Absent"
               class="fa fa-circle-xmark text-danger"
               title="Absent"
-            ></i>
-
+            ></i> -->
+              <img src="../../../assets/images/onleaveicon.svg" alt="" *ngSwitchCase="'Absent'"
+              pTooltip="Absent" title="Absent">
             <!-- Half-day Status with Orange Dot -->
             <span
               *ngSwitchCase="'Half-day'"
@@ -277,15 +280,16 @@
                 'font-size': '20px',
                 'margin-right': '8px'
               }"
-              >•</span
+              ></span
             >
-            <i
+            <!-- <i
               *ngSwitchCase="'Half-day'"
               pTooltip="Half-day"
               class="fa fa-circle-half-stroke text-warning"
               title="Half-day"
-            ></i>
-
+            ></i> -->
+              <img src="../../../assets/images/halfdayicon.svg" alt="" *ngSwitchCase="'Half-day'"
+              pTooltip="Half-day" title="Half-day">
             <!-- Late Status with Blue Dot -->
             <span
               *ngSwitchCase="'Late'"
@@ -294,15 +298,15 @@
                 'font-size': '20px',
                 'margin-right': '8px'
               }"
-              >•</span
+              ></span
             >
-            <i
+            <!-- <i
               *ngSwitchCase="'Late'"
               pTooltip="Late"
               class="fa fa-circle-exclamation text-primary"
               title="Late"
-            ></i>
-
+            ></i> -->
+              <img src="../../../assets/images/lateloginicon (2).svg" alt="" title="Late" pTooltip="Late" *ngSwitchCase="'Late'">
             <!-- Default Case for Other Statuses -->
             <span *ngSwitchDefault>{{ employee.status }}</span>
           </ng-container>

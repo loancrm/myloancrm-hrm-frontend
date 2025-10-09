@@ -26,20 +26,20 @@ export class LoginComponent implements OnInit {
   isPasswordVisible: boolean = false;
   carousalImages: any = [
     {
-      url: 'assets/images/slider/slider1',
+      url: 'assets/images/slider/hrm3.svg',
     },
     {
-      url: 'assets/images/slider/slider4.png',
+      url: 'assets/images/slider/hrm2.svg',
     },
     {
-      url: 'assets/images/slider/slider5.jpg',
+      url: 'assets/images/slider/img3.svg',
     },
-    {
-      url: 'assets/images/slider/slider3.jpg',
-    },
-    {
-      url: 'assets/images/slider/slider6.jpg',
-    },
+    // {
+    //   url: 'assets/images/slider/slider3.jpg',
+    // },
+    // {
+    //   url: 'assets/images/slider/slider6.jpg',
+    // },
   ];
   userType: string = 'user'; // Default to User
   constructor(

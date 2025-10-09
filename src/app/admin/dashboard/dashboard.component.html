@@ -65,10 +65,10 @@
                             {{ item.displayName | uppercase }}
                           </div>
                           <div
-                            class="count-sub-title-employee"
+                            class=" cardsdisplayname"
                             *ngIf="capabilities.employee"
                           >
-                            {{ item.displayName }}
+                            {{ item.displayName  | uppercase}}
                           </div>
                           <div
                             class="count-title"
@@ -378,7 +378,7 @@
             </div>
           </div> -->
           <!-- <div class="attendance-container p-4 "> -->
-          <h3 class="attendance-heading text-center mb-3">
+          <h3 class="attendance-heading text-center mb-3" style="color: #333333;">
             Mark Your Attendance
           </h3>
           <div
@@ -407,8 +407,9 @@
           <div class="details-container mt-4 p-3 rounded fw-bold">
             <div class="employee-info-line" *ngIf="status">
               <span class="icon text-dark-emphasis"
-                ><i class="fa fa-user-check"></i
-              ></span>
+                >
+                <i class="fa fa-user-check"></i>
+              </span>
               <div
                 class="text-dark-emphasis employee-label d-flex justify-content-between"
               >
@@ -420,8 +421,10 @@
             </div>
             <div class="employee-info-line" *ngIf="checkInTime">
               <span class="icon text-success"
-                ><i class="fa fa-sign-in-alt"></i
-              ></span>
+                >
+                <i class="fa fa-sign-in-alt"></i>
+                 
+              </span>
               <div
                 class="text-success employee-label d-flex justify-content-between"
               >
@@ -446,10 +449,10 @@
             </div>
             <div class="text-center mt-3" *ngIf="loggedHours">
               <!-- <span class="icon text-primary"><i class="fa fa-clock"></i></span> -->
-              <div class="text-primary-emphasis">
+              <div class="text-primary-emphasis"  style="color: #535ab4 !important;">
                 Total Logged Hours<b>&nbsp;</b>
               </div>
-              <div class="loggedin-value mt-2 text-primary-emphasis">
+              <div class="loggedin-value mt-2 text-primary-emphasis"  style="color: #535ab4 !important;">
                 {{ loggedHours }}
               </div>
             </div>

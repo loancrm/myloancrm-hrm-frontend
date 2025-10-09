@@ -590,7 +590,7 @@
                 tooltipPosition="left"
                 class="p-button-info me-2 view-btn"
                 icon="fa fa-eye"
-                (click)="showLeaveDetails(leave)"
+                (click)="showLeaveDetails(leave)" style="background-color: #535ab4; border: #535ab4;"
               ></button>
               <button
                 *ngIf="capabilities.employeeLeaves"
@@ -605,7 +605,7 @@
                   leave.leaveInternalStatus === 2 ||
                   leave.leaveInternalStatus === 3
                 "
-                (click)="updateLeave(leave.leaveId)"
+                (click)="updateLeave(leave.leaveId)"  style="background-color:#979ad1; border: #979ad1"
               ></button>
               <p-menu
                 appendTo="body"
