@@ -4,7 +4,8 @@ import { AuthGuard } from './auth.guard';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  // { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '', redirectTo: '/user', pathMatch: 'full' },
   {
     path: 'user',
     loadChildren: () =>
@@ -37,4 +38,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

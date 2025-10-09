@@ -3,10 +3,7 @@
     <div class="row align-items-center">
       <div class="col-md-10">
         <div class="d-flex justify-content-start align-items-center mb-2">
-          <div
-            class="d-flex align-items-center pointer-cursor"
-            (click)="goBack()"
-          >
+          <div class="d-flex align-items-center pointer-cursor" (click)="goBack()">
             <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
             <span class="back-btn-text ms-2 text-capitalize">Interviews</span>
           </div>
@@ -28,16 +25,8 @@
 <div *ngIf="loading">
   <app-preloader></app-preloader>
 </div>
-<p-dialog
-  [(visible)]="isDialogVisible"
-  [modal]="true"
-  [closable]="true"
-  [responsive]="true"
-  class="dialogbox"
-  [style]="{ width: '50vw' }"
-  header="Interview Details"
-  (onHide)="clearDialog()"
->
+<p-dialog [(visible)]="isDialogVisible" [modal]="true" [closable]="true" [responsive]="true" class="dialogbox"
+  [style]="{ width: '50vw' }" header="Interview Details" (onHide)="clearDialog()">
   <div *ngIf="selectedInterviewDetails" class="text-capitalize">
     <div class="info-line">
       <span class="icon"><i class="fas fa-id-badge"></i></span>
@@ -46,9 +35,9 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.interviewId
-            ? selectedInterviewDetails.interviewId
-            : "-"
+        selectedInterviewDetails.interviewId
+        ? selectedInterviewDetails.interviewId
+        : "-"
         }}
       </div>
     </div>
@@ -58,17 +47,14 @@
         Interview Status<b>:&nbsp;</b>
       </div>
       <div class="value">
-        <span
-          class="fw-bold statusdata"
-          [ngStyle]="{
+        <span class="fw-bold statusdata" [ngStyle]="{
             color: getStatusColor(
               getStatusName(selectedInterviewDetails.interviewInternalStatus)
             ).textColor,
             'background-color': getStatusColor(
               getStatusName(selectedInterviewDetails.interviewInternalStatus)
             ).backgroundColor
-          }"
-        >
+          }">
           {{ getStatusName(selectedInterviewDetails.interviewInternalStatus) }}
         </span>
       </div>
@@ -82,9 +68,9 @@
       >
       <div class="value">
         {{
-          selectedInterviewDetails.candidateName
-            ? (selectedInterviewDetails.candidateName | capitalizeFirst)
-            : "-"
+        selectedInterviewDetails.candidateName
+        ? (selectedInterviewDetails.candidateName | capitalizeFirst)
+        : "-"
         }}
       </div>
       >
@@ -96,9 +82,9 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.dateOfBirth
-            ? (selectedInterviewDetails.dateOfBirth | date)
-            : "-"
+        selectedInterviewDetails.dateOfBirth
+        ? (selectedInterviewDetails.dateOfBirth | date)
+        : "-"
         }}
       </div>
     </div>
@@ -109,9 +95,9 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.primaryPhone
-            ? selectedInterviewDetails.primaryPhone
-            : "-"
+        selectedInterviewDetails.primaryPhone
+        ? selectedInterviewDetails.primaryPhone
+        : "-"
         }}
       </div>
     </div>
@@ -122,9 +108,9 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.qualification
-            ? (selectedInterviewDetails.qualification | capitalizeFirst)
-            : "-"
+        selectedInterviewDetails.qualification
+        ? (selectedInterviewDetails.qualification | capitalizeFirst)
+        : "-"
         }}
       </div>
     </div>
@@ -144,9 +130,9 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.scheduledLocationName
-            ? selectedInterviewDetails.scheduledLocationName
-            : "-"
+        selectedInterviewDetails.scheduledLocationName
+        ? selectedInterviewDetails.scheduledLocationName
+        : "-"
         }}
       </div>
     </div>
@@ -157,9 +143,9 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.scheduledDate
-            ? (selectedInterviewDetails.scheduledDate | date)
-            : "-"
+        selectedInterviewDetails.scheduledDate
+        ? (selectedInterviewDetails.scheduledDate | date)
+        : "-"
         }}
       </div>
     </div>
@@ -170,9 +156,9 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.attendedInterviewName
-            ? selectedInterviewDetails.attendedInterviewName
-            : "-"
+        selectedInterviewDetails.attendedInterviewName
+        ? selectedInterviewDetails.attendedInterviewName
+        : "-"
         }}
       </div>
     </div>
@@ -183,9 +169,9 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.postponedDate
-            ? (selectedInterviewDetails.postponedDate | date)
-            : "-"
+        selectedInterviewDetails.postponedDate
+        ? (selectedInterviewDetails.postponedDate | date)
+        : "-"
         }}
       </div>
     </div>
@@ -228,33 +214,18 @@
         Resume<b>:&nbsp;</b>
       </div>
       <div class="value mt-2">
-        <div
-          *ngIf="
+        <div *ngIf="
             selectedInterviewDetails &&
             selectedInterviewDetails.resume &&
             selectedInterviewDetails.resume.length > 0
-          "
-          class="files-container d-flex flex-wrap gap-2"
-        >
-          <div
-            *ngFor="let file of selectedInterviewDetails.resume"
-            class="file-item"
-          >
-            <a
-              [href]="'//' + file"
-              target="_blank"
-              class="d-flex align-items-center"
-            >
-              <i
-                [class]="getFileIcon(file.split('.').pop())"
-                class="file-icon me-2"
-              ></i>
+          " class="files-container d-flex flex-wrap gap-2">
+          <div *ngFor="let file of selectedInterviewDetails.resume" class="file-item">
+            <a [href]="'//' + file" target="_blank" class="d-flex align-items-center">
+              <i [class]="getFileIcon(file.split('.').pop())" class="file-icon me-2"></i>
             </a>
           </div>
         </div>
-        <ng-container *ngIf="selectedInterviewDetails?.resume == null"
-          >-</ng-container
-        >
+        <ng-container *ngIf="selectedInterviewDetails?.resume == null">-</ng-container>
       </div>
     </div>
     <div class="info-line">
@@ -264,9 +235,9 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.remarks
-            ? (selectedInterviewDetails.remarks | capitalizeFirst)
-            : "-"
+        selectedInterviewDetails.remarks
+        ? (selectedInterviewDetails.remarks | capitalizeFirst)
+        : "-"
         }}
       </div>
     </div>
@@ -277,9 +248,9 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.currentAddress
-            ? (selectedInterviewDetails.currentAddress | capitalizeFirst)
-            : "-"
+        selectedInterviewDetails.currentAddress
+        ? (selectedInterviewDetails.currentAddress | capitalizeFirst)
+        : "-"
         }}
       </div>
     </div>
@@ -290,9 +261,9 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.permanentAddress
-            ? (selectedInterviewDetails.permanentAddress | capitalizeFirst)
-            : "-"
+        selectedInterviewDetails.permanentAddress
+        ? (selectedInterviewDetails.permanentAddress | capitalizeFirst)
+        : "-"
         }}
       </div>
     </div>
@@ -303,9 +274,9 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.createdBy
-            ? (selectedInterviewDetails.createdBy | capitalizeFirst)
-            : "-"
+        selectedInterviewDetails.createdBy
+        ? (selectedInterviewDetails.createdBy | capitalizeFirst)
+        : "-"
         }}
       </div>
     </div>
@@ -316,9 +287,9 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.createdOn
-            ? (selectedInterviewDetails.createdOn | date)
-            : "-"
+        selectedInterviewDetails.createdOn
+        ? (selectedInterviewDetails.createdOn | date)
+        : "-"
         }}
       </div>
     </div>
@@ -329,9 +300,9 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.lastUpdatedBy
-            ? (selectedInterviewDetails.lastUpdatedBy | capitalizeFirst)
-            : "-"
+        selectedInterviewDetails.lastUpdatedBy
+        ? (selectedInterviewDetails.lastUpdatedBy | capitalizeFirst)
+        : "-"
         }}
       </div>
     </div>
@@ -342,10 +313,10 @@
       </div>
       <div class="value">
         {{
-          selectedInterviewDetails.lastUpdatedOn
-            ? (selectedInterviewDetails.lastUpdatedOn
-              | date : "MMM d, y, h:mm a")
-            : "-"
+        selectedInterviewDetails.lastUpdatedOn
+        ? (selectedInterviewDetails.lastUpdatedOn
+        | date : "MMM d, y, h:mm a")
+        : "-"
         }}
       </div>
     </div>
@@ -355,16 +326,10 @@
   <div class="row">
     <div class="d-flex flex-wrap justify-content-start">
       <ng-container *ngFor="let item of countsAnalytics">
-        <div
-          class="col-lg-3 col-md-3 col-sm-6 col-12 mt-2"
-          (click)="cardClick(item)"
-        >
-          <div
-            class="card p-3 shadow-sm pointer-cursor m-2 cards"
-            [ngClass]="{
+        <div class="col-lg-3 col-md-3 col-sm-6 col-12 mt-2" (click)="cardClick(item)">
+          <div class="card p-3 shadow-sm pointer-cursor m-2 cards" [ngClass]="{
               'active-card': this.selectedInterviewStatus?.name === item?.name
-            }"
-          >
+            }">
             <div class="d-flex justify-content-between">
               <div class="d-flex align-items-center">
                 <div>
@@ -376,13 +341,10 @@
                   </div>
                 </div>
               </div>
-              <div
-                class="cardicons"
-                [ngStyle]="{
+              <div class="cardicons" [ngStyle]="{
                   color: item.textcolor,
                   'background-color': item.backgroundcolor
-                }"
-              >
+                }">
                 <img src="../../../assets/images/{{ item.icon }}.svg" alt="" />
                 <!-- <i class="fa fa-{{ item.icon }}"></i> -->
               </div>
@@ -394,94 +356,45 @@
   </div>
 </div>
 <div class="text-capitalize table-card">
-  <p-table
-    #interviewsTable
-    [value]="interviews"
-    [sortOrder]="-1"
-    [sortField]="'scheduledDate'"
-    [lazy]="true"
-    (onLazyLoad)="loadInterviews($event)"
-    dataKey="id"
-    [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [paginator]="true"
-    [rows]="10"
-    class="p-datatable-striped table"
-    [totalRecords]="totalInterviewsCount"
-    [loading]="apiLoading"
-    responsiveLayout="scroll"
-    scrollHeight="flex"
+  <p-table #interviewsTable [value]="interviews" [sortOrder]="-1" [sortField]="'scheduledDate'" [lazy]="true"
+    (onLazyLoad)="loadInterviews($event)" dataKey="id" [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true" [rows]="10" class="p-datatable-striped table"
+    [totalRecords]="totalInterviewsCount" [loading]="apiLoading" responsiveLayout="scroll" scrollHeight="flex"
     [globalFilterFields]="[
       'referenceNo',
       'customer.firstName',
       'partner.partnerName',
       'status'
-    ]"
-    styleClass="p-datatable-customers"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Interviews"
-  >
+    ]" styleClass="p-datatable-customers"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Interviews">
     <ng-template pTemplate="caption">
       <div class="row">
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
           <div class="p-inputgroup">
-            <input
-              type="text"
-              pInputText
-              placeholder="Search with Candidate Name"
-              [(ngModel)]="candidateNameToSearch"
+            <input type="text" pInputText placeholder="Search with Candidate Name" [(ngModel)]="candidateNameToSearch"
               (ngModelChange)="
                 inputValueChangeEvent('interviewId', candidateNameToSearch)
-              "
-              (keyup.enter)="filterWithCandidateName()"
-            />
-            <button
-              type="button"
-              pButton
-              icon="pi pi-search"
-              class="p-button-primary"
-              [disabled]="!candidateNameToSearch"
-              (click)="filterWithCandidateName()"
-            ></button>
+              " (keyup.enter)="filterWithCandidateName()" />
+            <button type="button" pButton icon="pi pi-search" class="p-button-primary"
+              [disabled]="!candidateNameToSearch" (click)="filterWithCandidateName()"></button>
           </div>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
-          <p-dropdown
-            styleClass="text-left"
-            [style]="{ width: '100%' }"
-            [options]="interviewInternalStatusList"
-            (onChange)="statusChange($event)"
-            [dropdownIcon]="'fa fa-caret-down'"
-            [(ngModel)]="selectedInterviewStatus"
-            optionLabel="displayName"
-            dataKey="name"
-            appendTo="body"
-          >
+          <p-dropdown styleClass="text-left" [style]="{ width: '100%' }" [options]="interviewInternalStatusList"
+            (onChange)="statusChange($event)" [dropdownIcon]="'fa fa-caret-down'" [(ngModel)]="selectedInterviewStatus"
+            optionLabel="displayName" dataKey="name" appendTo="body">
           </p-dropdown>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
           <div class="d-flex">
             <div class="flex-grow-1 me-2"></div>
             <div class="d-flex align-items-center pointer-cursor">
-              <app-filter
-                [position]="'right'"
-                [iconColor]="'#33009C'"
-                [iconSize]="'28px!important'"
-                class="me-2"
-                (filterEvent)="applyConfigFilters($event)"
-                [filterConfig]="filterConfig"
-                [showFilterIndication]="appliedFilter"
-              >
+              <app-filter [position]="'right'" [iconColor]="'#33009C'" [iconSize]="'28px!important'" class="me-2"
+                (filterEvent)="applyConfigFilters($event)" [filterConfig]="filterConfig"
+                [showFilterIndication]="appliedFilter">
               </app-filter>
-              <button
-                pButton
-                pRipple
-                pTooltip="Add Interview"
-                tooltipPosition="top"
-                type="button"
-                class="p-button-primary"
-                icon="fa fa-plus"
-                (click)="createInterview()"
-              >
+              <button pButton pRipple pTooltip="Add Interview" tooltipPosition="top" type="button"
+                class="p-button-primary" icon="fa fa-plus" (click)="createInterview()">
                 &nbsp;Add Interview
               </button>
             </div>
@@ -521,58 +434,36 @@
       <tr>
         <td>
           <b>
-            <span
-              class="table-column-data"
-              *ngIf="interview.interviewId; else noData"
-              >{{ interview.interviewId }}</span
-            >
+            <span class="table-column-data" *ngIf="interview.interviewId; else noData">{{ interview.interviewId
+              }}</span>
           </b>
         </td>
         <td>
-          <span
-            class="table-column-data"
-            *ngIf="interview.candidateName; else noData"
-            >{{ interview.candidateName | capitalizeFirst }}</span
-          >
+          <span class="table-column-data" *ngIf="interview.candidateName; else noData">{{ interview.candidateName |
+            capitalizeFirst }}</span>
         </td>
         <td>
-          <span
-            class="table-column-data"
-            *ngIf="interview.scheduledLocationName; else noData"
-            >{{ interview.scheduledLocationName | capitalizeFirst }}</span
-          >
+          <span class="table-column-data" *ngIf="interview.scheduledLocationName; else noData">{{
+            interview.scheduledLocationName | capitalizeFirst }}</span>
         </td>
         <td>
-          <span
-            class="table-column-data"
-            *ngIf="interview.scheduledDate; else noData"
-            >{{ interview.scheduledDate | date : "mediumDate" }}</span
-          >
+          <span class="table-column-data" *ngIf="interview.scheduledDate; else noData">{{ interview.scheduledDate | date
+            : "mediumDate" }}</span>
         </td>
         <td>
-          <span
-            class="table-column-data"
-            *ngIf="interview.attendedInterviewName; else noData"
-            >{{ interview.attendedInterviewName }}</span
-          >
+          <span class="table-column-data" *ngIf="interview.attendedInterviewName; else noData">{{
+            interview.attendedInterviewName }}</span>
         </td>
         <td>
-          <span
-            class="table-column-data"
-            *ngIf="interview.createdOn; else noData"
-            >{{ interview.createdOn | date : "mediumDate" }}</span
-          >
+          <span class="table-column-data" *ngIf="interview.createdOn; else noData">{{ interview.createdOn | date :
+            "mediumDate" }}</span>
         </td>
         <td>
-          <span
-            class="d-inline-flex align-items-center justify-content-start gap-2 text-nowrap"
-            [pTooltip]="
+          <span class="d-inline-flex align-items-center justify-content-start gap-2 text-nowrap" [pTooltip]="
               interview?.referenceNo
                 ? 'Employee Id: ' + interview.referenceNo
                 : ''
-            "
-            *ngIf="interview.interviewInternalStatus"
-            [ngStyle]="{
+            " *ngIf="interview.interviewInternalStatus" [ngStyle]="{
               backgroundColor: getStatusColor(
                 getStatusName(interview.interviewInternalStatus)
               ).backgroundColor,
@@ -587,20 +478,16 @@
               fontSize: '12px',
               fontWeight: 500,
               paddingLeft: '8px'
-            }"
-          >
+            }">
             <!-- Dot -->
-            <span
-              class="rounded-circle"
-              [ngStyle]="{
+            <span class="rounded-circle" [ngStyle]="{
                 backgroundColor: getStatusColor(
                   getStatusName(interview.interviewInternalStatus)
                 ).dotColor,
                 width: '8px',
                 height: '8px',
                 display: 'inline-block'
-              }"
-            ></span>
+              }"></span>
 
             <!-- Status Text -->
             {{ getStatusName(interview.interviewInternalStatus) }}
@@ -609,30 +496,17 @@
         <td>
           <div class="text-center">
             <div class="d-flex tableimage">
-              <p-menu
-                appendTo="body"
-                #menu
-                [model]="actionItems(interview)"
-                [popup]="true"
-              ></p-menu>
-                 <!-- <button
+              <p-menu appendTo="body" #menu [model]="actionItems(interview)" [popup]="true"></p-menu>
+              <!-- <button
                 pButton
                 type="button"
                 class="custom-btn"
                 (click)="menu.toggle($event)"
                 icon="pi pi-ellipsis-h"
               ></button> -->
-              <img
-                class="pointer-cursor"
-                style="color: #878a99 !important"
-                alt="Actions"
-                src="../../../assets/images/menu/menu.svg"
-                width="24px"
-                height="24px"
-                pTooltip="Actions"
-                tooltipPosition="top"
-                (click)="menu.toggle($event); $event.stopPropagation()"
-              />
+              <img class="pointer-cursor" style="color: #878a99 !important" alt="Actions"
+                src="../../../assets/images/menu/menu.svg" width="24px" height="24px" pTooltip="Actions"
+                tooltipPosition="top" (click)="menu.toggle($event); $event.stopPropagation()" />
             </div>
           </div>
         </td>
@@ -641,11 +515,7 @@
     <ng-template pTemplate="emptymessage">
       <tr class="text-center">
         <td colspan="10" class="text-center fw-bold">
-          <img
-            src="../../../assets/images/menu/no data found.svg"
-            width="300"
-            height="300"
-          />
+          <img src="../../../assets/images/menu/no data found.svg" width="300" height="300" />
           <!-- <p>No Interviews Found</p> -->
         </td>
       </tr>
@@ -655,9 +525,7 @@
 <ng-template #noData> - </ng-template>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
   <div class="text-center mb-3">
-    © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b
-      style="color: #535ab4"
-      >HRMS</b
-    >. | All Rights Reserved
+    © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b style="color: #535ab4">HRMS</b>. | All Rights
+    Reserved
   </div>
 </footer>
