@@ -1,3 +1,207 @@
+// .bg-glass {
+//   background-color: #f8f0e5;
+//   backdrop-filter: saturate(200%) blur(25px);
+// }
+
+// .center-button {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+// .contact-links {
+//   margin-top: 40px;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+// .contact-links img {
+//   width: 50px;
+//   height: 50px;
+//   transition: transform 0.3s;
+// }
+
+// .contact-links img:hover {
+//   transform: scale(1.35);
+// }
+
+// .link {
+//   margin-right: 15px;
+// }
+
+// .link:last-child {
+//   margin-right: 0;
+// }
+
+// .card-logo {
+//   font-weight: bold;
+//   display: flex;
+//   justify-content: center;
+//   margin-bottom: 30px;
+// }
+
+// // .typing-text-container {
+// //   // overflow: hidden;
+// //   border-right: 0.1em solid hsl(218, 41%, 19%);
+// //   white-space: nowrap;
+// //   animation: typing-animation 5s steps(40, end) infinite;
+// // }
+
+// @keyframes typing-animation {
+//   from {
+//     width: 0;
+//   }
+//   to {
+//     width: 100%;
+//   }
+// }
+
+// .background-img {
+//   // width: 100%;
+//   // min-height: 100vh;
+//   // animation: changeBackgroundColor 6s infinite;
+//  background-image: url("../../assets/images/menu/blackimg.svg");
+//  background-repeat: no-repeat;
+//  background-size: cover;
+//  height: 600px;
+//  width: 800px;
+//  margin-top: 50px;
+// //  margin-bottom: 50px;
+//  margin-left: 50px;
+//  margin-right: 50px;
+//  border-radius: 50px;
+
+// }
+
+// @keyframes changeBackgroundColor {
+//   0%
+//   {
+//     // background-color:#e7e4f7;
+//     background-image: url("../../assets/images/slider/blackimg1.svg");
+//     background-repeat: no-repeat;
+//     background-size: cover;
+//     border-radius: 0%;
+//   }
+//   50% {
+//     // background-color: #d4cff5;
+//   background-image: url("../../assets/images/slider/blackimg1.svg");
+//   background-repeat: no-repeat;
+//   background-size: cover;
+
+//   }
+//   100% {
+//     // background-color: #e3e1ec;
+//   background-image: url("../../assets/images/slider/blackimg1.svg");
+//   background-repeat: no-repeat;
+//   background-size: cover;
+
+//   }
+
+// }
+
+// .login-form,
+// .text-large {
+//   margin: 0 80px;
+// }
+
+// .shadow-image {
+//   width: 400px;
+//   height: 400px;
+// }
+
+// @media screen and (max-width: 620px) {
+//   .login-form,
+//   .text-large {
+//     margin: 0;
+//   }
+
+//   .carouselimg {
+//     display: none !important;
+//   }
+
+//   .signinform {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     height: 100vh;
+//   }
+// }
+
+// .logo-container {
+//   position: absolute;
+//   top: 10px;
+//   right: 10px;
+// }
+
+// .logo {
+//   width: 80px;
+//   height: 40px;
+//   margin-right: 5px;
+//   }
+
+// .logo-right {
+//   color: #535AB4;
+//   font-size: 30px;
+//   margin-top: 5px;
+// }
+
+// .logo-right {
+//   color: #51c297;
+// }
+
+// .form-label {
+//   font-weight: bold;
+// }
+// .center-button {
+//   background-color: #535AB4 !important;
+//   border-color: #535AB4 !important;
+// }
+// .p-inputtext {
+//   color: #333;
+//   padding: 10px;
+//   font-size: 16px;
+//   transition: border-color 0.3s, box-shadow 0.3s;
+// }
+// .p-inputtext:hover {
+//   border: 1px solid #C7C2E8 !important;
+// }
+// .p-inputtext:focus {
+//   border: 1px solid #C7C2E8 !important;
+//   box-shadow: 0 0 5px #9b8db5 !important;
+//   outline: none;
+// }
+// .p-inputtext::placeholder {
+//   color: #888;
+// }
+
+// // login.component.scss
+
+// .login-container {
+
+//   align-items: center;
+//   justify-content: center;
+//   padding: 10px 0;
+
+// }
+
+// .user-type-text {
+//   font-size: 18px;
+//   color: #333;
+//   margin-bottom: 10px;
+// }
+
+// .toggle-link {
+//   color: #535AB4;
+//   font-size: 16px;
+//   text-decoration: underline;
+//   cursor: pointer;
+
+//   &:hover {
+//     color: #535AB4;
+//   }
+// }
+
 .bg-glass {
   background-color: #f8f0e5;
   backdrop-filter: saturate(200%) blur(25px);
@@ -58,47 +262,21 @@
 }
 
 .background-img {
-  // width: 100%;
-  // min-height: 100vh;
-  // animation: changeBackgroundColor 6s infinite;
- background-image: url("../../assets/images/menu/blackimg.svg");
- background-repeat: no-repeat;
- background-size: cover;
- height: 600px;
- width: 800px;
- margin-top: 50px;
-//  margin-bottom: 50px;
- margin-left: 50px;
- margin-right: 50px;
- border-radius: 50px;
-
+  width: 100%;
+  min-height: 100vh;
+  animation: changeBackgroundColor 6s infinite;
 }
 
 @keyframes changeBackgroundColor {
-  0% 
-  {
-    // background-color:#e7e4f7;
-    background-image: url("../../assets/images/slider/blackimg1.svg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    border-radius: 0%;
+  0% {
+    background-color: #fae5e6;
   }
   50% {
-    // background-color: #d4cff5;
-  background-image: url("../../assets/images/slider/blackimg1.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  
+    background-color: #e5f0f4;
   }
   100% {
-    // background-color: #e3e1ec;
-  background-image: url("../../assets/images/slider/blackimg1.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
- 
+    background-color: #fffde3;
   }
-  
- 
 }
 
 .login-form,
@@ -107,8 +285,8 @@
 }
 
 .shadow-image {
-  width: 400px;
-  height: 400px;
+  width: 500px;
+  height: 500px;
 }
 
 @media screen and (max-width: 620px) {
@@ -139,10 +317,10 @@
   width: 80px;
   height: 40px;
   margin-right: 5px;
-  }
+}
 
-.logo-right {
-  color: #535AB4;
+.logo-left {
+  color: #535ab4;
   font-size: 30px;
   margin-top: 5px;
 }
@@ -155,8 +333,8 @@
   font-weight: bold;
 }
 .center-button {
-  background-color: #535AB4 !important;
-  border-color: #535AB4 !important;
+  background-color: #535ab4 !important;
+  border-color: #535ab4 !important;
 }
 .p-inputtext {
   color: #333;
@@ -165,10 +343,10 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .p-inputtext:hover {
-  border: 1px solid #C7C2E8 !important;
+  border: 1px solid #c7c2e8 !important;
 }
 .p-inputtext:focus {
-  border: 1px solid #C7C2E8 !important;
+  border: 1px solid #c7c2e8 !important;
   box-shadow: 0 0 5px #9b8db5 !important;
   outline: none;
 }
@@ -176,15 +354,12 @@
   color: #888;
 }
 
-
 // login.component.scss
 
 .login-container {
-
   align-items: center;
   justify-content: center;
   padding: 10px 0;
-
 }
 
 .user-type-text {
@@ -194,12 +369,12 @@
 }
 
 .toggle-link {
-  color: #535AB4;
+  color: #535ab4;
   font-size: 16px;
   text-decoration: underline;
   cursor: pointer;
 
   &:hover {
-    color: #535AB4;
+    color: #535ab4;
   }
 }
