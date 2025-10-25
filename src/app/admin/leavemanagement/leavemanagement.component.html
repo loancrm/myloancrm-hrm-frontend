@@ -621,6 +621,7 @@
                 height="24px"
                 pTooltip="Actions"
                 tooltipPosition="top"
+                *ngIf="capabilities.adminLeaves"
                 (click)="menu.toggle($event); $event.stopPropagation()"
               />
               <!-- <button
