@@ -1,4 +1,4 @@
-name: Deploy Angular to Hostinger
+name: Deploy Hrms to Hostinger
 
 on:
   push:
