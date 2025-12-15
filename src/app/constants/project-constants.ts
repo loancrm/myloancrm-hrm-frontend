@@ -90,7 +90,7 @@ export const projectConstantsLocal = {
     { label: 'Yes', value: 'Yes' },
     { label: 'No', value: 'No' },
   ],
-  BASE_URL: 'http://localhost:5001/',
+  BASE_URL: 'http://localhost:5003/',
   // BASE_URL: 'https://rest.thefintalk.in:5003/',
   // BASE_URL: 'https://rest.thefintalk.in/hrms/',
   VERSION_DESKTOP: '0.0.0',

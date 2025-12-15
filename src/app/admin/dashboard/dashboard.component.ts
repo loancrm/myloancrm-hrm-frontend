@@ -1099,16 +1099,21 @@ export class DashboardComponent implements OnInit {
         }
 
         // Create filters for each branch
+        // Note: Employees store branchId (string) in ofcBranch field, not id (number)
         const branchFilters = this.branches.map((branch: any) => ({
           ...filter,
-          'ofcBranch-eq': branch.id,
+          'ofcBranch-eq': branch.branchId || branch.id,
         }));
+
+        console.log('Branch Filters:', branchFilters);
+        console.log('Branches:', this.branches.map(b => ({ id: b.id, branchId: b.branchId, name: b.displayName || b.name })));
 
         // Get employee counts for each branch
         forkJoin(
           branchFilters.map((f) => this.employeesService.getEmployeesCount(f))
         ).subscribe(
           (counts: any) => {
+            console.log('Raw Counts from API:', counts);
             this.branchCounts = this.branches.map((branch: any, index: number) => ({
               branchId: branch.id,
               branchName: branch.displayName || branch.name || `Branch ${branch.id}`,
