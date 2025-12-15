@@ -522,7 +522,7 @@
               ></app-apex-charts>
               <div
                 class="nodata-container"
-                *ngIf="panjaguttaCount == 0 && BegumpetCount == 0"
+                *ngIf="areAllBranchCountsZero()"
               >
                 <img
                   [lazyLoad]="'../../../assets/images/menu/no data found.svg'"

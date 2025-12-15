@@ -7,6 +7,7 @@ import { forkJoin } from 'rxjs';
 import { DateTimeProcessorService } from 'src/app/services/date-time-processor.service';
 import { Table } from 'primeng/table';
 import { ConfirmationService } from 'primeng/api';
+import { BranchesService } from 'src/app/services/branches.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,9 +18,9 @@ export class DashboardComponent implements OnInit {
   userDetails: any;
   maleCount: number = 0;
   femaleCount: number = 0;
-  panjaguttaCount: number = 0;
   @ViewChild('employeesTable') employeesTable!: Table;
-  BegumpetCount: number = 0;
+  branches: any[] = [];
+  branchCounts: any[] = [];
   selectedDate: any;
   loading: any;
   apiLoading: any;
@@ -67,7 +68,8 @@ export class DashboardComponent implements OnInit {
     private employeesService: EmployeesService,
     private toastService: ToastService,
     private confirmationService: ConfirmationService,
-    private dateTimeProcessor: DateTimeProcessorService
+    private dateTimeProcessor: DateTimeProcessorService,
+    private branchesService: BranchesService
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
     this.selectedDateforIncentive = this.moment(new Date())
@@ -1082,27 +1084,60 @@ export class DashboardComponent implements OnInit {
   // }
   getBranchCounts(filter = {}) {
     filter['employeeInternalStatus-eq'] = 1;
-    const panjaguttafilter = { ...filter, 'ofcBranch-eq': 1 };
-    const begumpetfilter = { ...filter, 'ofcBranch-eq': 2 };
     this.loading = true;
-    forkJoin({
-      panjaguttaCount:
-        this.employeesService.getEmployeesCount(panjaguttafilter),
-      BegumpetCount: this.employeesService.getEmployeesCount(begumpetfilter),
-    }).subscribe(
-      (response: any) => {
-        this.panjaguttaCount = response.panjaguttaCount;
-        this.BegumpetCount = response.BegumpetCount;
-        console.log('Panjagutta Count:', this.panjaguttaCount);
-        console.log('Begumpet Count:', this.BegumpetCount);
-        this.setChartOptions();
-        this.loading = false;
+    
+    // First fetch all active branches
+    this.branchesService.getBranches({ 'branchInternalStatus-eq': 1 }).subscribe(
+      (branchesData: any) => {
+        this.branches = branchesData || [];
+        
+        if (this.branches.length === 0) {
+          this.branchCounts = [];
+          this.setChartOptions();
+          this.loading = false;
+          return;
+        }
+
+        // Create filters for each branch
+        const branchFilters = this.branches.map((branch: any) => ({
+          ...filter,
+          'ofcBranch-eq': branch.id,
+        }));
+
+        // Get employee counts for each branch
+        forkJoin(
+          branchFilters.map((f) => this.employeesService.getEmployeesCount(f))
+        ).subscribe(
+          (counts: any) => {
+            this.branchCounts = this.branches.map((branch: any, index: number) => ({
+              branchId: branch.id,
+              branchName: branch.displayName || branch.name || `Branch ${branch.id}`,
+              count: counts[index] || 0,
+            }));
+            
+            console.log('Branch Counts:', this.branchCounts);
+            this.setChartOptions();
+            this.loading = false;
+          },
+          (error: any) => {
+            this.loading = false;
+            this.toastService.showError(error);
+          }
+        );
       },
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
       }
     );
+  }
+  
+  // Check if all branch counts are zero
+  areAllBranchCountsZero(): boolean {
+    if (this.branchCounts.length === 0) {
+      return true;
+    }
+    return this.branchCounts.every((branch: any) => branch.count === 0);
   }
   setChartOptions() {
     this.DepartmentChartOptions = {
@@ -1243,15 +1278,23 @@ export class DashboardComponent implements OnInit {
         },
       ],
     };
+    // Dynamic branch chart
+    const branchSeries = this.branchCounts.map((branch: any) => branch.count || 0);
+    const branchLabels = this.branchCounts.map((branch: any) => branch.branchName);
+    
+    // Generate colors dynamically (repeating if needed)
+    const branchColors = ['#ABA5DC', '#8E89D0', '#706EC4', '#535AB4', '#3D4A94', '#2A3574'];
+    const chartColors = branchSeries.map((_, index) => branchColors[index % branchColors.length]);
+    
     this.branchpieChartOptions = {
-      series: [this.panjaguttaCount || 0, this.BegumpetCount || 0],
-      labels: ['Panjagutta', 'Begumpet'],
+      series: branchSeries.length > 0 ? branchSeries : [0],
+      labels: branchLabels.length > 0 ? branchLabels : ['No Branches'],
       chart: {
         height: 350,
         type: 'donut',
         toolbar: { show: true },
       },
-      colors: ['#ABA5DC', '#8E89D0'],
+      colors: chartColors,
       title: {
         text: 'Branch Wise Employees Count',
         align: 'left',
@@ -1265,7 +1308,7 @@ export class DashboardComponent implements OnInit {
         offsetY: 15,
         offsetX: -5,
         formatter: (seriesName, opts) => {
-          const customLabels = ['Panjagutta', 'Begumpet'];
+          const customLabels = branchLabels.length > 0 ? branchLabels : ['No Branches'];
           return `${customLabels[opts.seriesIndex]}: ${opts.w.config.series[opts.seriesIndex]
             }`;
         },
@@ -1273,7 +1316,7 @@ export class DashboardComponent implements OnInit {
       dataLabels: {
         enabled: true,
         formatter: function (val, opts) {
-          var customLabels = ['Panjagutta', 'Begumpet'];
+          var customLabels = branchLabels.length > 0 ? branchLabels : ['No Branches'];
           var seriesValues = opts.w.config.series[opts.seriesIndex];
           var customLabel = customLabels[opts.seriesIndex];
           return customLabel + ': ' + seriesValues;
