@@ -36,10 +36,11 @@
       <div class="page">
         <div class="header">
           <img
-            src="../../assets/images/pdf/winway icon.png"
+            [src]="'https://' + companySettings?.companylogo"
             alt="Company Logo"
             width="200"
             height="100"
+            style="object-fit: contain;"
           />
         </div>
         <div class="offerletter-title">Offer Letter</div>
@@ -63,7 +64,7 @@
           <p class="para firstpara indented-paragraph">
             This is a reference to your application and subsequent interview you
             had with us; we are pleased to offer you a position in our
-            company,<b> Winway Creators India Pvt. Ltd.</b>, subjected to the
+            company,<b> {{ companySettings.companyName || 'Winway Creators India Pvt. Ltd.' }}</b>, subjected to the
             following employment terms and conditions.
           </p>
           <div class="details text-capitalize">
@@ -122,16 +123,16 @@
           </li>
         </div>
         <p class="para mt-2">
-          We are happy to welcome you to Winway Creators India Pvt Ltd.
+          We are happy to welcome you to {{ companySettings.companyName || 'Winway Creators India Pvt Ltd' }}.
         </p>
       </div>
       <div class="page">
         <div class="policyheading">
-          Winway Creators India Private Limited Policies
+          {{ companySettings.companyName || 'Winway Creators India Private Limited' }} Policies
         </div>
         <div>
           <p class="para indented-paragraph">
-            This is to acknowledge all the staff members of Winway Creators.
+            This is to acknowledge all the staff members of {{ companySettings.companyName || 'Winway Creators' }}.
             Private Limited, to hereby abide by the below-mentioned Rules, Terms
             and Conditions of the company.
           </p>
@@ -143,7 +144,7 @@
             <li>
               <p class="para">
                 You will be under a probation period of three months from the
-                date of joining. Winway Creators India Pvt Ltd will monitor your
+                date of joining. {{ companySettings.companyName || 'Winway Creators India Pvt Ltd' }} will monitor your
                 daily activities. After the successful completion of probation
                 Period, you will be considered a regular employee of Winway.
                 Creators India Pvt. Ltd.
@@ -184,12 +185,17 @@
             </li>
             <li>
               <p class="para">
-                Since Winway is operating at two branches (Begumpet, Hyderabad &
-                Punjagutta, Hyderabad) Candidates are bound to work in branch,
+                Since Winway is operating at 
+                <span *ngIf="branches.length > 0">
+                  <span *ngIf="branches.length === 1">branch ({{ getBranchesDisplayText() }})</span>
+                  <span *ngIf="branches.length > 1">branches ({{ getBranchesDisplayText() }})</span>
+                </span>
+                <span *ngIf="branches.length === 0">multiple branches</span>
+                Candidates are bound to work in branch,
                 other than their respective working branch, as per the
                 management decision, which will be temporary or permanent due to
                 Unavoidable business operation conditions.
-              </p>
+              </p>  
             </li>
           </ul>
           <li class="policysubHeading">&nbsp;&nbsp;Leaves and Permissions:</li>
@@ -388,7 +394,7 @@
               <p class="para">
                 I have read and understood the above-mentioned terms and
                 conditions and accept the terms and conditions of employment.
-                agreement with Winway Creators India Pvt. Ltd.
+                agreement with {{ companySettings.companyName || 'Winway Creators India Pvt. Ltd.' }}.
               </p>
             </li>
             <li>
@@ -420,12 +426,17 @@
             <b>{{ employees.createdBy | capitalizeFirst }} </b>
           </div>
           <div>(HR Executive)</div>
-          <div>Mobile: +91 9030227331</div>
-          <div><b>WINWAY CREATORS INDIA PRIVATE LIMITED</b></div>
-          <div>#506, 5th Floor,</div>
-          <div>MGR Estates, Dwarakapuri Colony,</div>
-          <div>Punjagutta, Hyderabad- 82</div>
-          <div>www.winwaycreators.com</div>
+          <div *ngIf="companySettings.companyPhone">Mobile: {{ companySettings.companyPhone }}</div>
+          <div *ngIf="!companySettings.companyPhone">Mobile: +91 9030227331</div>
+          <div *ngIf="companySettings.companyName"><b>{{ companySettings.companyName | uppercase }}</b></div>
+          <div *ngIf="!companySettings.companyName"><b>WINWAY CREATORS INDIA PRIVATE LIMITED</b></div>
+          <div *ngIf="companySettings.companyAddress">{{ companySettings.companyAddress }}</div>
+          <div *ngIf="companySettings.companyCity || companySettings.companyState || companySettings.companyPincode">
+            <span *ngIf="companySettings.companyCity">{{ companySettings.companyCity }}</span><span *ngIf="companySettings.companyCity && (companySettings.companyState || companySettings.companyPincode)">, </span>
+            <span *ngIf="companySettings.companyState">{{ companySettings.companyState }}</span>
+            <span *ngIf="companySettings.companyPincode"> - {{ companySettings.companyPincode }}</span>
+          </div>
+          <div *ngIf="companySettings.companyWebsite">{{ companySettings.companyWebsite }}</div>
         </div>
       </div>
     </div>
@@ -492,7 +503,7 @@
       <div class="page">
         <div class="header">
           <img
-            src="../../assets/images/pdf/winway icon.png"
+            [src]="'https://' + companySettings?.companyLogo || 'https://hrfiles.thefintalk.in/hrfiles/winway icon.png'"
             alt="Company Logo"
             width="270"
             height="150"
@@ -518,7 +529,7 @@
           <p class="para firstpara indented-paragraph">
             This is a reference to your application and subsequent interview you
             had with us; we are pleased to offer you a position in our
-            company,<b> Winway Creators India Pvt. Ltd.</b>, subjected to the
+            company,<b> {{ companySettings.companyName || 'Winway Creators India Pvt. Ltd.' }}</b>, subjected to the
             following employment terms and conditions.
           </p>
           <div class="details text-capitalize">
@@ -575,16 +586,16 @@
           </li>
         </div>
         <p class="para mt-5">
-          We are happy to welcome you to Winway Creators India Pvt Ltd.
+          We are happy to welcome you to {{ companySettings.companyName || 'Winway Creators India Pvt Ltd' }}.
         </p>
       </div>
       <div class="page">
         <div class="policyheading">
-          Winway Creators India Private Limited Policies
+          {{ companySettings.companyName || 'Winway Creators India Private Limited' }} Policies
         </div>
         <div>
           <p class="para indented-paragraph">
-            This is to acknowledge all the staff members of Winway Creators.
+            This is to acknowledge all the staff members of {{ companySettings.companyName || 'Winway Creators' }}.
             Private Limited, to hereby abide by the below-mentioned Rules, Terms
             and Conditions of the company.
           </p>
@@ -596,7 +607,7 @@
             <li>
               <p class="para">
                 You will be under a probation period of three months from the
-                date of joining. Winway Creators India Pvt Ltd will monitor your
+                date of joining. {{ companySettings.companyName || 'Winway Creators India Pvt Ltd' }} will monitor your
                 daily activities. After the successful completion of probation
                 Period, you will be considered a regular employee of Winway.
                 Creators India Pvt. Ltd.
@@ -637,8 +648,13 @@
             </li>
             <li>
               <p class="para">
-                Since Winway is operating at two branches (Begumpet, Hyderabad &
-                Punjagutta, Hyderabad) Candidates are bound to work in branch,
+                Since Winway is operating at 
+                <span *ngIf="branches.length > 0">
+                  <span *ngIf="branches.length === 1">branch ({{ getBranchesDisplayText() }})</span>
+                  <span *ngIf="branches.length > 1">branches ({{ getBranchesDisplayText() }})</span>
+                </span>
+                <span *ngIf="branches.length === 0">multiple branches</span>
+                Candidates are bound to work in branch,
                 other than their respective working branch, as per the
                 management decision, which will be temporary or permanent due to
                 Unavoidable business operation conditions.
@@ -841,7 +857,7 @@
               <p class="para">
                 I have read and understood the above-mentioned terms and
                 conditions and accept the terms and conditions of employment.
-                agreement with Winway Creators India Pvt. Ltd.
+                agreement with {{ companySettings.companyName || 'Winway Creators India Pvt. Ltd.' }}.
               </p>
             </li>
             <li>
@@ -876,12 +892,17 @@
             >
           </div>
           <div>(HR Executive)</div>
-          <div>Mobile: +91 {{ userDetails.phoneNumber }}</div>
-          <div><b>WINWAY CREATORS INDIA PRIVATE LIMITED</b></div>
-          <div>#506, 5th Floor,</div>
-          <div>MGR Estates, Dwarakapuri Colony,</div>
-          <div>Punjagutta, Hyderabad- 82</div>
-          <div>www.winwaycreators.com</div>
+          <div *ngIf="companySettings.companyPhone">Mobile: {{ companySettings.companyPhone }}</div>
+          <div *ngIf="!companySettings.companyPhone">Mobile: +91 {{ userDetails.phoneNumber }}</div>
+          <div *ngIf="companySettings.companyName"><b>{{ companySettings.companyName | uppercase }}</b></div>
+          <div *ngIf="!companySettings.companyName"><b>WINWAY CREATORS INDIA PRIVATE LIMITED</b></div>
+          <div *ngIf="companySettings.companyAddress">{{ companySettings.companyAddress }}</div>
+          <div *ngIf="companySettings.companyCity || companySettings.companyState || companySettings.companyPincode">
+            <span *ngIf="companySettings.companyCity">{{ companySettings.companyCity }}</span><span *ngIf="companySettings.companyCity && (companySettings.companyState || companySettings.companyPincode)">, </span>
+            <span *ngIf="companySettings.companyState">{{ companySettings.companyState }}</span>
+            <span *ngIf="companySettings.companyPincode"> - {{ companySettings.companyPincode }}</span>
+          </div>
+          <div *ngIf="companySettings.companyWebsite">{{ companySettings.companyWebsite }}</div>
         </div>
       </div>
     </div>

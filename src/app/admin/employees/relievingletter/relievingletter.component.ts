@@ -8,6 +8,8 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { EmployeesService } from '../employees.service';
 import * as html2pdf from 'html2pdf.js';
 import { DateTimeProcessorService } from 'src/app/services/date-time-processor.service';
+import { CompanySettingsService } from 'src/app/services/company-settings.service';
+
 @Component({
   selector: 'app-relievingletter',
   templateUrl: './relievingletter.component.html',
@@ -25,6 +27,7 @@ export class RelievingletterComponent {
   offerLetterContent: string | undefined;
   currentYear: number;
   apiLoading: any;
+  companySettings: any = {};
   constructor(
     private location: Location,
     private route: ActivatedRoute,
@@ -32,7 +35,8 @@ export class RelievingletterComponent {
     private routingService: RoutingService,
     private localStorageService: LocalStorageService,
     private employeesService: EmployeesService,
-    private dateTimeProcessor: DateTimeProcessorService
+    private dateTimeProcessor: DateTimeProcessorService,
+    private companySettingsService: CompanySettingsService
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
     this.breadCrumbItems = [
@@ -54,10 +58,23 @@ export class RelievingletterComponent {
 
   ngOnInit(): void {
     this.currentYear = this.employeesService.getCurrentYear();
+    this.loadCompanySettings();
     this.employeeId = this.route.snapshot.paramMap.get('id');
     if (this.employeeId) {
       this.getEmployeeById(this.employeeId);
     }
+  }
+
+  loadCompanySettings() {
+    this.companySettingsService.getCompanySettings().subscribe(
+      (response: any) => {
+        this.companySettings = response || {};
+      },
+      (error: any) => {
+        // Silently fail - use default values if settings not available
+        console.error('Error loading company settings:', error);
+      }
+    );
   }
   roundToLPA(amount: number): string {
     const lakhs = amount / 100000;

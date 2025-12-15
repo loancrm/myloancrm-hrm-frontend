@@ -7,7 +7,7 @@ import { RoutingService } from 'src/app/services/routing-service';
 import { ToastService } from 'src/app/services/toast.service';
 import { DateTimeProcessorService } from 'src/app/services/date-time-processor.service';
 import { projectConstantsLocal } from 'src/app/constants/project-constants';
-
+import { BranchesService } from 'src/app/services/branches.service';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -44,7 +44,7 @@ export class CreateComponent {
   interviewStatusList = projectConstantsLocal.INTERVIEW_STATUS;
   departementStatusList = projectConstantsLocal.DEPARTMENT_STATUS;
   designationStatusList = projectConstantsLocal.DESIGNATION_ENTITIES;
-  officebranchEntities = projectConstantsLocal.BRANCH_ENTITIES;
+  officebranchEntities: any = [];
   leaveTypeEntities = projectConstantsLocal.LEAVE_TYPE_ENTITIES;
   designationEntities: any[] = [];
 
@@ -69,7 +69,8 @@ export class CreateComponent {
     private activatedRoute: ActivatedRoute,
     private routingService: RoutingService,
     private toastService: ToastService,
-    private dateTimeProcessor: DateTimeProcessorService
+    private dateTimeProcessor: DateTimeProcessorService,
+    private branchesService: BranchesService
   ) {
     this.breadCrumbItems = [
       {
@@ -98,8 +99,20 @@ export class CreateComponent {
   }
   ngOnInit() {
     this.currentYear = this.employeesService.getCurrentYear();
+    this.loadBranches();
     this.getDesignations();
     this.generateYears();
+  }
+  loadBranches() {
+    this.branchesService.getBranches({ 'branchInternalStatus-eq': 1 }).subscribe(
+      (response: any) => {
+        this.officebranchEntities = response || [];
+        this.setReportsList();
+      },
+      (error: any) => {
+        this.toastService.showError(error);
+      }
+    );
   }
   updateBreadcrumb(): void {
     this.breadCrumbItems = [

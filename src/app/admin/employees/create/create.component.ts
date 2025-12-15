@@ -15,6 +15,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { FileUploadComponent } from '../../file-upload/file-upload.component';
 import { ConfirmationService } from 'primeng/api';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { BranchesService } from 'src/app/services/branches.service';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -37,8 +38,8 @@ export class CreateComponent {
   heading: any = 'Create Employee';
   actionType: any = 'create';
   version = projectConstantsLocal.VERSION_DESKTOP;
-  ofcBranchNamesList: any = projectConstantsLocal.BRANCH_ENTITIES;
-  branchEntities: any = projectConstantsLocal.BRANCH_ENTITIES;
+  ofcBranchNamesList: any = [];
+  branchEntities: any = [];
   careOfEntities: any = projectConstantsLocal.CARE_OF_ENTITIES;
   qualificationEntities: any = projectConstantsLocal.QUALIFICATION_ENTITIES;
   genderEntities: any = projectConstantsLocal.GENDER_ENTITIES;
@@ -71,7 +72,8 @@ export class CreateComponent {
     private localStorageService: LocalStorageService,
     private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
-    private dateTimeProcessor: DateTimeProcessorService
+    private dateTimeProcessor: DateTimeProcessorService,
+    private branchesService: BranchesService
   ) {
     this.steps = [
       { label: 'Employee Details', icon: 'fa fa-user' },
@@ -179,9 +181,23 @@ export class CreateComponent {
   ngOnInit() {
     this.currentYear = this.employeesService.getCurrentYear();
     this.createForm();
+    this.loadBranches();
     this.setEmployeesList();
     this.capabilities = this.employeesService.getUserRbac();
     console.log('capabilities', this.capabilities);
+  }
+
+  loadBranches() {
+    this.branchesService.getBranches({ 'branchInternalStatus-eq': 1 }).subscribe(
+      (response: any) => {
+        this.branchEntities = response || [];
+        this.ofcBranchNamesList = response || [];
+        this.setEmployeesList();
+      },
+      (error: any) => {
+        this.toastService.showError(error);
+      }
+    );
   }
 
   addotherDocumentsRow() {
@@ -377,7 +393,7 @@ export class CreateComponent {
         options: 'branchEntities',
         required: true,
         optionLabel: 'displayName',
-        optionValue: 'id',
+        optionValue: 'branchId',
       },
       {
         label: 'Salary',
@@ -604,7 +620,7 @@ export class CreateComponent {
   getOfcBranchName(branchId) {
     if (this.ofcBranchNamesList && this.ofcBranchNamesList.length > 0) {
       let branchName = this.ofcBranchNamesList.filter(
-        (ofcBranch) => ofcBranch.id == branchId
+        (ofcBranch) => ofcBranch.branchId == branchId || ofcBranch.id == branchId
       );
       return (branchName && branchName[0] && branchName[0].displayName) || '';
     }

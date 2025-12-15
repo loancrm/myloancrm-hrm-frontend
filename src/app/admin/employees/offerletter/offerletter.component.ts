@@ -10,6 +10,8 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import * as html2pdf from 'html2pdf.js';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { CompanySettingsService } from 'src/app/services/company-settings.service';
+import { BranchesService } from 'src/app/services/branches.service';
 
 @Component({
   selector: 'app-offerletter',
@@ -27,6 +29,8 @@ export class OfferletterComponent {
   employeeId: string | null = null;
   offerLetterContent: string | undefined;
   currentYear: number;
+  companySettings: any = {};
+  branches: any = [];
   constructor(
     private location: Location,
     private route: ActivatedRoute,
@@ -34,7 +38,9 @@ export class OfferletterComponent {
     private routingService: RoutingService,
     private localStorageService: LocalStorageService,
     private employeesService: EmployeesService,
-    private dateTimeProcessor: DateTimeProcessorService
+    private dateTimeProcessor: DateTimeProcessorService,
+    private companySettingsService: CompanySettingsService,
+    private branchesService: BranchesService
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
     this.breadCrumbItems = [
@@ -56,10 +62,55 @@ export class OfferletterComponent {
 
   ngOnInit(): void {
     this.currentYear = this.employeesService.getCurrentYear();
+    this.loadCompanySettings();
+    this.loadBranches();
     this.employeeId = this.route.snapshot.paramMap.get('id');
     if (this.employeeId) {
       this.getEmployeeById(this.employeeId);
     }
+  }
+
+  loadCompanySettings() {
+    this.companySettingsService.getCompanySettings().subscribe(
+      (response: any) => {
+        this.companySettings = response || {};
+      },
+      (error: any) => {
+        // Silently fail - use default values if settings not available
+        console.error('Error loading company settings:', error);
+      }
+    );
+  }
+
+  loadBranches() {
+    this.branchesService.getBranches({ 'branchInternalStatus-eq': 1 }).subscribe(
+      (response: any) => {
+        this.branches = response || [];
+      },
+      (error: any) => {
+        // Silently fail - use default values if branches not available
+        console.error('Error loading branches:', error);
+      }
+    );
+  }
+
+  getBranchesDisplayText(): string {
+    if (!this.branches || this.branches.length === 0) {
+      return 'multiple branches';
+    }
+    
+    if (this.branches.length === 1) {
+      return this.branches[0].displayName;
+    }
+    
+    if (this.branches.length === 2) {
+      return `${this.branches[0].displayName} & ${this.branches[1].displayName}`;
+    }
+    
+    // For more than 2 branches, show first two and count
+    const firstTwo = this.branches.slice(0, 2).map(b => b.displayName).join(', ');
+    const remaining = this.branches.length - 2;
+    return `${firstTwo}${remaining > 0 ? ` & ${remaining} more` : ''}`;
   }
   roundToLPA(amount: number): string {
     const lakhs = amount / 100000;

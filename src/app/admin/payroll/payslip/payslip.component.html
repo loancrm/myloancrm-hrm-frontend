@@ -37,15 +37,18 @@
       <div class="header">
         <div class="leftheading">
           <img
-            src="../../assets/images/pdf/winway icon.png"
+            [src]="companySettings?.companyLogo || '../../assets/images/pdf/winway icon.png'"
             alt="Company Logo"
             class="companylogo"
+            style="object-fit: contain;"
           />
           <div class="companyheading">
-            <div class="companyname">WINWAY CREATORS INDIA PVT LTD</div>
+            <div class="companyname">{{ companySettings.companyName || 'WINWAY CREATORS INDIA PVT LTD' | uppercase }}</div>
             <div class="companyaddress">
-              506, 5th Floor, MGR Estates, Punjagutta, Hyderabad, Telangana
-              500082
+              <span *ngIf="companySettings.companyAddress">{{ companySettings.companyAddress }}</span><span *ngIf="companySettings.companyAddress && (companySettings.companyCity || companySettings.companyState || companySettings.companyPincode)">, </span>
+              <span *ngIf="companySettings.companyCity">{{ companySettings.companyCity }}</span><span *ngIf="companySettings.companyCity && (companySettings.companyState || companySettings.companyPincode)">, </span>
+              <span *ngIf="companySettings.companyState">{{ companySettings.companyState }}</span>
+              <span *ngIf="companySettings.companyPincode"> - {{ companySettings.companyPincode }}</span>
             </div>
           </div>
         </div>
@@ -233,7 +236,7 @@
           *This is a computer-generated slip and does not require a
           signature.<br />
           *For any information on your payslip, please contact
-          hr&#64;winwaycreators.com.
+          {{ companySettings.companyEmail }}.
         </div>
       </div>
     </div>
@@ -301,16 +304,18 @@ OLD CODE
       <div class="header">
         <div class="leftheading">
           <img
-            src="../../assets/images/pdf/winway icon.png"
+            [src]="companySettings?.companyLogo || '../../assets/images/pdf/winway icon.png'"
             alt="Company Logo"
             width="200"
             height="100"
           />
           <div class="companyheading">
-            <p class="companyname">WINWAY CREATORS INDIA PVT LTD</p>
+            <p class="companyname">{{ companySettings.companyName || 'WINWAY CREATORS INDIA PVT LTD' | uppercase }}</p>
             <div class="companyaddress">
-              506, 5th Floor, MGR Estates, Punjagutta, Hyderabad, Telangana
-              500082
+              <span *ngIf="companySettings.companyAddress">{{ companySettings.companyAddress }}</span><span *ngIf="companySettings.companyAddress && (companySettings.companyCity || companySettings.companyState || companySettings.companyPincode)">, </span>
+              <span *ngIf="companySettings.companyCity">{{ companySettings.companyCity }}</span><span *ngIf="companySettings.companyCity && (companySettings.companyState || companySettings.companyPincode)">, </span>
+              <span *ngIf="companySettings.companyState">{{ companySettings.companyState }}</span>
+              <span *ngIf="companySettings.companyPincode"> - {{ companySettings.companyPincode }}</span>
             </div>
           </div>
         </div>
@@ -498,7 +503,7 @@ OLD CODE
           *This is a computer-generated slip and does not require a
           signature.<br />
           *For any information on your payslip, please contact
-          hr&#64;winwaycreators.com.
+          {{ companySettings.companyEmail }}.
         </div>
       </div>
     </div>

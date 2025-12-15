@@ -7,6 +7,7 @@ import { RoutingService } from 'src/app/services/routing-service';
 import { projectConstantsLocal } from 'src/app/constants/project-constants';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { DateTimeProcessorService } from 'src/app/services/date-time-processor.service';
+import { BranchesService } from 'src/app/services/branches.service';
 @Component({
   selector: 'app-interviews',
   templateUrl: './interviews.component.html',
@@ -29,7 +30,7 @@ export class InterviewsComponent implements OnInit {
   apiLoading: any;
   interviewStatusCount: { [key: number]: number } = { 1: 0, 2: 0, 3: 0 };
   interviewInternalStatusList: any = projectConstantsLocal.INTERVIEW_STATUS;
-  scheduledloactionDetails = projectConstantsLocal.BRANCH_ENTITIES;
+  scheduledloactionDetails: any = [];
   attendedinterviewDetails = projectConstantsLocal.ATTENDED_INTERVIEW_ENTITIES;
   selectedInterviewStatus = this.interviewInternalStatusList[1];
   version = projectConstantsLocal.VERSION_DESKTOP;
@@ -43,7 +44,8 @@ export class InterviewsComponent implements OnInit {
     private toastService: ToastService,
     private routingService: RoutingService,
     private dateTimeProcessor: DateTimeProcessorService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private branchesService: BranchesService
   ) {
     this.breadCrumbItems = [
       {
@@ -62,6 +64,7 @@ export class InterviewsComponent implements OnInit {
     this.capabilities = this.employeesService.getUserRbac();
     console.log('capabilities', this.capabilities);
     this.updateCountsAnalytics();
+    this.loadBranches();
     this.setFilterConfig();
     this.getInterviewsStatusCount();
     const storedStatus = this.localStorageService.getItemFromLocalStorage(
@@ -77,6 +80,17 @@ export class InterviewsComponent implements OnInit {
     if (storedAppliedFilter) {
       this.appliedFilter = storedAppliedFilter;
     }
+  }
+  loadBranches() {
+    this.branchesService.getBranches({ 'branchInternalStatus-eq': 1 }).subscribe(
+      (response: any) => {
+        this.scheduledloactionDetails = response || [];
+        this.setFilterConfig();
+      },
+      (error: any) => {
+        this.toastService.showError(error);
+      }
+    );
   }
   setFilterConfig() {
     this.filterConfig = [

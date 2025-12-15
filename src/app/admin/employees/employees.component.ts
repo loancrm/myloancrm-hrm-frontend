@@ -6,6 +6,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { projectConstantsLocal } from 'src/app/constants/project-constants';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { BranchesService } from 'src/app/services/branches.service';
 import { Table } from 'primeng/table';
 @Component({
   selector: 'app-employees',
@@ -18,7 +19,7 @@ export class EmployeesComponent implements OnInit {
   filterConfig: any[] = [];
   totalEmployeesCount: any = 0;
   loading: any;
-  appliedFilter: {};
+  appliedFilter: {}; 
   searchFilter: any = {};
   employeeStatusCount = {
     statusCount: { 1: 0, 2: 0 },
@@ -30,7 +31,7 @@ export class EmployeesComponent implements OnInit {
   employees: any = [];
   version = projectConstantsLocal.VERSION_DESKTOP;
   designationDetails: any;
-  branchDetails: any = projectConstantsLocal.BRANCH_ENTITIES;
+  branchDetails: any = [];
   genderDetails: any = projectConstantsLocal.GENDER_ENTITIES;
   qualificationDetails: any = projectConstantsLocal.QUALIFICATION_ENTITIES;
   employeeInternalStatusList: any = projectConstantsLocal.EMPLOYEE_STATUS;
@@ -44,7 +45,8 @@ export class EmployeesComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private toastService: ToastService,
     private routingService: RoutingService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private branchesService: BranchesService
   ) {
     this.breadCrumbItems = [
       {
@@ -61,6 +63,7 @@ export class EmployeesComponent implements OnInit {
     this.currentYear = this.employeesService.getCurrentYear();
     this.capabilities = this.employeesService.getUserRbac();
     console.log('capabilities', this.capabilities);
+    this.loadBranches();
     this.updateCountsAnalytics();
     // this.setFilterConfig();
     this.getEmployeesStatusCount();
@@ -77,6 +80,21 @@ export class EmployeesComponent implements OnInit {
     if (storedAppliedFilter) {
       this.appliedFilter = storedAppliedFilter;
     }
+  }
+
+  loadBranches() {
+    this.branchesService.getBranches({ 'branchInternalStatus-eq': 1 }).subscribe(
+      (response: any) => {
+        this.branchDetails = response || [];
+        this.setFilterConfig();
+      },
+      (error: any) => {
+        this.toastService.showError(error);
+        // Fallback to empty array if error
+        this.branchDetails = [];
+        this.setFilterConfig();
+      }
+    );
   }
   updateCountsAnalytics() {
     this.countsAnalytics = [
@@ -283,7 +301,7 @@ export class EmployeesComponent implements OnInit {
             filterType: 'like',
             options: this.branchDetails.map((entity) => ({
               label: entity.displayName,
-              value: entity.id,
+              value: entity.branchId || entity.id,
             })),
           },
         ],

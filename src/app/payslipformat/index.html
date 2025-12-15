@@ -163,10 +163,14 @@
         height="100"
       />
       <div class="companyheading">
-        <p class="companyname">WINWAY CREATORS INDIA PVT LTD</p>
+        <p class="companyname">{{companyName}}</p>
         <div class="companyaddress">
-          506, 5th Floor, MGR Estates,<br />
-          Punjagutta, Hyderabad, Telangana 500082
+          {{companyAddress}}<br />
+          <span *ngIf="companyCity || companyState || companyPincode">
+            <span *ngIf="companyCity">{{companyCity}}</span><span *ngIf="companyCity && (companyState || companyPincode)">, </span>
+            <span *ngIf="companyState">{{companyState}}</span>
+            <span *ngIf="companyPincode"> - {{companyPincode}}</span>
+          </span>
         </div>
       </div>
     </div>

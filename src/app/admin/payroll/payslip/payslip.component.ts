@@ -9,6 +9,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import * as html2pdf from 'html2pdf.js';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { CompanySettingsService } from 'src/app/services/company-settings.service';
 @Component({
   selector: 'app-payslip',
   templateUrl: './payslip.component.html',
@@ -26,13 +27,15 @@ export class PayslipComponent {
   amountinwords: string = 'Sixty Thousand Rupees Only';
   currentYear: number;
   apiLoading: any;
+  companySettings: any = {};
   constructor(
     private location: Location,
     private route: ActivatedRoute,
     private localStorageService: LocalStorageService,
     private toastService: ToastService,
     private employeesService: EmployeesService,
-    private dateTimeProcessor: DateTimeProcessorService
+    private dateTimeProcessor: DateTimeProcessorService,
+    private companySettingsService: CompanySettingsService
   ) {
     const usertype = localStorageService.getItemFromLocalStorage('userType');
     this.moment = this.dateTimeProcessor.getMoment();
@@ -55,10 +58,22 @@ export class PayslipComponent {
 
   ngOnInit(): void {
     this.currentYear = this.employeesService.getCurrentYear();
+    this.loadCompanySettings();
     this.payslipId = this.route.snapshot.paramMap.get('id');
     if (this.payslipId) {
       this.getPayrollById(this.payslipId);
     }
+  }
+
+  loadCompanySettings() {
+    this.companySettingsService.getCompanySettings().subscribe(
+      (response: any) => {
+        this.companySettings = response || {};
+      },
+      (error: any) => {
+        console.error('Error loading company settings:', error);
+      }
+    );
   }
 
   generatePDF() {

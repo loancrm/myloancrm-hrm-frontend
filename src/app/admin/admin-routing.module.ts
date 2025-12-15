@@ -94,6 +94,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('./reports/reports.module').then((m) => m.ReportsModule),
       },
+      {
+        path: 'settings',
+        loadChildren: () =>
+          import('./settings/settings.module').then((m) => m.SettingsModule),
+      },
     ],
   },
 ];

@@ -234,7 +234,7 @@
           <li>
             <p class="para">
               Since winway is operating at two branches (Begumpet, Hyderabad &
-              Punjagutta, Hyderabad) Candidates are bound to work in branch,
+              {{companyCity}}, {{companyState}}) Candidates are bound to work in branch,
               other than their respective working branch, as per the management
               decision, which will be temporary or permanent due to unavoidable
               business operation conditions.
@@ -463,12 +463,12 @@
         <b>{{ employees.createdBy }}</b>
       </div>
       <div>(HR Executive)</div>
-      <div>Mobile: +91 {{ 9030227331 }}</div>
-      <div><b>WINWAY CREATORS INDIA PRIVATE LIMITED</b></div>
-      <div>#506, 5th Floor,</div>
-      <div>MGR Estates, Dwarakapuri Colony,</div>
-      <div>Punjagutta, Hyderabad- 82</div>
-      <div>www.winwaycreators.com</div>
+      <div *ngIf="companyPhone">Mobile: +91 {{ companyPhone }}</div>
+      <div *ngIf="!companyPhone">Mobile: +91 {{ userDetails.phoneNumber }}</div>
+      <div *ngIf="companyName"><b>{{companyName}}</b></div>
+      <div *ngIf="companyAddress">{{companyAddress}}</div>
+      <div *ngIf="companyCity || companyState || companyPincode">{{companyCity}}, {{companyState}} - {{companyPincode}}</div>
+      <div *ngIf="companyWebsite">{{companyWebsite}}</div>
     </div>
   </body>
 </html>

@@ -14,10 +14,6 @@ export const projectConstantsLocal = {
     { id: 1, name: 'Active', displayName: 'Active Hikes' },
     { id: 2, name: 'InActive', displayName: 'InActive Hikes' },
   ],
-  BRANCH_ENTITIES: [
-    { id: 1, displayName: 'Punjagutta', name: 'punjagutta' },
-    { id: 2, displayName: 'Begumpet', name: 'begumpet' },
-  ],
   CARE_OF_ENTITIES: [
     { displayName: 'Father', name: 'father' },
     { displayName: 'Spouse', name: 'spouse' },
@@ -94,7 +90,8 @@ export const projectConstantsLocal = {
     { label: 'Yes', value: 'Yes' },
     { label: 'No', value: 'No' },
   ],
-  // BASE_URL: 'http://localhost:5001/',
-  BASE_URL: 'https://rest.thefintalk.in:5003/',
+  BASE_URL: 'http://localhost:5001/',
+  // BASE_URL: 'https://rest.thefintalk.in:5003/',
+  // BASE_URL: 'https://rest.thefintalk.in/hrms/',
   VERSION_DESKTOP: '0.0.0',
 };

@@ -88,11 +88,10 @@
         <div>Team -HR Dept</div>
         <div>{{telephone}}</div>
         <div>{{email}}</div>
-        <div><b>WINWAY CREATORS INDIA PRIVATE LIMITED</b></div>
-        <div>#506, 5th Floor,</div>
-        <div>MGR Estates, Dwarakapuri</div>
-        <div>Colony, Punjagutta, Hyderabad</div>
-        <div>- 82 www.winwaycreators.com</div>
+        <div><b>{{companyName}}</b></div>
+        <div *ngIf="companyAddress">{{companyAddress}}</div>
+        <div *ngIf="companyCity || companyState || companyPincode">{{companyCity}}, {{companyState}} - {{companyPincode}}</div>
+        <div *ngIf="companyWebsite">{{companyWebsite}}</div>
       </div>
     </div>
   </body>

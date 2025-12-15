@@ -273,8 +273,15 @@
             style="width: 60px; background-color: #7c4dff; height: 2px"
           />
           <p>
-            #506, 5th Floor, MGR Estates, <br />
-            Punjagutta, Hyderabad - 500082
+            {{companySettings?.companyAddress}}
+            <span *ngIf="companySettings?.companyCity || companySettings?.companyState || companySettings?.companyPincode">
+              <span *ngIf="companySettings?.companyCity">{{companySettings.companyCity}}</span><span *ngIf="companySettings?.companyCity && (companySettings?.companyState || companySettings?.companyPincode)">, </span>
+              <span *ngIf="companySettings?.companyState">{{companySettings.companyState}}</span>
+              <span *ngIf="companySettings?.companyPincode"> - {{companySettings.companyPincode}}</span>
+            </span>
+            <span *ngIf="companySettings?.companyWebsite">
+              <a href="{{companySettings.companyWebsite}}" target="_blank">{{companySettings.companyWebsite}}</a>
+            </span>
           </p>
         </div>
         <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">

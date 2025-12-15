@@ -1,0 +1,311 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-12">
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading">
+  <app-preloader></app-preloader>
+</div>
+
+<div class="container-fluid mt-3" *ngIf="!loading">
+  <div class="card">
+    <div class="card-body">
+      <!-- Tabs -->
+      <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'branches'"
+            (click)="setActiveTab('branches')"
+            type="button"
+          >
+            <i class="fas fa-building me-2"></i>Branches/Locations
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'company'"
+            (click)="setActiveTab('company')"
+            type="button"
+          >
+            <i class="fas fa-map-marker-alt me-2"></i>Company Details
+          </button>
+        </li>
+      </ul>
+
+      <!-- Branches Tab -->
+      <div *ngIf="activeTab === 'branches'" class="tab-content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">Manage Branches/Locations</h5>
+          <button
+            pButton
+            type="button"
+            label="Add Branch"
+            icon="pi pi-plus"
+            (click)="openBranchDialog('create')"
+            class="p-button-primary"
+          ></button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Display Name</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let branch of branches">
+                <td>{{ branch.displayName }}</td>
+                <td>{{ branch.name }}</td>
+                <td>{{ branch.address || '-' }}</td>
+                <td>
+                  <button
+                    pButton
+                    type="button"
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-text p-button-primary me-2"
+                    (click)="openBranchDialog('update', branch)"
+                    pTooltip="Edit"
+                  ></button>
+                  <button
+                    pButton
+                    type="button"
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-text p-button-danger"
+                    (click)="deleteBranch(branch)"
+                    pTooltip="Delete"
+                  ></button>
+                </td>
+              </tr>
+              <tr *ngIf="branches.length === 0">
+                <td colspan="4" class="text-center">No branches found</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Company Address Tab -->
+      <div *ngIf="activeTab === 'company'" class="tab-content">
+        <h5 class="mb-4">Company Address Details</h5>
+        <form [formGroup]="companySettingsForm" (ngSubmit)="saveCompanySettings()">
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="companyLogo">Company Logo</label>
+              <div class="d-flex align-items-center gap-3 mb-2">
+                <div *ngIf="companySettings?.companyLogo" class="logo-preview">
+                  <img
+                    [src]="'https://' + companySettings?.companyLogo"
+                    alt="Company Logo"
+                    style="max-width: 200px; max-height: 100px; object-fit: contain; border: 1px solid #ddd; padding: 5px;"
+                  />
+                </div>
+                <div class="flex-grow-1">
+                  <input
+                    type="file"
+                    id="companyLogo"
+                    accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+                    (change)="onLogoFileSelect($event)"
+                    class="form-control"
+                    style="display: none;"
+                    #logoInput
+                  />
+                  <div class="d-flex gap-2">
+                    <button
+                      pButton
+                      type="button"
+                      label="Choose Logo"
+                      icon="pi pi-upload"
+                      class="p-button-secondary"
+                      (click)="logoInput.click()"
+                    ></button>
+                    <button
+                      *ngIf="logoFile || companySettings?.companyLogo"
+                      pButton
+                      type="button"
+                      label="Upload"
+                      icon="pi pi-check"
+                      class="p-button-success"
+                      [disabled]="uploadingLogo"
+                      (click)="uploadLogo()"
+                    ></button>
+                    <button
+                      *ngIf="logoFile || companySettings?.companyLogo"
+                      pButton
+                      type="button"
+                      label="Remove"
+                      icon="pi pi-times"
+                      class="p-button-danger"
+                      (click)="removeLogo()"
+                    ></button>
+                  </div>
+                  <small class="text-muted d-block mt-2">
+                    Recommended: PNG or JPG, max 5MB. Logo will appear on all documents.
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="companyName">Company Name <sup class="text-danger">*</sup></label>
+              <input
+                pInputText
+                id="companyName"
+                formControlName="companyName"
+                class="w-100"
+                placeholder="Enter company name"
+              />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="companyPhone">Company Phone</label>
+              <input
+                pInputText
+                id="companyPhone"
+                formControlName="companyPhone"
+                class="w-100"
+                placeholder="Enter company phone (e.g., +91 9030227331)"
+              />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="companyWebsite">Website</label>
+              <input
+                pInputText
+                id="companyWebsite"
+                formControlName="companyWebsite"
+                class="w-100"
+                placeholder="Enter website URL"
+              />
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="companyAddress">Company Address <sup class="text-danger">*</sup></label>
+              <textarea
+                pInputTextarea
+                id="companyAddress"
+                formControlName="companyAddress"
+                rows="3"
+                class="w-100"
+                placeholder="Enter company address"
+              ></textarea>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="companyCity">City</label>
+              <input
+                pInputText
+                id="companyCity"
+                formControlName="companyCity"
+                class="w-100"
+                placeholder="Enter city"
+              />
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="companyState">State</label>
+              <input
+                pInputText
+                id="companyState"
+                formControlName="companyState"
+                class="w-100"
+                placeholder="Enter state"
+              />
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="companyPincode">Pincode</label>
+              <input
+                pInputText
+                id="companyPincode"
+                formControlName="companyPincode"
+                class="w-100"
+                placeholder="Enter pincode"
+              />
+            </div>
+            <div class="col-md-12">
+              <button
+                pButton
+                type="submit"
+                label="Save Company Address"
+                icon="pi pi-save"
+                class="p-button-primary"
+                [disabled]="loading"
+              ></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Branch Dialog -->
+<p-dialog
+  [(visible)]="showBranchDialog"
+  [header]="actionType === 'create' ? 'Add Branch' : 'Edit Branch'"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+  [closable]="true"
+  (onHide)="closeBranchDialog()"
+>
+  <form [formGroup]="branchForm" (ngSubmit)="saveBranch()">
+    <div class="mb-3">
+      <label for="displayName"
+        >Display Name <sup class="text-danger">*</sup></label
+      >
+      <input
+        pInputText
+        id="displayName"
+        formControlName="displayName"
+        class="w-100"
+        placeholder="Enter display name"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="name">Name <sup class="text-danger">*</sup></label>
+      <input
+        pInputText
+        id="name"
+        formControlName="name"
+        class="w-100"
+        placeholder="Enter name"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="address">Address</label>
+      <textarea
+        pInputTextarea
+        id="address"
+        formControlName="address"
+        rows="3"
+        class="w-100"
+        placeholder="Enter branch address"
+      ></textarea>
+    </div>
+    <div class="d-flex justify-content-end gap-2">
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        icon="pi pi-times"
+        class="p-button-secondary"
+        (click)="closeBranchDialog()"
+      ></button>
+      <button
+        pButton
+        type="submit"
+        [label]="actionType === 'create' ? 'Create' : 'Update'"
+        icon="pi pi-check"
+        class="p-button-primary"
+        [disabled]="!branchForm.valid || loading"
+      ></button>
+    </div>
+  </form>
+</p-dialog>
+

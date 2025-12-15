@@ -15,6 +15,7 @@ import { ConfirmationService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { FileUploadComponent } from '../../file-upload/file-upload.component';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { BranchesService } from 'src/app/services/branches.service';
 
 @Component({
   selector: 'app-create',
@@ -26,7 +27,7 @@ export class CreateComponent {
   breadCrumbItems: any = [];
   interviewsData: any;
   moment: any;
-  locationEntities: any = projectConstantsLocal.BRANCH_ENTITIES;
+  locationEntities: any = [];
   attendedInterviewEntities: any =
     projectConstantsLocal.ATTENDED_INTERVIEW_ENTITIES;
   version = projectConstantsLocal.VERSION_DESKTOP;
@@ -52,7 +53,8 @@ export class CreateComponent {
     private dialogService: DialogService,
     private activatedRoute: ActivatedRoute,
     private localStorageService: LocalStorageService,
-    private dateTimeProcessor: DateTimeProcessorService
+    private dateTimeProcessor: DateTimeProcessorService,
+    private branchesService: BranchesService
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
     this.activatedRoute.params.subscribe((params) => {
@@ -103,9 +105,22 @@ export class CreateComponent {
   ngOnInit() {
     this.currentYear = this.employeesService.getCurrentYear();
     this.createForm();
+    this.loadBranches();
     this.setInterviewsList();
     this.capabilities = this.employeesService.getUserRbac();
     console.log('capabilities', this.capabilities);
+  }
+
+  loadBranches() {
+    this.branchesService.getBranches({ 'branchInternalStatus-eq': 1 }).subscribe(
+      (response: any) => {
+        this.locationEntities = response || [];
+        this.setInterviewsList();
+      },
+      (error: any) => {
+        this.toastService.showError(error);
+      }
+    );
   }
   setInterviewsList() {
     this.formFields = [
@@ -162,7 +177,7 @@ export class CreateComponent {
         options: 'locationEntities',
         required: true,
         optionLabel: 'displayName',
-        optionValue: 'id',
+        optionValue: 'branchId',
       },
       {
         label: 'Scheduled Date',
@@ -376,7 +391,7 @@ export class CreateComponent {
   getScheduledLocationName(interviewId) {
     if (this.locationEntities && this.locationEntities.length > 0) {
       let locationName = this.locationEntities.filter(
-        (location) => location.id == interviewId
+        (location) => location.branchId == interviewId || location.id == interviewId
       );
       return (
         (locationName && locationName[0] && locationName[0].displayName) || ''
