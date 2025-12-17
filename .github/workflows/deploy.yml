@@ -33,5 +33,5 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
           local-dir: dist/hrmodule-angular/
-          server-dir: /public_html/hrm/
+          server-dir: ./
           dangerous-clean-slate: true
