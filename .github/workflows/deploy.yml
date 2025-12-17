@@ -28,7 +28,7 @@ jobs:
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
-          server: 'ftp.myloancrm.com'
+          server: '217.21.87.236'
           username: 'u641548194.hrms'
           password: 'Myloancrm@123$'
           port: '21'
