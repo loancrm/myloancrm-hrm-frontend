@@ -1,4 +1,4 @@
-name: Deploy Hrms to Hostinger
+name: Deploy Hrm to Hostinger
 
 on:
   push:
@@ -33,6 +33,5 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
           local-dir: dist/hrmodule-angular/
-          server-dir: ./
-          delete-removed: true
-          passive: true
+          server-dir: /public_html/hrm/
+          dangerous-clean-slate: true
