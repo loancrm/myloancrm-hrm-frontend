@@ -1,4 +1,4 @@
-name: Deploy Hrm to Hostinger Via FTP
+name: Deploy Hrm to Hostinger
 
 on:
   push:
