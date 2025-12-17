@@ -28,9 +28,10 @@ jobs:
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
-          server: '217.21.87.236'
-          username: 'u641548194.hrms'
-          password: 'Myloancrm@123$'
-          port: '21'
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
           local-dir: dist/hrmodule-angular/
           server-dir: /public_html/hrm/
+          delete-removed: true
