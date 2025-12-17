@@ -106,6 +106,7 @@ export class EmployeesService {
       reports: rbac.includes('reports'),
       passwordView: rbac.includes('passwordView'),
       delete: rbac.includes('delete'),
+      showSettings: rbac.includes('showSettings'),
     };
     return capabilities;
   }

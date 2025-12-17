@@ -10,8 +10,15 @@ import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { SettingsComponent } from './settings.component';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
+import { SettingsGuard } from './settings.guard';
 
-const routes: Routes = [{ path: '', component: SettingsComponent }];
+const routes: Routes = [
+  { 
+    path: '', 
+    component: SettingsComponent,
+    canActivate: [SettingsGuard]
+  }
+];
 
 @NgModule({
   declarations: [SettingsComponent],

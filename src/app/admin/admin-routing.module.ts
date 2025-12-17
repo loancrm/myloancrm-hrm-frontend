@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
+import { SettingsGuard } from './settings/settings.guard';
 
 const routes: Routes = [
   {
@@ -98,6 +99,7 @@ const routes: Routes = [
         path: 'settings',
         loadChildren: () =>
           import('./settings/settings.module').then((m) => m.SettingsModule),
+        canActivate: [SettingsGuard],
       },
     ],
   },

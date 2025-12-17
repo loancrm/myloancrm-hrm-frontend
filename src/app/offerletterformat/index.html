@@ -152,7 +152,7 @@
       <div>
         <b
           ><p>List of documents required to submit on the day of joining.</p>
-          <p>Also share the soft copies to {{companySettings?.companyEmail}}</p></b
+          <p>Also share the soft copies to {{companySettings?.hrEmail || companySettings?.accountEmail}}</p></b
         >
       </div>
       <ol>
@@ -440,7 +440,7 @@
           treat all the candidates equally without any difference and to run the
           business operations smoothly. Hence it applicable to all the
           candidates who had acknowledge the above policies. For any Details
-          please contact our Human Resource Team at {{companySettings?.companyEmail}}
+          please contact our Human Resource Team at {{companySettings?.hrEmail || companySettings?.accountEmail}}
         </p>
       </div>
       <div>

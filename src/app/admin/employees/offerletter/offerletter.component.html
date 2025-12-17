@@ -103,7 +103,7 @@
         <div class="para">
           <b
             ><p>List of documents required to submit on the day of joining.</p>
-            <p>Also share the soft copies to {{companySettings?.companyEmail}}</p></b
+            <p>Also share the soft copies to {{companySettings?.hrEmail || companySettings?.accountEmail}}</p></b
           >
         </div>
         <ol class="para">
@@ -413,7 +413,7 @@
             run the business operations smoothly. Hence it is applicable to all
             the candidates who had acknowledged the above policies. For any
             details Please contact our Human Resource Team at
-            {{companySettings?.companyEmail}}.
+            {{companySettings?.hrEmail || companySettings?.accountEmail}}.
           </p>
         </div>
         <div class="regards">

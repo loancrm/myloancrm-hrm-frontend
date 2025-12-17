@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 import { RoutingService } from 'src/app/services/routing-service';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { projectConstantsLocal } from 'src/app/constants/project-constants';
@@ -33,9 +34,14 @@ export class SettingsComponent implements OnInit {
   logoFile: File | null = null;
   logoPreview: string | null = null;
   uploadingLogo: boolean = false;
+  attendanceReportEmails: string[] = [];
+  newEmail: string = '';
+  employeeUpdateEmails: string[] = [];
+  newEmployeeUpdateEmail: string = '';
 
   constructor(
     private location: Location,
+    private router: Router,
     private routingService: RoutingService,
     private localStorageService: LocalStorageService,
     private branchesService: BranchesService,
@@ -57,6 +63,14 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Double-check if user has showSettings capability (guard should handle this, but extra safety)
+    const capabilities: any = this.employeesService.getUserRbac();
+    if (!capabilities?.showSettings) {
+      this.toastService.showError('You do not have permission to access Settings.');
+      this.router.navigate(['/user/dashboard'], { queryParams: { v: this.version } });
+      return;
+    }
+    
     this.loadBranches();
     this.loadCompanySettings();
   }
@@ -71,6 +85,10 @@ export class SettingsComponent implements OnInit {
       companyPincode: [''],
       companyWebsite: [''],
       companyLogo: [''],
+      email: [''],
+      appPassword: [''],
+      supportEmail: [''],
+      hrEmail: [''],
     });
 
     this.branchForm = this.formBuilder.group({
@@ -107,10 +125,61 @@ export class SettingsComponent implements OnInit {
           companyState: this.companySettings.companyState || '',
           companyPincode: this.companySettings.companyPincode || '',
           companyWebsite: this.companySettings.companyWebsite || '',
+          email: this.companySettings.email || '',
+          appPassword: '', // Don't populate password for security
+          supportEmail: this.companySettings.supportEmail || '',
+          hrEmail: this.companySettings.hrEmail || '',
         });
         // Set logo preview if logo exists
         if (this.companySettings.companyLogo) {
           this.logoPreview = this.companySettings.companyLogo;
+        }
+        // Load attendance report emails
+        if (this.companySettings.attendanceReportEmails) {
+          // Check if it's already an array (parsed by parseNestedJSON middleware)
+          if (Array.isArray(this.companySettings.attendanceReportEmails)) {
+            this.attendanceReportEmails = this.companySettings.attendanceReportEmails;
+          } else if (typeof this.companySettings.attendanceReportEmails === 'string') {
+            // It's a string, try to parse it
+            try {
+              const parsed = JSON.parse(this.companySettings.attendanceReportEmails);
+              this.attendanceReportEmails = Array.isArray(parsed) ? parsed : [];
+            } catch (e) {
+              // If not JSON, try comma-separated
+              this.attendanceReportEmails = this.companySettings.attendanceReportEmails
+                .split(',')
+                .map((email: string) => email.trim())
+                .filter((email: string) => email.length > 0);
+            }
+          } else {
+            this.attendanceReportEmails = [];
+          }
+        } else {
+          this.attendanceReportEmails = [];
+        }
+        
+        // Load employee update emails
+        if (this.companySettings.employeeUpdateEmails) {
+          // Check if it's already an array (parsed by parseNestedJSON middleware)
+          if (Array.isArray(this.companySettings.employeeUpdateEmails)) {
+            this.employeeUpdateEmails = this.companySettings.employeeUpdateEmails;
+          } else if (typeof this.companySettings.employeeUpdateEmails === 'string') {
+            // It's a string, try to parse it
+            try {
+              const parsed = JSON.parse(this.companySettings.employeeUpdateEmails);
+              this.employeeUpdateEmails = Array.isArray(parsed) ? parsed : [];
+            } catch (e) {
+              // If not JSON, try comma-separated
+              this.employeeUpdateEmails = this.companySettings.employeeUpdateEmails
+                .split(',')
+                .map((email: string) => email.trim())
+                .filter((email: string) => email.length > 0);
+            }
+          } else {
+            this.employeeUpdateEmails = [];
+          }
+        } else {
+          this.employeeUpdateEmails = [];
         }
         this.loading = false;
       },
@@ -298,6 +367,119 @@ export class SettingsComponent implements OnInit {
     this.logoFile = null;
     this.logoPreview = null;
     this.companySettingsForm.patchValue({ companyLogo: '' });
+  }
+
+  addAttendanceReportEmail() {
+    if (this.newEmail && this.newEmail.trim()) {
+      const email = this.newEmail.trim();
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        this.toastService.showError('Please enter a valid email address');
+        return;
+      }
+      // Check if email already exists
+      if (this.attendanceReportEmails.includes(email)) {
+        this.toastService.showError('This email is already added');
+        return;
+      }
+      this.attendanceReportEmails.push(email);
+      this.newEmail = '';
+      this.saveAttendanceReportEmails();
+    }
+  }
+
+  removeAttendanceReportEmail(email: string) {
+    this.attendanceReportEmails = this.attendanceReportEmails.filter(e => e !== email);
+    this.saveAttendanceReportEmails();
+  }
+
+  saveAttendanceReportEmails() {
+    const emailsJson = JSON.stringify(this.attendanceReportEmails);
+    this.loading = true;
+    this.companySettingsService
+      .updateCompanySettings({ attendanceReportEmails: emailsJson })
+      .subscribe(
+        (response: any) => {
+          this.loading = false;
+          this.toastService.showSuccess('Attendance report emails updated successfully');
+          this.loadCompanySettings();
+        },
+        (error: any) => {
+          this.loading = false;
+          this.toastService.showError(error);
+        }
+      );
+  }
+
+  addEmployeeUpdateEmail() {
+    if (this.newEmployeeUpdateEmail && this.newEmployeeUpdateEmail.trim()) {
+      const email = this.newEmployeeUpdateEmail.trim();
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        this.toastService.showError('Please enter a valid email address');
+        return;
+      }
+      // Check if email already exists
+      if (this.employeeUpdateEmails.includes(email)) {
+        this.toastService.showError('This email is already added');
+        return;
+      }
+      this.employeeUpdateEmails.push(email);
+      this.newEmployeeUpdateEmail = '';
+      this.saveEmployeeUpdateEmails();
+    }
+  }
+
+  removeEmployeeUpdateEmail(email: string) {
+    this.employeeUpdateEmails = this.employeeUpdateEmails.filter(e => e !== email);
+    this.saveEmployeeUpdateEmails();
+  }
+
+  saveEmployeeUpdateEmails() {
+    const emailsJson = JSON.stringify(this.employeeUpdateEmails);
+    this.loading = true;
+    this.companySettingsService
+      .updateCompanySettings({ employeeUpdateEmails: emailsJson })
+      .subscribe(
+        (response: any) => {
+          this.loading = false;
+          this.toastService.showSuccess('Employee update emails updated successfully');
+          this.loadCompanySettings();
+        },
+        (error: any) => {
+          this.loading = false;
+          this.toastService.showError(error);
+        }
+      );
+  }
+
+  saveEmailCredentials() {
+    if (this.companySettingsForm.get('email')?.value && this.companySettingsForm.get('appPassword')?.value) {
+      this.loading = true;
+      const emailData = {
+        email: this.companySettingsForm.get('email')?.value,
+        appPassword: this.companySettingsForm.get('appPassword')?.value,
+      };
+      this.companySettingsService
+        .updateCompanySettings(emailData)
+        .subscribe(
+          (response: any) => {
+            this.loading = false;
+            this.toastService.showSuccess('Email credentials saved successfully');
+            // Clear password field after saving
+            this.companySettingsForm.patchValue({ appPassword: '' });
+            this.loadCompanySettings();
+          },
+          (error: any) => {
+            this.loading = false;
+            this.toastService.showError(error);
+          }
+        );
+    } else {
+      this.toastService.showError('Please enter both email and app password');
+    }
   }
 }
 

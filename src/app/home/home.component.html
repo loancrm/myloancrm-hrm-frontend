@@ -290,12 +290,12 @@
             class="mb-4 mt-0 d-inline-block mx-auto"
             style="width: 60px; background-color: #7c4dff; height: 2px"
           />
-          <p>
+          <p *ngIf="companySettings?.supportEmail || companySettings?.accountEmail">
             <i class="fas fa-envelope me-3"></i>
             <a
-              href="mailto:info@thefintalk.in"
+              [href]="'mailto:' + (companySettings?.supportEmail || companySettings?.accountEmail)"
               style="text-decoration: none; color: inherit"
-              >info&#64;thefintalk.in</a
+              >{{companySettings?.supportEmail || companySettings?.accountEmail}}</a
             >
           </p>
           <p>

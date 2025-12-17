@@ -263,7 +263,7 @@ export class SidebarMenuComponent implements OnChanges {
       },
       {
         name: 'Settings',
-        condition: true,
+        condition: this.capabilities.showSettings,
         routerLink: 'settings',
         image: 'settinglogo.svg',
         thumbnail: 'settinglogo.svg',

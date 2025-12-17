@@ -39,6 +39,16 @@
             <i class="fas fa-map-marker-alt me-2"></i>Company Details
           </button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'email'"
+            (click)="setActiveTab('email')"
+            type="button"
+          >
+            <i class="fas fa-envelope me-2"></i>Email Settings
+          </button>
+        </li>
       </ul>
 
       <!-- Branches Tab -->
@@ -228,6 +238,30 @@
                 placeholder="Enter pincode"
               />
             </div>
+            <div class="col-md-6 mb-3">
+              <label for="supportEmail">Support Email</label>
+              <input
+                pInputText
+                id="supportEmail"
+                type="email"
+                formControlName="supportEmail"
+                class="w-100"
+                placeholder="support@company.com"
+              />
+              <small class="text-muted">Email address for customer support inquiries</small>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="hrEmail">HR Email</label>
+              <input
+                pInputText
+                id="hrEmail"
+                type="email"
+                formControlName="hrEmail"
+                class="w-100"
+                placeholder="hr@company.com"
+              />
+              <small class="text-muted">Email address for HR-related inquiries</small>
+            </div>
             <div class="col-md-12">
               <button
                 pButton
@@ -240,6 +274,167 @@
             </div>
           </div>
         </form>
+      </div>
+
+      <!-- Email Settings Tab -->
+      <div *ngIf="activeTab === 'email'" class="tab-content">
+        <h5 class="mb-4">Email Settings</h5>
+        
+        <!-- Email Credentials Section -->
+        <div class="mb-5">
+          <h6 class="mb-3">Email Credentials</h6>
+          <p class="text-muted mb-3">
+            Configure your email credentials to send notifications. Use your Gmail address and App Password (not your regular password).
+            <br><small class="text-info">
+              <i class="fas fa-info-circle"></i> To generate an App Password: Gmail → Account → Security → 2-Step Verification → App Passwords
+            </small>
+          </p>
+          
+          <form [formGroup]="companySettingsForm" (ngSubmit)="saveEmailCredentials()">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="email">Email Address <sup class="text-danger">*</sup></label>
+                <input
+                  pInputText
+                  id="email"
+                  type="email"
+                  formControlName="email"
+                  class="w-100"
+                  placeholder="your-email@gmail.com"
+                />
+                <small class="text-muted">Gmail address to send emails from</small>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="appPassword">App Password <sup class="text-danger">*</sup></label>
+                <input
+                  pInputText
+                  id="appPassword"
+                  type="password"
+                  formControlName="appPassword"
+                  class="w-100"
+                  placeholder="Enter Gmail App Password"
+                />
+                <small class="text-muted">Gmail App Password (16 characters)</small>
+              </div>
+              <div class="col-md-12 mb-3">
+                <button
+                  pButton
+                  type="submit"
+                  label="Save Email Credentials"
+                  icon="pi pi-save"
+                  class="p-button-primary"
+                  [disabled]="loading || !companySettingsForm.get('email')?.value || !companySettingsForm.get('appPassword')?.value"
+                ></button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Attendance Report Emails Section -->
+        <div class="mt-5 pt-4 border-top">
+          <h6 class="mb-3">Attendance Report Emails</h6>
+          <p class="text-muted mb-3">
+            Add email addresses to receive daily attendance reports. Multiple emails can be added.
+          </p>
+          
+          <div class="mb-3">
+            <div class="d-flex gap-2 mb-3">
+              <input
+                pInputText
+                [(ngModel)]="newEmail"
+                class="flex-grow-1"
+                placeholder="Enter email address"
+                (keyup.enter)="addAttendanceReportEmail()"
+                [disabled]="loading"
+              />
+              <button
+                pButton
+                type="button"
+                label="Add Email"
+                icon="pi pi-plus"
+                class="p-button-primary"
+                (click)="addAttendanceReportEmail()"
+                [disabled]="loading || !newEmail || !newEmail.trim()"
+              ></button>
+            </div>
+          </div>
+
+          <div *ngIf="attendanceReportEmails.length > 0" class="mb-3">
+            <div class="list-group">
+              <div
+                *ngFor="let email of attendanceReportEmails"
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                <span>{{ email }}</span>
+                <button
+                  pButton
+                  type="button"
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-text p-button-danger"
+                  (click)="removeAttendanceReportEmail(email)"
+                  [disabled]="loading"
+                  pTooltip="Remove"
+                ></button>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="attendanceReportEmails.length === 0" class="text-muted">
+            No emails added yet. Add email addresses to receive attendance reports.
+          </div>
+        </div>
+
+        <!-- Employee Update Emails Section -->
+        <div class="mt-5 pt-4 border-top">
+          <h6 class="mb-3">Employee Update Notification Emails</h6>
+          <p class="text-muted mb-3">
+            Add email addresses to receive notifications for employee updates such as leave requests, leave approvals/rejections, and other employee-related changes. Multiple emails can be added.
+          </p>
+          
+          <div class="mb-3">
+            <div class="d-flex gap-2 mb-3">
+              <input
+                pInputText
+                [(ngModel)]="newEmployeeUpdateEmail"
+                class="flex-grow-1"
+                placeholder="Enter email address"
+                (keyup.enter)="addEmployeeUpdateEmail()"
+                [disabled]="loading"
+              />
+              <button
+                pButton
+                type="button"
+                label="Add Email"
+                icon="pi pi-plus"
+                class="p-button-primary"
+                (click)="addEmployeeUpdateEmail()"
+                [disabled]="loading || !newEmployeeUpdateEmail || !newEmployeeUpdateEmail.trim()"
+              ></button>
+            </div>
+          </div>
+
+          <div *ngIf="employeeUpdateEmails.length > 0" class="mb-3">
+            <div class="list-group">
+              <div
+                *ngFor="let email of employeeUpdateEmails"
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                <span>{{ email }}</span>
+                <button
+                  pButton
+                  type="button"
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-text p-button-danger"
+                  (click)="removeEmployeeUpdateEmail(email)"
+                  [disabled]="loading"
+                  pTooltip="Remove"
+                ></button>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="employeeUpdateEmails.length === 0" class="text-muted">
+            No emails added yet. Add email addresses to receive employee update notifications.
+          </div>
+        </div>
       </div>
     </div>
   </div>
