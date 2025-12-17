@@ -126,7 +126,7 @@ export class SettingsComponent implements OnInit {
           companyPincode: this.companySettings.companyPincode || '',
           companyWebsite: this.companySettings.companyWebsite || '',
           email: this.companySettings.email || '',
-          appPassword: '', // Don't populate password for security
+          appPassword: this.companySettings.appPassword || '',
           supportEmail: this.companySettings.supportEmail || '',
           hrEmail: this.companySettings.hrEmail || '',
         });
