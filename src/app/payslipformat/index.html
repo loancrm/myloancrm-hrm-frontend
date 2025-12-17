@@ -157,7 +157,7 @@
   <body>
     <div class="header">
       <img
-        src="../../assets/images/pdf/winway icon.png"
+        [src]="'https://' + companySettings?.companyLogo"
         alt="Company Logo"
         width="250"
         height="100"
@@ -303,7 +303,7 @@
     <div class="disclaimer">
       *This is a computer-generated slip and does not require a signature.<br />
       *For any information on your payslip, please contact
-      hr@winwaycreators.com.
+      {{companySettings?.companyEmail}}.
     </div>
   </body>
 </html>

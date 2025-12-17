@@ -96,7 +96,7 @@
     <div class="page">
       <div class="header">
         <img
-          src="../../assets/images/pdf/winway icon.png"
+          [src]="'https://' + companySettings?.companyLogo"
           alt="Company Logo"
           width="200"
           height="100"
@@ -117,7 +117,7 @@
         <p class="para firstpara indented-paragraph">
           This is a reference to your application and subsequent interview you
           had with us; we are pleased to offer you a position of in our company
-          <b> Winway Creators India Pvt Ltd </b> subjected to following
+          <b> {{companyName}} </b> subjected to following
           employment terms and conditions.
         </p>
         <div class="details">
@@ -152,7 +152,7 @@
       <div>
         <b
           ><p>List of documents required to submit on the day of joining.</p>
-          <p>Also share the soft copies to hr@winwaycreators.com</p></b
+          <p>Also share the soft copies to {{companySettings?.companyEmail}}</p></b
         >
       </div>
       <ol>
@@ -171,17 +171,16 @@
           manager name & number
         </li>
       </div>
-      <p>We are happy to welcome you to Winway Creators India Pvt Ltd.</p>
+      <p>We are happy to welcome you to {{companyName}}.</p>
     </div>
     <div class="page">
       <div class="policyheading">
-        Winway Creators India Private Limited Policies
+        {{companyName}} Policies
       </div>
       <div>
         <p class="para indented-paragraph">
-          This is to acknowledge all the staff members of Winway Creators
-          Private Limited, to here by abide by the below mentioned Rules, terms
-          and Conditions of the company.
+          This is to acknowledge all the staff members of {{companyName}}
+          , to here by abide by the below mentioned Rules, terms and Conditions of the company.
         </p>
       </div>
 
@@ -191,10 +190,9 @@
           <li>
             <p class="para">
               You will be under probation period of Three months from the date
-              of joining. Winway Creators India Pvt Ltd will monitor your daily
+              of joining. {{companyName}} will monitor your daily
               activities. After the successful completion of probation period
-              you will be considered as a Regular employee of Winway Creators
-              India Pvt Ltd.
+              you will be considered as a Regular employee of {{companyName}}.
             </p>
           </li>
         </ul>
@@ -425,7 +423,7 @@
             <p class="para">
               I have read and understood the above mentioned terms & conditions
               and accept the terms and conditions of employment agreement of
-              Winway Creators India Pvt Ltd.
+              {{companyName}}.
             </p>
           </li>
           <li>
@@ -442,7 +440,7 @@
           treat all the candidates equally without any difference and to run the
           business operations smoothly. Hence it applicable to all the
           candidates who had acknowledge the above policies. For any Details
-          please contact our Human Resource Team at hr@winwaycreators.com
+          please contact our Human Resource Team at {{companySettings?.companyEmail}}
         </p>
       </div>
       <div>
@@ -454,8 +452,7 @@
         <b>{{ employees.createdBy }}</b>
       </div>
       <div>(HR Executive)</div>
-      <div *ngIf="companyPhone">Mobile: +91 {{ companyPhone }}</div>
-      <div *ngIf="!companyPhone">Mobile: +91 {{ userDetails.phoneNumber }}</div>
+      <div *ngIf="companyPhone">Mobile: {{ companyPhone }}</div>
       <div *ngIf="companyName"><b>{{companyName}}</b></div>
       <div *ngIf="companyAddress">{{companyAddress}}</div>
       <div *ngIf="companyCity || companyState || companyPincode">{{companyCity}}, {{companyState}} - {{companyPincode}}</div>

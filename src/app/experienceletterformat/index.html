@@ -57,7 +57,7 @@
     <div class="page">
       <div class="header">
         <img
-          src="../../assets/images/pdf/winway icon.png"
+          [src]="'https://' + companySettings?.companyLogo"
           alt="Company Logo"
           width="200"
           height="100"
@@ -69,7 +69,7 @@
       <div>
         <p class="para firstpara indented-paragraph">
           It is certified that <b>{{name}}</b> D/O <b>{{careofname}}</b> was
-          under the employer of Winway creators India (Pvt.) Limited as a
+          under the employer of {{companyName}} as a
           <b>{{role}}</b> from {{dateofjoining}} to {{dateofresignation}}.
         </p>
 
@@ -85,7 +85,7 @@
         <br />
         <br />
         <b> Regards,</b>
-        <div>Team -HR Dept</div>
+        <div>Team -HR Dept of {{companyName}}</div>
         <div>{{telephone}}</div>
         <div>{{email}}</div>
         <div><b>{{companyName}}</b></div>

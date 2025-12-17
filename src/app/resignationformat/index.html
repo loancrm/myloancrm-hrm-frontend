@@ -57,7 +57,7 @@
     <div class="page">
       <div class="header">
         <img
-          src="../../assets/images/pdf/winway icon.png"
+          [src]="'https://' + companySettings?.companyLogo"
           alt="Company Logo"
           width="200"
           height="100"
@@ -90,7 +90,7 @@
         <p class="para firstpara indented-paragraph">
           We wish you the best in your future endeavors, If you have any
           questions please contact our human resource Team at
-          hr@winwaycreators.com.
+          {{companySettings?.companyEmail}}.
         </p>
       </div>
       <div>
