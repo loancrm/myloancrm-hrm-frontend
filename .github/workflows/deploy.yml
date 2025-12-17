@@ -34,4 +34,5 @@ jobs:
           port: ${{ secrets.FTP_PORT }}
           local-dir: dist/hrmodule-angular/
           server-dir: ./
-          dangerous-clean-slate: true
+          delete-removed: true
+          passive: true
