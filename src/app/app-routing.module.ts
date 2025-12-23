@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth.guard';
 import { NotFoundComponent } from './not-found/not-found.component';
-
+import { SsoAuthComponent } from './sso-auth/sso-auth.component';
 const routes: Routes = [
   // { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '', redirectTo: '/user', pathMatch: 'full' },
@@ -33,6 +33,8 @@ const routes: Routes = [
   //   redirectTo: 'not-found',
   //   pathMatch: 'full',
   // },
+  { path: "sso-auth", component: SsoAuthComponent }
+
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

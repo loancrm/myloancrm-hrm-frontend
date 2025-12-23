@@ -65,17 +65,22 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "configurations": {
-            "production": {
-              "buildTarget": "hrmodule-angular:build:production"
-            },
-            "development": {
-              "buildTarget": "hrmodule-angular:build:development"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
+  "builder": "@angular-devkit/build-angular:dev-server",
+  "options": {
+    "browserTarget": "hrmodule-angular:build"
+  },
+  "configurations": {
+    "development": {
+      "browserTarget": "hrmodule-angular:build:development"
+    },
+    "production": {
+      "browserTarget": "hrmodule-angular:build:production"
+    }
+  },
+  "defaultConfiguration": "development"
+},
+
+
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
@@ -95,5 +100,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "3cda3922-227c-400f-b482-cf5755e9b4b6"
   }
 }

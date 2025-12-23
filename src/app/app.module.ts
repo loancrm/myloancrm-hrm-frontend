@@ -17,13 +17,14 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { NotFoundModule } from "./not-found/not-found.module";
 import { HomeModule } from "./home/home.module";
+import { SsoAuthComponent } from './sso-auth/sso-auth.component';
 
 export function tokenGetter() {
   return localStorage.getItem("access_token");
 }
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, SsoAuthComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
