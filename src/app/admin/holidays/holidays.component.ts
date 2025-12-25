@@ -211,12 +211,33 @@ export class HolidaysComponent implements OnInit {
       },
     });
   }
+  // generateYears() {
+  //   const currentYear = new Date().getFullYear();
+  //   for (let year = currentYear; year >= currentYear - 10; year--) {
+  //     this.years.push({ label: `${year}`, value: year });
+  //   }
+  // }
+
   generateYears() {
-    const currentYear = new Date().getFullYear();
-    for (let year = currentYear; year >= currentYear - 10; year--) {
-      this.years.push({ label: `${year}`, value: year });
-    }
+  const today = new Date();
+  let year = today.getFullYear();
+  console.log(year);
+  
+
+  if (today.getMonth() === 11 && today.getDate() >= 21) {
+    year = year + 1;
   }
+
+  this.years = [];
+  for (let y = year; y >= year - 10; y--) {
+    this.years.push({ label: `${y}`, value: y });
+  }
+
+  this.selectedYear = year;
+  console.log(this.selectedYear);
+  
+}
+
 
   loadHolidaysByYear(): void {
     this.localStorageService.setItemOnLocalStorage(
