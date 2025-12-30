@@ -591,7 +591,7 @@ export class DashboardComponent implements OnInit {
       },
       {
         name: 'interviews',
-        displayName: 'Upcomming Interviews',
+        displayName: 'Upcoming Interviews',
         count: this.totalInterviewsCount,
         routerLink: 'interviews',
         condition: this.capabilities.interviews,
@@ -1085,12 +1085,12 @@ export class DashboardComponent implements OnInit {
   getBranchCounts(filter = {}) {
     filter['employeeInternalStatus-eq'] = 1;
     this.loading = true;
-    
+
     // First fetch all active branches
     this.branchesService.getBranches({ 'branchInternalStatus-eq': 1 }).subscribe(
       (branchesData: any) => {
         this.branches = branchesData || [];
-        
+
         if (this.branches.length === 0) {
           this.branchCounts = [];
           this.setChartOptions();
@@ -1119,7 +1119,7 @@ export class DashboardComponent implements OnInit {
               branchName: branch.displayName || branch.name || `Branch ${branch.id}`,
               count: counts[index] || 0,
             }));
-            
+
             console.log('Branch Counts:', this.branchCounts);
             this.setChartOptions();
             this.loading = false;
@@ -1136,7 +1136,7 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
-  
+
   // Check if all branch counts are zero
   areAllBranchCountsZero(): boolean {
     if (this.branchCounts.length === 0) {
@@ -1286,11 +1286,11 @@ export class DashboardComponent implements OnInit {
     // Dynamic branch chart
     const branchSeries = this.branchCounts.map((branch: any) => branch.count || 0);
     const branchLabels = this.branchCounts.map((branch: any) => branch.branchName);
-    
+
     // Generate colors dynamically (repeating if needed)
     const branchColors = ['#ABA5DC', '#8E89D0', '#706EC4', '#535AB4', '#3D4A94', '#2A3574'];
     const chartColors = branchSeries.map((_, index) => branchColors[index % branchColors.length]);
-    
+
     this.branchpieChartOptions = {
       series: branchSeries.length > 0 ? branchSeries : [0],
       labels: branchLabels.length > 0 ? branchLabels : ['No Branches'],
