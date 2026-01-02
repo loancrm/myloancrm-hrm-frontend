@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { LocalStorageService } from '../services/local-storage.service';
-
+import { projectConstantsLocal } from '../constants/project-constants';
 @Component({
   selector: 'app-sso-auth',
   template: ''
 })
 export class SsoAuthComponent implements OnInit {
-
+version = projectConstantsLocal.VERSION_DESKTOP;
+userType = 'user'
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -22,15 +23,17 @@ export class SsoAuthComponent implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
-
+    this.localStorage.setItemOnLocalStorage('userType', this.userType);
     this.localStorage.setItemOnLocalStorage('accessToken', token);
-
 
     const decoded: any = jwtDecode(token);
     const user = decoded.user;
 
     this.localStorage.setItemOnLocalStorage('userDetails', { user });
 
-    this.router.navigate(['/user/dashboard']);
+    // this.router.navigate(['/user/dashboard']);
+     this.router.navigate(['user', 'dashboard'], {
+              queryParams: { v: this.version },
+            });
   }
 }
