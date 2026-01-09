@@ -12,6 +12,7 @@ import * as html2pdf from 'html2pdf.js';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { CompanySettingsService } from 'src/app/services/company-settings.service';
 import { BranchesService } from 'src/app/services/branches.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-offerletter',
@@ -19,6 +20,9 @@ import { BranchesService } from 'src/app/services/branches.service';
   styleUrls: ['./offerletter.component.scss'],
 })
 export class OfferletterComponent {
+  // offerLetterHtml: string = '';
+  offerLetterHtml: SafeHtml;
+
   breadCrumbItems: any = [];
   moment: any;
   @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
@@ -32,6 +36,7 @@ export class OfferletterComponent {
   companySettings: any = {};
   branches: any = [];
   constructor(
+    private sanitizer: DomSanitizer,
     private location: Location,
     private route: ActivatedRoute,
     private toastService: ToastService,
@@ -68,6 +73,18 @@ export class OfferletterComponent {
     if (this.employeeId) {
       this.getEmployeeById(this.employeeId);
     }
+
+    this.loadCompanySettings();
+  this.loadBranches();
+
+  // 🔥 Load OFFER LETTER template
+  this.employeesService
+    .getTemplateByType('offerLetter')
+    .subscribe((res: any) => {
+      this.offerLetterContent = res.html;
+      this.prepareOfferLetterHtml(); // 🔥 AUTO FILL HERE
+    });
+
   }
 
   loadCompanySettings() {
@@ -154,40 +171,76 @@ export class OfferletterComponent {
   //     }
   //   }
   generatePDF() {
-    const element = document.getElementById('content');
-    if (element) {
-      this.loading = true; // Show loading indicator
-      html2pdf()
-        .from(element)
-        .save(`${this.employees?.employeeName} Offer Letter.pdf`)
-        .then(() => {
-          this.loading = false; // Hide loading indicator after success
-        })
-        .catch((error) => {
-          console.error('PDF generation error:', error);
-          this.loading = false; // Hide loading indicator on error
-        });
-    }
+  const element = document.getElementById('content');
+
+  if (element) {
+    this.loading = true;
+
+    const options = {
+      margin: [8, 0, 10, 5], // 🔥 TOP, LEFT, BOTTOM, RIGHT (mm)
+      filename: `${this.employees?.employeeName} Offer Letter.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true
+      },
+      jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+      }
+    };
+
+    html2pdf()
+      .set(options)
+      .from(element)
+      .save()
+      .then(() => {
+        this.loading = false;
+      })
+      .catch(err => {
+        console.error(err);
+        this.loading = false;
+      });
   }
+}
+
+  // generatePDF() {
+  //   const element = document.getElementById('content');
+  //   if (element) {
+  //     this.loading = true; // Show loading indicator
+      
+  //     html2pdf()
+  //       .from(element)
+  //       .save(`${this.employees?.employeeName} Offer Letter.pdf`)
+  //       .then(() => {
+  //         this.loading = false; // Hide loading indicator after success
+  //       })
+  //       .catch((error) => {
+  //         console.error('PDF generation error:', error);
+  //         this.loading = false; // Hide loading indicator on error
+  //       });
+  //   }
+  // }
   getOfferLetterDate(joiningDate: string): Date {
     const date = new Date(joiningDate);
     date.setDate(date.getDate() - 2);
     return date;
   }
-  getEmployeeById(id: string) {
-    this.loading = true;
-    this.employeesService.getEmployeeById(id).subscribe(
-      (response) => {
-        this.employees = response;
-        console.log('Employees', this.employees);
-        this.loading = false;
-      },
-      (error: any) => {
-        this.loading = false;
-        this.toastService.showError(error);
-      }
-    );
-  }
+  // getEmployeeById(id: string) {
+  //   this.loading = true;
+  //   this.employeesService.getEmployeeById(id).subscribe(
+  //     (response) => {
+  //       this.employees = response;
+  //       console.log('Employees', this.employees);
+  //       this.loading = false;
+  //     },
+  //     (error: any) => {
+  //       this.loading = false;
+  //       this.toastService.showError(error);
+  //     }
+  //   );
+  // }
 
   getDesignationName(userId) {
     if (this.designations && this.designations.length > 0) {
@@ -220,4 +273,61 @@ export class OfferletterComponent {
   goBack() {
     this.location.back();
   }
+
+  prepareOfferLetterHtml() {
+  if (!this.offerLetterContent || !this.employees) return;
+
+  let html = this.offerLetterContent;
+
+  // =======================
+// 🔥 COMPANY LOGO REPLACE
+// =======================
+const logoUrl = this.companySettings?.companyLogo
+  ? 'https://' + this.companySettings.companyLogo
+  : '';
+
+if (logoUrl) {
+  html = html.replace(
+    /{{COMPANY_LOGO}}/g,
+    `<div>
+       <img src="${logoUrl}"
+            alt="Company Logo"
+            style="max-height:80px;max-width:200px;object-fit:contain;" />
+     </div>`
+  );
+} else {
+  html = html.replace(/{{COMPANY_LOGO}}/g, '');
+}
+
+  html = html.replace(/{{EMPLOYEE_NAME}}/g, this.employees.employeeName);
+  html = html.replace(/{{EMPLOYEE_CITY}}/g, this.employees.city);
+  html = html.replace(/{{EMPLOYEE_DISTRICT}}/g, this.employees.district);
+  html = html.replace(/{{EMPLOYEE_STATE}}/g, this.employees.state);
+  html = html.replace(/{{CREATED_BY}}/g, this.employees.createdBy);
+  html = html.replace(/{{JOINING_DATE}}/g, this.employees.joiningDate);
+  html = html.replace(/{{DESIGNATION}}/g, this.getDesignationName(this.employees.designation));
+  html = html.replace(/{{SALARY}}/g, this.roundToLPA(this.employees.salary * 12));
+
+  html = html.replace(/{{COMPANY_NAME}}/g, this.companySettings.companyName || '');
+  html = html.replace(/{{HR_EMAIL}}/g, this.companySettings.hrEmail || '');
+  html = html.replace(/{{ACCOUNT_EMAIL}}/g, this.companySettings.accountEmail || '');
+  html = html.replace(/{{COMPANY_PHONE}}/g, this.companySettings.companyPhone || '');
+  html = html.replace(/{{COMPANY_ADDRESS}}/g, this.companySettings.companyAddress || '');
+  html = html.replace(/{{COMPANY_CITY}}/g, this.companySettings.companyCity || '');
+  html = html.replace(/{{COMPANY_STATE}}/g, this.companySettings.companyState || '');
+  html = html.replace(/{{COMPANY_PINCODE}}/g, this.companySettings.companyPincode || '');
+  html = html.replace(/{{COMPANY_WEBSITE}}/g, this.companySettings.companyWebsite || '');
+
+  // this.offerLetterHtml = html;
+  this.offerLetterHtml = this.sanitizer.bypassSecurityTrustHtml(html);
+
+  console.log('Prepared Offer Letter HTML:', this.offerLetterHtml);
+  }
+  getEmployeeById(id: string) {
+    this.employeesService.getEmployeeById(id).subscribe(res => {
+      this.employees = res;
+      this.prepareOfferLetterHtml(); // 🔥 AUTO FILL HERE
+    });
+  }
+
 }

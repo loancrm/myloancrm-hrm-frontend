@@ -49,6 +49,26 @@
             <i class="fas fa-envelope me-2"></i>Email Settings
           </button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'templates'"
+            (click)="setActiveTab('templates')"
+            type="button"
+          >
+            <i class="fas fa-file-alt me-2"></i>Templates
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'templateselection'"
+            (click)="setActiveTab('templateselection')"
+            type="button"
+          >
+            <i class="fas fa-file-alt me-2"></i>Templates Selection
+          </button>
+        </li>
       </ul>
 
       <!-- Branches Tab -->
@@ -289,7 +309,6 @@
               <i class="fas fa-info-circle"></i> To generate an App Password: Gmail → Account → Security → 2-Step Verification → App Passwords
             </small>
           </p>
-          
           <form [formGroup]="companySettingsForm" (ngSubmit)="saveEmailCredentials()">
             <div class="row">
               <div class="col-md-6 mb-3">
@@ -435,6 +454,56 @@
             No emails added yet. Add email addresses to receive employee update notifications.
           </div>
         </div>
+      </div>
+
+      <!-- Templates Tab -->
+      <div *ngIf="activeTab === 'templates'" class="tab-content">
+        <app-template-list></app-template-list>
+      </div>
+
+      <div *ngIf="activeTab === 'templateselection'" class="tab-content d-flex flex-row gap-4">
+         <div class="col-md-3">
+          <label for="offerLetterTemplate">Offer Letter Template Selection</label>
+          <p-dropdown
+              [options]="offerLetterTemplates"
+              [style]="{ width: '100%' }"
+              optionLabel="templateName"
+              optionValue="id"
+              placeholder="Select Offer Letter Template"
+              [(ngModel)]="selectedOfferTemplate"
+              (onChange)="saveTemplateSelection('offerLetter')"
+              
+              >
+            </p-dropdown>
+         </div>
+          <div class="col-md-3">
+            <label for="relievingLetterTemplate">Relieving Letter Template Selection</label>
+            <p-dropdown
+              [options]="relievingTemplates"
+              [style]="{ width: '100%' }"
+              optionLabel="templateName"
+              optionValue="id"
+              placeholder="Select Relieving Letter Template"
+              [(ngModel)]="selectedRelievingTemplate"
+              (onChange)="saveTemplateSelection('relievingLetter')"
+              class="w-100"
+              >
+            </p-dropdown>
+          </div>
+          <div class="col-md-3">
+            <label for="hikeLetterTemplate">Hike Letter Template Selection</label>
+            <p-dropdown
+              [options]="hikeLetterTemplates"
+              [style]="{ width: '100%' }"
+              optionLabel="templateName"
+              optionValue="id"
+              placeholder="Select Hike Letter Template"
+              [(ngModel)]="selectedHikeTemplate"
+              (onChange)="saveTemplateSelection('hikeLetter')"
+              class="w-100"
+              >
+            </p-dropdown>
+          </div>
       </div>
     </div>
   </div>

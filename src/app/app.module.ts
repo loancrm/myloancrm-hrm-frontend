@@ -18,6 +18,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { NotFoundModule } from "./not-found/not-found.module";
 import { HomeModule } from "./home/home.module";
 import { SsoAuthComponent } from './sso-auth/sso-auth.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 export function tokenGetter() {
   return localStorage.getItem("access_token");
@@ -34,6 +35,7 @@ export function tokenGetter() {
     ConfirmDialogModule,
     NotFoundModule,
     HomeModule,
+    CKEditorModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter

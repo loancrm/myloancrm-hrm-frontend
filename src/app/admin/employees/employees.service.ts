@@ -5,6 +5,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ServiceMeta } from 'src/app/services/service-meta';
 import axios from 'axios';
 import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -686,4 +687,63 @@ export class EmployeesService {
     }
     return api_filter;
   }
+  saveOfferTemplate(payload: any) {
+    return this.serviceMeta.httpPost('offer-letter/save', payload);
+  }
+  // getTemplateTypes(): Observable<any[]> {
+  // return this.http.get<any[]>('templateTypes');
+  // }
+  getTemplateTypes() {
+  return this.serviceMeta.httpGet('templateTypes');
+}
+  getAllTemplates() {
+    return this.serviceMeta.httpGet('offer-letter');
+  }
+
+  getTemplateById(id: number) {
+    return this.serviceMeta.httpGet('offer-letter/' + id);
+  }
+
+  updateTemplate(id: number, payload: any) {
+    return this.serviceMeta.httpPut('offer-letter/' + id, payload);
+  }
+
+  updateTemplateStatus(id: number, status: number) {
+    return this.serviceMeta.httpPatch('offer-letter/status/' + id, { status });
+  }
+
+  getTemplateByType(type: string) {
+    return this.serviceMeta.httpGet(`offer-letter/by-type/${type}`);
+  }
+
+  getTemplatesForSelection() {
+    return this.serviceMeta.httpGet('offer-letter');
+  }
+
+
+  selectTemplate(payload: { templateId: string; templateType: string }) {
+    return this.serviceMeta.httpPost('offer-letter/select', payload);
+  }
+
+  getTemplatesCount(filter = {}) {
+      const url = 'offer-letter/total';
+      return this.serviceMeta.httpGet(url, null, filter);
+    }
+
+// getTemplateTypes(): Observable<any[]> {
+//   const headers = {
+//     Authorization: `Bearer ${localStorage.getItem('token')}`
+//   };
+
+//   return this.http.get<any[]>('templateTypes', { headers });
+// }
+
+
+//   getTemplateTypes() {
+//   return this.http.get('/templateTypes');
+// }
+
+//   saveOfferTemplate(payload: any) {
+//   return this.http.post('/api/offer-letter/save', payload);
+// }
 }

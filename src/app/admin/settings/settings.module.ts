@@ -11,12 +11,38 @@ import { TooltipModule } from 'primeng/tooltip';
 import { SettingsComponent } from './settings.component';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { SettingsGuard } from './settings.guard';
+import { CustomtemplateComponent } from '../customtemplate/customtemplate.component';
+import { CustomtemplateModule } from '../customtemplate/customtemplate.module';
+import { TemplateListModule } from '../customtemplate/template-list/template-list.module';
+import { DropdownModule } from 'primeng/dropdown';
 
+
+// const routes: Routes = [
+//   {
+//     path: '',
+//     component: SettingsComponent,
+//     canActivate: [SettingsGuard],
+//     children: [
+//       {
+//         path: 'customtemplate',
+//         loadChildren: () =>
+//           import('../customtemplate/customtemplate.module')
+//             .then(m => m.CustomtemplateModule)
+//       }
+//     ]
+//   }
+// ];
 const routes: Routes = [
-  { 
-    path: '', 
+  {
+    path: '',
     component: SettingsComponent,
-    canActivate: [SettingsGuard]
+    canActivate: [SettingsGuard],
+  },
+  {
+    path: 'customtemplate',
+    loadChildren: () =>
+      import('../customtemplate/customtemplate.module')
+        .then(m => m.CustomtemplateModule)
   }
 ];
 
@@ -34,6 +60,8 @@ const routes: Routes = [
     DialogModule,
     TooltipModule,
     PreloaderModule,
+    TemplateListModule,
+    DropdownModule,
   ],
 })
 export class SettingsModule {}

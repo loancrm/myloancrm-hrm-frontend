@@ -114,7 +114,20 @@
   border-left: 2px solid #fff;
   background: linear-gradient(to bottom, lightgrey, lightgrey, #558b28);
 }
-
+.a4-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f0f0f0;
+  padding: 20px;
+}
+.a4-page {
+  width: 210mm;
+  // min-height: 297mm;
+  padding: 10mm;
+  box-sizing: border-box;
+  background: #fff;
+}
 // //OLD CODE
 // .hikeletter-card {
 //   margin: 20px;

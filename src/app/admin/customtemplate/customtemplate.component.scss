@@ -1,0 +1,23 @@
+::ng-deep .ck-editor__editable {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: plaintext;
+}
+
+.p-inputtext {
+  color: #333;
+  padding: 10px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.p-inputtext:hover {
+  border: 1px solid #c7c2e8 !important;
+}
+.p-inputtext:focus {
+  border: 1px solid #c7c2e8 !important;
+  box-shadow: 0 0 5px #9b8db5 !important;
+  outline: none;
+}
+.p-inputtext::placeholder {
+  color: #888;
+}

@@ -38,7 +38,17 @@ export class SettingsComponent implements OnInit {
   newEmail: string = '';
   employeeUpdateEmails: string[] = [];
   newEmployeeUpdateEmail: string = '';
+  // offerLetterTemplates = [];
+  // relievingTemplates = [];
+  selectedOfferTemplate: string | null = null;
+  selectedRelievingTemplate: string | null = null;
+  selectedHikeTemplate: string | null = null;
+  offerLetterTemplates: any[] = [];
+  relievingTemplates: any[] = [];
+  hikeLetterTemplates: any[] = [];
 
+
+  
   constructor(
     private location: Location,
     private router: Router,
@@ -73,6 +83,30 @@ export class SettingsComponent implements OnInit {
     
     this.loadBranches();
     this.loadCompanySettings();
+      //   this.employeesService.getTemplatesForSelection().subscribe(res => {
+      //   this.offerLetterTemplates = res.offerLetter || [];
+      //   this.relievingTemplates = res.relievingLetter || [];
+      // });
+      this.employeesService.getAllTemplates().subscribe((res: any) => {
+        
+      this.offerLetterTemplates = res.filter(
+        t => t.templateType === 'offerLetter' && t.status === 1
+        
+      );
+
+      this.relievingTemplates = res.filter(
+        t => t.templateType === 'relievingLetter' && t.status === 1
+      );
+
+      this.hikeLetterTemplates = res.filter(
+        t => t.templateType === 'hikeLetter' && t.status === 1
+      );
+
+      // ✅ ADD EXACTLY HERE
+      this.selectedOfferTemplate = this.companySettings?.offerLetterTemplateId || null;
+      this.selectedRelievingTemplate = this.companySettings?.relievingLetterTemplateId || null;
+      this.selectedHikeTemplate = this.companySettings?.hikeLetterTemplateId || null;
+    });
   }
 
   initializeForms() {
@@ -134,6 +168,7 @@ export class SettingsComponent implements OnInit {
         if (this.companySettings.companyLogo) {
           this.logoPreview = this.companySettings.companyLogo;
         }
+        
         // Load attendance report emails
         if (this.companySettings.attendanceReportEmails) {
           // Check if it's already an array (parsed by parseNestedJSON middleware)
@@ -481,5 +516,69 @@ export class SettingsComponent implements OnInit {
       this.toastService.showError('Please enter both email and app password');
     }
   }
+//   goToCustomTemplate() {
+//   this.router.navigate(['/user/customtemplate']);
+// }
+goToCustomTemplate() {
+  this.routingService.handleRoute('settings/customtemplate', null);
+}
+// saveTemplateSelection(type: string) {
+//   const templateId =
+//     type === 'offerLetter'
+//       ? this.selectedOfferTemplate
+//       : this.selectedRelievingTemplate;
+
+//   // 🔥 HARD GUARD — NO NULL ALLOWED
+//   if (!templateId) {
+//     this.toastService.showError('Please select a template');
+//     return;
+//   }
+
+//   this.employeesService.selectTemplate({
+//     templateId: templateId,   // ✅ always string
+//     templateType: type
+//   }).subscribe(() => {
+//     this.toastService.showSuccess('Template selected');
+//   });
+// }
+saveTemplateSelection(type: string) {
+  let templateId: string | null = null;
+
+  if (type === 'offerLetter') {
+    templateId = this.selectedOfferTemplate;
+  } else if (type === 'relievingLetter') {
+    templateId = this.selectedRelievingTemplate;
+  } else if (type === 'hikeLetter') {
+    templateId = this.selectedHikeTemplate;
+  }
+
+  // 🔒 HARD GUARD
+  if (!templateId) {
+    this.toastService.showError('Please select a template');
+    return;
+  }
+
+  this.employeesService.selectTemplate({
+    templateId: templateId,
+    templateType: type
+  }).subscribe(() => {
+    this.toastService.showSuccess('Template selected');
+  });
+}
+
+// saveTemplateSelection(type: string) {
+//   const templateId =
+//     type === 'offerLetter'
+//       ? this.selectedOfferTemplate
+//       : this.selectedRelievingTemplate;
+
+//   this.employeesService.selectTemplate({
+//     templateId,
+//     templateType: type
+//   }).subscribe(() => {
+//     this.toastService.showSuccess('Template selected');
+//   });
+// }
+
 }
 

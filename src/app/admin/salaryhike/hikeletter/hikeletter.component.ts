@@ -11,6 +11,7 @@ import { CompanySettingsService } from 'src/app/services/company-settings.servic
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import * as html2pdf from 'html2pdf.js';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 @Component({
   selector: 'app-hikeletter',
   templateUrl: './hikeletter.component.html',
@@ -29,6 +30,8 @@ export class HikeletterComponent {
   currentYear: number;
   apiLoading: any;
   companySettings: any = {};
+  hikeLetterContent!: string;
+  hikeLetterHtml!: SafeHtml;
   constructor(
     private location: Location,
     private route: ActivatedRoute,
@@ -37,7 +40,8 @@ export class HikeletterComponent {
     private localStorageService: LocalStorageService,
     private employeesService: EmployeesService,
     private dateTimeProcessor: DateTimeProcessorService,
-    private companySettingsService: CompanySettingsService
+    private companySettingsService: CompanySettingsService,
+    private sanitizer: DomSanitizer
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
     this.breadCrumbItems = [
@@ -64,6 +68,13 @@ export class HikeletterComponent {
     if (this.employeeId) {
       this.getSalaryHikesById(this.employeeId);
     }
+
+    this.employeesService
+    .getTemplateByType('hikeLetter')
+    .subscribe((res: any) => {
+      this.hikeLetterContent = res.html;
+      this.prepareHikeLetterHtml();
+    });
   }
 
   loadCompanySettings() {
@@ -150,19 +161,35 @@ export class HikeletterComponent {
     );
   }
   getEmployeeById(id: string) {
-    this.apiLoading = true;
-    this.employeesService.getEmployeeById(id).subscribe(
-      (response) => {
-        this.employees = response;
-        console.log('Employees', this.employees);
-        this.apiLoading = false;
-      },
-      (error: any) => {
-        this.apiLoading = false;
-        this.toastService.showError(error);
-      }
-    );
-  }
+  this.apiLoading = true;
+  this.employeesService.getEmployeeById(id).subscribe(
+    (response) => {
+      this.employees = response;
+      this.apiLoading = false;
+
+      // 🔥 THIS LINE WAS MISSING
+      this.prepareHikeLetterHtml();
+    },
+    (error) => {
+      this.apiLoading = false;
+      this.toastService.showError(error);
+    }
+  );
+}
+  // getEmployeeById(id: string) {
+  //   this.apiLoading = true;
+  //   this.employeesService.getEmployeeById(id).subscribe(
+  //     (response) => {
+  //       this.employees = response;
+  //       console.log('Employees', this.employees);
+  //       this.apiLoading = false;
+  //     },
+  //     (error: any) => {
+  //       this.apiLoading = false;
+  //       this.toastService.showError(error);
+  //     }
+  //   );
+  // }
 
   getDesignationName(userId) {
     if (this.designations && this.designations.length > 0) {
@@ -192,6 +219,41 @@ export class HikeletterComponent {
       }
     );
   }
+
+  prepareHikeLetterHtml() {
+  if (!this.hikeLetterContent || !this.employees || !this.salaryHikes) return;
+
+  let html = this.hikeLetterContent;
+
+  const logo = this.companySettings?.companyLogo
+    ? `<img src="https://${this.companySettings.companyLogo}" style="max-height:80px;" />`
+    : '';
+
+  html = html.replace(/{{COMPANY_LOGO}}/g, logo);
+  html = html.replace(/{{EMPLOYEE_NAME}}/g, this.employees.employeeName);
+  html = html.replace(/{{DESIGNATION}}/g, this.getDesignationName(this.employees.designation));
+  html = html.replace(/{{HIKE_DATE}}/g, this.salaryHikes.hikeDate);
+  html = html.replace(/{{TOTAL_SALARY}}/g, this.roundToLPA(this.salaryHikes.totalSalary * 12));
+   html = html.replace(
+    /{{TOTAL_HIKEPERCENTAGE}}/g,
+    this.calculateHikePercentage(
+      this.salaryHikes.basicSalary,
+      this.salaryHikes.totalSalary
+    )
+  );
+  html = html.replace(/{{EFFECTIVE_DATE}}/g, this.getOfferLetterDate(this.salaryHikes.hikeDate).toDateString());
+  html = html.replace(/{{CREATED_BY}}/g, this.salaryHikes.createdBy);
+
+  html = html.replace(/{{COMPANY_NAME}}/g, this.companySettings.companyName || '');
+  html = html.replace(/{{COMPANY_PHONE}}/g, this.companySettings.companyPhone || '');
+  html = html.replace(/{{COMPANY_ADDRESS}}/g, this.companySettings.companyAddress || '');
+  html = html.replace(/{{COMPANY_CITY}}/g, this.companySettings.companyCity || '');
+  html = html.replace(/{{COMPANY_STATE}}/g, this.companySettings.companyState || '');
+  html = html.replace(/{{COMPANY_PINCODE}}/g, this.companySettings.companyPincode || '');
+
+  this.hikeLetterHtml = this.sanitizer.bypassSecurityTrustHtml(html);
+}
+
   goBack() {
     this.location.back();
   }
