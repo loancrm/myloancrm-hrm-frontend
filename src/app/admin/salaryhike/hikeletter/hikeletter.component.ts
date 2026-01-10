@@ -93,26 +93,6 @@ export class HikeletterComponent {
     return lakhs.toFixed(2) + ' LPA';
   }
 
-  // generatePDF() {
-  //   this.loading = true;
-  //   const pdfContent = this.pdfContent.nativeElement;
-  //   html2canvas(pdfContent).then((canvas) => {
-  //     const imgData = canvas.toDataURL('image/png');
-  //     const pdf = new jsPDF('p', 'mm', 'a4');
-  //     const imgWidth = 190;
-  //     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  //     pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-  //     pdf.save('incrementletter.pdf');
-  //     this.loading = false;
-  //   });
-  // }
-
-  // generatePDF() {
-  //   const element = document.getElementById('content');
-  //   if (element) {
-  //     html2pdf().from(element).save('IncrementLetter.pdf');
-  //   }
-  // }
 
   generatePDF() {
     const element = document.getElementById('content');
@@ -219,37 +199,47 @@ export class HikeletterComponent {
       }
     );
   }
-
-  prepareHikeLetterHtml() {
+prepareHikeLetterHtml() {
   if (!this.hikeLetterContent || !this.employees || !this.salaryHikes) return;
 
   let html = this.hikeLetterContent;
 
-  const logo = this.companySettings?.companyLogo
-    ? `<img src="https://${this.companySettings.companyLogo}" style="max-height:80px;" />`
+  //  COMPANY LOGO
+  const logoHtml = this.companySettings?.companyLogo
+    ? `<img src="https://${this.companySettings.companyLogo}"
+             style="max-height:80px;object-fit:contain;" />`
     : '';
 
-  html = html.replace(/{{COMPANY_LOGO}}/g, logo);
-  html = html.replace(/{{EMPLOYEE_NAME}}/g, this.employees.employeeName);
-  html = html.replace(/{{DESIGNATION}}/g, this.getDesignationName(this.employees.designation));
-  html = html.replace(/{{HIKE_DATE}}/g, this.salaryHikes.hikeDate);
-  html = html.replace(/{{TOTAL_SALARY}}/g, this.roundToLPA(this.salaryHikes.totalSalary * 12));
-   html = html.replace(
-    /{{TOTAL_HIKEPERCENTAGE}}/g,
-    this.calculateHikePercentage(
+  // ALL PLACEHOLDERS IN ONE OBJECT
+  const replacements: { [key: string]: any } = {
+    '{{COMPANY_LOGO}}': logoHtml,
+
+    '{{EMPLOYEE_NAME}}': this.employees.employeeName,
+    '{{DESIGNATION}}': this.getDesignationName(this.employees.designation),
+    '{{HIKE_DATE}}': this.salaryHikes.hikeDate,
+    '{{TOTAL_SALARY}}': this.roundToLPA(this.salaryHikes.totalSalary * 12),
+    '{{TOTAL_HIKEPERCENTAGE}}': this.calculateHikePercentage(
       this.salaryHikes.basicSalary,
       this.salaryHikes.totalSalary
-    )
-  );
-  html = html.replace(/{{EFFECTIVE_DATE}}/g, this.getOfferLetterDate(this.salaryHikes.hikeDate).toDateString());
-  html = html.replace(/{{CREATED_BY}}/g, this.salaryHikes.createdBy);
+    ),
+    '{{EFFECTIVE_DATE}}': this.getOfferLetterDate(
+      this.salaryHikes.hikeDate
+    ).toDateString(),
+    '{{CREATED_BY}}': this.salaryHikes.createdBy,
 
-  html = html.replace(/{{COMPANY_NAME}}/g, this.companySettings.companyName || '');
-  html = html.replace(/{{COMPANY_PHONE}}/g, this.companySettings.companyPhone || '');
-  html = html.replace(/{{COMPANY_ADDRESS}}/g, this.companySettings.companyAddress || '');
-  html = html.replace(/{{COMPANY_CITY}}/g, this.companySettings.companyCity || '');
-  html = html.replace(/{{COMPANY_STATE}}/g, this.companySettings.companyState || '');
-  html = html.replace(/{{COMPANY_PINCODE}}/g, this.companySettings.companyPincode || '');
+    '{{COMPANY_NAME}}': this.companySettings.companyName || '',
+    '{{COMPANY_PHONE}}': this.companySettings.companyPhone || '',
+    '{{COMPANY_ADDRESS}}': this.companySettings.companyAddress || '',
+    '{{COMPANY_CITY}}': this.companySettings.companyCity || '',
+    '{{COMPANY_STATE}}': this.companySettings.companyState || '',
+    '{{COMPANY_PINCODE}}': this.companySettings.companyPincode || ''
+  };
+
+  // SINGLE LOOP REPLACEMENT
+  Object.keys(replacements).forEach(key => {
+    const value = replacements[key] ?? '';
+    html = html.replace(new RegExp(key, 'g'), value);
+  });
 
   this.hikeLetterHtml = this.sanitizer.bypassSecurityTrustHtml(html);
 }

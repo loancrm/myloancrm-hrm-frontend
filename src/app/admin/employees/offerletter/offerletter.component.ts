@@ -134,42 +134,6 @@ export class OfferletterComponent {
     return lakhs.toFixed(2) + ' LPA';
   }
 
-  // generatePDF() {
-  //   this.loading = true;
-  //   const pageElements = document.querySelectorAll('.page');
-  //   const pdf = new jsPDF('p', 'mm', 'a4');
-  //   const imgWidth = 190;
-  //   const pageHeight = 297;
-  //   const addPagesToPDF = async () => {
-  //     for (let i = 0; i < pageElements.length; i++) {
-  //       const pageElement = pageElements[i];
-  //       await html2canvas(pageElement as HTMLElement).then((canvas) => {
-  //         const imgData = canvas.toDataURL('image/png');
-  //         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  //         pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-  //         if (i < pageElements.length - 1) {
-  //           pdf.addPage();
-  //         }
-  //       });
-  //     }
-  //   };
-  //   addPagesToPDF()
-  //     .then(() => {
-  //       pdf.save('Offerletter.pdf');
-  //       this.loading = false;
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error generating PDF:', error);
-  //       this.loading = false;
-  //     });
-  // }
-
-  //  generatePDF() {
-  //     const element = document.getElementById('content');
-  //     if (element) {
-  //       html2pdf().from(element).save('IncrementLetter.pdf');
-  //     }
-  //   }
   generatePDF() {
   const element = document.getElementById('content');
 
@@ -205,42 +169,12 @@ export class OfferletterComponent {
   }
 }
 
-  // generatePDF() {
-  //   const element = document.getElementById('content');
-  //   if (element) {
-  //     this.loading = true; // Show loading indicator
-      
-  //     html2pdf()
-  //       .from(element)
-  //       .save(`${this.employees?.employeeName} Offer Letter.pdf`)
-  //       .then(() => {
-  //         this.loading = false; // Hide loading indicator after success
-  //       })
-  //       .catch((error) => {
-  //         console.error('PDF generation error:', error);
-  //         this.loading = false; // Hide loading indicator on error
-  //       });
-  //   }
-  // }
   getOfferLetterDate(joiningDate: string): Date {
     const date = new Date(joiningDate);
     date.setDate(date.getDate() - 2);
     return date;
   }
-  // getEmployeeById(id: string) {
-  //   this.loading = true;
-  //   this.employeesService.getEmployeeById(id).subscribe(
-  //     (response) => {
-  //       this.employees = response;
-  //       console.log('Employees', this.employees);
-  //       this.loading = false;
-  //     },
-  //     (error: any) => {
-  //       this.loading = false;
-  //       this.toastService.showError(error);
-  //     }
-  //   );
-  // }
+
 
   getDesignationName(userId) {
     if (this.designations && this.designations.length > 0) {
@@ -274,59 +208,61 @@ export class OfferletterComponent {
     this.location.back();
   }
 
-  prepareOfferLetterHtml() {
+prepareOfferLetterHtml() {
   if (!this.offerLetterContent || !this.employees) return;
 
   let html = this.offerLetterContent;
 
-  // =======================
-// 🔥 COMPANY LOGO REPLACE
-// =======================
-const logoUrl = this.companySettings?.companyLogo
-  ? 'https://' + this.companySettings.companyLogo
-  : '';
+  //  COMPANY LOGO
+  const logoUrl = this.companySettings?.companyLogo
+    ? 'https://' + this.companySettings.companyLogo
+    : '';
 
-if (logoUrl) {
-  html = html.replace(
-    /{{COMPANY_LOGO}}/g,
-    `<div>
-       <img src="${logoUrl}"
-            alt="Company Logo"
-            style="max-height:80px;max-width:200px;object-fit:contain;" />
-     </div>`
-  );
-} else {
-  html = html.replace(/{{COMPANY_LOGO}}/g, '');
+  const logoHtml = logoUrl
+    ? `<div>
+         <img src="${logoUrl}"
+              alt="Company Logo"
+              style="max-height:80px;max-width:200px;object-fit:contain;" />
+       </div>`
+    : '';
+
+  // ALL PLACEHOLDERS IN ONE OBJECT
+  const replacements: { [key: string]: any } = {
+    '{{COMPANY_LOGO}}': logoHtml,
+
+    '{{EMPLOYEE_NAME}}': this.employees.employeeName,
+    '{{EMPLOYEE_CITY}}': this.employees.city,
+    '{{EMPLOYEE_DISTRICT}}': this.employees.district,
+    '{{EMPLOYEE_STATE}}': this.employees.state,
+    '{{CREATED_BY}}': this.employees.createdBy,
+    '{{JOINING_DATE}}': this.employees.joiningDate,
+    '{{DESIGNATION}}': this.getDesignationName(this.employees.designation),
+    '{{SALARY}}': this.roundToLPA(this.employees.salary * 12),
+
+    '{{COMPANY_NAME}}': this.companySettings.companyName || '',
+    '{{HR_EMAIL}}': this.companySettings.hrEmail || '',
+    '{{ACCOUNT_EMAIL}}': this.companySettings.accountEmail || '',
+    '{{COMPANY_PHONE}}': this.companySettings.companyPhone || '',
+    '{{COMPANY_ADDRESS}}': this.companySettings.companyAddress || '',
+    '{{COMPANY_CITY}}': this.companySettings.companyCity || '',
+    '{{COMPANY_STATE}}': this.companySettings.companyState || '',
+    '{{COMPANY_PINCODE}}': this.companySettings.companyPincode || '',
+    '{{COMPANY_WEBSITE}}': this.companySettings.companyWebsite || ''
+  };
+
+  //  SINGLE LOOP FOR ALL REPLACEMENTS
+  Object.keys(replacements).forEach(key => {
+    const value = replacements[key] ?? '';
+    html = html.replace(new RegExp(key, 'g'), value);
+  });
+
+  this.offerLetterHtml = this.sanitizer.bypassSecurityTrustHtml(html);
 }
 
-  html = html.replace(/{{EMPLOYEE_NAME}}/g, this.employees.employeeName);
-  html = html.replace(/{{EMPLOYEE_CITY}}/g, this.employees.city);
-  html = html.replace(/{{EMPLOYEE_DISTRICT}}/g, this.employees.district);
-  html = html.replace(/{{EMPLOYEE_STATE}}/g, this.employees.state);
-  html = html.replace(/{{CREATED_BY}}/g, this.employees.createdBy);
-  html = html.replace(/{{JOINING_DATE}}/g, this.employees.joiningDate);
-  html = html.replace(/{{DESIGNATION}}/g, this.getDesignationName(this.employees.designation));
-  html = html.replace(/{{SALARY}}/g, this.roundToLPA(this.employees.salary * 12));
-
-  html = html.replace(/{{COMPANY_NAME}}/g, this.companySettings.companyName || '');
-  html = html.replace(/{{HR_EMAIL}}/g, this.companySettings.hrEmail || '');
-  html = html.replace(/{{ACCOUNT_EMAIL}}/g, this.companySettings.accountEmail || '');
-  html = html.replace(/{{COMPANY_PHONE}}/g, this.companySettings.companyPhone || '');
-  html = html.replace(/{{COMPANY_ADDRESS}}/g, this.companySettings.companyAddress || '');
-  html = html.replace(/{{COMPANY_CITY}}/g, this.companySettings.companyCity || '');
-  html = html.replace(/{{COMPANY_STATE}}/g, this.companySettings.companyState || '');
-  html = html.replace(/{{COMPANY_PINCODE}}/g, this.companySettings.companyPincode || '');
-  html = html.replace(/{{COMPANY_WEBSITE}}/g, this.companySettings.companyWebsite || '');
-
-  // this.offerLetterHtml = html;
-  this.offerLetterHtml = this.sanitizer.bypassSecurityTrustHtml(html);
-
-  console.log('Prepared Offer Letter HTML:', this.offerLetterHtml);
-  }
   getEmployeeById(id: string) {
     this.employeesService.getEmployeeById(id).subscribe(res => {
       this.employees = res;
-      this.prepareOfferLetterHtml(); // 🔥 AUTO FILL HERE
+      this.prepareOfferLetterHtml(); 
     });
   }
 

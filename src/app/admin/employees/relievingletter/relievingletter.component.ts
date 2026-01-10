@@ -152,7 +152,7 @@ relievingLetterContent: string;
     );
   }
 
-  prepareRelievingLetterHtml() {
+prepareRelievingLetterHtml() {
   if (!this.relievingLetterContent || !this.employees) return;
 
   let html = this.relievingLetterContent;
@@ -161,28 +161,37 @@ relievingLetterContent: string;
     ? 'https://' + this.companySettings.companyLogo
     : '';
 
-  html = html.replace(/{{COMPANY_LOGO}}/g,
-    logoUrl
-      ? `<img src="${logoUrl}" style="max-height:80px;max-width:200px;object-fit:contain;" />`
-      : ''
-  );
+  const logoHtml = logoUrl
+    ? `<img src="${logoUrl}"
+             style="max-height:80px;max-width:200px;object-fit:contain;" />`
+    : '';
 
-  html = html.replace(/{{EMPLOYEE_NAME}}/g, this.employees.employeeName);
-  html = html.replace(/{{EMPLOYEE_CITY}}/g, this.employees.employeeCity);
-  html = html.replace(/{{DESIGNATION}}/g, this.getDesignationName(this.employees.designation));
-  html = html.replace(/{{JOINING_DATE}}/g, this.employees.joiningDate);
-  html = html.replace(
-    /{{RELIEVING_DATE}}/g,
-    this.employees.resignedDate || this.employees.terminationDate
-  );
-  html = html.replace(/{{EMPLOYEE_CITY}}/g, this.employees.employeeCity);
-  html = html.replace(/{{CREATED_BY}}/g, this.employees.createdBy);
-  html = html.replace(/{{COMPANY_NAME}}/g, this.companySettings.companyName || '');
-  html = html.replace(/{{COMPANY_PHONE}}/g, this.companySettings.companyPhone || '');
-  html = html.replace(/{{COMPANY_ADDRESS}}/g, this.companySettings.companyAddress || '');
-  html = html.replace(/{{COMPANY_CITY}}/g, this.companySettings.companyCity || '');
-  html = html.replace(/{{COMPANY_STATE}}/g, this.companySettings.companyState || '');
-  html = html.replace(/{{COMPANY_PINCODE}}/g, this.companySettings.companyPincode || '');
+  // ALL PLACEHOLDERS IN ONE OBJECT
+  const replacements: { [key: string]: any } = {
+    '{{COMPANY_LOGO}}': logoHtml,
+
+    '{{EMPLOYEE_NAME}}': this.employees.employeeName,
+    '{{EMPLOYEE_CITY}}': this.employees.employeeCity,
+    '{{DESIGNATION}}': this.getDesignationName(this.employees.designation),
+    '{{JOINING_DATE}}': this.employees.joiningDate,
+    '{{RELIEVING_DATE}}':
+      this.employees.resignedDate || this.employees.terminationDate,
+    '{{CREATED_BY}}': this.employees.createdBy,
+
+    '{{COMPANY_NAME}}': this.companySettings.companyName || '',
+    '{{COMPANY_PHONE}}': this.companySettings.companyPhone || '',
+    '{{COMPANY_ADDRESS}}': this.companySettings.companyAddress || '',
+    '{{COMPANY_CITY}}': this.companySettings.companyCity || '',
+    '{{COMPANY_STATE}}': this.companySettings.companyState || '',
+    '{{COMPANY_PINCODE}}': this.companySettings.companyPincode || ''
+  };
+
+  // SINGLE LOOP FOR ALL REPLACEMENTS
+  Object.keys(replacements).forEach(key => {
+    const value = replacements[key] ?? '';
+    html = html.replace(new RegExp(key, 'g'), value);
+  });
+
   this.relievingLetterHtml = this.sanitizer.bypassSecurityTrustHtml(html);
   console.log('Prepared Relieving Letter HTML:', this.relievingLetterHtml);
 }
@@ -193,7 +202,7 @@ getEmployeeById(id: string) {
       this.employees = response;
       this.apiLoading = false;
 
-      // 🔥 THIS LINE WAS MISSING
+      // THIS LINE WAS MISSING
       this.prepareRelievingLetterHtml();
     },
     (error) => {

@@ -8,7 +8,6 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ActivatedRoute } from '@angular/router';
 import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter';
 import { ToastService } from 'src/app/services/toast.service';
-// import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Style from '@ckeditor/ckeditor5-style/src/style';
 @Component({
   selector: 'app-customtemplate',
@@ -28,129 +27,6 @@ public Editor = DecoupledEditor;
   templateName: string = '';
   selectedTemplateType: string = '';
   offerLetterHtml: string = '';
-//   editorConfig = {
-//   // extraPlugins: [ Base64UploadAdapter ],
-  
-//   toolbar: {
-    
-//     items: [
-//       'heading',
-//       '|',
-//       'fontfamily',
-//       'fontsize',
-//       'fontColor',
-//       'fontBackgroundColor',
-//       'bold',
-//       'italic',
-//       'underline',
-//       'strikethrough',
-//       '|',
-//       'alignment',
-//       'bulletedList',
-//       'numberedList',
-//       '|',
-//       'insertTable',
-//       // 'imageUpload',
-//       'link',
-//       '|',
-//       'undo',
-//       'redo'
-//     ]
-//   },
-//   image: {
-//     toolbar: [
-//       'imageStyle:alignLeft',
-//       'imageStyle:full',
-//       'imageStyle:alignRight',
-//       '|',
-//       'imageTextAlternative'
-//     ]
-//   },
-//   table: {
-//     contentToolbar: [
-//       'tableColumn',
-//       'tableRow',
-//       'mergeTableCells'
-//     ]
-//   }
-// };
-
-// editorConfig: any = {
-//   toolbar: {
-//     items: [
-//       'heading',
-//       '|',
-//       'fontfamily',
-//       'fontsize',
-//       '|',
-//       'fontColor',
-//       'fontBackgroundColor',
-//       'bold',
-//       'italic',
-//       'underline',
-//       'strikethrough',
-//       '|',
-//       'alignment',
-//       'bulletedList',
-//       'numberedList',
-//       '|',
-//       'insertTable',
-//       'link',
-//       '|',
-//       'undo',
-//       'redo'
-//     ]
-//   },
-
-//   fontSize: {
-//     options: [
-//       10,
-//       11,
-//       12,
-//       13,
-//       'default',
-//       14,
-//       16,
-//       18,
-//       20,
-//       22,
-//       24,
-//       28,
-//       32,
-//       36
-//     ],
-//     supportAllValues: false
-//   },
-
-//   fontFamily: {
-//     options: [
-//       'default',
-//       'Arial, Helvetica, sans-serif',
-//       'Times New Roman, Times, serif',
-//       'Calibri, sans-serif',
-//       'Georgia, serif',
-//       'Courier New, Courier, monospace'
-//     ]
-//   },
-
-//   image: {
-//     toolbar: [
-//       'imageStyle:alignLeft',
-//       'imageStyle:full',
-//       'imageStyle:alignRight',
-//       '|',
-//       'imageTextAlternative'
-//     ]
-//   },
-
-//   table: {
-//     contentToolbar: [
-//       'tableColumn',
-//       'tableRow',
-//       'mergeTableCells'
-//     ]
-//   }
-// };
 
 editorConfig: any = {
   toolbar: {
@@ -250,50 +126,6 @@ editorConfig: any = {
   }
 };
 
-//   editorConfig: any = {
-//   toolbar: {
-//     items: [
-//       'heading',
-//       '|',
-//       'fontfamily',
-//       'fontsize',
-//       'fontColor',
-//       'fontBackgroundColor',
-//       'bold',
-//       'italic',
-//       'underline',
-//       'strikethrough',
-//       '|',
-//       'alignment',
-//       'bulletedList',
-//       'numberedList',
-//       '|',
-//       'insertTable',
-//       'link',
-//       '|',
-//       'undo',
-//       'redo'
-//     ]
-//   },
-//   image: {
-//     toolbar: [
-//       'imageStyle:alignLeft',
-//       'imageStyle:full',
-//       'imageStyle:alignRight',
-//       '|',
-//       'imageTextAlternative'
-//     ]
-//   },
-//   table: {
-//     contentToolbar: [
-//       'tableColumn',
-//       'tableRow',
-//       'mergeTableCells'
-//     ]
-//   }
-// };
-
-
 templateId: number | null = null;
 
  constructor(
@@ -304,11 +136,6 @@ templateId: number | null = null;
 
   ){}
 
-//   ngOnInit() {
-//   this.employeesService.getTemplateTypes().subscribe((res: any[]) => {
-//       this.templateTypes = res;
-//     });
-// }
 ngOnInit() {
   this.employeesService.getTemplateTypes().subscribe({
     next: (res: any) => {
@@ -333,14 +160,6 @@ ngOnInit() {
   });
 }
 
-//   saveTemplate() {
-//   this.employeesService.saveOfferTemplate({
-//     employeeId: this.employeeId,
-//     html: this.offerLetterHtml,
-//     templateType: this.selectedTemplateType,
-//     templateName: this.templateName,
-//   }).subscribe();
-// }
 
 saveTemplate() {
   if (!this.templateName || !this.selectedTemplateType) {
@@ -394,25 +213,6 @@ saveTemplate() {
   }
 }
 
-// saveTemplate() {
-//   if (this.templateId) {
-//     this.employeesService.updateTemplate(this.templateId, {
-//       templateName: this.templateName,
-//       templateType: this.selectedTemplateType,
-//       html: this.offerLetterHtml
-//     }).subscribe();
-//   } else {
-//     this.employeesService.saveOfferTemplate({
-//       templateName: this.templateName,
-//       templateType: this.selectedTemplateType,
-//       html: this.offerLetterHtml
-//     }).subscribe();
-//   }
-// }
-
-// onEditorChange(event: any) {
-//   this.offerLetterHtml = event.editor.getData();
-// }
 @ViewChild('toolbar', { static: true }) toolbarContainer: ElementRef;
 onEditorReady(editor: any) {
   this.toolbarContainer.nativeElement.appendChild(
