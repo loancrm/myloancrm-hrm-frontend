@@ -20,9 +20,6 @@
     </div>
   </div>
 </div>
-<!-- <div *ngIf="loading">
-  <app-preloader></app-preloader>
-</div> -->
 
 <div class="p-3">
   <div style="background-color: #ffffff;" class="row p-3">
@@ -50,6 +47,18 @@
       optionValue="name"
       [(ngModel)]="selectedTemplateType"
       placeholder="Select Template Type">
+    </p-dropdown>
+  </div>
+  <div class="col-md-4 mt-1 mb-1 no-padding-small">
+    <label style="font-weight: bold;">Insert Variable</label>
+    <p-dropdown
+      styleClass="text-left"
+      [style]="{ width: '100%' }"
+      [options]="templateVariables"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Select Variable"
+      (onChange)="insertVariable($event.value)">
     </p-dropdown>
   </div>
 </div>

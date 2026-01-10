@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter';
 import { ToastService } from 'src/app/services/toast.service';
 import Style from '@ckeditor/ckeditor5-style/src/style';
+import { last } from 'rxjs';
 @Component({
   selector: 'app-customtemplate',
   templateUrl: './customtemplate.component.html',
@@ -128,6 +129,35 @@ editorConfig: any = {
 
 templateId: number | null = null;
 
+templateVariables = [
+  { label: 'Account Email: {{ACCOUNT_EMAIL}}', value: '{{ACCOUNT_EMAIL}}' },
+  { label: 'Company Logo: {{COMPANY_LOGO}}', value: '{{COMPANY_LOGO}}' },
+  { label: 'Company Name: {{COMPANY_NAME}}', value: '{{COMPANY_NAME}}' },
+  { label: 'Company Phone: {{COMPANY_PHONE}}', value: '{{COMPANY_PHONE}}' },
+  { label: 'Company Address: {{COMPANY_ADDRESS}}', value: '{{COMPANY_ADDRESS}}' },
+  { label: 'Company City: {{COMPANY_CITY}}', value: '{{COMPANY_CITY}}' },
+  { label: 'Company State: {{COMPANY_STATE}}', value: '{{COMPANY_STATE}}' },
+  { label: 'Company Pincode: {{COMPANY_PINCODE}}', value: '{{COMPANY_PINCODE}}' },
+  { label: 'Company Website: {{COMPANY_WEBSITE}}', value: '{{COMPANY_WEBSITE}}' },
+  { label: 'Created By: {{CREATED_BY}}', value: '{{CREATED_BY}}' },
+  { label: 'Designation: {{DESIGNATION}}', value: '{{DESIGNATION}}' },
+  { label: 'Employee Name: {{EMPLOYEE_NAME}}', value: '{{EMPLOYEE_NAME}}' },
+  { label: 'Employee City: {{EMPLOYEE_CITY}}', value: '{{EMPLOYEE_CITY}}' },
+  { label: 'Employee District: {{EMPLOYEE_DISTRICT}}', value: '{{EMPLOYEE_DISTRICT}}' },
+  { label: 'Employee State: {{EMPLOYEE_STATE}}', value: '{{EMPLOYEE_STATE}}' },
+  { label: 'Effective Date: {{EFFECTIVE_DATE}}', value: '{{EFFECTIVE_DATE}}' },
+  { label: 'HR Email: {{HR_EMAIL}}', value: '{{HR_EMAIL}}' },
+  { label: 'Hike Date: {{HIKE_DATE}}', value: '{{HIKE_DATE}}' },
+  { label: 'Joining Date: {{JOINING_DATE}}', value: '{{JOINING_DATE}}' },
+  { label: 'Relieving Date: {{RELIEVING_DATE}}', value: '{{RELIEVING_DATE}}' },
+  { label: 'Salary: {{SALARY}}', value: '{{SALARY}}' }, 
+  { label: 'Total Salary: {{TOTAL_SALARY}}', value: '{{TOTAL_SALARY}}' },
+  { label: 'Total Hike Percentage: {{TOTAL_HIKEPERCENTAGE}}', value: '{{TOTAL_HIKEPERCENTAGE}}' }
+];
+
+editorInstance: any;
+
+
  constructor(
     private location: Location,
     private employeesService: EmployeesService,
@@ -214,12 +244,32 @@ saveTemplate() {
 }
 
 @ViewChild('toolbar', { static: true }) toolbarContainer: ElementRef;
-onEditorReady(editor: any) {
+// onEditorReady(editor: any) {
+//   this.toolbarContainer.nativeElement.appendChild(
+//     editor.ui.view.toolbar.element
+//   );
+// }
+goBack() {
+    this.location.back();
+  }
+
+  onEditorReady(editor: any) {
+  this.editorInstance = editor;
+
   this.toolbarContainer.nativeElement.appendChild(
     editor.ui.view.toolbar.element
   );
 }
-goBack() {
-    this.location.back();
-  }
+insertVariable(variable: string) {
+  if (!this.editorInstance) return;
+
+  this.editorInstance.model.change((writer: any) => {
+    const insertPosition =
+      this.editorInstance.model.document.selection.getFirstPosition();
+
+    writer.insertText(variable, insertPosition);
+  });
+}
+
+
 }

@@ -262,7 +262,7 @@
         <th pSortableColumn="createdOn" class="text-nowrap">
           Created Date <p-sortIcon field="createdOn"></p-sortIcon>
         </th>
-        <th *ngIf="capabilities.adminSalaryHikes" class="text-nowrap">
+        <th class="text-nowrap">
           Hike Letter
         </th>
         <th pSortableColumn="hikeInternalStatus" class="text-nowrap">
@@ -364,7 +364,7 @@
             >{{ salaryHike.createdOn | date : "mediumDate" }}</span
           >
         </td>
-        <td *ngIf="capabilities.adminSalaryHikes">
+        <td>
           <div class="text-center">
             <div class="d-flex">
               <button
