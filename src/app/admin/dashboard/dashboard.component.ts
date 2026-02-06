@@ -572,7 +572,8 @@ export class DashboardComponent implements OnInit {
   updateCountsAnalytics() {
     this.countsAnalytics = [
       {
-        name: 'employees',
+        name: 'user-check',
+        cardImages:'employee',
         displayName: 'Active Employees',
         count: this.totalEmployeesCount,
         routerLink: 'employees',
@@ -590,7 +591,7 @@ export class DashboardComponent implements OnInit {
         isLoading: true,
       },
       {
-        name: 'interviews',
+        name: 'briefcase-business',
         displayName: 'Upcoming Interviews',
         count: this.totalInterviewsCount,
         routerLink: 'interviews',
@@ -598,7 +599,7 @@ export class DashboardComponent implements OnInit {
         isLoading: true,
       },
       {
-        name: 'attendance',
+        name: 'calendar-check-2',
         displayName: this.capabilities.employee
           ? 'Attendance'
           : 'Today Attendance',
@@ -611,7 +612,7 @@ export class DashboardComponent implements OnInit {
         isLoading: true,
       },
       {
-        name: 'payroll',
+        name: 'wallet',
         displayName: this.capabilities.employee
           ? 'Payroll'
           : 'Last Month Payroll',
@@ -622,7 +623,7 @@ export class DashboardComponent implements OnInit {
         isLoading: true,
       },
       {
-        name: 'leaves',
+        name: 'calendar-clock',
         displayName: this.capabilities.employee ? 'Leaves' : 'Pending Leaves',
         count: this.totalLeavesCount,
         routerLink: 'leaves',
@@ -631,7 +632,7 @@ export class DashboardComponent implements OnInit {
         isLoading: true,
       },
       {
-        name: 'holidays',
+        name: 'cable-car',
         displayName: `${new Date().getFullYear()} Holidays`, // Dynamically set based on current year
         count: this.totalHolidaysCount,
         routerLink: 'holidays',
@@ -639,7 +640,7 @@ export class DashboardComponent implements OnInit {
         isLoading: true,
       },
       {
-        name: 'incentives',
+        name: 'gift',
         displayName: 'Incentives',
         count: this.incentivesCount,
         routerLink: 'incentives',
@@ -649,7 +650,7 @@ export class DashboardComponent implements OnInit {
         isLoading: true,
       },
       {
-        name: 'departments',
+        name: 'landmark',
         displayName: 'Departments',
         count: this.designationsCount,
         routerLink: 'designations',
@@ -657,7 +658,7 @@ export class DashboardComponent implements OnInit {
         isLoading: true,
       },
       {
-        name: 'salaryhike',
+        name: 'shield-user',
         displayName: 'Salary Hikes',
         condition: this.capabilities.employeeSalaryHikes,
         routerLink: 'salaryhikes',
@@ -671,7 +672,7 @@ export class DashboardComponent implements OnInit {
       //   condition: true,
       // },
       {
-        name: 'users',
+        name: 'shield-user',
         displayName: 'Users',
         count: this.totalUsersCount,
         routerLink: 'users',
@@ -691,6 +692,58 @@ export class DashboardComponent implements OnInit {
       // },
     ];
   }
+  
+
+ cardStyles = [
+  { bg: 'linear-gradient(108.85deg, #a0ceec -2.78%, #B3E0FE 101.22%)', border: '#B9DCF8' },
+  { bg: 'linear-gradient(108deg, #a4f6f0 -3.58%, #90e4c7b4 70.94%)', border: '#B0E2D2' },
+  { bg: 'linear-gradient(107.92deg, #F5F1F8 -4.26%, #E6C0FF 99.87%)', border: '#E1BCF9' },//up coming Interviews
+  { bg: 'linear-gradient(107.41deg, #95aaef 10.56%, #7aa3fccc 60.06%)', border: '#B6BBC5' },//Today Attendance
+  { bg: 'linear-gradient(107.67deg, #f1e2a4 -2.41%, #FFECA6 98.62%)', border: '#F5DEBB' },
+  { bg: 'linear-gradient(107.9deg, #a5d28a -6.06%, #a8f772 98.28%)', border: '#CBEDBA' },
+  { bg: 'linear-gradient(107deg, #ecbfd1 -6.06%, #f48da79b 60.28%)',border: '#FF8FA3' },
+  { bg: 'linear-gradient(107deg, #90f2ba -2.41%, #38ec92 98.50%)', border: '#34D399' },
+  { bg: 'linear-gradient(107.92deg, #e8f093 -3.58%, #ebed7a 100%)', border: '#fcff39' }
+];
+
+
+
+iconColors = [
+  '#7dbce5',
+  '#90e4c7b4',
+  '#c785f3',//up coming Interviews
+  '#3a72ebcc',//Today Attendance
+  '#f3c41d',
+  '#79f428',
+  '#f9698d9b',
+  '#07e375',
+  '#d0d303'
+];
+
+iconbackgroundColors = [
+  '#d5e8f5',
+  '#a4f6f0',
+  '#f5e1f8',//up coming Interviews
+  '#95aaef',//Today Attendance
+  '#f1e2a4',
+  '#bee3a6',
+  '#ecbfd1',
+  '#90f2ba',
+  '#e8f093'
+]
+// iconFilters = [
+//   'invert(37%) sepia(91%) saturate(749%) hue-rotate(185deg) brightness(92%) contrast(96%)',
+//   'invert(45%) sepia(73%) saturate(412%) hue-rotate(122deg) brightness(90%) contrast(94%)',
+//   'invert(32%) sepia(61%) saturate(623%) hue-rotate(250deg) brightness(90%) contrast(97%)',
+//   'invert(27%) sepia(58%) saturate(505%) hue-rotate(200deg) brightness(92%) contrast(95%)',
+//   'invert(68%) sepia(88%) saturate(415%) hue-rotate(360deg) brightness(95%) contrast(90%)',
+//   'invert(56%) sepia(79%) saturate(365%) hue-rotate(85deg) brightness(93%) contrast(91%)',
+//   'invert(40%) sepia(51%) saturate(505%) hue-rotate(210deg) brightness(96%) contrast(93%)',
+//   'invert(45%) sepia(62%) saturate(521%) hue-rotate(330deg) brightness(95%) contrast(92%)',
+//   'invert(41%) sepia(72%) saturate(401%) hue-rotate(145deg) brightness(94%) contrast(92%)'
+// ];
+
+
 
   // updateCountsAnalytics() {
   //   const isEmployee = this.capabilities?.employee;
@@ -1145,94 +1198,206 @@ export class DashboardComponent implements OnInit {
     return this.branchCounts.every((branch: any) => branch.count === 0);
   }
   setChartOptions() {
+    // this.DepartmentChartOptions = {
+    //   series: [
+    //     {
+    //       name: 'Inside Sales',
+    //       data: [this.designationCounts[0] || 0],
+    //     },
+    //     {
+    //       name: 'Operations Team',
+    //       data: [this.designationCounts[1] || 0],
+    //     },
+    //     {
+    //       name: 'Human Resource',
+    //       data: [this.designationCounts[2] || 0],
+    //     },
+    //     {
+    //       name: 'Information Technology',
+    //       data: [this.designationCounts[3] || 0],
+    //     },
+    //   ],
+    //   chart: {
+    //     height: 400,
+    //     type: 'bar',
+    //     toolbar: {
+    //       show: true,
+    //     },
+    //   },
+    //   plotOptions: {
+    //     bar: {
+    //       columnWidth: '10%', // desktop default
+    //       distributed: true
+    //     },
+    //   },
+    //   responsive: [
+    //     {
+    //       breakpoint: 992,
+    //       options: {
+    //         plotOptions: {
+    //           bar: {
+    //             columnWidth: '12%',
+    //           },
+    //         },
+    //       },
+    //     },
+    //     {
+    //       breakpoint: 576,
+    //       options: {
+    //         plotOptions: {
+    //           bar: {
+    //             columnWidth: '6%',
+    //           },
+    //         },
+    //       },
+    //     },
+    //   ],
+
+
+
+    //   // colors: [
+    //   //   '#640D5F',
+    //   //   '#31425E',
+    //   //   '#415A77',
+    //   //   '#1E212B',
+    //   //   '#3D5A80',
+    //   //   '#293241',
+    //   // ],
+    //   // colors: ['#ABA5DC', '#8E89D0', '#706EC4', '#535AB4'],
+    //   // colors: ['#18BADD', '#3039A1', ],
+    //   colors: [
+    //     '#B3E0FE',
+    //     '#f9698d9b',
+    //     '#3a72ebcc',
+    //     '#f59e0b',
+    //     '#FFECA6',
+    //     '#98f05e',
+    //   ],
+    //   dataLabels: {
+    //     enabled: true,
+    //     style: {
+    //       fontSize: '10px',
+    //     },
+    //   },
+    //   stroke: {
+    //     width: 2,
+    //     colors: ['#fff'],
+    //   },
+    //   title: {
+    //     text: 'Departments Analytics',
+    //     align: 'left',
+    //     style: {
+    //       fontSize: '22px',
+    //       color: '#333333',
+    //       fontWeight: '500'
+    //     },
+    //   },
+    //   grid: {
+    //     borderColor: '#e7e7e7',
+    //     row: {
+    //       colors: ['#f3f3f3', 'transparent'],
+    //       opacity: 0.5,
+    //     },
+    //   },
+    //   markers: {
+    //     size: 4,
+    //   },
+    //   xaxis: {
+    //     categories: ['Departments'],
+    //     // title: {
+    //     //   text: 'Departments',
+    //     // },
+    //   },
+    //   yaxis: {
+    //     title: {
+    //       text: 'Count',
+    //     },
+    //   },
+    //   // legend: {
+    //   //   position: 'top',
+    //   //   horizontalAlign: 'right',
+    //   //   floating: true,
+    //   //   offsetY: -20,
+    //   //   offsetX: -5,
+    //   // },
+    //   legend: {
+    //     // position: 'top',
+    //     // horizontalAlign: 'center',
+    //     position: 'bottom',
+    //     horizontalAlign: 'center'
+    //   },
+    // };
     this.DepartmentChartOptions = {
-      series: [
-        {
-          name: 'Inside Sales',
-          data: [this.designationCounts[0] || 0],
-        },
-        {
-          name: 'Operations Team',
-          data: [this.designationCounts[1] || 0],
-        },
-        {
-          name: 'Human Resource',
-          data: [this.designationCounts[2] || 0],
-        },
-        {
-          name: 'Information Technology',
-          data: [this.designationCounts[3] || 0],
-        },
-      ],
-      chart: {
-        height: 400,
-        type: 'bar',
-        toolbar: {
-          show: true,
-        },
-      },
-      // colors: [
-      //   '#640D5F',
-      //   '#31425E',
-      //   '#415A77',
-      //   '#1E212B',
-      //   '#3D5A80',
-      //   '#293241',
-      // ],
-      colors: ['#ABA5DC', '#8E89D0', '#706EC4', '#535AB4'],
-      // colors: ['#18BADD', '#3039A1', ],
-      dataLabels: {
-        enabled: true,
-        style: {
-          fontSize: '12px',
-        },
-      },
-      stroke: {
-        width: 2,
-        colors: ['#fff'],
-      },
-      title: {
-        text: 'Departments Analytics',
-        align: 'left',
-        style: {
-          fontSize: '20px',
-          color: '#333333',
-          fontWeight: '500'
-        },
-      },
-      grid: {
-        borderColor: '#e7e7e7',
-        row: {
-          colors: ['#f3f3f3', 'transparent'],
-          opacity: 0.5,
-        },
-      },
-      markers: {
-        size: 4,
-      },
-      xaxis: {
-        categories: ['Departments'],
-        // title: {
-        //   text: 'Departments',
-        // },
-      },
-      yaxis: {
-        title: {
-          text: 'Count',
-        },
-      },
-      // legend: {
-      //   position: 'top',
-      //   horizontalAlign: 'right',
-      //   floating: true,
-      //   offsetY: -20,
-      //   offsetX: -5,
-      // },
-      legend: {
-        position: 'top',
-        horizontalAlign: 'center',
-      },
-    };
+  series: [
+    { name: 'Inside Sales', data: [this.designationCounts[0] || 0] },
+    { name: 'Operations Team', data: [this.designationCounts[1] || 0] },
+    { name: 'Human Resource', data: [this.designationCounts[2] || 0] },
+    { name: 'Information Technology', data: [this.designationCounts[3] || 0] },
+  ],
+
+  chart: {
+    height: 400,
+    type: 'bar',
+    toolbar: { show: true },
+  },
+
+  plotOptions: {
+    bar: {
+      distributed: true,
+      columnWidth: '10%',     // ✅ small bars on ALL screens
+      borderRadius: 6,        // ✅ rounded corners
+      borderRadiusApplication: 'end',
+      endingShape: 'rounded',
+      
+    },
+  },
+
+  colors: [
+    '#B3E0FE',
+    '#f9698d9b',
+    '#3a72ebcc',
+    '#f59e0b',
+  ],
+
+  dataLabels: {
+    enabled: true,
+    style: { fontSize: '10px' },
+  },
+
+  stroke: {
+    width: 1,
+    colors: ['#fff'],
+  },
+
+  title: {
+    text: 'Departments Analytics',
+    align: 'left',
+    style: {
+      fontSize: '22px',
+      color: '#333',
+      fontWeight: '500',
+    },
+  },
+
+  grid: {
+    borderColor: '#e7e7e7',
+    padding: { left: 10, right: 10 }, // ✅ keeps spacing clean
+  },
+
+  xaxis: {
+    categories: ['Departments'],
+  },
+
+  yaxis: {
+    title: { text: 'Count' },
+  },
+
+  legend: {
+    position: 'bottom',
+    horizontalAlign: 'center',
+  },
+};
+
     this.pieChartOptions = {
       series: [this.maleCount || 0, this.femaleCount || 0],
       labels: ['Male', 'Female'],
@@ -1241,7 +1406,7 @@ export class DashboardComponent implements OnInit {
         type: 'pie',
         toolbar: { show: true },
       },
-      colors: ['#ABA5DC', '#8E89D0'],
+      colors: ['#E6C0FF', '#8ec7ed'],
       title: {
         text: 'Employee Structure',
         align: 'left',

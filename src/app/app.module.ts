@@ -19,7 +19,7 @@ import { NotFoundModule } from "./not-found/not-found.module";
 import { HomeModule } from "./home/home.module";
 import { SsoAuthComponent } from './sso-auth/sso-auth.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-
+import { LucideAngularModule, UserCheck, BriefcaseBusiness, CalendarCheck2, Wallet, CalendarClock, CableCar, Gift, Landmark, ShieldUser } from 'lucide-angular';
 export function tokenGetter() {
   return localStorage.getItem("access_token");
 }
@@ -36,6 +36,17 @@ export function tokenGetter() {
     NotFoundModule,
     HomeModule,
     CKEditorModule,
+    LucideAngularModule.pick({
+      UserCheck,
+      BriefcaseBusiness,
+      CalendarCheck2,
+      Wallet,
+      CalendarClock,
+      CableCar,
+      Gift,
+      Landmark,
+      ShieldUser
+    }),
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter

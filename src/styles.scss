@@ -2,8 +2,9 @@
 // @import url("https://fonts.googleapis.com/css2?family=Figtree&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 *:not(.pi, .fas, .fa, .mat-icon) {
-  font-family: "inter", sans-serif !important;
+  font-family: "Open Sans", "Inter", sans-serif !important;
   line-height: 1.43;
   letter-spacing: 0.2px !important;
 }
@@ -12,7 +13,7 @@ html,
 body {
   height: 100%;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: 'Open Sans', Roboto, "Helvetica Neue", sans-serif;
 }
 .card {
   border: none;
@@ -81,7 +82,7 @@ body {
 
 .heading-card {
   // background-color: #C7C2E8 !important;
-  color: #333333 !important;
+  color: #bee3a6 !important;
   border-radius: 8px !important;
   border: none !important;
 }
@@ -131,12 +132,13 @@ body {
 }
 
 .p-menu .p-menuitem-text {
-  color: #535ab4 !important;
+  // color: #535ab4 !important;
+  color: #f537679b !important;
   font-weight: bold;
 }
 .p-datatable .p-datatable-thead > tr > th {
-  background-color: #edf3ff !important;
-  color: #2e2e2e !important;
+  background-color: #CDEBFF !important;
+  color: #000000 !important;
   text-align: left !important;
 }
 .p-inputgroup-addon,

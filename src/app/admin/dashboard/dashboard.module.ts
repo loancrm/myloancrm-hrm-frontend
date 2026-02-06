@@ -10,7 +10,7 @@ import { DashboardComponent } from './dashboard.component';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { ApexChartsModule } from '../apex-charts/apex-charts.module';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
-
+import { LucideAngularModule, UserCheck, BriefcaseBusiness, CalendarCheck2, Wallet, CalendarClock, CableCar, Gift, Landmark, ShieldUser } from 'lucide-angular';
 const routes: Routes = [{ path: '', component: DashboardComponent }];
 
 @NgModule({
@@ -26,6 +26,17 @@ const routes: Routes = [{ path: '', component: DashboardComponent }];
     PreloaderModule,
     ApexChartsModule,
     CapitalizeFirstPipe,
+    LucideAngularModule.pick({
+      UserCheck,
+      BriefcaseBusiness,
+      CalendarCheck2,
+      Wallet,
+      CalendarClock,
+      CableCar,
+      Gift,
+      Landmark,
+      ShieldUser
+    })
   ],
 })
 export class DashboardModule {}

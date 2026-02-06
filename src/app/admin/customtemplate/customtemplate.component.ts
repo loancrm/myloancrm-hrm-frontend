@@ -270,6 +270,4 @@ insertVariable(variable: string) {
     writer.insertText(variable, insertPosition);
   });
 }
-
-
 }

@@ -45,7 +45,12 @@
 .hide-on-desktop {
   display: none !important;
 }
-
+.desktop-only{
+  // background-color: white;
+  height: auto;
+  padding: 1px;
+  border-radius: 10px;
+}
 @media (max-width: 767px) {
   .mobile-only {
     display: flex !important;
@@ -67,10 +72,10 @@
   }
 }
 
-.header-card {
-  border: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
-}
+// .header-card {
+//   border: none;
+//   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
+// }
 .label {
   font-size: 14px;
 }
@@ -98,12 +103,16 @@
   position: relative;
   display: inline-block;
   cursor: pointer;
+  margin-top: 20px !important;
 }
 
 .icon-container .alerticon {
   width: 35px;
   color: #333;
 }
+// .alerticon{
+//   margin-top: 10px;
+// }
 .icon-container .badge {
   position: absolute;
   top: -5px;
