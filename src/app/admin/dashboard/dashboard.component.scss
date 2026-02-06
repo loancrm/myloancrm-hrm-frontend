@@ -6,7 +6,6 @@
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 10px;
-  background: linear-gradient(135deg, #f5f7ff 70%, #94edae 8%, #77f9f5c3 40%);
 }
 .card-content {
   color: #878784;
@@ -25,14 +24,14 @@
   border: 1px solid #e4e4e7;
 }
 .count-title {
-  font-size: 28px !important;
-  font-weight: 500 !important;
+  font-size: 25px !important;
+  font-weight: bold !important;
   color: #333333;
 }
 .count-sub-title {
-  font-size: 18px !important;
-  font-weight: bold !important;
-  color: #333333;
+  font-size: 12px !important;
+  // font-weight: bold !important;
+  color: #878784;
 }
 .count-sub-title-employee {
   font-size: 12px !important;
@@ -102,8 +101,7 @@
   border: 2px solid gray;
 }
 .cardkname {
-  height: 150px;
-  
+  height: 95px;
 }
 .custom-scroll-container {
   max-height: 330px;
@@ -178,7 +176,7 @@
   border-radius: 12px;
   color: #ffffff;
   cursor: pointer;
-  font-family: Open Sans, -apple-system, system-ui, "Segoe UI", Roboto, Helvetica, Arial,
+  font-family: -apple-system, system-ui, "Segoe UI", Roboto, Helvetica, Arial,
     sans-serif;
   font-size: 16px;
   font-weight: 600;
@@ -203,114 +201,4 @@
 }
 .loggedin-value {
   font-size: 30px;
-}
-.icon-bg-card {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Background icon */
-// .icon-bg-card::after {
-//   content: '';
-//   position: absolute;
-//   top: -10px;
-//   right: -10px;
-//   width: 120px;
-//   height: 120px;
-//   background-image: var(--icon-url);
-//   background-repeat: no-repeat;
-//   background-size: contain;
-//   opacity: 0.08;            /* light watermark */
-//   filter: grayscale(100%);
-//   pointer-events: none;
-// }
-.icon-bg-card::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: -20px;
-  transform: translateY(-50%);
-  width: 140px;
-  height: 140px;
-  background-image: var(--icon-url);
-  background-repeat: no-repeat;
-  background-size: contain;
-  opacity: 0.08;
-  filter: grayscale(100%);
-  pointer-events: none;
-  z-index: 0;
-}
-/* Keep content above background icon */
-.icon-bg-card > * {
-  position: relative;
-  z-index: 1;
-}
-
-.icon-circle {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  // background: #ffffff; /* IMPORTANT */
-}
-.leaveimage{
-  filter: brightness(0) saturate(100%) invert(56%) sepia(69%) saturate(6372%) hue-rotate(339deg) brightness(99%) contrast(88%);
-}
-
-.presentimage{
-  filter: brightness(0) saturate(100%) invert(71%) sepia(89%) saturate(445%) hue-rotate(55deg) brightness(101%) contrast(85%);
-}
-
-.lateloginimage{
-  filter: brightness(0) saturate(100%) invert(73%) sepia(60%) saturate(3631%) hue-rotate(343deg) brightness(106%) contrast(92%);
-}
-.halfdayimage{
-  filter: brightness(0) saturate(100%) invert(17%) sepia(75%) saturate(5602%) hue-rotate(235deg) brightness(100%) contrast(92%);
-}
-
-// .imagico{
-//   background-color: #f8f8fa !;
-// }
-
-
-.icon-bg-card {
-  position: relative;
-  overflow: hidden;
-}
-.icon-bg-card > div {
-  position: relative;
-  z-index: 2;
-}
-
-/* BACKGROUND ICON */
-.bg-lucide-icon {
-  position: absolute;
-  top: 10px;          /* 🔥 REMOVE TOP GAP */
-  right: 100px;
-  width: 140px !important;
-  height: 140px !important;
-  // display: block;      /* 🔥 VERY IMPORTANT */
-  line-height: 0;      /* 🔥 KILLS EXTRA SPACE */
-  color: #000 !important;
-  stroke-width: 1.5 !important;
-  opacity: 0.08 !important;
-  pointer-events: none;
-  z-index: 0;
-}
-/* 🔥 THIS increases the real icon, not the box */
-.bg-lucide-icon svg {
-  width: 100%;
-  height: 100%;
-  transform: scale(1.6);      /* 🔥 INCREASE ICON HERE */
-  transform-origin: center;
-}
-/* CARD CONTENT ON TOP */
-.card-content {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start; /* vertically center content */
 }

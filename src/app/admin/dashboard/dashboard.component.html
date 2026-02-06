@@ -5,7 +5,7 @@
 <div class="container-fluid mb-3" *ngIf="!loading">
   <div class="row">
     <div class="col-md-8 mt-3">
-      <!-- <div class="card welcome-card" *ngIf="userDetails">
+      <div class="card welcome-card" *ngIf="userDetails">
         <div class="d-flex justify-content-between align-items-center">
           <div class="card-content text-capitalize">
             <h4>
@@ -44,21 +44,20 @@
             />
           </div>
         </div>
-      </div> -->
+      </div>
       <div class="bg-color" *ngIf="!loading">
         <div class="row">
           <div class="d-flex flex-wrap justify-content-start">
             <ng-container *ngFor="let item of countsAnalytics; let i = index">
               <ng-container *ngIf="item.condition">
                 <div class="col-lg-4 col-md-6 col-sm-6 col-12 mt-2">
-                  <!-- <div
-                    class="card p-3 shadow-sm pointer-cursor m-2 cards cardkname icon-bg-card"
-                                        [ngStyle]="{
-                      'background': cardStyles[i % cardStyles.length].bg,
-                      'border': '1px solid ' + cardStyles[i % cardStyles.length].border,
-                      '--icon-url': 'url(assets/images/menu/' + item.name + '.svg)'
-                    }"
+                  <div
+                    class="card p-3 shadow-sm pointer-cursor m-2 cards cardkname"
                     (click)="goToRoute(item.routerLink)"
+                    [ngStyle]="{
+                      
+                      'border': '1px solid ' + cardStyles[i % cardStyles.length].border
+                    }"
                   >
                     <div class="d-flex justify-content-between">
                       <div class="d-flex align-items-center">
@@ -83,99 +82,39 @@
                           </div>
                         </div>
                       </div>
-                      <div class="image-container icon-circle" >
+                      <div class="image-container">
+                        <!-- <p-skeleton
+                          *ngIf="item.isLoading"
+                          width="35px"
+                          height="35px"
+                          shape="circle"
+                        ></p-skeleton>
+                        <img
+                          class="imagico"
+                          style="width: 40px"
+                          src="
+                            assets/images/menu/{{ item.name }}.svg
+                          "
+                          width="50"
+                          height="50"
+                          alt="{{ item.displayName }} icon"
+                          [hidden]="item.isLoading"
+                          (load)="onImageLoad(item)"
+                          (error)="onImageError(item)"
+                        /> -->
                         <lucide-icon
                           [name]="item.name"
-                          class="lucide-icon"
                           [ngStyle]="{ color: iconColors[i % iconColors.length] }"
                         ></lucide-icon>
                       </div>
                     </div>
-                  </div> -->
-                 <div
-                    class="card p-3 shadow-sm pointer-cursor m-2 cards cardkname icon-bg-card"
-                    [ngStyle]="{
-                      'background': cardStyles[i % cardStyles.length].bg,
-                      'border': '1px solid ' + cardStyles[i % cardStyles.length].border
-                    }"
-                  >
-                  <!-- 🔥 BACKGROUND ICON -->
-                  <ng-container>
-                    <span styles="height:500px; width:140px; position:absolute; top:-10px; right:-30px; display:block; line-height:0;">
-                      <lucide-icon
-                      [name]="item.name"
-                      class="bg-lucide-icon"
-                      size="60"
-                    ></lucide-icon>
-                    </span>
-                  </ng-container>
-                  <!-- 🔥 CARD CONTENT -->
-                  <div class="d-flex justify-content-between align-items-center h-100">
-                    <div style="position: relative; z-index: 2;">
-                      <div class="count-sub-title">{{ item.displayName | uppercase }}</div>
-                      <div class="count-title">{{ item.count }}</div>
-                    </div>
-
-                    <div class="icon-circle" [ngStyle]="{
-                      'background': iconbackgroundColors[i % iconbackgroundColors.length],
-                      'border': '1px solid ' + iconColors[i % iconColors.length]
-                    }">
-                      <lucide-icon
-                        [name]="item.name"
-                        [ngStyle]="{ color: iconColors[i % iconColors.length] }"
-                      ></lucide-icon>
-                    </div>
                   </div>
-                </div>
                 </div>
               </ng-container>
             </ng-container>
           </div>
         </div>
       </div>
-      <!-- <div class="bg-color" *ngIf="!loading">
-        <div class="row">
-          <div class="d-flex flex-wrap justify-content-start">
-            <ng-container *ngFor="let item of countsAnalytics; let i = index">
-              <ng-container *ngIf="item.condition">
-                <div class="col-lg-4 col-md-6 col-sm-6 col-12 mt-2">
-                  <div
-                    class="card p-3 shadow-sm pointer-cursor m-2 cards cardkname icon-bg-card"
-                    [ngStyle]="{
-                      'background': cardStyles[i % cardStyles.length].bg,
-                      'border': '1px solid ' + cardStyles[i % cardStyles.length].border
-                    }"
-                    (click)="goToRoute(item.routerLink)"
-                  >
-                    <lucide-icon
-                      class="bg-lucide-icon"
-                      [name]="item.name"
-                    ></lucide-icon>
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div>
-                        <div class="count-sub-title cardsdisplayname">
-                          {{ item.displayName | uppercase }}
-                        </div>
-                        <div class="count-title">
-                          {{ item.count }}
-                        </div>
-                      </div>
-                      <div class="icon-circle">
-                        <lucide-icon
-                          [name]="item.name"
-                          [ngStyle]="{ color: iconColors[i % iconColors.length] }"
-                        ></lucide-icon>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </ng-container>
-            </ng-container>
-          </div>
-        </div>
-      </div> -->
-
     </div>
     <div class="col-md-4 mt-3">
       <div class="card attendancecard" *ngIf="!capabilities.employee">
@@ -199,7 +138,7 @@
             <div class="info-line">
               <span class="text-success">
                 <!-- <i class="fas fa-check"></i> -->
-                <img src="../../../assets/images/presenthrmicon.svg" alt="Total Present" class="presentimage"/>
+                <img src="../../../assets/images/presenthrmicon.svg" alt="" />
               </span>
               <div class="label d-flex justify-content-between">
                 TOTAL PRESENT<b>:&nbsp;</b>
@@ -209,7 +148,7 @@
             <div class="info-line">
               <span class="text-danger">
                 <!-- <i class="fas fa-xmark"></i> -->
-                <img src="../../../assets/images/onleaveicon.svg" alt="on Leave" class="leaveimage"/>
+                <img src="../../../assets/images/onleaveicon.svg" alt="" />
               </span>
               <div class="label d-flex justify-content-between">
                 ON LEAVE<b>:&nbsp;</b>
@@ -221,7 +160,7 @@
             <div class="info-line">
               <span class="text-warning">
                 <!-- <i class="fas fa-circle-half-stroke"></i> -->
-                <img src="../../../assets/images/halfdayicon.svg" alt="Half Day" class="halfdayimage"/>
+                <img src="../../../assets/images/halfdayicon.svg" alt="" />
               </span>
               <div class="label d-flex justify-content-between">
                 HALF-DAY<b>:&nbsp;</b>
@@ -233,8 +172,7 @@
                 <!-- <i class="fas fa-circle-exclamation"></i> -->
                 <img
                   src="../../../assets/images/lateloginicon (2).svg"
-                  alt="Late Login"
-                  class="lateloginimage"
+                  alt=""
                 />
               </span>
               <div class="label d-flex justify-content-between">
@@ -547,7 +485,7 @@
     <div class="col-md-12 col-12">
       <div class="row mt-3">
         <ng-container>
-          <div class="col-md-6 col-12" *ngIf="DepartmentChartOptions">
+          <div class="col-md-4 col-12" *ngIf="DepartmentChartOptions">
             <br class="d-lg-none d-md-none" />
             <div class="card p-2 chart-container" style="height: 420px">
               <app-apex-charts
@@ -563,7 +501,7 @@
             </div>
           </div>
         </ng-container>
-        <div class="col-md-6 col-12" *ngIf="pieChartOptions">
+        <div class="col-md-4 col-12" *ngIf="pieChartOptions">
           <br class="d-lg-none d-md-none" />
           <div class="card p-2" style="height: 420px; position: relative">
             <div>
@@ -583,7 +521,7 @@
             </div>
           </div>
         </div>
-        <!-- <div class="col-md-4 col-12" *ngIf="branchpieChartOptions">
+        <div class="col-md-4 col-12" *ngIf="branchpieChartOptions">
           <br class="d-lg-none d-md-none" />
           <div class="card p-2" style="height: 420px; position: relative">
             <div>
@@ -602,7 +540,7 @@
               </div>
             </div>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
     <br />
