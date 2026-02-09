@@ -55,7 +55,7 @@
                     class="card p-3 shadow-sm pointer-cursor m-2 cards cardkname"
                     (click)="goToRoute(item.routerLink)"
                     [ngStyle]="{
-                      
+                      'background': cardStyles[i % cardStyles.length].bg,
                       'border': '1px solid ' + cardStyles[i % cardStyles.length].border
                     }"
                   >

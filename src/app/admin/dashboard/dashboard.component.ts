@@ -695,29 +695,30 @@ export class DashboardComponent implements OnInit {
   
 
  cardStyles = [
-  { bg: 'linear-gradient(108.85deg, #a0ceec -2.78%, #B3E0FE 101.22%)', border: '#B9DCF8' },
-  { bg: 'linear-gradient(108deg, #a4f6f0 -3.58%, #90e4c7b4 70.94%)', border: '#B0E2D2' },
-  { bg: 'linear-gradient(107.92deg, #F5F1F8 -4.26%, #E6C0FF 99.87%)', border: '#E1BCF9' },//up coming Interviews
-  { bg: 'linear-gradient(107.41deg, #95aaef 10.56%, #7aa3fccc 60.06%)', border: '#B6BBC5' },//Today Attendance
-  { bg: 'linear-gradient(107.67deg, #f1e2a4 -2.41%, #FFECA6 98.62%)', border: '#F5DEBB' },
-  { bg: 'linear-gradient(107.9deg, #a5d28a -6.06%, #a8f772 98.28%)', border: '#CBEDBA' },
-  { bg: 'linear-gradient(107deg, #ecbfd1 -6.06%, #f48da79b 60.28%)',border: '#FF8FA3' },
-  { bg: 'linear-gradient(107deg, #90f2ba -2.41%, #38ec92 98.50%)', border: '#34D399' },
-  { bg: 'linear-gradient(107.92deg, #e8f093 -3.58%, #ebed7a 100%)', border: '#fcff39' }
+  { bg: 'linear-gradient(125.56deg, #e5edf2cd 50%, #e1eff7cd 12%, #bfe1f8bc 70%)', border: '#2595f0' },
+  // { bg: 'linear-gradient(125deg, #e5edf2cd 0%, #e5edf2cd 35%, #e1eff7cd 55%, #bfe1f8bc 100%)', border: '#2595f0' },
+  { bg: 'linear-gradient(125.56deg, #def1f0db 50%, #cef1efcf 12%, #b1f4dcb4 70%)', border: '#08de9a' },//users
+  { bg: 'linear-gradient(125.56deg, #f6eef9 50%, #f3e8f8cf 12%, #e1c6f4c4 70%)', border: '#940dee' },//up coming Interviews
+  { bg: 'linear-gradient(125.56deg, #d5dceed0 50%, #c8d1e8d0 13%, #c6d5f5cc 80%)', border: '#165eec' },//Today Attendance
+  { bg: 'linear-gradient(125.86deg, #f5f4f0 50%, #f3f0e7dd 12%, #f1e5bbdf 70%)', border: '#f29509' },// last month pay roll
+  { bg: 'linear-gradient(125.56deg, #e4eddf 50%, #e3f2dde2 12%,#cef2b7e2 70%)', border: '#54ed07' }, //pending leaves
+  { bg: 'linear-gradient(125.56deg, #f1e6eae8 50%, #f1e3e9ec 12%, #f3cbd59b 70%)',border: '#f00933' }, // 2026 Holidays
+  { bg: 'linear-gradient(125.56deg, #ddf3e5dd 50%, #d4f0dedd 12%, #baf3d6d9 70%)', border: '#02f49b' },
+  { bg: 'linear-gradient(125.56deg, #f1f3ed 50%, #edf2e2e9 12%,#eeefaae1 70%)', border: '#717303' }
 ];
 
 
 
 iconColors = [
-  '#7dbce5',
-  '#90e4c7b4',
-  '#c785f3',//up coming Interviews
-  '#3a72ebcc',//Today Attendance
-  '#f3c41d',
-  '#79f428',
-  '#f9698d9b',
-  '#07e375',
-  '#d0d303'
+  '#1694e8',
+  '#00e796f9',//users
+  '#930aee',//up coming Interviews
+  '#1052e0cc',//Today Attendance
+  '#ecba05',//Last month payroll
+  '#79f428',//pending leaves
+  '#f00933', //2026 Hloidays
+  '#02f49b',
+  '#717303'
 ];
 
 iconbackgroundColors = [
