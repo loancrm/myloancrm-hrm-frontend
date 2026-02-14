@@ -70,21 +70,32 @@
               "
               (keyup.enter)="filterWithEmployeeName()"
             />
-            <button
+            <!-- <button
               type="button"
               pButton
               icon="pi pi-search"
               class="p-button-primary"
               [disabled]="!employeeNameToSearch"
               (click)="filterWithEmployeeName()"
-            ></button>
+            ></button> -->
+             <span
+              class="input-group-text searchbtn"
+              (click)="filterWithEmployeeName()"
+            >
+              <img
+                src="../../../assets/images/icons/search.svg"
+                alt="Search" 
+              />
+            </span>
           </div>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
-          <div class="selecteddate">
+          <div  class="custom-calendar-wrapper position-relative">
+            <div class="selecteddate">
             <p-calendar
+            #calendar
               [(ngModel)]="displayMonth"
-              [showIcon]="true"
+              [showIcon]="false"
               view="month"
               [monthNavigator]="true"
               [yearNavigator]="true"
@@ -96,6 +107,13 @@
               (ngModelChange)="onDateChange($event)"
               [placeholder]="'Select Month and Year'"
             ></p-calendar>
+             <img
+            src="../../../assets/images/icons/calendar.svg"
+            alt="Calendar Icon"
+            class="calendar-custom-img"
+            (click)="calendar.toggle()"
+          />
+          </div>
           </div>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
@@ -207,13 +225,21 @@
                 class="fa fa-check-circle text-success"
                 title="Present"
               ></i> -->
-              <img
+              <!-- <img
                 src="../../../../assets/images/presenthrmicon.svg"
                 alt=""
                 *ngSwitchCase="'Present'"
                 title="Present"
                 pTooltip="Present"
-              />
+              /> -->
+              <lucide-icon
+                *ngSwitchCase="'Present'"
+                name="user-check"
+                size="20"
+                title="Present"
+                pTooltip="Present"
+                class="text-success"
+              ></lucide-icon>
               <!-- <img src="../../../../assets/images/onleaveicon.svg" alt=""> -->
               <!-- <i
                 *ngSwitchCase="'Absent'"
@@ -221,13 +247,23 @@
                 class="fa fa-circle-xmark text-danger"
                 title="Absent"
               ></i> -->
-              <img
+              <!-- <img
                 src="../../../../assets/images/onleaveicon.svg"
                 alt=""
                 *ngSwitchCase="'Absent'"
                 title="Absent"
                 pTooltip="Absent"
-              />
+              /> -->
+              
+              <!-- Absent -->
+              <lucide-icon
+                *ngSwitchCase="'Absent'"
+                name="user-round-x"
+                size="20"
+                title="Absent"
+                pTooltip="Absent"
+                class="text-danger"
+              ></lucide-icon>
               <ng-container *ngSwitchCase="'Half-day'">
                 <!-- <i
                   pTooltip="{{
@@ -237,13 +273,22 @@
                   class="fa fa-circle-half-stroke text-warning"
                   title="Half-day"
                 ></i> -->
-                <img
+                <!-- <img
                   src="../../../../assets/images/halfdayicon.svg"
                   alt=""
                   *ngSwitchCase="'Half-day'"
                   title="Half-day"
                   pTooltip="Half-day"
-                />
+                /> -->
+                <!-- Half-day -->
+                <lucide-icon
+                  *ngSwitchCase="'Half-day'"
+                  name="timer"
+                  size="20"
+                  title="Half-day"
+                  pTooltip="Half-day"
+                  class="text-primary"
+                ></lucide-icon>
               </ng-container>
               <ng-container *ngSwitchCase="'Late'">
                 <!-- <i
@@ -254,13 +299,21 @@
                   class="fa fa-circle-exclamation text-primary"
                   title="Late"
                 ></i> -->
-                <img
+                <!-- <img
                   src="../../../../assets/images/lateloginicon (2).svg"
                   alt=""
                   *ngSwitchCase="'Late'"
                   title="Late"
                   pTooltip="Late"
-                />
+                /> -->
+                 <lucide-icon
+                  *ngSwitchCase="'Late'"
+                  name="calendar-clock"
+                  size="20"
+                  title="Late"
+                  pTooltip="Late"
+                  class="text-warning"
+                ></lucide-icon>
               </ng-container>
               <span *ngSwitchDefault>{{
                 getAttendanceForDate(employee.employeeId, date)
@@ -273,13 +326,14 @@
               class="fa fa-star text-muted"
               title="Holiday"
             ></i> -->
-            <img
+            <!-- <img
               src="../../../../assets/images/menu/holidayhrmlogo.svg"
               alt=""
               title="Holiday"
               pTooltip="Holiday"
               style="size: 5px"
-            />
+            /> -->
+            <lucide-icon name="sun" [size]="24"></lucide-icon>
           </td>
         </ng-container>
       </tr>
@@ -301,17 +355,47 @@
 <div class="status-legend m-3">
   <u>Note:</u>
   <!-- <i class="fa fa-star text-muted" title="Holiday"></i>  -->
-  <img src="../../../../assets/images/menu/holidayhrmlogo.svg" alt="" />
+  <!-- <img src="../../../../assets/images/menu/holidayhrmlogo.svg" alt="" /> -->
+   <lucide-icon name="sun" [size]="24"></lucide-icon>
   Holiday |
-  <img src="../../../../assets/images/presenthrmicon.svg" alt="" /> Present |
+  <!-- <img src="../../../../assets/images/presenthrmicon.svg" alt="" /> -->
+   <lucide-icon
+    name="user-check"
+    size="20"
+    title="Present"
+    pTooltip="Present"
+    class="text-success"
+  ></lucide-icon>
+   Present |
   <!-- <i class="fa fa-circle-half-stroke text-warning" title="Half-day"></i> -->
-  <img src="../../../../assets/images/halfdayicon.svg" alt="" />
+  <!-- <img src="../../../../assets/images/halfdayicon.svg" alt="" /> -->
+   <lucide-icon
+    name="timer"
+    size="20"
+    title="Half-day"
+    pTooltip="Half-day"
+    class="text-primary"
+  ></lucide-icon>
   Half-Day |
   <!-- <i class="fa fa-circle-exclamation text-primary" title="Late"></i> -->
-  <img src="../../../../assets/images/lateloginicon (2).svg" alt="" />
+  <!-- <img src="../../../../assets/images/lateloginicon (2).svg" alt="" /> -->
+   <lucide-icon
+    name="calendar-clock"
+    size="20"
+    title="Late"
+    pTooltip="Late"
+    class="text-warning"
+  ></lucide-icon>
   Late |
   <!-- <i class="fa fa-circle-xmark text-danger" title="Absent"></i> -->
-  <img src="../../../../assets/images/onleaveicon.svg" alt="" />
+  <!-- <img src="../../../../assets/images/onleaveicon.svg" alt="" /> -->
+   <lucide-icon
+    name="user-round-x"
+    size="20"
+    title="Absent"
+    pTooltip="Absent"
+    class="text-danger"
+  ></lucide-icon>
   Absent
 </div>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">

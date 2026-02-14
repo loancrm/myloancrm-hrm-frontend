@@ -1,6 +1,10 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 // @import url("https://fonts.googleapis.com/css2?family=Figtree&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeicons/primeicons.css";
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+// @import url("https://fonts.googleapis.com/css2?family=Inter:ital,...");
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 *:not(.pi, .fas, .fa, .mat-icon) {
@@ -8,7 +12,7 @@
   line-height: 1.43;
   letter-spacing: 0.2px !important;
 }
-
+@import 'styles/colors';
 html,
 body {
   height: 100%;
@@ -22,8 +26,8 @@ body {
 
 .p-button-primary,
 .p-dialog .p-confirm-dialog-accept {
-  background-color: #535ab4 !important;
-  border-color: #c7c2e8 !important;
+  background-color: $primary-color!important;
+  border-color: $primary-color !important;
   border: none !important;
   border-radius: 5px;
   padding: 0.625rem 1.25rem;
@@ -82,7 +86,7 @@ body {
 
 .heading-card {
   // background-color: #C7C2E8 !important;
-  color: #d4f0dedd !important;
+  color: #679aa3 !important;
   border-radius: 8px !important;
   border: none !important;
 }
@@ -98,9 +102,12 @@ body {
 }
 
 .back-btn-text {
-  color: #535ab4 !important;
-  font-weight: bold !important;
+  color: $primary-color !important;
+  font-weight: 700 !important;
   font-size: 24px !important;
+}
+.back-btn-text {
+  color: #000;
 }
 
 .back-btn-icon {
@@ -140,10 +147,41 @@ body {
   background-color: #CDEBFF !important;
   color: #000000 !important;
   text-align: left !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 8px !important;
 }
-.p-inputgroup-addon,
-.p-dropdown .p-dropdown-trigger {
-  background-color: #8f8ad1 !important;
+
+.p-datatable .p-datatable-tbody>tr:nth-child(odd) {
+  background: #ffffff !important;
+}
+
+.p-datatable .p-datatable-tbody>tr:nth-child(even) {
+  background: #f1f8fc !important;
+  /* light blue */
+}
+
+// .p-inputgroup-addon,
+// .p-dropdown .p-dropdown-trigger {
+//   background-color: #8f8ad1 !important;
+// }
+.searchbtn img {
+  filter: brightness(0) saturate(100%) invert(46%) sepia(0%) saturate(0%) hue-rotate(187deg) brightness(91%) contrast(86%);
+}
+
+.searchbtn {
+  background-color: #fff !important;
+  // border-color: lightgray !important;
+  border-bottom-right-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+  border-bottom-left-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+  border: none !important;
+  box-shadow: 0 0 4px 0 #00000040 !important;
+}
+
+.searchbtn img {
+  filter: brightness(0) saturate(100%) invert(46%) sepia(0%) saturate(0%) hue-rotate(187deg) brightness(91%) contrast(86%);
 }
 
 .p-dropdown .p-dropdown-trigger-icon,
@@ -213,6 +251,17 @@ body {
 .p-datatable .p-sortable-column .p-sortable-column-icon {
   color: #333333 !important;
 }
+
+.p-datatable .p-datatable-tbody>tr>td.leadid {
+  color: #101828 !important;
+  font-weight: 500;
+  font-size: 14px !important;
+}
+
+.p-datatable .p-datatable-tbody>tr>td.dashboardtable {
+  color: #000;
+}
+
 .employeeImage {
   border-radius: 50px;
 }
@@ -543,19 +592,45 @@ body {
 .update-btn,
 .delete-btn,
 .view-btn {
-  height: 30px;
-  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+  height: 40px;
+  // box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
 }
 .p-datatable .p-datatable-loading-icon {
   font-size: 2rem;
   background: transparent;
 }
-.tableimage img {
-  filter: brightness(0) saturate(100%) invert(47%) sepia(0%) saturate(2725%)
-    hue-rotate(315deg) brightness(95%) contrast(94%);
-  transition: filter 0.3s ease;
-}
+// .tableimage img {
+//   filter: brightness(0) saturate(100%) invert(47%) sepia(0%) saturate(2725%)
+//     hue-rotate(315deg) brightness(95%) contrast(94%);
+//   transition: filter 0.3s ease;
+// }
 
+// .tableimage img {
+//   // filter: brightness(0) saturate(100%) invert(38%) sepia(0%) saturate(0%)
+//   //   hue-rotate(187deg) brightness(91%) contrast(86%);
+//   filter: brightness(0) saturate(100%) invert(47%) sepia(0%) saturate(2725%) hue-rotate(315deg) brightness(95%) contrast(94%);
+//   transition: filter 0.3s ease;
+// }
+.cardicons {
+  // border-radius: 70px;
+  color: $primary-color !important;
+}
+.calendar-custom-img {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 25px;
+  width: 25px;
+  cursor: pointer;
+  filter: grayscale(100%) brightness(50%);
+  z-index: 10;
+}
+/* On hover or focus: change to $primary-color */
+// .tableimage img:hover,
+// .tableimage img:focus {
+//   filter: brightness(0) saturate(100%) invert(32%) sepia(15%) saturate(1281%) hue-rotate(212deg) brightness(96%) contrast(91%);
+// }
 
 .p-toast .p-toast-message-error,
 .p-toast-message-info,
@@ -582,4 +657,80 @@ body {
 .p-toast .p-toast-message .p-toast-message-content .p-toast-summary {
   font-weight: 700;
   color: #535ab4;
+}
+
+
+
+/* ==============================================
+   MAT-MENU ACTION BUTTON AND ITEMS GLOBAL STYLES
+   ============================================== */
+
+/* Menu trigger button */
+.tableimage {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: rgba($primary-color, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+
+  img {
+    width: 24px;
+    height: 24px;
+    transition: all 0.2s ease;
+    filter: brightness(0) saturate(100%) invert(19%) sepia(83%) saturate(3382%) hue-rotate(241deg) brightness(80%) contrast(144%);
+  }
+
+  &:hover {
+    background-color: rgba($primary-color, 0.1);
+    transform: translateY(-1px);
+  }
+
+  &:hover img {
+    filter: brightness(0) saturate(100%) invert(19%) sepia(83%) saturate(3382%) hue-rotate(241deg) brightness(80%) contrast(144%);
+  }
+
+  &:active {
+    background-color: rgba($primary-color, 0.2);
+    transform: translateY(0);
+  }
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 12px;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.menu-item:hover {
+   background-color:  rgba($primary-color, 0.1);
+}
+
+.menu-item .menu-icon {
+
+  width: 24px;
+  height: 24px;
+
+  background-color:  rgba($primary-color, 0.1);
+  border-radius: 6px;
+  color: $primary-color;
+  // margin-right: px !important;
+}
+
+
+  ::ng-deep .mat-menu-item {
+  background: transparent !important;
+}
+
+::ng-deep .mat-menu-item:hover {
+  background: transparent !important;
 }

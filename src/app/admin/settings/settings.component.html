@@ -101,22 +101,30 @@
                 <td>{{ branch.name }}</td>
                 <td>{{ branch.address || '-' }}</td>
                 <td>
-                  <button
-                    pButton
-                    type="button"
-                    icon="pi pi-pencil"
-                    class="p-button-rounded p-button-text p-button-primary me-2"
-                    (click)="openBranchDialog('update', branch)"
-                    pTooltip="Edit"
-                  ></button>
-                  <button
-                    pButton
-                    type="button"
-                    icon="pi pi-trash"
-                    class="p-button-rounded p-button-text p-button-danger"
-                    (click)="deleteBranch(branch)"
-                    pTooltip="Delete"
-                  ></button>
+                  <div class="text-center">
+                    <div class="d-flex">
+                      <button
+                        pRipple
+                        type="button"
+                        class="menu-item"
+                        (click)="openBranchDialog('update', branch)"
+                        pTooltip="Edit"
+                      >
+                      <lucide-icon name="square-pen" [size]="1" class="menu-icon"></lucide-icon>
+                      </button>
+                      <button
+                        pRipple
+                        type="button"
+                        icon="pi pi-trash"
+                        class="menu-item"
+                        (click)="deleteBranch(branch)"
+                        pTooltip="Delete"
+                      >
+                      <lucide-icon name="trash" [size]="18" class="menu-icon"></lucide-icon>
+                      </button>
+                    </div>
+                  </div>
+                  
                 </td>
               </tr>
               <tr *ngIf="branches.length === 0">

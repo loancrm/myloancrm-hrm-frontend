@@ -344,7 +344,8 @@
                   color: item.textcolor,
                   'background-color': item.backgroundcolor
                 }">
-                <img src="../../../assets/images/{{ item.icon }}.svg" alt="" />
+                <lucide-icon [name]= "item.icon" [size]="30"></lucide-icon>
+                <!-- <img src="../../../assets/images/{{ item.icon }}.svg" alt="" /> -->
                 <!-- <i class="fa fa-{{ item.icon }}"></i> -->
               </div>
             </div>
@@ -374,13 +375,22 @@
               (ngModelChange)="
                 inputValueChangeEvent('interviewId', candidateNameToSearch)
               " (keyup.enter)="filterWithCandidateName()" />
-            <button type="button" pButton icon="pi pi-search" class="p-button-primary"
-              [disabled]="!candidateNameToSearch" (click)="filterWithCandidateName()"></button>
+              <span
+              class="input-group-text searchbtn"
+              (click)="filterWithCandidateName()"
+            >
+              <img
+                src="../../../assets/images/icons/search.svg"
+                alt="Search" 
+              />
+            </span>
+            <!-- <button type="button" pButton icon="pi pi-search" class="p-button-primary"
+              [disabled]="!candidateNameToSearch" (click)="filterWithCandidateName()"></button> -->
           </div>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
           <p-dropdown styleClass="text-left" [style]="{ width: '100%' }" [options]="interviewInternalStatusList"
-            (onChange)="statusChange($event)" [dropdownIcon]="'fa fa-caret-down'" [(ngModel)]="selectedInterviewStatus"
+            (onChange)="statusChange($event)" [dropdownIcon]="'pi pi-chevron-down'" [(ngModel)]="selectedInterviewStatus"
             optionLabel="displayName" dataKey="name" appendTo="body">
           </p-dropdown>
         </div>
@@ -492,20 +502,111 @@
             {{ getStatusName(interview.interviewInternalStatus) }}
           </span>
         </td>
-        <td>
+        <!-- <td>
           <div class="text-center">
             <div class="d-flex tableimage">
               <p-menu appendTo="body" #menu [model]="actionItems(interview)" [popup]="true"></p-menu>
-              <!-- <button
+              <button
                 pButton
                 type="button"
                 class="custom-btn"
                 (click)="menu.toggle($event)"
                 icon="pi pi-ellipsis-h"
-              ></button> -->
+              ></button>
               <img class="pointer-cursor" style="color: #878a99 !important" alt="Actions"
                 src="../../../assets/images/menu/menu.svg" width="24px" height="24px" pTooltip="Actions"
                 tooltipPosition="top" (click)="menu.toggle($event); $event.stopPropagation()" />
+            </div>
+          </div>
+        </td> -->
+        <td>
+          <div class="text-center">
+            <div class="d-flex tableimage">
+
+              <!-- Menu Trigger -->
+              <img
+                class="pointer-cursor"
+                src="../../../assets/images/menu/menu.svg"
+                width="24"
+                height="24"
+                alt="Actions"
+                matTooltip="Actions"
+                [matMenuTriggerFor]="menu"
+                (click)="$event.stopPropagation()"
+              />
+
+              <!-- Angular Material Menu -->
+              <mat-menu #menu="matMenu">
+
+                <!-- Interview Details -->
+                <button mat-menu-item (click)="showInterviewDetails(interview)" class="menu-item">
+                  <lucide-icon name="eye" [size]="24" class="menu-icon"></lucide-icon>
+                  Interview Details
+                </button>
+
+                <!-- Status = 1 -->
+                <ng-container *ngIf="interview.interviewInternalStatus === 1">
+                  <button mat-menu-item (click)="selectedInterview(interview)" class="menu-item">
+                    <lucide-icon name="user-round-check" [size]="24" class="menu-icon"></lucide-icon>
+                    Selected
+                  </button>
+
+                  <button mat-menu-item (click)="rejectedInterview(interview)" class="menu-item">
+                    <lucide-icon name="user-round-x" [size]="24" class="menu-icon"></lucide-icon>
+                    Rejected
+                  </button>
+                </ng-container>
+
+                <!-- Status = 2 -->
+                <ng-container *ngIf="interview.interviewInternalStatus === 2">
+                  <button mat-menu-item (click)="confirmSendtoEmployee(interview)" class="menu-item">
+                    <lucide-icon name="id-card-lanyard" [size]="24" class="menu-icon"></lucide-icon>
+                    Send To Employee
+                  </button>
+
+                  <button mat-menu-item (click)="pendingInterview(interview)" class="menu-item">
+                    <lucide-icon name="loader" [size]="24" class="menu-icon"></lucide-icon>
+                    Pending
+                  </button>
+
+                  <button mat-menu-item (click)="rejectedInterview(interview)" class="menu-item">
+                   <lucide-icon name="circle-x" [size]="24" class="menu-icon"></lucide-icon>
+                    Rejected
+                  </button>
+                </ng-container>
+
+                <!-- Status = 3 -->
+                <ng-container *ngIf="interview.interviewInternalStatus === 3">
+                  <button mat-menu-item (click)="pendingInterview(interview)" class="menu-item">
+                    <lucide-icon name="loader" [size]="24" class="menu-icon"></lucide-icon>
+                    Pending
+                  </button>
+
+                  <button mat-menu-item (click)="selectedInterview(interview)" class="menu-item">
+                    <lucide-icon name="user-round-check" [size]="24" class="menu-icon"></lucide-icon>
+                    Selected
+                  </button>
+                </ng-container>
+
+                <!-- Update -->
+                <button mat-menu-item (click)="updateInterview(interview.interviewId)" class="menu-item">
+                 <lucide-icon name="square-pen" [size]="24" class="menu-icon"></lucide-icon>
+                  Update
+                </button>
+
+                <!-- Delete -->
+                <button
+                  mat-menu-item
+                  *ngIf="capabilities?.delete"
+                  (click)="confirmDelete(interview)"
+                   class="menu-item"
+                >
+                  <lucide-icon name="trash" [size]="24" class="menu-icon"></lucide-icon>
+                  Delete
+                </button>
+
+              </mat-menu>
+
             </div>
           </div>
         </td>

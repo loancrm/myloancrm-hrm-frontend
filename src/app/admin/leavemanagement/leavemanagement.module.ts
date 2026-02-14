@@ -13,7 +13,21 @@ import { FilterModule } from 'src/app/filter/filter.module';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
 import { DialogModule } from 'primeng/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
+import {LucideAngularModule,
+  FileUser,
+  ClipboardClock,
+  ShieldX,
+  ShieldCheck,
+  Eye,
+  CalendarClock,
+  CircleCheckBig,
+  SquarePen,
+  Trash,
+  CircleX 
+} from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: LeavemanagementComponent },
   {
@@ -44,6 +58,20 @@ const routes: Routes = [
     FilterModule,
     PreloaderModule,
     CapitalizeFirstPipe,
+    MatMenuModule,
+    MatTooltipModule,
+    LucideAngularModule.pick({ 
+      FileUser,
+      ClipboardClock,
+      ShieldX,
+      ShieldCheck,
+      Eye,
+      CalendarClock,
+      CircleCheckBig,
+      SquarePen,
+      Trash,
+      CircleX 
+    })
   ],
 })
 export class LeavemanagementModule {}

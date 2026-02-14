@@ -1,3 +1,4 @@
+@import "../../../styles.scss";
 // .card {
 //   padding: 10px !important;
 // }
@@ -672,18 +673,19 @@
   }
 }
 
-.sidebaricon {
-  color: #fd7e14;
-  width: 20px !important;
-}
+// .sidebaricon {
+//   color: #fd7e14;
+//   width: 20px !important;
+// }
 
 // .sidebar-header {
 //   border-bottom: 1px solid #f0f0f0;
 // }
 .logo {
   // padding-top: 15px;
-  max-width: 180px;
-  height: auto;
+  max-width: 100%;
+  // height: auto;
+  max-height: 60px;
 }
 .sidebardiv::-webkit-scrollbar-thumb {
   background: lightgray !important; /* Scrollbar thumb color */
@@ -698,24 +700,80 @@
   list-style: none;
 }
 
+// .nav-link {
+//   padding: 10px 8px;
+//   color: #333;
+//   transition: background-color 0.2s;
+
+//   &.active {
+//     background-color: #CDEBFF;
+//     color: #0716e1 !important;
+//     font-weight: 500;
+//     border-radius: 8px;
+
+//     img {
+//       // filter: brightness(0) invert(1);
+//       filter: brightness(0) saturate(100%) invert(21%) sepia(65%)
+//         saturate(2298%) hue-rotate(211deg) brightness(89%) contrast(93%);
+//     }
+//     .sidebar-label {
+//       color: #3a42a7 !important; // ⬅️ Match label color to active image/text
+//     }
+
+//     // &:not(.active):hover {
+//     //   background-color: #e60b0b;
+//     //   border-radius: 8px;
+//     // }
+//   }
+// }
 .nav-link {
   padding: 10px 8px;
   color: #333;
   transition: background-color 0.2s;
 
-  &.active {
-    background-color: #edf3fe;
-    color: #3a42a7 !important;
+  &:hover {
+    background-color: #dad9ff;
+    color: #5c3acc !important;
     font-weight: 500;
     border-radius: 8px;
+
+    ::ng-deep lucide-icon {
+      color: #5c3acc !important;
+    }
 
     img {
       // filter: brightness(0) invert(1);
       filter: brightness(0) saturate(100%) invert(21%) sepia(65%)
         saturate(2298%) hue-rotate(211deg) brightness(89%) contrast(93%);
     }
+
     .sidebar-label {
-      color: #3a42a7 !important; // ⬅️ Match label color to active image/text
+      color: $primary-color !important; // ⬅️ Match label color to active image/text
+    }
+
+    // &:not(.active):hover {
+    //   background-color: #f2f2f2;
+    //   border-radius: 8px;
+    // }
+  }
+
+  &.active {
+    // background-color: $primary-color;
+    background: linear-gradient(271.53deg, #7571f8 1.9%, #454392 97.93%);
+    color: #edf3fe !important;
+    font-weight: 500;
+    border-radius: 8px;
+
+    img {
+      filter: brightness(0) invert(1);
+    }
+
+    ::ng-deep lucide-icon {
+      color: #fff !important;
+    }
+
+    .sidebar-label {
+      color: #edf3fe !important; // ⬅️ Match label color to active image/text
     }
 
     &:not(.active):hover {
@@ -724,6 +782,27 @@
     }
   }
 }
+.sidebaricon {
+  color: #707070;
+  width: 20px !important;
+
+  ::ng-deep lucide-icon {
+    opacity: 0.08 !important;
+    display: block;
+
+    svg {
+      width: 90px !important;
+      height: 90px !important;
+    }
+  }
+}
+
+// .nav-link:hover{
+//   background-color: #DCE2F0;
+//   color: #0716e1 !important;
+//   border-radius: 8px;
+// }
+
 .nav-link img {
   // filter: brightness(0) saturate(100%) invert(46%) sepia(0%) saturate(0%)
   //   hue-rotate(187deg) brightness(91%) contrast(86%);

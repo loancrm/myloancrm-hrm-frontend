@@ -219,14 +219,23 @@
               "
               (keyup.enter)="filterWithCandidateName()"
             />
-            <button
+            <!-- <button
               type="button"
               pButton
               icon="pi pi-search"
               class="p-button-primary"
               [disabled]="!displayNameToSearch"
               (click)="filterWithCandidateName()"
-            ></button>
+            ></button> -->
+             <span
+              class="input-group-text searchbtn"
+              (click)="filterWithCandidateName()"
+            >
+              <img
+                src="../../../assets/images/icons/search.svg"
+                alt="Search" 
+              />
+            </span>
           </div>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
@@ -235,7 +244,7 @@
             [style]="{ width: '100%' }"
             [options]="departmentInternalStatusList"
             (onChange)="statusChange($event)"
-            [dropdownIcon]="'fa fa-caret-down'"
+            [dropdownIcon]="'pi pi-chevron-down'"
             [(ngModel)]="selectedDepartmentStatus"
             optionLabel="displayName"
             dataKey="name"
@@ -364,7 +373,7 @@
             {{ getStatusName(designation.designationInternalStatus) }}
           </span>
         </td>
-        <td>
+        <!-- <td>
           <div class="text-center">
             <div class="d-flex tableimage">
               <p-menu
@@ -373,13 +382,6 @@
                 [model]="actionItems(designation)"
                 [popup]="true"
               ></p-menu>
-              <!-- <button
-                pButton
-                type="button"
-                class="custom-btn"
-                (click)="menu.toggle($event)"
-                icon="pi pi-ellipsis-h"
-              ></button> -->
               <img
                 class="pointer-cursor"
                 alt="Actions"
@@ -392,7 +394,67 @@
               />
             </div>
           </div>
+        </td> -->
+        <td>
+          <div class="text-center">
+            <div class="d-flex tableimage">
+
+              <!-- Menu Trigger -->
+              <img
+                class="pointer-cursor"
+                src="../../../assets/images/menu/menu.svg"
+                width="24"
+                height="24"
+                alt="Actions"
+                matTooltip="Actions"
+                [matMenuTriggerFor]="menu"
+                (click)="$event.stopPropagation()"
+              />
+
+              <!-- Angular Material Menu -->
+              <mat-menu #menu="matMenu">
+
+                <!-- Status = 1 -->
+                <ng-container *ngIf="designation.designationInternalStatus === 1">
+
+                  <button mat-menu-item (click)="inactiveDepartment(designation)" class="menu-item">
+                    <lucide-icon name="shield-ban" [size]="20"class="menu-icon"></lucide-icon>
+                    In Active
+                  </button>
+
+                  <button mat-menu-item (click)="updateDepartment(designation.designationId)" class="menu-item">
+                    <lucide-icon name="square-pen" [size]="20"class="menu-icon"></lucide-icon>
+                    Update
+                  </button>
+
+                  <button
+                    mat-menu-item
+                    *ngIf="capabilities?.delete"
+                    (click)="confirmDelete(designation)"
+                     class="menu-item"
+                  >
+                    <lucide-icon name="trash" [size]="20"class="menu-icon"></lucide-icon>
+                    Delete
+                  </button>
+
+                </ng-container>
+
+                <!-- Status = 2 -->
+                <ng-container *ngIf="designation.designationInternalStatus === 2">
+
+                  <button mat-menu-item (click)="ActiveDepartment(designation)" class="menu-item">
+                    <lucide-icon name="shield-check" [size]="20"class="menu-icon"></lucide-icon>
+                    Active
+                  </button>
+
+                </ng-container>
+
+              </mat-menu>
+
+            </div>
+          </div>
         </td>
+
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">

@@ -228,20 +228,31 @@
               "
               (keyup.enter)="filterWithEmployeeName()"
             />
-            <button
+             <span
+              class="input-group-text searchbtn"
+              (click)="filterWithEmployeeName()"
+            >
+              <img
+                src="../../../assets/images/icons/search.svg"
+                alt="Search" 
+              />
+            </span>
+            <!-- <button
               type="button"
               pButton
               icon="pi pi-search"
               class="p-button-primary"
               [disabled]="!employeeNameToSearch"
               (click)="filterWithEmployeeName()"
-            ></button>
+            ></button> -->
           </div>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
-          <p-calendar
+          <div class="custom-calendar-wrapper position-relative">
+            <p-calendar
+            #calendar
             [(ngModel)]="displayMonth"
-            [showIcon]="true"
+            [showIcon]="false"
             view="month"
             [monthNavigator]="true"
             [yearNavigator]="true"
@@ -253,6 +264,14 @@
             (ngModelChange)="onDateChange($event)"
             [placeholder]="'Select Month and Year'"
           ></p-calendar>
+          <img
+            src="../../../assets/images/icons/calendar.svg"
+            alt="Calendar Icon"
+            class="calendar-custom-img"
+            (click)="calendar.toggle()"
+          />
+          </div>
+          
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
           <div class="d-flex">
@@ -392,33 +411,34 @@
           <div class="text-center">
             <div class="d-flex">
               <button
-                pButton
                 pRipple
                 type="button"
                 pTooltip="View"
-                class="p-button-info me-2 view-btn"
-                icon="fa fa-eye"
-                (click)="showUserDetails(incentive)" style="background-color: #535AB4; border-color: #535AB4;"
-              ></button>
+                class="menu-item"
+                (click)="showUserDetails(incentive)"
+              >
+              <lucide-icon name="eye" [size]="18" class="menu-icon"></lucide-icon>
+            </button>
               <button
                 *ngIf="capabilities.adminIncentives"
-                pButton
                 pRipple
                 type="button"
                 pTooltip="Update"
-                class="p-button-success me-2 update-btn"
-                icon="fa fa-pen-to-square"
-                (click)="updateIncentive(incentive.incentiveId)" style="background-color: #8E89D0; border-color: #8E89D0;"
-              ></button>
+                class="menu-item"
+                (click)="updateIncentive(incentive.incentiveId)"
+              >
+              <lucide-icon name="square-pen" [size]="18" class="menu-icon"></lucide-icon>
+              </button>
               <button
                 *ngIf="capabilities.delete"
-                pButton
+                pRipple
                 type="button"
-                icon="fa fa-trash"
                 pTooltip="Delete"
-                class="p-button-danger me-2 delete-btn"
+                class="menu-item"
                 (click)="confirmDelete(incentive)" 
-              ></button>
+              >
+              <lucide-icon name="trash" [size]="18" class="menu-icon"></lucide-icon>
+              </button>
             </div>
           </div>
         </td>

@@ -8,6 +8,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { DateTimeProcessorService } from 'src/app/services/date-time-processor.service';
 import { projectConstantsLocal } from 'src/app/constants/project-constants';
 import { forkJoin } from 'rxjs';
+
 @Component({
   selector: 'app-payroll',
   templateUrl: './payroll.component.html',
@@ -24,6 +25,8 @@ export class PayrollComponent {
   loading: any;
   apiLoading: any;
   payroll: any = [];
+  selectedPayslip: any;
+
   holidays: any = [];
   totalPayrollCount: any = 0;
   employees: any = [];
@@ -104,6 +107,7 @@ export class PayrollComponent {
     this.countsAnalytics = [
       {
         name: 'payrolemp', // Represents total employees in payroll
+        icon:'id-card-lanyard',
         displayName: 'Total Payroll Employees',
         count: `${this.payrollEmployees} `, // Assuming you have a variable for total employees
         // textcolor: '#3498DB', // Blue to represent a professional/business environment
@@ -111,6 +115,7 @@ export class PayrollComponent {
       },
       {
         name: 'totlgrosssalarly', // Represents total gross salary (big earnings)
+        icon:'badge-indian-rupee',
         displayName: 'Total Gross Salary',
         count: `Rs. ${this.totalSalary} ( ${this.convertToReadableFormat(
           this.totalSalary
@@ -121,6 +126,7 @@ export class PayrollComponent {
       {
         name: 'deduction', // Represents deductions (taxes, deductions)
         displayName: 'Total Deductions',
+        icon: 'banknote-arrow-down',
         count: `Rs. ${this.totalDeductions} ( ${this.convertToReadableFormat(
           this.totalDeductions
         )} )`,
@@ -130,6 +136,7 @@ export class PayrollComponent {
       {
         name: 'netsalary', // Represents net salary (final savings or payout)
         displayName: 'Total Net Salary',
+        icon:'wallet',
         count: `Rs. ${this.totalNetSalary} ( ${this.convertToReadableFormat(
           this.totalNetSalary
         )} )`,

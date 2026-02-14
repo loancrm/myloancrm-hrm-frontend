@@ -1,16 +1,17 @@
+@import '../../../styles/colors';
 .custom-btn {
   height: 30px;
   background-color: #c7c2e8 !important;
-  border: #c7c2e8;
+  // border: #c7c2e8;
+  border: #DC3545;
   box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
 }
 .cardicons .fa {
   font-size: 25px;
   padding: 10px;
 }
-.cardicons {
-  border-radius: 70px;
-}
+
+
 .card {
   border: none;
   box-shadow: 0 0 10px 1px rgba(197, 201, 245, 0.25);

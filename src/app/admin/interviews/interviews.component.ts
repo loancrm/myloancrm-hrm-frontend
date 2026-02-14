@@ -277,9 +277,10 @@ export class InterviewsComponent implements OnInit {
   updateCountsAnalytics() {
     this.countsAnalytics = [
       {
-        icon: 'allinterviews',
+        // icon: 'allinterviews',
         name: 'all',
         displayName: 'All Interviews',
+        icon: 'messages-square',
         count:
           this.interviewStatusCount[1] +
           this.interviewStatusCount[2] +
@@ -288,7 +289,8 @@ export class InterviewsComponent implements OnInit {
 
       },
       {
-        icon: 'pendingintervies',
+        // icon: 'pendingintervies',
+        icon:'calendar-clock',
         name: 'pending',
         displayName: 'Pending Interviews',
         count: this.interviewStatusCount[1],
@@ -296,7 +298,8 @@ export class InterviewsComponent implements OnInit {
         // backgroundcolor: '#FFF3D6',
       },
       {
-        icon: 'selectedinterves',
+        // icon: 'selectedinterves',
+        icon:'user-round-check',
         name: 'selected',
         displayName: 'Selected Interviews',
         count: this.interviewStatusCount[2],
@@ -304,7 +307,8 @@ export class InterviewsComponent implements OnInit {
         // backgroundcolor: '#F0F9E8',
       },
       {
-        icon: 'rejectintrvs',
+        // icon: 'rejectintrvs',
+        icon:'user-round-x',
         name: 'rejected',
         displayName: 'Rejected Interviews',
         count: this.interviewStatusCount[3],

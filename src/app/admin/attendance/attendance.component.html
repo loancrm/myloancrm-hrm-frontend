@@ -59,10 +59,12 @@
     <ng-template pTemplate="caption">
       <div class="row">
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
-          <div class="p-inputgroup">
+          <div  class="custom-calendar-wrapper position-relative">
+            <div class="p-inputgroup">
             <p-calendar
+            #calendar
               [(ngModel)]="selectedDate"
-              [showIcon]="true"
+              [showIcon]="false"
               dateFormat="yy-mm-dd"
               [style]="{ width: '100%' }"
               placeholder="Select Date"
@@ -72,12 +74,22 @@
               (ngModelChange)="filterByDate()"
             >
             </p-calendar>
+             <img
+            src="../../../assets/images/icons/calendar.svg"
+            alt="Calendar Icon"
+            class="calendar-custom-img"
+            (click)="calendar.toggle()"
+          />
           </div>
+          </div>
+          
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
+          <div  class="custom-calendar-wrapper position-relative">
           <p-calendar
+            #calendar
             [(ngModel)]="displayMonth"
-            [showIcon]="true"
+            [showIcon]="false"
             view="month"
             [monthNavigator]="true"
             [yearNavigator]="true"
@@ -88,7 +100,14 @@
             [readonlyInput]="true"
             (ngModelChange)="onDateChange($event)"
             [placeholder]="'Select Month and Year'"
-          ></p-calendar>
+            ></p-calendar>
+            <img
+            src="../../../assets/images/icons/calendar.svg"
+            alt="Calendar Icon"
+            class="calendar-custom-img"
+            (click)="calendar.toggle()"
+          />
+          </div>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
           <div class="d-flex">
@@ -189,7 +208,7 @@
         <td>
           {{ attendance.createdOn | date }}
         </td>
-        <td>
+        <!-- <td>
           <div class="text-center">
             <div class="d-flex">
               <button
@@ -223,7 +242,48 @@
               ></button>
             </div>
           </div>
-        </td>
+        </td> -->
+        <td>
+  <div class="text-center">
+    <div class="d-flex">
+      <!-- VIEW BUTTON -->
+      <button
+        type="button"
+        pRipple
+        pTooltip="View"
+        class="menu-item"
+        (click)="ViewAttendance(attendance.attendanceId)"
+      >
+        <lucide-icon name="eye" [size]="20" class="menu-icon"></lucide-icon>
+      </button>
+
+      <!-- UPDATE BUTTON -->
+      <button
+        type="button"
+        pRipple
+        pTooltip="Update"
+        class="menu-item "
+        (click)="updateAttendance(attendance.attendanceId)"
+      >
+        <lucide-icon name="square-pen" [size]="18" class="menu-icon"></lucide-icon>
+      </button>
+
+      <!-- DELETE BUTTON -->
+      <button
+        *ngIf="capabilities.delete"
+        type="button"
+        pRipple
+        pTooltip="Delete"
+        class="menu-item"
+        (click)="confirmDelete(attendance)"
+      >
+        <lucide-icon name="trash" [size]="18" class="menu-icon"></lucide-icon>
+      </button>
+    </div>
+  </div>
+</td>
+
+
       </tr>
     </ng-template>
     <ng-template

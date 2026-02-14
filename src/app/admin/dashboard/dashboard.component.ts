@@ -1353,20 +1353,26 @@ iconbackgroundColors = [
     },
   },
 
+  // colors: [
+  //   '#7EB0D5',
+  //   '#B2E061',
+  //   '#BD7EBE',
+  //   '#FFB55A',
+  // ],
   colors: [
-    '#B3E0FE',
-    '#f9698d9b',
-    '#3a72ebcc',
-    '#f59e0b',
+    '#8d6e9bbf',
+    '#3EB3D2',
+    '#DE8170',
+    '#6F783F',
   ],
 
   dataLabels: {
     enabled: true,
-    style: { fontSize: '10px' },
+    style: { fontSize: '12px', color:'black' },
   },
 
   stroke: {
-    width: 1,
+    width: 10,
     colors: ['#fff'],
   },
 
@@ -1399,6 +1405,7 @@ iconbackgroundColors = [
   },
 };
 
+
     this.pieChartOptions = {
       series: [this.maleCount || 0, this.femaleCount || 0],
       labels: ['Male', 'Female'],
@@ -1407,7 +1414,7 @@ iconbackgroundColors = [
         type: 'pie',
         toolbar: { show: true },
       },
-      colors: ['#E6C0FF', '#8ec7ed'],
+      colors: ['#CC8F93', '#679aa3'],
       title: {
         text: 'Employee Structure',
         align: 'left',

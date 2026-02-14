@@ -12,7 +12,14 @@ import { CalendarModule } from 'primeng/calendar';
 import { IncentivesComponent } from './incentives.component';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import {LucideAngularModule,
+  Eye,
+  SquarePen,
+  Trash,
 
+} from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: IncentivesComponent },
   {
@@ -42,6 +49,13 @@ const routes: Routes = [
     CalendarModule,
     CapitalizeFirstPipe,
     PreloaderModule,
+    MatMenuModule,
+    MatButtonModule,
+    LucideAngularModule.pick({ 
+      Eye,
+      SquarePen,
+      Trash,
+    })
   ],
 })
 export class IncentivesModule {}

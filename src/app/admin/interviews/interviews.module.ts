@@ -13,7 +13,20 @@ import { InterviewsComponent } from './interviews.component';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { FilterModule } from 'src/app/filter/filter.module';
-
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import {LucideAngularModule,
+  MessagesSquare,
+  CalendarClock,
+  UserRoundCheck,
+  UserRoundX ,
+  Eye,
+  IdCardLanyard,
+  Loader,
+  CircleX,
+  SquarePen,
+  Trash,
+ }from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: InterviewsComponent },
   {
@@ -44,6 +57,20 @@ const routes: Routes = [
     CapitalizeFirstPipe,
     PreloaderModule,
     FilterModule,
+    MatMenuModule,
+    MatButtonModule,
+    LucideAngularModule.pick({
+      MessagesSquare,
+      CalendarClock,
+      UserRoundCheck,
+      UserRoundX, 
+      Eye,
+      IdCardLanyard,
+      Loader,
+      CircleX,
+      SquarePen,
+      Trash,
+    })
   ],
 })
 export class InterviewsModule {}

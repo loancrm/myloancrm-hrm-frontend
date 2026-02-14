@@ -12,7 +12,12 @@ import { HolidaysComponent } from './holidays.component';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
 import { FilterModule } from 'src/app/filter/filter.module';
-
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import {LucideAngularModule,
+  SquarePen,
+  Trash,
+} from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: HolidaysComponent },
   {
@@ -42,6 +47,12 @@ const routes: Routes = [
     PreloaderModule,
     CapitalizeFirstPipe,
     FilterModule,
+    MatMenuModule,
+    MatButtonModule,
+     LucideAngularModule.pick({ 
+      SquarePen,
+      Trash,
+     })
   ],
 })
 export class HolidaysModule {}

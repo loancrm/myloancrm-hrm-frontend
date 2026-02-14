@@ -101,6 +101,7 @@ export class EmployeesComponent implements OnInit {
       {
         name: 'allemp',
         displayName: 'All Employees',
+        icon:'id-card-lanyard',
         count:
           this.employeeStatusCount.statusCount['1'] +
           this.employeeStatusCount.statusCount['2'],
@@ -110,6 +111,7 @@ export class EmployeesComponent implements OnInit {
       {
         name: 'newemploye',
         displayName: 'New Employees',
+        icon:'user-plus',
         count: this.employeeStatusCount.newEmployeeCount['new'],
         textcolor: '#C7C2E8',
         boxShadow: '#C7C2E8',
@@ -117,6 +119,7 @@ export class EmployeesComponent implements OnInit {
       {
         name: 'activeemp',
         displayName: 'Active Employees',
+        icon: 'user-round-cog',
         count: this.employeeStatusCount.statusCount['1'],
         textcolor: '#2ECC71',
         boxShadow: '#C7C2E8',
@@ -124,6 +127,7 @@ export class EmployeesComponent implements OnInit {
       {
         name: 'inactivemp',
         displayName: 'InActive Employees',
+        icon: 'user-x',
         count: this.employeeStatusCount.statusCount['2'],
         textcolor: '#DC3545',
         boxShadow: '#C7C2E8',
@@ -540,9 +544,11 @@ export class EmployeesComponent implements OnInit {
     );
     this.loadEmployees(this.currentTableEvent);
   }
+
   inactiveEmployee(employee) {
     this.changeEmployeeStatus(employee.employeeId, 2);
   }
+  
   activateEmployee(employee) {
     this.changeEmployeeStatus(employee.employeeId, 1);
   }

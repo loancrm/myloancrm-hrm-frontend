@@ -14,7 +14,15 @@ import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
 import { FilterModule } from 'src/app/filter/filter.module';
 import { MenuModule } from 'primeng/menu';
-
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import {LucideAngularModule,
+  Eye,
+    Trash,
+    SquarePen,
+    ShieldBan,
+    ShieldCheck
+}from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: SalaryhikeComponent },
   {
@@ -41,7 +49,16 @@ const routes: Routes = [
     PreloaderModule,
     CapitalizeFirstPipe,
     FilterModule,
-    MenuModule
+    MenuModule,
+    MatMenuModule,
+    MatTooltipModule,
+    LucideAngularModule.pick({
+      Eye,
+      Trash,
+      SquarePen,
+      ShieldBan,
+      ShieldCheck
+    })
   ],
 })
 export class SalaryhikeModule {}

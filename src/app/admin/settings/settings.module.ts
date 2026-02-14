@@ -15,7 +15,10 @@ import { CustomtemplateComponent } from '../customtemplate/customtemplate.compon
 import { CustomtemplateModule } from '../customtemplate/customtemplate.module';
 import { TemplateListModule } from '../customtemplate/template-list/template-list.module';
 import { DropdownModule } from 'primeng/dropdown';
-
+import {LucideAngularModule,
+  SquarePen,
+  Trash,
+} from 'lucide-angular';
 
 // const routes: Routes = [
 //   {
@@ -62,6 +65,10 @@ const routes: Routes = [
     PreloaderModule,
     TemplateListModule,
     DropdownModule,
+    LucideAngularModule.pick({ 
+          SquarePen,
+          Trash,
+         })
   ],
 })
 export class SettingsModule {}

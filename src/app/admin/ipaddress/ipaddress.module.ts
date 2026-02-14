@@ -12,7 +12,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FilterModule } from 'src/app/filter/filter.module';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
-
+import {LucideAngularModule,
+  SquarePen,
+  Trash,
+} from 'lucide-angular';
 const routes: Routes = [{ path: '', component: IpaddressComponent }];
 
 @NgModule({
@@ -31,6 +34,10 @@ const routes: Routes = [{ path: '', component: IpaddressComponent }];
     FilterModule,
     PreloaderModule,
     CapitalizeFirstPipe,
+    LucideAngularModule.pick({ 
+      SquarePen,
+      Trash,
+     })
   ],
 })
 export class IpaddressModule {}

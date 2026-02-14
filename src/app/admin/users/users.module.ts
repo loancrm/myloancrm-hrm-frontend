@@ -14,7 +14,15 @@ import { FilterModule } from 'src/app/filter/filter.module';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
 import { DropdownModule } from 'primeng/dropdown';
-
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import {LucideAngularModule,
+    Eye,
+    Trash,
+    SquarePen,
+    ShieldBan,
+    ShieldCheck
+}from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: UsersComponent },
   {
@@ -46,7 +54,16 @@ const routes: Routes = [
     PreloaderModule,
     CapitalizeFirstPipe,
     MenuModule,
-    DropdownModule
+    DropdownModule,
+    MatMenuModule,
+    MatButtonModule,
+     LucideAngularModule.pick({
+      Eye,
+      Trash,
+      SquarePen,
+      ShieldBan,
+      ShieldCheck,
+     })
   ],
 })
 export class UsersModule {}

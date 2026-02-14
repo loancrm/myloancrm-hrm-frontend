@@ -283,14 +283,24 @@
               "
               (keyup.enter)="filterWithUserName()"
             />
-            <button
+            <!-- <button
               type="button"
               pButton
               icon="pi pi-search"
               class="p-button-primary"
               [disabled]="!userNameToSearch"
               (click)="filterWithUserName()"
-            ></button>
+            ></button> -->
+            
+            <span
+              class="input-group-text searchbtn"
+              (click)="filterWithUserName()"
+            >
+              <img
+                src="../../../assets/images/icons/search.svg"
+                alt="Search" 
+              />
+            </span>
           </div>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
@@ -300,7 +310,7 @@
             [options]="userInternalStatusList"
             (onChange)="statusChange($event)"
             appendTo="body"
-            [dropdownIcon]="'fa fa-caret-down'"
+            [dropdownIcon]="'pi pi-chevron-down'"
             [(ngModel)]="selectedUserStatus"
             optionLabel="displayName"
             dataKey="name"
@@ -494,7 +504,7 @@
             </div>
           </div>
         </td> -->
-        <td>
+        <!-- <td>
           <div class="text-center">
             <div class="d-flex tableimage">
               <p-menu
@@ -512,16 +522,75 @@
                 tooltipPosition="top"
                 (click)="menu.toggle($event); $event.stopPropagation()"
               />
-              <!-- <button
-                pButton
-                type="button"
-                class="custom-btn"
-                (click)="menu.toggle($event)"
-                icon="pi pi-ellipsis-h"
-              ></button> -->
+            </div>
+          </div>
+        </td> -->
+        <td>
+          <div class="text-center">
+            <div class="d-flex tableimage">
+
+              <!-- Menu Trigger -->
+              <img
+                class="pointer-cursor"
+                src="../../../assets/images/menu/menu.svg"
+                width="24"
+                height="24"
+                alt="Actions"
+                matTooltip="Actions"
+                [matMenuTriggerFor]="menu"
+                (click)="$event.stopPropagation()"
+              />
+
+              <!-- Angular Material Menu -->
+              <mat-menu #menu="matMenu">
+
+                <!-- Status = 1 -->
+                <ng-container *ngIf="user.userInternalStatus === 1">
+
+                  <button mat-menu-item (click)="showUserDetails(user)" class="menu-item">
+                    <lucide-icon name="eye" [size]="20" class="menu-icon"></lucide-icon>
+                    User Profile
+                  </button>
+
+                  <button mat-menu-item (click)="updateUser(user.userId)" class="menu-item">
+                    <lucide-icon name="square-pen" [size]="20" class="menu-icon"></lucide-icon>
+                    Update
+                  </button>
+
+                  <button mat-menu-item (click)="inactiveuser(user)" class="menu-item">
+                    <lucide-icon name="shield-ban" [size]="20" class="menu-icon"></lucide-icon>
+                    InActive
+                  </button>
+
+                </ng-container>
+
+                <!-- Status = 2 -->
+                <ng-container *ngIf="user.userInternalStatus === 2">
+
+                  <button mat-menu-item (click)="activateuser(user)" class="menu-item">
+                    <lucide-icon name="shield-check" [size]="20" class="menu-icon"></lucide-icon>
+                    Active
+                  </button>
+
+                </ng-container>
+
+                <!-- Delete (Based on Capability) -->
+                <button
+                  mat-menu-item
+                  *ngIf="capabilities?.delete"
+                  (click)="confirmDelete(user)"
+                   class="menu-item"
+                >
+                  <lucide-icon name="trash" [size]="20" class="menu-icon"></lucide-icon>
+                  Delete
+                </button>
+
+              </mat-menu>
+
             </div>
           </div>
         </td>
+
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">

@@ -14,7 +14,14 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { AttendanceComponent } from './attendance.component';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import {LucideAngularModule,
+  Eye,
+  SquarePen,
+  Trash,
 
+} from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: AttendanceComponent },
   {
@@ -56,6 +63,13 @@ const routes: Routes = [
     LazyLoadImageModule,
     PreloaderModule,
     CapitalizeFirstPipe,
+    MatMenuModule,
+    MatButtonModule,
+    LucideAngularModule.pick({ 
+      Eye,
+      SquarePen,
+      Trash,
+    })
   ],
 })
 export class AttendanceModule {}

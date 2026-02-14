@@ -14,7 +14,20 @@ import { PayrollComponent } from './payroll.component';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { FilterModule } from 'src/app/filter/filter.module';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
 
+import {LucideAngularModule,
+  BadgeIndianRupee,
+  BanknoteArrowDown,
+  IdCardLanyard,
+  Wallet,
+   Eye,
+      Trash,
+      SquarePen,
+      ShieldBan,
+      ShieldCheck
+} from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: PayrollComponent },
   {
@@ -50,6 +63,19 @@ const routes: Routes = [
     PreloaderModule,
     FilterModule,
     CapitalizeFirstPipe,
+    MatMenuModule,
+    MatButtonModule,
+    LucideAngularModule.pick({IdCardLanyard,
+      BadgeIndianRupee,
+      BanknoteArrowDown,
+      Wallet,
+       Eye,
+    Trash,
+    SquarePen,
+    ShieldBan,
+    ShieldCheck,
+    
+     })
   ],
 })
 export class PayrollModule {}

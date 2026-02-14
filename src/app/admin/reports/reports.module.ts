@@ -5,7 +5,18 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
 import { ReportsComponent } from './reports.component';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
-
+import {LucideAngularModule,
+  IdCardLanyard,
+  MessagesSquare,
+  CalendarCheck,
+  NotepadText,
+  CalendarClock,
+  CableCar,
+  Gift,
+  BanknoteArrowUp,
+  Landmark,
+  Users  
+} from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: ReportsComponent },
   {
@@ -30,6 +41,18 @@ const routes: Routes = [
     BreadcrumbModule,
     ButtonModule,
     PreloaderModule,
+    LucideAngularModule.pick({ 
+      IdCardLanyard,
+      MessagesSquare,
+      CalendarCheck,
+      NotepadText,
+      CalendarClock ,
+      CableCar,
+      Gift,
+      BanknoteArrowUp,
+      Landmark,
+      Users 
+    }),
   ],
 })
 export class ReportsModule {}

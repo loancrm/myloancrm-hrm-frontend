@@ -169,7 +169,7 @@
             [options]="hikeInternalStatusList"
             (onChange)="statusChange($event)"
             appendTo="body"
-            [dropdownIcon]="'fa fa-caret-down'"
+            [dropdownIcon]="'pi pi-chevron-down'"
             [(ngModel)]="selectedHikeStatus"
             optionLabel="displayName"
             dataKey="name"
@@ -188,14 +188,23 @@
               "
               (keyup.enter)="filterWithEmployeeName()"
             />
-            <button
+            <!-- <button
               type="button"
               pButton
               icon="pi pi-search"
               class="p-button-primary"
               [disabled]="!employeeeNameToSearch"
               (click)="filterWithEmployeeName()"
-            ></button>
+            ></button> -->
+            <span
+              class="input-group-text searchbtn"
+              (click)="filterWithEmployeeName()"
+            >
+              <img
+                src="../../../assets/images/icons/search.svg"
+                alt="Search" 
+              />
+            </span>
           </div>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
@@ -289,8 +298,9 @@
             >
           </b>
         </td> -->
-        <td *ngIf="capabilities.adminSalaryHikes">
-          <div class="d-flex align-items-center">
+        <td>
+          <ng-container *ngIf="capabilities.adminSalaryHikes">
+            <div class="d-flex align-items-center">
             <span class="me-2">
               <ng-container
                 *ngIf="
@@ -327,6 +337,7 @@
               </span>
             </b>
           </div>
+          </ng-container>
         </td>
         <td>
           <span class="table-column-data"
@@ -403,7 +414,7 @@
             {{ getStatusName(salaryHike.hikeInternalStatus) }}
           </span>
         </td>
-        <td *ngIf="capabilities.adminSalaryHikes">
+        <!-- <td *ngIf="capabilities.adminSalaryHikes">
           <div class="text-center">
             <div class="d-flex tableimage">
               <p-menu
@@ -422,16 +433,16 @@
                 tooltipPosition="top"
                 (click)="menu.toggle($event); $event.stopPropagation()"
               />
-              <!-- <button
+              <button
                 pButton
                 type="button"
                 class="custom-btn"
                 (click)="menu.toggle($event)"
                 icon="pi pi-ellipsis-h"
-              ></button> -->
+              ></button>
             </div>
           </div>
-        </td>
+        </td> -->
         <!-- <td *ngIf="capabilities.adminSalaryHikes">
           <div class="text-center">
             <div class="d-flex">
@@ -458,6 +469,24 @@
             </div>
           </div>
         </td> -->
+        <td>
+          <div class="text-center">
+            <div class="d-flex tableimage">
+
+              <img
+                class="pointer-cursor"
+                src="../../../assets/images/menu/menu.svg"
+                width="24"
+                height="24"
+                alt="Actions"
+                matTooltip="Actions"
+                [matMenuTriggerFor]="menu"
+                (click)="selectedSalaryHike = salaryHike; $event.stopPropagation()"
+              />
+
+            </div>
+          </div>
+        </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
@@ -473,6 +502,43 @@
       </tr>
     </ng-template>
   </p-table>
+  <mat-menu #menu="matMenu">
+
+  <ng-container *ngIf="selectedSalaryHike?.hikeInternalStatus === 1">
+
+    <button mat-menu-item (click)="updateSalaryHike(selectedSalaryHike)" class="menu-item">
+      <lucide-icon name="square-pen" [size]="20"class="menu-icon"></lucide-icon>
+      Update
+    </button>
+
+    <button mat-menu-item (click)="inactiveSalaryHike(selectedSalaryHike)" class="menu-item">
+      <lucide-icon name="shield-ban" [size]="20"class="menu-icon"></lucide-icon>
+      In Active
+    </button>
+
+  </ng-container>
+
+  <ng-container *ngIf="selectedSalaryHike?.hikeInternalStatus === 2">
+
+    <button mat-menu-item (click)="activateSalaryHike(selectedSalaryHike)" class="menu-item">
+      <lucide-icon name="shield-check" [size]="20"class="menu-icon"></lucide-icon>
+      Active
+    </button>
+
+  </ng-container>
+
+  <button
+    mat-menu-item
+    *ngIf="capabilities?.delete"
+    (click)="confirmDelete(selectedSalaryHike)"
+     class="menu-item"
+  >
+    <lucide-icon name="trash" [size]="20"class="menu-icon"></lucide-icon>
+    Delete
+  </button>
+
+</mat-menu>
+
 </div>
 <ng-template #noData> - </ng-template>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">

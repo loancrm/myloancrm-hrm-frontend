@@ -63,14 +63,23 @@
               "
               (keyup.enter)="filterWithHolidayName()"
             />
-            <button
+             <span
+              class="input-group-text searchbtn"
+              (click)="filterWithHolidayName()"
+            >
+              <img
+                src="../../../assets/images/icons/search.svg"
+                alt="Search" 
+              />
+            </span>
+            <!-- <button
               type="button"
               pButton
               icon="pi pi-search"
               class="p-button-primary"
               [disabled]="!holidayNameToSearch"
               (click)="filterWithHolidayName()"
-            ></button>
+            ></button> -->
           </div>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
@@ -185,24 +194,24 @@
           <div class="text-center">
             <div class="d-flex">
               <button
-                pButton
                 pRipple
                 type="button"
                 pTooltip="Update"
-                class="me-2 update-btn"
-                icon="fa fa-pen-to-square"
+               class="menu-item "
                 (click)="updateHoliday(holiday.holidayId)"
-                style="background-color: #8e89d0; border: 1px solid #8e89d0"
-              ></button>
+              >
+              <lucide-icon name="square-pen" [size]="18" class="menu-icon"></lucide-icon>
+              </button>
               <button
                 *ngIf="capabilities.delete"
-                pButton
+                pRipple
                 type="button"
-                icon="fa fa-trash"
                 pTooltip="Delete"
-                class="p-button-danger me-2 delete-btn"
+                class="menu-item"
                 (click)="confirmDelete(holiday)"
-              ></button>
+              >
+              <lucide-icon name="trash" [size]="18" class="menu-icon"></lucide-icon>
+              </button>
             </div>
           </div>
         </td>

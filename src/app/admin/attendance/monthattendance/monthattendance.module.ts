@@ -9,7 +9,14 @@ import { TableModule } from 'primeng/table';
 import { MonthattendanceComponent } from './monthattendance.component';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
-
+import {LucideAngularModule,
+  Eye,
+  UserCheck,
+  UserRoundX,
+  Sun,
+  CalendarClock,
+  Timer 
+} from 'lucide-angular';
 const routes: Routes = [{ path: '', component: MonthattendanceComponent }];
 
 @NgModule({
@@ -24,6 +31,14 @@ const routes: Routes = [{ path: '', component: MonthattendanceComponent }];
     TableModule,
     PreloaderModule,
     CapitalizeFirstPipe,
+    LucideAngularModule.pick({ 
+      Eye,
+      UserCheck,
+      UserRoundX,
+      Sun,
+      CalendarClock ,
+      Timer 
+    })
   ],
 })
 export class MonthattendanceModule {}

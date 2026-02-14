@@ -18,7 +18,7 @@
     <img
       src="../../../assets/images/logo.svg"
       alt="MyLoanCRM"
-      class="logo"
+      class="img-fluid logo"
       *ngIf="isSidebarVisible"
     />
     <!-- <img
@@ -72,13 +72,18 @@
           (click)="showMenuSection()"
           *ngIf="item.condition"
         >
-          <img
+          <!-- <img
             [src]="'assets/images/menu/' + item.image"
             class="sidebaricon"
             width="24"
             height="24"
             alt="icon"
-          />
+          /> -->
+          <lucide-icon
+            [name]="item.icon"
+            [size]="20"
+            class="sidebaricon me-2"
+          ></lucide-icon>
           <span class="sidebar-label ms-2" *ngIf="isSidebarVisible">
             {{ item.name }}
           </span>
@@ -90,11 +95,16 @@
   <!-- Footer -->
   <div class="sidebar-footer px-4 mb-3 pointer-cursor" *ngIf="isSidebarVisible">
     <a class="nav-link d-flex align-items-center" (click)="userLogout()">
-      <img
+      <!-- <img
         alt="Logout"
         src="../../../assets/images/menu/logout.svg"
         class="me-3 sidebaricon"
-      />
+      /> -->
+       <lucide-icon
+        name="LogOut"
+        [size]="20"
+        class="sidebaricon me-2"
+      ></lucide-icon>
       <span class="sidebar-label">Logout</span>
     </a>
   </div>

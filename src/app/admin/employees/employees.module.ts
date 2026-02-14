@@ -13,7 +13,21 @@ import { EmployeesComponent } from './employees.component';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { FilterModule } from 'src/app/filter/filter.module';
-
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import {LucideAngularModule,
+  ArrowLeft,
+  IdCardLanyard,
+  UserPlus,
+  UserRoundCog,
+  UserX,
+  Eye,
+  ScrollText,
+  SquarePen,
+  ShieldX,
+  Trash,
+  ShieldCheck   
+} from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: EmployeesComponent },
   {
@@ -63,6 +77,21 @@ const routes: Routes = [
     CapitalizeFirstPipe,
     PreloaderModule,
     FilterModule,
+    MatMenuModule,
+    MatButtonModule,
+     LucideAngularModule.pick({ 
+      ArrowLeft,
+      IdCardLanyard,
+      UserPlus,
+      UserRoundCog,
+      UserX ,
+      Eye,
+      ScrollText,
+      SquarePen,
+      ShieldX,
+      Trash,
+      ShieldCheck  
+     }),
   ],
 })
 export class EmployeesModule {}

@@ -31,7 +31,7 @@
 .count-sub-title {
   font-size: 12px !important;
   // font-weight: bold !important;
-  color: #878784;
+  color: #232323;
 }
 .count-sub-title-employee {
   font-size: 12px !important;
@@ -130,6 +130,11 @@
   flex: 1;
   margin-left: 5px;
 }
+/* Target calendar icon inside your component */
+::ng-deep .p-calendar .p-datepicker-trigger .pi-calendar {
+  color: white !important; /* change icon color to white */
+}
+
 @media screen and (max-width: 620px) {
   .employee-info-line {
     display: block;
@@ -201,4 +206,19 @@
 }
 .loggedin-value {
   font-size: 30px;
+}
+
+.leaveimage{
+  filter: brightness(0) saturate(100%) invert(56%) sepia(69%) saturate(6372%) hue-rotate(339deg) brightness(99%) contrast(88%);
+}
+
+.presentimage{
+  filter: brightness(0) saturate(100%) invert(71%) sepia(89%) saturate(445%) hue-rotate(55deg) brightness(101%) contrast(85%);
+}
+
+.lateloginimage{
+  filter: brightness(0) saturate(100%) invert(73%) sepia(60%) saturate(3631%) hue-rotate(343deg) brightness(106%) contrast(92%);
+}
+.halfdayimage{
+  filter: brightness(0) saturate(100%) invert(17%) sepia(75%) saturate(5602%) hue-rotate(235deg) brightness(100%) contrast(92%);
 }

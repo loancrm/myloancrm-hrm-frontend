@@ -223,23 +223,24 @@
           <div class="text-center">
             <div class="d-flex">
               <button
-                pButton
                 pRipple
                 type="button"
                 pTooltip="Update"
-                class="updatecolor me-2 update-btn"
-                icon="fa fa-pen-to-square"
+                class="menu-item"
                 (click)="updateIpAddress(ipAddress)"
-              ></button>
+              >
+              <lucide-icon name="square-pen" [size]="18" class="menu-icon"></lucide-icon>
+              </button>
               <button
                 *ngIf="capabilities.delete"
-                pButton
+                pRipple
                 type="button"
-                icon="fa fa-trash"
                 pTooltip="Delete"
-                class="p-button-danger me-2 delete-btn"
+                class="menu-item"
                 (click)="confirmDelete(ipAddress)"
-              ></button>
+              >
+              <lucide-icon name="trash" [size]="18" class="menu-icon"></lucide-icon>
+              </button>
             </div>
           </div>
         </td>

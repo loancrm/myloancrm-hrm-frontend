@@ -114,7 +114,7 @@
       </div>
     </div>
   </p-sidebar>
-  <div class="button-wrapper position-relative">
+  <!-- <div class="button-wrapper position-relative">
     <button
       pButton
       pRipple
@@ -126,5 +126,16 @@
       class="p-button-text"
     ></button>
     <span class="indication-dot" *ngIf="showIndicationIcon"></span>
+  </div> -->
+
+  <div class="filter-wrapper" (click)="sidebarVisible = true">
+    <img
+      src="../../assets/images/icons/Filter.svg"
+      alt="Filter"
+      widtxh="24px"
+      height="24px"
+      class="filter-icon"
+    />
+    <sup class="indication-dot" *ngIf="showIndicationIcon"></sup>
   </div>
 </div>

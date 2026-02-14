@@ -22,6 +22,7 @@ export class SalaryhikeComponent {
   breadCrumbItems: any = [];
   formFields: any = [];
   loading: any;
+  selectedSalaryHike: any;
   appliedFilter: {};
   salaryHikeData: any;
   filterConfig: any[] = [];

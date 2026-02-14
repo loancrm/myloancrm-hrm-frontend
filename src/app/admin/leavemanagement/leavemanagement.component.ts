@@ -229,7 +229,8 @@ export class LeavemanagementComponent {
   updateCountsAnalytics() {
     this.countsAnalytics = [
       {
-        icon: 'totlleaves',
+        // icon: 'totlleaves',
+        icon:'file-user',
         name: 'all',
         displayName: 'Total Leaves',
         count:
@@ -240,7 +241,8 @@ export class LeavemanagementComponent {
         // backgroundcolor: '#F0EFFF',
       },
       {
-        icon: 'pendingleaves',
+        // icon: 'pendingleaves',
+        icon: 'clipboard-clock',
         name: 'pending',
         displayName: 'Pending Leaves',
         count: this.leavesStatusCount[1],
@@ -248,7 +250,8 @@ export class LeavemanagementComponent {
         // backgroundcolor: '#FFF3D6',
       },
       {
-        icon: 'aprovedleaves',
+        // icon: 'aprovedleaves',
+        icon:'shield-check',
         name: 'approved',
         displayName: 'Approved Leaves',
         count: this.leavesStatusCount[2],
@@ -256,7 +259,8 @@ export class LeavemanagementComponent {
         // backgroundcolor: '#F0F9E8',
       },
       {
-        icon: 'rejectleaves',
+        // icon: 'rejectleaves',
+        icon:'shield-x',
         name: 'rejected',
         displayName: 'Rejected Leaves',
         count: this.leavesStatusCount[3],

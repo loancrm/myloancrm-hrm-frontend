@@ -13,7 +13,16 @@ import { DesignationsComponent } from './designations.component';
 import { FilterModule } from 'src/app/filter/filter.module';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import {LucideAngularModule,
+  Eye,
+  Trash,
+  SquarePen,
+  ShieldBan,
+  ShieldCheck,
 
+}from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: DesignationsComponent },
   {
@@ -45,6 +54,15 @@ const routes: Routes = [
     FilterModule,
     PreloaderModule,
     CapitalizeFirstPipe,
+    MatMenuModule,
+    MatButtonModule,
+    LucideAngularModule.pick({
+      Eye,
+      Trash,
+      SquarePen,
+      ShieldBan,
+      ShieldCheck,
+    })
   ],
 })
 export class DesignationsModule {}

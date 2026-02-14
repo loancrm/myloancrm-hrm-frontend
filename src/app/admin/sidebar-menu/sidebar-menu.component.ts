@@ -125,6 +125,7 @@ export class SidebarMenuComponent implements OnChanges {
     this.subFeatureMenuItems = [
       {
         name: 'Dashboard',
+        icon: 'LayoutDashboard',
         condition: true,
         routerLink: 'dashboard',
         image: 'dashboard.svg',
@@ -134,6 +135,7 @@ export class SidebarMenuComponent implements OnChanges {
       {
         name: 'Employees',
         condition: this.capabilities.adminEmployees,
+        icon: 'id-card-lanyard',
         routerLink: 'employees',
         image: 'employeehrms.svg',
         thumbnail: 'employeehrms.svg',
@@ -144,6 +146,7 @@ export class SidebarMenuComponent implements OnChanges {
         name: 'Interviews',
         condition: this.capabilities.interviews,
         routerLink: 'interviews',
+        icon:'messages-square',
         image: 'interviehrmlogo.svg',
         thumbnail: 'interviehrmlogo.svg',
         showOutside: this.capabilities.interviews,
@@ -154,6 +157,7 @@ export class SidebarMenuComponent implements OnChanges {
           this.capabilities.adminAttendance ||
           this.capabilities.employeeAttendance,
         routerLink: 'attendance',
+        icon:'user-check',
         image: 'attendencehrmlogo.svg',
         thumbnail: 'attendencehrmlogo.svg',
         showOutside:
@@ -165,6 +169,7 @@ export class SidebarMenuComponent implements OnChanges {
         condition:
           this.capabilities.adminPayroll || this.capabilities.employeePayroll,
         routerLink: 'payroll',
+        icon: 'hand-coins',
         image: 'payrollhrmlogo.svg',
         thumbnail: 'payrollhrmlogo.svg',
         showOutside:
@@ -176,6 +181,7 @@ export class SidebarMenuComponent implements OnChanges {
         condition:
           this.capabilities.adminLeaves || this.capabilities.employeeLeaves,
         routerLink: 'leaves',
+        icon: 'user-x',
         image: 'leavemanagementlogo.svg',
         thumbnail: 'leavemanagementlogo.svg',
         showOutside:
@@ -185,6 +191,7 @@ export class SidebarMenuComponent implements OnChanges {
         name: 'Holidays',
         condition: this.capabilities.holidays,
         routerLink: 'holidays',
+        icon:'sun',
         image: 'holidayhrmlogo.svg',
         thumbnail: 'holidayhrmlogo.svg',
         showOutside: this.capabilities.holidays,
@@ -195,6 +202,7 @@ export class SidebarMenuComponent implements OnChanges {
           this.capabilities.adminIncentives ||
           this.capabilities.employeeIncentives,
         routerLink: 'incentives',
+        icon:'banknote-arrow-up',
         image: 'incentiveshrmlogo.svg',
         thumbnail: 'incentiveshrmlogo.svg',
         showOutside:
@@ -205,6 +213,7 @@ export class SidebarMenuComponent implements OnChanges {
         name: 'Departments',
         condition: this.capabilities.departments,
         routerLink: 'designations',
+        icon:'landmark',
         image: 'departmenthrmlogo.svg',
         thumbnail: 'departmenthrmlogo.svg',
         showOutside: this.capabilities.departments,
@@ -215,6 +224,7 @@ export class SidebarMenuComponent implements OnChanges {
           this.capabilities.adminSalaryHikes ||
           this.capabilities.employeeSalaryHikes,
         routerLink: 'salaryhikes',
+        icon: 'trending-up',
         image: 'salaryhikehrmlogo.svg',
         thumbnail: 'salaryhikehrmlogo.svg',
         showOutside:
@@ -225,6 +235,7 @@ export class SidebarMenuComponent implements OnChanges {
         name: 'Events',
         condition: this.capabilities.events,
         routerLink: 'events',
+        icon:'calendar-days',
         image: 'eventshrmlogo.svg',
         thumbnail: 'eventshrmlogo.svg',
         showOutside: this.capabilities.events,
@@ -238,6 +249,7 @@ export class SidebarMenuComponent implements OnChanges {
         //   this.userDetails?.designation == 4,
         routerLink: 'users',
         image: 'userhrmlogo.svg',
+        icon: 'ShieldUser',
         thumbnail: 'userhrmlogo.svg',
         showOutside: this.capabilities.users,
         // showOutside: true,
@@ -248,6 +260,7 @@ export class SidebarMenuComponent implements OnChanges {
       {
         name: 'Reports',
         condition: this.capabilities.reports,
+        icon:'FileChartPie',
         routerLink: 'reports',
         image: 'reportshrm.svg',
         thumbnail: 'reportshrm.svg',
@@ -257,6 +270,7 @@ export class SidebarMenuComponent implements OnChanges {
         name: 'Ip Address',
         condition: this.capabilities.ipAddress,
         routerLink: 'ipAddress',
+        icon:'wifi-cog',
         image: 'ipaddresslogo.svg',
         thumbnail: 'ipaddresslogo.svg',
         showOutside: this.capabilities.ipAddress,
@@ -264,6 +278,7 @@ export class SidebarMenuComponent implements OnChanges {
       {
         name: 'Settings',
         condition: this.capabilities.showSettings,
+        icon: 'Settings',
         routerLink: 'settings',
         image: 'settinglogo.svg',
         thumbnail: 'settinglogo.svg',

@@ -120,10 +120,12 @@
       <div class="card attendancecard" *ngIf="!capabilities.employee">
         <div class="text-center d-flex justify-content-between mobile-only">
           <h4 class="attendance-heading">Today Attendance</h4>
-          <p-calendar
+          <div class="custom-calendar-wrapper position-relative">
+            <p-calendar
+            #calendar
             [(ngModel)]="selectedDate"
             dateFormat="yy-mm-dd"
-            [showIcon]="true"
+            [showIcon]="false"
             [style]="{ width: '200px' }"
             appendTo="body"
             [showButtonBar]="true"
@@ -132,13 +134,20 @@
             placeholder="Select a date"
           >
           </p-calendar>
+          <img
+            src="../../../assets/images/icons/calendar.svg"
+            alt="Calendar Icon"
+            class="calendar-custom-img"
+            (click)="calendar.toggle()"
+          />
+          </div>
         </div>
         <div class="row mt-2">
           <div class="col-md-6">
             <div class="info-line">
               <span class="text-success">
                 <!-- <i class="fas fa-check"></i> -->
-                <img src="../../../assets/images/presenthrmicon.svg" alt="" />
+                <img src="../../../assets/images/presenthrmicon.svg" alt="" class="presentimage"/>
               </span>
               <div class="label d-flex justify-content-between">
                 TOTAL PRESENT<b>:&nbsp;</b>
@@ -148,7 +157,7 @@
             <div class="info-line">
               <span class="text-danger">
                 <!-- <i class="fas fa-xmark"></i> -->
-                <img src="../../../assets/images/onleaveicon.svg" alt="" />
+                <img src="../../../assets/images/onleaveicon.svg" alt="" class="leaveimage"/>
               </span>
               <div class="label d-flex justify-content-between">
                 ON LEAVE<b>:&nbsp;</b>
@@ -160,7 +169,7 @@
             <div class="info-line">
               <span class="text-warning">
                 <!-- <i class="fas fa-circle-half-stroke"></i> -->
-                <img src="../../../assets/images/halfdayicon.svg" alt="" />
+                <img src="../../../assets/images/halfdayicon.svg" alt="" class="halfdayimage"/>
               </span>
               <div class="label d-flex justify-content-between">
                 HALF-DAY<b>:&nbsp;</b>
@@ -173,6 +182,7 @@
                 <img
                   src="../../../assets/images/lateloginicon (2).svg"
                   alt=""
+                  class="lateloginimage"
                 />
               </span>
               <div class="label d-flex justify-content-between">
@@ -485,7 +495,7 @@
     <div class="col-md-12 col-12">
       <div class="row mt-3">
         <ng-container>
-          <div class="col-md-4 col-12" *ngIf="DepartmentChartOptions">
+          <div class="col-md-6 col-12" *ngIf="DepartmentChartOptions">
             <br class="d-lg-none d-md-none" />
             <div class="card p-2 chart-container" style="height: 420px">
               <app-apex-charts
@@ -501,7 +511,7 @@
             </div>
           </div>
         </ng-container>
-        <div class="col-md-4 col-12" *ngIf="pieChartOptions">
+        <div class="col-md-6 col-12" *ngIf="pieChartOptions">
           <br class="d-lg-none d-md-none" />
           <div class="card p-2" style="height: 420px; position: relative">
             <div>
@@ -521,7 +531,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 col-12" *ngIf="branchpieChartOptions">
+        <!-- <div class="col-md-4 col-12" *ngIf="branchpieChartOptions">
           <br class="d-lg-none d-md-none" />
           <div class="card p-2" style="height: 420px; position: relative">
             <div>
@@ -540,7 +550,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <br />
