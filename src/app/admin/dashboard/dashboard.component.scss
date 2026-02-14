@@ -222,3 +222,8 @@
 .halfdayimage{
   filter: brightness(0) saturate(100%) invert(17%) sepia(75%) saturate(5602%) hue-rotate(235deg) brightness(100%) contrast(92%);
 }
+.card-design{
+  border: 2px solid #535ab4;
+  border-radius: 5px;
+  padding: 5px !important;
+}
