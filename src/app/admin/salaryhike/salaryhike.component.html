@@ -298,8 +298,8 @@
             >
           </b>
         </td> -->
-        <td>
-          <ng-container *ngIf="capabilities.adminSalaryHikes">
+        <td  *ngIf="capabilities.adminSalaryHikes">
+          <ng-container>
             <div class="d-flex align-items-center">
             <span class="me-2">
               <ng-container
@@ -469,7 +469,7 @@
             </div>
           </div>
         </td> -->
-        <td>
+        <td *ngIf="capabilities.adminSalaryHikes">
           <div class="text-center">
             <div class="d-flex tableimage">
 
@@ -504,41 +504,40 @@
   </p-table>
   <mat-menu #menu="matMenu">
 
-  <ng-container *ngIf="selectedSalaryHike?.hikeInternalStatus === 1">
+    <ng-container *ngIf="selectedSalaryHike?.hikeInternalStatus === 1">
 
-    <button mat-menu-item (click)="updateSalaryHike(selectedSalaryHike)" class="menu-item">
-      <lucide-icon name="square-pen" [size]="20"class="menu-icon"></lucide-icon>
-      Update
+      <button mat-menu-item (click)="updateSalaryHike(selectedSalaryHike)" class="menu-item">
+        <lucide-icon name="square-pen" [size]="20"class="menu-icon"></lucide-icon>
+        Update
+      </button>
+
+      <button mat-menu-item (click)="inactiveSalaryHike(selectedSalaryHike)" class="menu-item">
+        <lucide-icon name="shield-ban" [size]="20"class="menu-icon"></lucide-icon>
+        In Active
+      </button>
+
+    </ng-container>
+
+    <ng-container *ngIf="selectedSalaryHike?.hikeInternalStatus === 2">
+
+      <button mat-menu-item (click)="activateSalaryHike(selectedSalaryHike)" class="menu-item">
+        <lucide-icon name="shield-check" [size]="20"class="menu-icon"></lucide-icon>
+        Active
+      </button>
+
+    </ng-container>
+
+    <button
+      mat-menu-item
+      *ngIf="capabilities?.delete"
+      (click)="confirmDelete(selectedSalaryHike)"
+      class="menu-item"
+    >
+      <lucide-icon name="trash" [size]="20"class="menu-icon"></lucide-icon>
+      Delete
     </button>
 
-    <button mat-menu-item (click)="inactiveSalaryHike(selectedSalaryHike)" class="menu-item">
-      <lucide-icon name="shield-ban" [size]="20"class="menu-icon"></lucide-icon>
-      In Active
-    </button>
-
-  </ng-container>
-
-  <ng-container *ngIf="selectedSalaryHike?.hikeInternalStatus === 2">
-
-    <button mat-menu-item (click)="activateSalaryHike(selectedSalaryHike)" class="menu-item">
-      <lucide-icon name="shield-check" [size]="20"class="menu-icon"></lucide-icon>
-      Active
-    </button>
-
-  </ng-container>
-
-  <button
-    mat-menu-item
-    *ngIf="capabilities?.delete"
-    (click)="confirmDelete(selectedSalaryHike)"
-     class="menu-item"
-  >
-    <lucide-icon name="trash" [size]="20"class="menu-icon"></lucide-icon>
-    Delete
-  </button>
-
-</mat-menu>
-
+  </mat-menu>
 </div>
 <ng-template #noData> - </ng-template>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">

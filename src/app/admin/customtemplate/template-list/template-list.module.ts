@@ -21,6 +21,12 @@ import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { TemplateListComponent } from './template-list.component';
 import { MenuModule } from 'primeng/menu'; 
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import {LucideAngularModule,
+  ShieldBan,
+  ShieldCheck,
+}from 'lucide-angular';
 @NgModule({
   declarations: [
     TemplateListComponent   // ✅ DECLARED
@@ -30,7 +36,14 @@ import { MenuModule } from 'primeng/menu';
     TableModule,
     ButtonModule,
     RouterModule,
-    MenuModule  // ✅ IMPORTED
+    MenuModule,
+    MatMenuModule,
+    MatButtonModule,
+    LucideAngularModule.pick({
+      ShieldBan,
+      ShieldCheck,
+    })
+
   ],
   exports: [
     TemplateListComponent   // ✅ EXPORTED (THIS WAS MISSING)

@@ -20,6 +20,11 @@ import {LucideAngularModule,
   Eye,
   SquarePen,
   Trash,
+  UserCheck,
+  UserRoundX,
+  Sun,
+      CalendarClock ,
+      Timer 
 
 } from 'lucide-angular';
 const routes: Routes = [
@@ -69,6 +74,11 @@ const routes: Routes = [
       Eye,
       SquarePen,
       Trash,
+      UserCheck,
+      UserRoundX,
+      Sun,
+      CalendarClock ,
+      Timer 
     })
   ],
 })
