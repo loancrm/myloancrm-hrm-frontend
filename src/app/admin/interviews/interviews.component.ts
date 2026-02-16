@@ -655,7 +655,7 @@ getStatusColor(status: string): {
       case 'selected':
         return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6', dotColor: '#14BA6D', width: '100%' };
       case 'pending':
-        return { textColor: '#FF555A', backgroundColor: '#FFE2E3', dotColor: '#FF555A', width: '100%' };
+        return { textColor: '#e99e12', backgroundColor: '#f4d396', dotColor: '#e99e12', width: '100%' };
       case 'rejected':
         return { textColor: '#FF555A', backgroundColor: '#FFE2E3', dotColor: '#FF555A', width: '100%' };
       default:

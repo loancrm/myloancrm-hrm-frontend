@@ -60,11 +60,12 @@
                     class="rounded-lg"
                     autocomplete="off"
                   />
-                  <p-calendar
+                  <div *ngSwitchCase="'month'" class="custom-calendar-wrapper position-relative">
+                    <p-calendar
                     *ngSwitchCase="'month'"
                     [formControlName]="field.controlName"
                     [placeholder]="'Select ' + field.label"
-                    [showIcon]="true"
+                    [showIcon]="false"
                     appendTo="body"
                     view="month"
                     [showButtonBar]="true"
@@ -73,15 +74,22 @@
                     appendTo="body"
                     [readonlyInput]="true"
                   ></p-calendar>
+                  <img
+                    src="../../../assets/images/icons/calendar.svg"
+                    alt="Calendar Icon"
+                    class="calendar-custom-img"
+                    
+                  />
+                  </div>  
                   <p-dropdown
                     *ngSwitchCase="'dropdown'"
                     [options]="this[field.options]"
                     [formControlName]="field.controlName"
                     [optionLabel]="field.optionLabel"
                     [optionValue]="field.optionValue"
-                    [showClear]="true"
+                    [showClear]="false"
                     [placeholder]="'Select ' + field.label"
-                    [dropdownIcon]="'fa fa-caret-down'"
+                    [dropdownIcon]="'pi pi-chevron-down'"
                     styleClass="w-100"
                     [filter]="true"
                     filterPlaceholder="Search..."
@@ -148,9 +156,11 @@
                     <div>
                       <label>Disbursed Month&nbsp;</label>
                       <div class="d-flex">
-                        <p-calendar
+                        <div class="custom-calendar-wrapper position-relative">
+                          <p-calendar
+                          #calendar
                           [(ngModel)]="loans.disbursedMonth"
-                          [showIcon]="true"
+                          [showIcon]="false"
                           view="month"
                           [monthNavigator]="true"
                           [ngModelOptions]="{ standalone: true }"
@@ -164,6 +174,15 @@
                           [style]="{ width: '100%' }"
                           placeholder="Select Disbursed Month"
                         ></p-calendar>
+                        <img
+                            src="../../../assets/images/icons/calendar.svg"
+                            alt="Calendar Icon"
+                            class="calendar-custom-img"
+                            (click)="calendar.toggle()"
+                            
+                          />
+                        </div>
+                        
                         <button
                           pButton
                           pRipple

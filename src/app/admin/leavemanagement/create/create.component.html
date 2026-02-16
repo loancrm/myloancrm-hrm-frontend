@@ -68,27 +68,35 @@
                     class="rounded-lg"
                     autocomplete="off"
                   />
-                  <p-calendar
+                  <div *ngSwitchCase="'calendar'" class="custom-calendar-wrapper position-relative">
+                    <p-calendar
                     *ngSwitchCase="'calendar'"
                     [formControlName]="field.controlName"
                     [placeholder]="'Select ' + field.label"
-                    [showIcon]="true"
+                    [showIcon]="false"
                     appendTo="body"
                     dateFormat="yy-mm-dd"
                     styleClass="w-100"
                     [readonlyInput]="true"
                     [showButtonBar]="true"
                   ></p-calendar>
+                  <img
+                    src="../../../assets/images/icons/calendar.svg"
+                    alt="Calendar Icon"
+                    class="calendar-custom-img"
+                    
+                  />
+                  </div>
                   <p-dropdown
                     *ngSwitchCase="'dropdown'"
                     [options]="this[field.options]"
                     [formControlName]="field.controlName"
                     [optionLabel]="field.optionLabel"
                     [optionValue]="field.optionValue"
-                    [showClear]="true"
+                    [showClear]="false"
                     appendTo="body"
                     [placeholder]="'Select ' + field.label"
-                    [dropdownIcon]="'fa fa-caret-down'"
+                    [dropdownIcon]="'pi pi-chevron-down'"
                     styleClass="w-100"
                     [filter]="true"
                     filterPlaceholder="Search..."

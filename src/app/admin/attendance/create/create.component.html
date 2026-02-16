@@ -39,10 +39,12 @@
           >Attendance Date <span>&nbsp;<sup class="text-danger">*</sup></span>
         </label>
       </div>
-      <p-calendar
+      <div class="custom-calendar-wrapper position-relative">
+        <p-calendar
+        #calendar
         [(ngModel)]="selectedDate"
         dateFormat="yy-mm-dd"
-        [showIcon]="true"
+        [showIcon]="false"
         [style]="{ width: '100%' }"
         appendTo="body"
         [showButtonBar]="true"
@@ -51,6 +53,13 @@
         (onSelect)="getLeaves()"
       >
       </p-calendar>
+      <img
+        src="../../../assets/images/icons/calendar.svg"
+        alt="Calendar Icon"
+        class="calendar-custom-img"
+        (click)="calendar.toggle()"
+        
+      />
     </div>
   </div>
   <p-table
@@ -147,7 +156,7 @@
           <p-dropdown
             [options]="attendanceOptions"
             [(ngModel)]="employee.status"
-            [showClear]="true"
+            [showClear]="false"
             appendTo="body"
             (onChange)="updateAttendanceStatus(employee)"
             [style]="{ width: '150px' }"

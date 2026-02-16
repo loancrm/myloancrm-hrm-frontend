@@ -18,6 +18,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import {LucideAngularModule,
   SquarePen,
   Trash,
+  Landmark,
 } from 'lucide-angular';
 
 // const routes: Routes = [
@@ -68,6 +69,7 @@ const routes: Routes = [
     LucideAngularModule.pick({ 
           SquarePen,
           Trash,
+          Landmark,
          })
   ],
 })

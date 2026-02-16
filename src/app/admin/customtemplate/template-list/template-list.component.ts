@@ -48,6 +48,9 @@ export class TemplateListComponent {
       row.status = newStatus; // 🔥 THIS fixes button text
     });
 }
+showDefaultError() {
+  this.toastService.showError({error:"Default template can't be modified"});
+}
 
 actionItems(row: any): MenuItem[] {
 

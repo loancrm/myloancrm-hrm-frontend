@@ -64,11 +64,12 @@
                       autocomplete="off"
                       [readonly]="field.controlName === 'day'"
                     />
-                    <p-calendar
+                    <div *ngSwitchCase="'calendar'" class="custom-calendar-wrapper position-relative">
+                       <p-calendar
                       *ngSwitchCase="'calendar'"
                       [formControlName]="field.controlName"
                       [placeholder]="'Select ' + field.label"
-                      [showIcon]="true"
+                      [showIcon]="false"
                       dateFormat="yy-mm-dd"
                       appendTo="body"
                       [showButtonBar]="true"
@@ -77,6 +78,14 @@
                       (onSelect)="onDateSelect($event)"
                     >
                     </p-calendar>
+                    <img
+                    src="../../../assets/images/icons/calendar.svg"
+                    alt="Calendar Icon"
+                    class="calendar-custom-img"
+                    
+                  />
+                    </div>
+                   
                   </ng-container>
                 </div>
               </div>

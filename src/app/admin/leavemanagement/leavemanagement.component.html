@@ -581,33 +581,33 @@
         </td>
         <td>
           <div class="text-center">
-            <div class="d-flex tableimage">
+            <div class="d-flex">
               <button
                 *ngIf="capabilities.employeeLeaves"
-                pButton
                 pRipple
                 type="button"
                 pTooltip="Leave Details"
                 tooltipPosition="left"
-                class="p-button-info me-2 view-btn"
-                icon="fa fa-eye"
-                (click)="showLeaveDetails(leave)" style="background-color: #535ab4; border: #535ab4;"
-              ></button>
+                class="menu-item "
+                (click)="showLeaveDetails(leave)"
+              >
+              <lucide-icon name="eye" [size]="18" class="menu-icon"></lucide-icon>
+              </button>
               <button
                 *ngIf="capabilities.employeeLeaves"
-                pButton
                 pRipple
                 type="button"
                 pTooltip="Update"
                 tooltipPosition="left"
-                class="p-button-success me-2 update-btn"
-                icon="fa fa-pen-to-square"
+                class="menu-item "
                 [disabled]="
                   leave.leaveInternalStatus === 2 ||
                   leave.leaveInternalStatus === 3
                 "
-                (click)="updateLeave(leave.leaveId)"  style="background-color:#979ad1; border: #979ad1"
-              ></button>
+                (click)="updateLeave(leave.leaveId)"
+              >
+              <lucide-icon name="square-pen" [size]="18" class="menu-icon"></lucide-icon>
+              </button>
               <!-- <p-menu
                 appendTo="body"
                 #menu
@@ -634,7 +634,8 @@
                 icon="pi pi-ellipsis-h"
               ></button> -->
               
-              <img
+             <div class="d-flex tableimage" *ngIf="capabilities.adminLeaves">
+               <img
                 class="pointer-cursor"
                 src="../../../assets/images/menu/menu.svg"
                 width="24"
@@ -645,6 +646,7 @@
                 [matMenuTriggerFor]="leaveMenu"
                 (click)="selectedLeave = leave; $event.stopPropagation()"
               />
+             </div>
 
             </div>
           </div>

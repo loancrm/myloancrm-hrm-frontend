@@ -69,14 +69,23 @@
               "
               (keyup.enter)="filterWithReportType()"
             />
-            <button
+            <!-- <button
               type="button"
               pButton
               icon="pi pi-search"
               class="p-button-primary"
               [disabled]="!reportTypeToSearch"
               (click)="filterWithReportType()"
-            ></button>
+            ></button> -->
+            <span
+              class="input-group-text searchbtn"
+              (click)="filterWithReportType()"
+            >
+              <img
+                src="../../../assets/images/icons/search.svg"
+                alt="Search" 
+              />
+            </span>
           </div>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small"></div>
@@ -134,7 +143,7 @@
         </td>
         <td>
           <div class="text-center">
-            <div class="d-flex">
+            <div class="d-flex gap-3">
               <span *ngFor="let file of report.reportUrl">
                 <ng-container>
                   <a [href]="'//' + file" target="_blank">
@@ -143,10 +152,10 @@
                       pRipple
                       type="button"
                       pTooltip="Download"
-                      class="p-button-info me-2 view-btn"
-                      icon="fa fa-download"
-                      style="background-color: #8e89d0; border-color: #8e89d0"
-                    ></button>
+                      class="view-btn"
+                    >
+                    <lucide-icon name="arrow-down-to-line" [size]="25" class="menu-icon"></lucide-icon>
+                    </button>
                   </a>
                 </ng-container>
               </span>
@@ -154,11 +163,12 @@
                 *ngIf="capabilities.delete"
                 pButton
                 type="button"
-                icon="fa fa-trash"
                 pTooltip="Delete"
-                class="p-button-danger me-2 delete-btn"
+                class="view-btn"
                 (click)="confirmDelete(report)"
-              ></button>
+              >
+              <lucide-icon name="trash" [size]="25" class="menu-icon"></lucide-icon>
+              </button>
             </div>
           </div>
         </td>
