@@ -1,4 +1,4 @@
-/* Screen preview should look like A4 */
+
 .a4-preview {
   display: flex;
   flex-direction: column;
@@ -15,7 +15,7 @@
   background: #fff;
 }
 
-/* 🔥 Prevent paragraph/table cutting */
+
 p, table, tr, td, th, img, h1, h2, h3, h4, h5, h6 {
   page-break-inside: avoid;
 }

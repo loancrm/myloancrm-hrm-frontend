@@ -245,7 +245,7 @@
         </td> -->
         <td>
   <div class="text-center">
-    <div class="d-flex">
+    <div class="d-flex g-5">
       <!-- VIEW BUTTON -->
       <button
         type="button"
@@ -312,8 +312,16 @@
               class="fa fa-check-circle text-success"
               title="Present"
             ></i> -->
-            <img src="../../../assets/images/presenthrmicon.svg" alt="" *ngSwitchCase="'Present'"
-              pTooltip="Present" title="Present">
+            <!-- <img src="../../../assets/images/presenthrmicon.svg" alt="" *ngSwitchCase="'Present'"
+              pTooltip="Present" title="Present"> -->
+              <lucide-icon
+                  *ngSwitchCase="'Present'"
+                  name="user-check"
+                  size="20"
+                  title="Present"
+                  pTooltip="Present"
+                  class="text-success"
+                ></lucide-icon>
             <!-- Absent Status with Red Dot -->
             <span
               *ngSwitchCase="'Absent'"
@@ -330,8 +338,16 @@
               class="fa fa-circle-xmark text-danger"
               title="Absent"
             ></i> -->
-              <img src="../../../assets/images/onleaveicon.svg" alt="" *ngSwitchCase="'Absent'"
-              pTooltip="Absent" title="Absent">
+              <!-- <img src="../../../assets/images/onleaveicon.svg" alt="" *ngSwitchCase="'Absent'"
+              pTooltip="Absent" title="Absent"> -->
+              <lucide-icon
+                *ngSwitchCase="'Absent'"
+                name="user-round-x"
+                size="20"
+                title="Absent"
+                pTooltip="Absent"
+                class="text-danger"
+              ></lucide-icon>
             <!-- Half-day Status with Orange Dot -->
             <span
               *ngSwitchCase="'Half-day'"
@@ -348,10 +364,10 @@
               class="fa fa-circle-half-stroke text-warning"
               title="Half-day"
             ></i> -->
-              <img src="../../../assets/images/halfdayicon.svg" alt="" *ngSwitchCase="'Half-day'"
-              pTooltip="Half-day" title="Half-day">
+              <!-- <img src="../../../assets/images/halfdayicon.svg" alt="" *ngSwitchCase="'Half-day'"
+              pTooltip="Half-day" title="Half-day"> -->
             <!-- Late Status with Blue Dot -->
-            <span
+            <!-- <span
               *ngSwitchCase="'Late'"
               [ngStyle]="{
                 color: 'blue',
@@ -359,14 +375,30 @@
                 'margin-right': '8px'
               }"
               ></span
-            >
+            > -->
+             <lucide-icon
+                  *ngSwitchCase="'Half-day'"
+                  name="timer"
+                  size="20"
+                  title="Half-day"
+                  pTooltip="Half-day"
+                  class="text-primary"
+                ></lucide-icon>
             <!-- <i
               *ngSwitchCase="'Late'"
               pTooltip="Late"
               class="fa fa-circle-exclamation text-primary"
               title="Late"
             ></i> -->
-              <img src="../../../assets/images/lateloginicon (2).svg" alt="" title="Late" pTooltip="Late" *ngSwitchCase="'Late'">
+              <!-- <img src="../../../assets/images/lateloginicon (2).svg" alt="" title="Late" pTooltip="Late" *ngSwitchCase="'Late'"> -->
+               <lucide-icon
+                  *ngSwitchCase="'Late'"
+                  name="calendar-clock"
+                  size="20"
+                  title="Late"
+                  pTooltip="Late"
+                  class="text-warning"
+                ></lucide-icon>
             <!-- Default Case for Other Statuses -->
             <span *ngSwitchDefault>{{ employee.status }}</span>
           </ng-container>

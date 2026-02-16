@@ -47,7 +47,7 @@ body {
 }
 
 .btn-primary {
-  background-color: #c7c2e8 !important;
+  // background-color: #c7c2e8 !important;
   color: #000 !important;
   font-weight: 600 !important;
   border: none !important;
@@ -683,7 +683,7 @@ body {
     width: 24px;
     height: 24px;
     transition: all 0.2s ease;
-    filter: brightness(0) saturate(100%) invert(19%) sepia(83%) saturate(3382%) hue-rotate(241deg) brightness(80%) contrast(144%);
+     filter: brightness(0) saturate(100%) invert(42%) sepia(87%) saturate(607%) hue-rotate(207deg) brightness(97%) contrast(100%);
   }
 
   &:hover {
@@ -711,14 +711,10 @@ body {
   box-shadow: none !important;
 }
 
-.menu-item:hover {
-   background-color:  rgba($primary-color, 0.1);
-}
-
 .menu-item .menu-icon {
 
-  width: 24px;
-  height: 24px;
+  width: 25px;
+  height: 25px;
 
   background-color:  rgba($primary-color, 0.1);
   border-radius: 6px;
@@ -726,11 +722,6 @@ body {
   // margin-right: px !important;
 }
 
-
-  ::ng-deep .mat-menu-item {
-  background: transparent !important;
-}
-
-::ng-deep .mat-menu-item:hover {
-  background: transparent !important;
+::ng-deep .mat-mdc-menu-item:hover {
+  background-color: rgba($primary-color, 0.1) !important;
 }

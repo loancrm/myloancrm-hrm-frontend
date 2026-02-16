@@ -95,7 +95,7 @@
           (click)="toggleStatus(row)"
         ></button>
       </td> -->
-      <td>
+      <!-- <td>
         <div class="text-center">
           <div class="d-flex tableimage">
             <p-menu
@@ -105,15 +105,6 @@
             
             [popup]="true"
           ></p-menu>
-
-          <!-- <img
-            alt="Actions"
-            src="../../../assets/images/menu/menu.svg"
-            width="24"
-            height="24"
-            class="pointer-cursor"
-            (click)="menu.toggle($event); $event.stopPropagation()"
-          /> -->
           <img
             alt="Actions"
             src="../../../assets/images/menu/menu.svg"
@@ -122,10 +113,114 @@
             class="pointer-cursor"
             (click)="menu.toggle($event); $event.stopPropagation()"
           />
-
           </div>
         </div>
-      </td>
+      </td> -->
+
+      <td>
+  <div class="text-center">
+    <div class="d-flex tableimage">
+
+      <!-- Menu Trigger -->
+      <img
+        class="pointer-cursor"
+        src="../../../assets/images/menu/menu.svg"
+        width="24"
+        height="24"
+        alt="Actions"
+        matTooltip="Actions"
+        [matMenuTriggerFor]="menu"
+        (click)="$event.stopPropagation()"
+      />
+
+      <!-- Angular Material Menu -->
+      <mat-menu #menu="matMenu">
+
+        <!-- 🔒 DEFAULT TEMPLATE (canEdit = 0) -->
+        <ng-container *ngIf="row.canEdit === 0">
+
+          <button
+            mat-menu-item
+            (click)="showDefaultError()"
+            class="menu-item"
+          >
+            <lucide-icon name="square-pen" [size]="20" class="menu-icon"></lucide-icon>
+            Edit
+          </button>
+<!-- 
+          <button
+            mat-menu-item
+            (click)="showDefaultError()"
+            class="menu-item"
+          >
+            <lucide-icon name="power" [size]="20" class="menu-icon"></lucide-icon>
+            {{ row.status === 1 ? 'Inactive' : 'Active' }}
+          </button> -->
+          <button
+            mat-menu-item
+            (click)="showDefaultError()"
+            class="menu-item"
+          >
+            <lucide-icon
+              [name]="row.status === 1 ? 'shield-ban' : 'shield-check'"
+              [size]="20"
+              class="menu-icon">
+            </lucide-icon>
+
+            {{ row.status === 1 ? 'Inactive' : 'Active' }}
+          </button>
+
+
+        </ng-container>
+
+
+        <!-- ✅ CUSTOM TEMPLATE (canEdit = 1) -->
+        <ng-container *ngIf="row.canEdit === 1">
+
+          <!-- Edit -->
+          <button
+            mat-menu-item
+            *ngIf="row.canEdit === 1"
+            [disabled]="row.status === 0"
+            (click)="editTemplate(row.id)"
+            class="menu-item"
+          >
+            <lucide-icon name="square-pen" [size]="20" class="menu-icon"></lucide-icon>
+            Edit
+          </button>
+
+          <!-- Toggle Status -->
+          <!-- <button
+            mat-menu-item
+            *ngIf="row.canEdit === 1"
+            (click)="toggleStatus(row)"
+            class="menu-item"
+          >
+            <lucide-icon name="power" [size]="20" class="menu-icon"></lucide-icon>
+            {{ row.status === 1 ? 'Inactive' : 'Active' }}
+          </button> -->
+
+          <button
+            mat-menu-item
+            (click)="toggleStatus(row)"
+            class="menu-item"
+          >
+            <lucide-icon
+              [name]="row.status === 1 ? 'shield-ban' : 'shield-check'"
+              [size]="20"
+              class="menu-icon">
+            </lucide-icon>
+
+            {{ row.status === 1 ? 'Inactive' : 'Active' }}
+          </button>
+
+        </ng-container>
+
+      </mat-menu>
+
+    </div>
+  </div>
+</td>
 
     </tr>
   </ng-template>
