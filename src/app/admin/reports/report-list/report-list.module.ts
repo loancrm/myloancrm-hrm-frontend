@@ -9,7 +9,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ReportListComponent } from './report-list.component';
 import { FilterModule } from 'src/app/filter/filter.module';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
-
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import {LucideAngularModule,
+  ArrowDownToLine,
+  Trash
+} from 'lucide-angular';
 const routes: Routes = [{ path: '', component: ReportListComponent }];
 
 @NgModule({
@@ -24,6 +29,10 @@ const routes: Routes = [{ path: '', component: ReportListComponent }];
     InputTextModule,
     PreloaderModule,
     FilterModule,
+    LucideAngularModule.pick({ 
+      ArrowDownToLine,
+      Trash
+    })
   ],
 })
 export class ReportListModule {}

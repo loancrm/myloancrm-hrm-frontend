@@ -68,8 +68,8 @@
                     [(ngModel)]="filter[field.field + '-' + field.filterType]"
                     [optionLabel]="field.label"
                     appendTo="body"
-                    [showClear]="true"
-                    [dropdownIcon]="'fa fa-caret-down'"
+                    [showClear]="false"
+                    [dropdownIcon]="'pi pi-chevron-down'"
                     [autoDisplayFirst]="false"
                   >
                   </p-dropdown>
@@ -100,7 +100,7 @@
                       width: field.fieldWidth ? field.fieldWidth : '100%'
                     }"
                     [(ngModel)]="filter[field.field + '-' + field.filterType]"
-                    [dropdownIcon]="'fa fa-caret-down'"
+                    [dropdownIcon]="'pi pi-chevron-down'"
                     [options]="field.options"
                     appendTo="body"
                     [optionValue]="field.value"
