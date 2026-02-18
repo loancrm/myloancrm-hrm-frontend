@@ -666,7 +666,100 @@ body {
    ============================================== */
 
 /* Menu trigger button */
-.tableimage {
+// .tableimage {
+//   all: unset;
+//   display: inline-flex;
+//   align-items: center;
+//   justify-content: center;
+//   width: 32px;
+//   height: 32px;
+//   border-radius: 8px;
+//   background-color: rgba($primary-color, 0.1);
+//   cursor: pointer;
+//   transition: all 0.2s ease;
+//   border: 1px solid transparent;
+
+//   img {
+//     width: 24px;
+//     height: 24px;
+//     transition: all 0.2s ease;
+//      filter: brightness(0) saturate(100%) invert(42%) sepia(87%) saturate(607%) hue-rotate(207deg) brightness(97%) contrast(100%);
+//   }
+
+//   &:hover {
+//     background-color: rgba($primary-color, 0.1);
+//     transform: translateY(-1px);
+//   }
+
+//   &:hover img {
+//     filter: brightness(0) saturate(100%) invert(19%) sepia(83%) saturate(3382%) hue-rotate(241deg) brightness(80%) contrast(144%);
+//   }
+
+//   &:active {
+//     background-color: rgba($primary-color, 0.2);
+//     transform: translateY(0);
+//   }
+// }
+
+// .menu-item {
+//   display: flex;
+//   align-items: center;
+//   gap: 14px;
+//   font-size: 12px;
+//   border: none !important;
+//   background: transparent !important;
+//   box-shadow: none !important;
+// }
+
+// .menu-item .menu-icon {
+
+//   width: 25px;
+//   height: 25px;
+
+//   background-color:  rgba($primary-color, 0.1);
+//   border-radius: 6px;
+//   color: $primary-color;
+//   // margin-right: px !important;
+// }
+
+// ::ng-deep .mat-mdc-menu-item:hover {
+//   background-color: rgba($primary-color, 0.1) !important;
+// }
+
+.action-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: rgba($primary-color, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+
+  &:hover {
+    background-color: rgba($primary-color, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba($primary-color, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+    background-color: rgba($primary-color, 0.3);
+  }
+
+  .action-icon {
+    color: $primary-color;
+    transition: all 0.2s ease;
+  }
+
+  &:hover .action-icon {
+    color: darken($primary-color, 5%);
+  }
+}
+
+.menu-icon-wrapper {
   all: unset;
   display: inline-flex;
   align-items: center;
@@ -679,49 +772,55 @@ body {
   transition: all 0.2s ease;
   border: 1px solid transparent;
 
-  img {
-    width: 24px;
-    height: 24px;
-    transition: all 0.2s ease;
-     filter: brightness(0) saturate(100%) invert(42%) sepia(87%) saturate(607%) hue-rotate(207deg) brightness(97%) contrast(100%);
-  }
-
   &:hover {
-    background-color: rgba($primary-color, 0.1);
+    background-color: rgba($primary-color, 0.2);
     transform: translateY(-1px);
-  }
-
-  &:hover img {
-    filter: brightness(0) saturate(100%) invert(19%) sepia(83%) saturate(3382%) hue-rotate(241deg) brightness(80%) contrast(144%);
+    box-shadow: 0 2px 4px rgba($primary-color, 0.2);
   }
 
   &:active {
-    background-color: rgba($primary-color, 0.2);
     transform: translateY(0);
+    background-color: rgba($primary-color, 0.3);
+  }
+
+  .action-icon {
+    color: $primary-color;
+    transition: all 0.2s ease;
+  }
+
+  &:hover .action-icon {
+    color: darken($primary-color, 5%);
   }
 }
 
-.menu-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-size: 12px;
-  border: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
+.matmenuimg {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px;
+
+  .menu-action-icon-wrapper {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background-color: rgba($primary-color, 0.1);
+    margin-right: 8px;
+    transition: all 0.2s ease;
+
+    .menu-action-icon {
+      color: $primary-color;
+      transition: all 0.2s ease;
+    }
+  }
+
+  &:hover .menu-action-icon-wrapper {
+    background-color: rgba($primary-color, 0.2);
+
+    .menu-action-icon {
+      color: darken($primary-color, 5%);
+    }
+  }
 }
 
-.menu-item .menu-icon {
-
-  width: 25px;
-  height: 25px;
-
-  background-color:  rgba($primary-color, 0.1);
-  border-radius: 6px;
-  color: $primary-color;
-  // margin-right: px !important;
-}
-
-::ng-deep .mat-mdc-menu-item:hover {
-  background-color: rgba($primary-color, 0.1) !important;
-}

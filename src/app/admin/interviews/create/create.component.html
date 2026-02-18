@@ -68,7 +68,7 @@
                   />
                   <div *ngIf="field.type === 'calendar'" class="custom-calendar-wrapper position-relative">
                     <p-calendar
-                    *ngSwitchCase="'calendar'"
+                    #calendar
                     [formControlName]="field.controlName"
                     [placeholder]="'Select ' + field.label"
                     [showIcon]="false"
@@ -82,6 +82,7 @@
                     src="../../../assets/images/icons/calendar.svg"
                     alt="Calendar Icon"
                     class="calendar-custom-img"
+                    (click)="calendar.toggle()"
                     
                   />
                   </div>

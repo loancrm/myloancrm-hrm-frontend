@@ -88,7 +88,7 @@
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
           <div  class="custom-calendar-wrapper position-relative">
           <p-calendar
-            #calendar
+            #calendar1
             [(ngModel)]="displayMonth"
             [showIcon]="false"
             view="month"
@@ -106,7 +106,7 @@
             src="../../../assets/images/icons/calendar.svg"
             alt="Calendar Icon"
             class="calendar-custom-img"
-            (click)="calendar.toggle()"
+            (click)="calendar1.toggle()"
           />
           </div>
         </div>
@@ -245,46 +245,43 @@
           </div>
         </td> -->
         <td>
-  <div class="text-center">
-    <div class="d-flex g-5">
-      <!-- VIEW BUTTON -->
-      <button
-        type="button"
-        pRipple
-        pTooltip="View"
-        class="menu-item"
-        (click)="ViewAttendance(attendance.attendanceId)"
-      >
-        <lucide-icon name="eye" [size]="20" class="menu-icon"></lucide-icon>
-      </button>
+          <div class="text-center pointer-cursor tableimage">
+            <div class="d-flex g-5">
+              <button
+                type="button"
+                pRipple
+                pTooltip="View"
+                class="action-icon-wrapper me-2"
+                (click)="ViewAttendance(attendance.attendanceId)"
+              >
+                <lucide-icon name="eye" [size]="20"class="action-icon"></lucide-icon>
+              </button>
 
-      <!-- UPDATE BUTTON -->
-      <button
-        type="button"
-        pRipple
-        pTooltip="Update"
-        class="menu-item "
-        (click)="updateAttendance(attendance.attendanceId)"
-      >
-        <lucide-icon name="square-pen" [size]="18" class="menu-icon"></lucide-icon>
-      </button>
+              <!-- UPDATE BUTTON -->
+              <button
+                type="button"
+                pRipple
+                pTooltip="Update"
+                class="action-icon-wrapper me-2"
+                (click)="updateAttendance(attendance.attendanceId)"
+              >
+                <lucide-icon name="square-pen" [size]="18" class="action-icon"></lucide-icon>
+              </button>
 
-      <!-- DELETE BUTTON -->
-      <button
-        *ngIf="capabilities.delete"
-        type="button"
-        pRipple
-        pTooltip="Delete"
-        class="menu-item"
-        (click)="confirmDelete(attendance)"
-      >
-        <lucide-icon name="trash" [size]="18" class="menu-icon"></lucide-icon>
-      </button>
-    </div>
-  </div>
-</td>
-
-
+              <!-- DELETE BUTTON -->
+              <button
+                *ngIf="capabilities.delete"
+                type="button"
+                pRipple
+                pTooltip="Delete"
+                class="action-icon-wrapper me-2"
+                (click)="confirmDelete(attendance)"
+              >
+                <lucide-icon name="trash" [size]="18"class="action-icon"></lucide-icon>
+              </button>
+            </div>
+          </div>
+        </td>
       </tr>
     </ng-template>
     <ng-template

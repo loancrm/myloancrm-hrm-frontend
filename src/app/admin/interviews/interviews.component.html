@@ -519,79 +519,107 @@
             </div>
           </div>
         </td> -->
+           
         <td>
-          <div class="text-center">
-            <div class="d-flex tableimage">
+          <div class="text-center pointer-cursor tableimage">
+            <div class="d-flex">
 
-              <!-- Menu Trigger -->
-              <img
-                class="pointer-cursor"
-                src="../../../assets/images/menu/menu.svg"
-                width="24"
-                height="24"
-                alt="Actions"
-                matTooltip="Actions"
+              <!-- ACTION MENU BUTTON -->
+              <button
+                class="action-icon-wrapper menu-icon-wrapper"
                 [matMenuTriggerFor]="menu"
+                aria-label="Actions"
+                matTooltip="Actions"
                 (click)="$event.stopPropagation()"
-              />
+              >
+                <lucide-icon
+                  name="MoreVertical"
+                  [size]="20"
+                  class="action-icon"
+                ></lucide-icon>
+              </button>
 
-              <!-- Angular Material Menu -->
+              <!-- MAT MENU -->
               <mat-menu #menu="matMenu">
 
                 <!-- Interview Details -->
-                <button mat-menu-item (click)="showInterviewDetails(interview)" class="menu-item">
-                  <lucide-icon name="eye" [size]="24" class="menu-icon"></lucide-icon>
-                  Interview Details
+                <button mat-menu-item (click)="showInterviewDetails(interview)" class="matmenuimg">
+                  <div class="menu-action-icon-wrapper">
+                    <lucide-icon name="eye" [size]="18" class="menu-action-icon"></lucide-icon>
+                  </div>
+                  <span>Interview Details</span>
                 </button>
 
                 <!-- Status = 1 -->
                 <ng-container *ngIf="interview.interviewInternalStatus === 1">
-                  <button mat-menu-item (click)="selectedInterview(interview)" class="menu-item">
-                    <lucide-icon name="user-round-check" [size]="24" class="menu-icon"></lucide-icon>
-                    Selected
+
+                  <button mat-menu-item (click)="selectedInterview(interview)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="user-round-check" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Selected</span>
                   </button>
 
-                  <button mat-menu-item (click)="rejectedInterview(interview)" class="menu-item">
-                    <lucide-icon name="user-round-x" [size]="24" class="menu-icon"></lucide-icon>
-                    Rejected
+                  <button mat-menu-item (click)="rejectedInterview(interview)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="user-round-x" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Rejected</span>
                   </button>
+
                 </ng-container>
 
                 <!-- Status = 2 -->
                 <ng-container *ngIf="interview.interviewInternalStatus === 2">
-                  <button mat-menu-item (click)="confirmSendtoEmployee(interview)" class="menu-item">
-                    <lucide-icon name="id-card-lanyard" [size]="24" class="menu-icon"></lucide-icon>
-                    Send To Employee
+
+                  <button mat-menu-item (click)="confirmSendtoEmployee(interview)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="id-card-lanyard" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Send To Employee</span>
                   </button>
 
-                  <button mat-menu-item (click)="pendingInterview(interview)" class="menu-item">
-                    <lucide-icon name="loader" [size]="24" class="menu-icon"></lucide-icon>
-                    Pending
+                  <button mat-menu-item (click)="pendingInterview(interview)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="loader" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Pending</span>
                   </button>
 
-                  <button mat-menu-item (click)="rejectedInterview(interview)" class="menu-item">
-                   <lucide-icon name="circle-x" [size]="24" class="menu-icon"></lucide-icon>
-                    Rejected
+                  <button mat-menu-item (click)="rejectedInterview(interview)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="circle-x" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Rejected</span>
                   </button>
+
                 </ng-container>
 
                 <!-- Status = 3 -->
                 <ng-container *ngIf="interview.interviewInternalStatus === 3">
-                  <button mat-menu-item (click)="pendingInterview(interview)" class="menu-item">
-                    <lucide-icon name="loader" [size]="24" class="menu-icon"></lucide-icon>
-                    Pending
+
+                  <button mat-menu-item (click)="pendingInterview(interview)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="loader" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Pending</span>
                   </button>
 
-                  <button mat-menu-item (click)="selectedInterview(interview)" class="menu-item">
-                    <lucide-icon name="user-round-check" [size]="24" class="menu-icon"></lucide-icon>
-                    Selected
+                  <button mat-menu-item (click)="selectedInterview(interview)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="user-round-check" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Selected</span>
                   </button>
+
                 </ng-container>
 
                 <!-- Update -->
-                <button mat-menu-item (click)="updateInterview(interview.interviewId)" class="menu-item">
-                 <lucide-icon name="square-pen" [size]="24" class="menu-icon"></lucide-icon>
-                  Update
+                <button mat-menu-item (click)="updateInterview(interview.interviewId)" class="matmenuimg">
+                  <div class="menu-action-icon-wrapper">
+                    <lucide-icon name="square-pen" [size]="18" class="menu-action-icon"></lucide-icon>
+                  </div>
+                  <span>Update</span>
                 </button>
 
                 <!-- Delete -->
@@ -599,10 +627,12 @@
                   mat-menu-item
                   *ngIf="capabilities?.delete"
                   (click)="confirmDelete(interview)"
-                   class="menu-item"
+                  class="matmenuimg"
                 >
-                  <lucide-icon name="trash" [size]="24" class="menu-icon"></lucide-icon>
-                  Delete
+                  <div class="menu-action-icon-wrapper">
+                    <lucide-icon name="trash" [size]="18" class="menu-action-icon"></lucide-icon>
+                  </div>
+                  <span>Delete</span>
                 </button>
 
               </mat-menu>
@@ -610,6 +640,7 @@
             </div>
           </div>
         </td>
+
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">

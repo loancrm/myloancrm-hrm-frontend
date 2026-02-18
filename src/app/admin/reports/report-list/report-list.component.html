@@ -148,26 +148,25 @@
                 <ng-container>
                   <a [href]="'//' + file" target="_blank">
                     <button
-                      pButton
                       pRipple
                       type="button"
                       pTooltip="Download"
-                      class="view-btn"
+                      class="action-icon-wrapper me-2"
                     >
-                    <lucide-icon name="arrow-down-to-line" [size]="25" class="menu-icon"></lucide-icon>
+                    <lucide-icon name="arrow-down-to-line" [size]="25" class="action-icon"></lucide-icon>
                     </button>
                   </a>
                 </ng-container>
               </span>
               <button
+                pRipple
                 *ngIf="capabilities.delete"
-                pButton
                 type="button"
                 pTooltip="Delete"
-                class="view-btn"
+                class="action-icon-wrapper me-2"
                 (click)="confirmDelete(report)"
               >
-              <lucide-icon name="trash" [size]="25" class="menu-icon"></lucide-icon>
+              <lucide-icon name="trash" [size]="25" class="action-icon"></lucide-icon>
               </button>
             </div>
           </div>

@@ -580,73 +580,142 @@
           >
         </td>
         <td>
-          <div class="text-center">
-            <div class="d-flex">
+          <div class="text-center pointer-cursor tableimage">
+            <div class="d-flex align-items-center gap-2">
+
+              <!-- Leave Details Button -->
               <button
                 *ngIf="capabilities.employeeLeaves"
-                pRipple
                 type="button"
                 pTooltip="Leave Details"
                 tooltipPosition="left"
-                class="menu-item "
-                (click)="showLeaveDetails(leave)"
+                class="action-icon-wrapper"
+                (click)="showLeaveDetails(leave); $event.stopPropagation()"
               >
-              <lucide-icon name="eye" [size]="18" class="menu-icon"></lucide-icon>
+                <lucide-icon name="eye" [size]="18" class="action-icon"></lucide-icon>
               </button>
+
+              <!-- Update Button -->
               <button
                 *ngIf="capabilities.employeeLeaves"
-                pRipple
                 type="button"
                 pTooltip="Update"
                 tooltipPosition="left"
-                class="menu-item "
+                class="action-icon-wrapper"
                 [disabled]="
                   leave.leaveInternalStatus === 2 ||
                   leave.leaveInternalStatus === 3
                 "
-                (click)="updateLeave(leave.leaveId)"
+                (click)="updateLeave(leave.leaveId); $event.stopPropagation()"
               >
-              <lucide-icon name="square-pen" [size]="18" class="menu-icon"></lucide-icon>
+                <lucide-icon name="square-pen" [size]="18" class="action-icon"></lucide-icon>
               </button>
-              <!-- <p-menu
-                appendTo="body"
-                #menu
-                [model]="actionItems(leave)"
-                [popup]="true"
-              ></p-menu>
-              <img
-                class="pointer-cursor"
-                alt="Actions"
-                src="../../../assets/images/menu/menu.svg"
-                width="24px"
-                height="24px"
-                pTooltip="Actions"
-                tooltipPosition="top"
+
+              <!-- Admin Action Menu -->
+              <button
                 *ngIf="capabilities.adminLeaves"
-                (click)="menu.toggle($event); $event.stopPropagation()"
-              /> -->
-              <!-- <button
-                *ngIf="capabilities.adminLeaves"
-                pButton
-                type="button"
-                class="custom-btn"
-                (click)="menu.toggle($event)"
-                icon="pi pi-ellipsis-h"
-              ></button> -->
-              
-             <div class="d-flex tableimage" *ngIf="capabilities.adminLeaves">
-               <img
-                class="pointer-cursor"
-                src="../../../assets/images/menu/menu.svg"
-                width="24"
-                height="24"
-                alt="Actions"
-                matTooltip="Actions"
-                *ngIf="capabilities.adminLeaves"
+                class="action-icon-wrapper menu-icon-wrapper"
                 [matMenuTriggerFor]="leaveMenu"
+                matTooltip="Actions"
                 (click)="selectedLeave = leave; $event.stopPropagation()"
-              />
-             </div>
+              >
+                <lucide-icon
+                  name="MoreVertical"
+                  [size]="20"
+                  class="action-icon"
+                ></lucide-icon>
+              </button>
+
+              <!-- MAT MENU -->
+              <mat-menu #leaveMenu="matMenu">
+
+                <!-- Leave Details -->
+                <button mat-menu-item (click)="showLeaveDetails(selectedLeave)" class="matmenuimg">
+                  <div class="menu-action-icon-wrapper">
+                    <lucide-icon name="eye" [size]="18" class="menu-action-icon"></lucide-icon>
+                  </div>
+                  <span>Leave Details</span>
+                </button>
+
+                <!-- Status = 1 -->
+                <ng-container *ngIf="selectedLeave?.leaveInternalStatus === 1">
+
+                  <button mat-menu-item (click)="approveLeave(selectedLeave)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="circle-check-big" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Approved</span>
+                  </button>
+
+                  <button mat-menu-item (click)="rejectLeave(selectedLeave)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="circle-x" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Rejected</span>
+                  </button>
+
+                </ng-container>
+
+                <!-- Status = 2 -->
+                <ng-container *ngIf="selectedLeave?.leaveInternalStatus === 2">
+
+                  <button mat-menu-item (click)="pendingLeave(selectedLeave)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="calendar-clock" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Pending</span>
+                  </button>
+
+                  <button mat-menu-item (click)="rejectLeave(selectedLeave)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="circle-x" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Rejected</span>
+                  </button>
+
+                </ng-container>
+
+                <!-- Status = 3 -->
+                <ng-container *ngIf="selectedLeave?.leaveInternalStatus === 3">
+
+                  <button mat-menu-item (click)="pendingLeave(selectedLeave)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="calendar-clock" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Pending</span>
+                  </button>
+
+                  <button mat-menu-item (click)="approveLeave(selectedLeave)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="circle-check-big" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Approved</span>
+                  </button>
+
+                </ng-container>
+
+                <!-- Update -->
+                <button mat-menu-item (click)="updateLeave(selectedLeave?.leaveId)" class="matmenuimg">
+                  <div class="menu-action-icon-wrapper">
+                    <lucide-icon name="square-pen" [size]="18" class="menu-action-icon"></lucide-icon>
+                  </div>
+                  <span>Update</span>
+                </button>
+
+                <!-- Delete -->
+                <button
+                  mat-menu-item
+                  *ngIf="capabilities?.delete"
+                  (click)="confirmDelete(selectedLeave)"
+                  class="matmenuimg"
+                >
+                  <div class="menu-action-icon-wrapper">
+                    <lucide-icon name="trash" [size]="18" class="menu-action-icon"></lucide-icon>
+                  </div>
+                  <span>Delete</span>
+                </button>
+
+              </mat-menu>
 
             </div>
           </div>
@@ -675,78 +744,6 @@
       </tr>
     </ng-template>
   </p-table>
-  <mat-menu #leaveMenu="matMenu">
-
-  <!-- Leave Details (Always Visible) -->
-  <button mat-menu-item (click)="showLeaveDetails(selectedLeave)" class="menu-item">
-    <lucide-icon name="eye" [size]="20" class="menu-icon"></lucide-icon>
-    Leave Details
-  </button>
-
-  <!-- Status = 1 -->
-  <ng-container *ngIf="selectedLeave?.leaveInternalStatus === 1">
-
-    <button mat-menu-item (click)="approveLeave(selectedLeave)" class="menu-item">
-      <lucide-icon name="circle-check-big" [size]="20" class="menu-icon"></lucide-icon>
-      Approved
-    </button>
-
-    <button mat-menu-item (click)="rejectLeave(selectedLeave)" class="menu-item">
-      <lucide-icon name="circle-x" [size]="20" class="menu-icon"></lucide-icon>
-      Rejected
-    </button>
-
-  </ng-container>
-
-  <!-- Status = 2 -->
-  <ng-container *ngIf="selectedLeave?.leaveInternalStatus === 2">
-
-    <button mat-menu-item (click)="pendingLeave(selectedLeave)" class="menu-item">
-      <lucide-icon name="calendar-clock" [size]="20" class="menu-icon"></lucide-icon>
-      Pending
-    </button>
-
-    <button mat-menu-item (click)="rejectLeave(selectedLeave)" class="menu-item">
-      <lucide-icon name="circle-x" [size]="20" class="menu-icon"></lucide-icon>
-      Rejected
-    </button>
-
-  </ng-container>
-
-  <!-- Status = 3 -->
-  <ng-container *ngIf="selectedLeave?.leaveInternalStatus === 3">
-
-    <button mat-menu-item (click)="pendingLeave(selectedLeave)" class="menu-item">
-      <lucide-icon name="calendar-clock" [size]="20" class="menu-icon"></lucide-icon>
-      Pending
-    </button>
-
-    <button mat-menu-item (click)="approveLeave(selectedLeave)" class="menu-item">
-      <lucide-icon name="circle-check-big" [size]="20" class="menu-icon"></lucide-icon>
-      Approved
-    </button>
-
-  </ng-container>
-
-  <!-- Update -->
-  <button mat-menu-item (click)="updateLeave(selectedLeave?.leaveId)" class="menu-item">
-    <lucide-icon name="square-pen" [size]="20" class="menu-icon"></lucide-icon>
-    Update
-  </button>
-
-  <!-- Delete -->
-  <button
-    mat-menu-item
-    *ngIf="capabilities?.delete"
-    (click)="confirmDelete(selectedLeave)"
-     class="menu-item"
-  >
-    <lucide-icon name="trash" [size]="20" class="menu-icon"></lucide-icon>
-    Delete
-  </button>
-
-</mat-menu>
-
 </div>
 <ng-template #noData> - </ng-template>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">

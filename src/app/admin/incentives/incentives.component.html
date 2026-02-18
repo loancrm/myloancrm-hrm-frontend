@@ -414,30 +414,30 @@
                 pRipple
                 type="button"
                 pTooltip="View"
-                class="menu-item"
+                class="action-icon-wrapper me-2"
                 (click)="showUserDetails(incentive)"
               >
-              <lucide-icon name="eye" [size]="18" class="menu-icon"></lucide-icon>
+              <lucide-icon name="eye" [size]="18" class="action-icon"></lucide-icon>
             </button>
               <button
                 *ngIf="capabilities.adminIncentives"
                 pRipple
                 type="button"
                 pTooltip="Update"
-                class="menu-item"
+                class="action-icon-wrapper me-2"
                 (click)="updateIncentive(incentive.incentiveId)"
               >
-              <lucide-icon name="square-pen" [size]="18" class="menu-icon"></lucide-icon>
+              <lucide-icon name="square-pen" [size]="18" class="action-icon"></lucide-icon>
               </button>
               <button
                 *ngIf="capabilities.delete"
                 pRipple
                 type="button"
                 pTooltip="Delete"
-                class="menu-item"
+                class="action-icon-wrapper me-2"
                 (click)="confirmDelete(incentive)" 
               >
-              <lucide-icon name="trash" [size]="18" class="menu-icon"></lucide-icon>
+              <lucide-icon name="trash" [size]="18" class="action-icon"></lucide-icon>
               </button>
             </div>
           </div>

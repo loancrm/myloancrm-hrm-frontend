@@ -342,90 +342,105 @@
           </div>
         </td> -->
         <td>
-          <div class="text-center">
-            <div class="d-flex tableimage">
+  <div class="text-center pointer-cursor tableimage">
+    <div class="d-flex">
 
-              <!-- ACTION MENU BUTTON -->
-              <button
-                class="menu-action-button"
-                [matMenuTriggerFor]="employeeMenu"
-                aria-label="Actions"
-                pTooltip="Actions"
-                tooltipPosition="top"
-                style="all: unset; cursor: pointer"
-                (click)="$event.stopPropagation()"
-              >
-                <img
-                  alt="Actions"
-                  src="../../../assets/images/menu/menu.svg"
-                  width="24"
-                  height="24"
-                />
-              </button>
+      <!-- ACTION MENU BUTTON -->
+      <button
+        class="action-icon-wrapper menu-icon-wrapper"
+        [matMenuTriggerFor]="employeeMenu"
+        aria-label="Actions"
+        pTooltip="Actions"
+        tooltipPosition="top"
+        (click)="$event.stopPropagation()"
+      >
+        <lucide-icon
+          name="MoreVertical"
+          [size]="20"
+          class="action-icon"
+        ></lucide-icon>
+      </button>
 
-              <!-- MAT MENU -->
-              <mat-menu #employeeMenu="matMenu">
+      <!-- MAT MENU -->
+      <mat-menu #employeeMenu="matMenu">
 
-                <!-- ================= ACTIVE EMPLOYEE ================= -->
-                <ng-container *ngIf="employee.employeeInternalStatus === 1">
+        <!-- ================= ACTIVE EMPLOYEE ================= -->
+        <ng-container *ngIf="employee.employeeInternalStatus === 1">
 
-                  <button mat-menu-item (click)="employeeProfile(employee.employeeId)" class="menu-item">
-                    <lucide-icon name="eye" [size]="24" class="menu-icon"></lucide-icon>
-                    Profile
-                  </button>
-
-                  <button mat-menu-item (click)="ViewOfferletter(employee.employeeId)" class="menu-item">
-                    <lucide-icon name="scroll-text" [size]="24" class="menu-icon"></lucide-icon>
-                    Offer Letter
-                  </button>
-
-                  <button mat-menu-item (click)="updateEmployee(employee.employeeId)" class="menu-item">
-                   <lucide-icon name="square-pen" [size]="24" class="menu-icon"></lucide-icon>
-                    Update
-                  </button>
-
-                  <button mat-menu-item (click)="inactiveEmployee(employee)" class="menu-item">
-                    <lucide-icon name="shield-x" [size]="24" class="menu-icon"></lucide-icon>
-                    InActive
-                  </button>
-
-                  <button
-                    mat-menu-item
-                    *ngIf="capabilities.delete"
-                    (click)="confirmDelete(employee)"
-                    class="menu-item"
-                  >
-                    <lucide-icon name="trash" [size]="24" class="menu-icon"></lucide-icon>
-                    Delete
-                  </button>
-
-                </ng-container>
-
-                <!-- ================= INACTIVE EMPLOYEE ================= -->
-                <ng-container *ngIf="employee.employeeInternalStatus === 2">
-
-                  <button mat-menu-item (click)="employeeProfile(employee.employeeId)" class="menu-item">
-                    <lucide-icon name="eye" [size]="24" class="menu-icon"></lucide-icon>
-                    Profile
-                  </button>
-
-                  <button mat-menu-item (click)="ViewRelievingletter(employee.employeeId)" class="menu-item">
-                    <lucide-icon name="scroll-text" [size]="24" class="menu-icon"></lucide-icon>
-                    Relieving Letter
-                  </button>
-
-                  <button mat-menu-item (click)="activateEmployee(employee)" class="menu-item">
-                    <lucide-icon name="shield-check" [size]="24" class="menu-icon"></lucide-icon>
-                    Active
-                  </button>
-
-                </ng-container>
-
-              </mat-menu>
-
+          <button mat-menu-item (click)="employeeProfile(employee.employeeId)" class="matmenuimg">
+            <div class="menu-action-icon-wrapper">
+              <lucide-icon name="eye" [size]="18" class="menu-action-icon"></lucide-icon>
             </div>
-          </div>
-        </td>
+            <span>Profile</span>
+          </button>
+
+          <button mat-menu-item (click)="ViewOfferletter(employee.employeeId)" class="matmenuimg">
+            <div class="menu-action-icon-wrapper">
+              <lucide-icon name="scroll-text" [size]="18" class="menu-action-icon"></lucide-icon>
+            </div>
+            <span>Offer Letter</span>
+          </button>
+
+          <button mat-menu-item (click)="updateEmployee(employee.employeeId)" class="matmenuimg">
+            <div class="menu-action-icon-wrapper">
+              <lucide-icon name="square-pen" [size]="18" class="menu-action-icon"></lucide-icon>
+            </div>
+            <span>Update</span>
+          </button>
+
+          <button mat-menu-item (click)="inactiveEmployee(employee)" class="matmenuimg">
+            <div class="menu-action-icon-wrapper">
+              <lucide-icon name="shield-x" [size]="18" class="menu-action-icon"></lucide-icon>
+            </div>
+            <span>InActive</span>
+          </button>
+
+          <button
+            mat-menu-item
+            *ngIf="capabilities.delete"
+            (click)="confirmDelete(employee)"
+            class="matmenuimg"
+          >
+            <div class="menu-action-icon-wrapper">
+              <lucide-icon name="trash" [size]="18" class="menu-action-icon"></lucide-icon>
+            </div>
+            <span>Delete</span>
+          </button>
+
+        </ng-container>
+
+        <!-- ================= INACTIVE EMPLOYEE ================= -->
+        <ng-container *ngIf="employee.employeeInternalStatus === 2">
+
+          <button mat-menu-item (click)="employeeProfile(employee.employeeId)" class="matmenuimg">
+            <div class="menu-action-icon-wrapper">
+              <lucide-icon name="eye" [size]="18" class="menu-action-icon"></lucide-icon>
+            </div>
+            <span>Profile</span>
+          </button>
+
+          <button mat-menu-item (click)="ViewRelievingletter(employee.employeeId)" class="matmenuimg">
+            <div class="menu-action-icon-wrapper">
+              <lucide-icon name="scroll-text" [size]="18" class="menu-action-icon"></lucide-icon>
+            </div>
+            <span>Relieving Letter</span>
+          </button>
+
+          <button mat-menu-item (click)="activateEmployee(employee)" class="matmenuimg">
+            <div class="menu-action-icon-wrapper">
+              <lucide-icon name="shield-check" [size]="18" class="menu-action-icon"></lucide-icon>
+            </div>
+            <span>Active</span>
+          </button>
+
+        </ng-container>
+
+      </mat-menu>
+
+    </div>
+  </div>
+</td>
+
 
       </tr>
     </ng-template>

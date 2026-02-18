@@ -24,6 +24,7 @@ import { MenuModule } from 'primeng/menu';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import {LucideAngularModule,
+  MoreVertical,
   ShieldBan,
   ShieldCheck,
 }from 'lucide-angular';
@@ -42,6 +43,7 @@ import {LucideAngularModule,
     LucideAngularModule.pick({
       ShieldBan,
       ShieldCheck,
+      MoreVertical,
     })
 
   ],

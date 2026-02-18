@@ -1,3 +1,32 @@
+<div class="container-fluid mt-2">
+  <div class="card heading-card p-3">
+    <div class="row align-items-center">
+      <div class="col-md-10">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <div
+            class="d-flex align-items-center pointer-cursor"
+            (click)="goBack()"
+          >
+            <i class="pi pi-arrow-left fw-bold back-btn-icon"></i>
+            <span class="back-btn-text ms-2 text-capitalize">{{
+              employees.employeeName | capitalizeFirst
+            }}</span>
+          </div>
+        </div>
+        <div class="bread-crumb mt-3">
+          <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
+        </div>
+      </div>
+      <!-- <div class="col-md-2 text-end">
+        <img
+          src="../../../assets/images/menu/salaryhike.png"
+          width="100"
+          class="heading-image"
+        />
+      </div> -->
+    </div>
+  </div>
+</div>
 <div class="a4-preview">
   <div id="content" class="a4-page" [innerHTML]="hikeLetterHtml"></div>
 

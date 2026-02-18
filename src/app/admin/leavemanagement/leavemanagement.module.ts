@@ -26,7 +26,8 @@ import {LucideAngularModule,
   CircleCheckBig,
   SquarePen,
   Trash,
-  CircleX 
+  CircleX,
+  MoreVertical,
 } from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: LeavemanagementComponent },
@@ -70,7 +71,8 @@ const routes: Routes = [
       CircleCheckBig,
       SquarePen,
       Trash,
-      CircleX 
+      CircleX,
+      MoreVertical,
     })
   ],
 })

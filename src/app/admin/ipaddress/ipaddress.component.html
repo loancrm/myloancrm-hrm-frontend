@@ -226,20 +226,20 @@
                 pRipple
                 type="button"
                 pTooltip="Update"
-                class="menu-item"
+                class="action-icon-wrapper me-2"
                 (click)="updateIpAddress(ipAddress)"
               >
-              <lucide-icon name="square-pen" [size]="18" class="menu-icon"></lucide-icon>
+              <lucide-icon name="square-pen" [size]="18" class="action-icon"></lucide-icon>
               </button>
               <button
                 *ngIf="capabilities.delete"
                 pRipple
                 type="button"
                 pTooltip="Delete"
-                class="menu-item"
+                class="action-icon-wrapper me-2"
                 (click)="confirmDelete(ipAddress)"
               >
-              <lucide-icon name="trash" [size]="18" class="menu-icon"></lucide-icon>
+              <lucide-icon name="trash" [size]="18" class="action-icon"></lucide-icon>
               </button>
             </div>
           </div>

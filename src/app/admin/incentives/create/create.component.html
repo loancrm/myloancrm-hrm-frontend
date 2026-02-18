@@ -62,7 +62,7 @@
                   />
                   <div *ngSwitchCase="'month'" class="custom-calendar-wrapper position-relative">
                     <p-calendar
-                    *ngSwitchCase="'month'"
+                    #calendar1
                     [formControlName]="field.controlName"
                     [placeholder]="'Select ' + field.label"
                     [showIcon]="false"
@@ -78,6 +78,7 @@
                     src="../../../assets/images/icons/calendar.svg"
                     alt="Calendar Icon"
                     class="calendar-custom-img"
+                    (click)="calendar1.toggle()"
                     
                   />
                   </div>  

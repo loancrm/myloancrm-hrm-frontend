@@ -102,7 +102,8 @@
                   ></p-dropdown>
                   <div *ngSwitchCase="'calendar'" class="custom-calendar-wrapper position-relative">
                     <p-calendar
-                    *ngSwitchCase="'calendar'"
+                    #calendar
+                    
                     [formControlName]="field.controlName"
                     [placeholder]="'Select ' + field.label"
                     [showIcon]="false"
@@ -116,6 +117,8 @@
                     src="../../../assets/images/icons/calendar.svg"
                     alt="Calendar Icon"
                     class="calendar-custom-img"
+                    *ngSwitchCase="'calendar'"
+                    (click)="calendar.toggle()"
                     
                   />
                   </div>
@@ -451,46 +454,73 @@
             </div>
           </div>
         </td> -->
-        <!-- <td *ngIf="capabilities.adminSalaryHikes">
-          <div class="text-center">
-            <div class="d-flex">
-              <button
-                pButton
-                pRipple
-                type="button"
-                tooltipPosition="left"
-                pTooltip="Update"
-                class="p-button-success me-2 update-btn"
-                icon="fa fa-pen-to-square"
-                (click)="updateSalaryHike(salaryHike)"
-              ></button>
-              <button
-                *ngIf="capabilities.delete"
-                pButton
-                type="button"
-                icon="fa fa-trash"
-                tooltipPosition="left"
-                pTooltip="Delete"
-                class="p-button-danger me-2 delete-btn"
-                (click)="confirmDelete(salaryHike)"
-              ></button>
-            </div>
-          </div>
-        </td> -->
         <td *ngIf="capabilities.adminSalaryHikes">
-          <div class="text-center">
-            <div class="d-flex tableimage">
+          <div class="text-center pointer-cursor tableimage">
+            <div class="d-flex">
 
-              <img
-                class="pointer-cursor"
-                src="../../../assets/images/menu/menu.svg"
-                width="24"
-                height="24"
-                alt="Actions"
-                matTooltip="Actions"
+              <!-- ACTION MENU BUTTON -->
+              <button
+                class="action-icon-wrapper menu-icon-wrapper"
                 [matMenuTriggerFor]="menu"
+                aria-label="Actions"
+                matTooltip="Actions"
                 (click)="selectedSalaryHike = salaryHike; $event.stopPropagation()"
-              />
+              >
+                <lucide-icon
+                  name="MoreVertical"
+                  [size]="20"
+                  class="action-icon"
+                ></lucide-icon>
+              </button>
+
+              <!-- MAT MENU -->
+              <mat-menu #menu="matMenu">
+
+                <!-- Status = 1 -->
+                <ng-container *ngIf="selectedSalaryHike?.hikeInternalStatus === 1">
+
+                  <button mat-menu-item (click)="updateSalaryHike(selectedSalaryHike)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="square-pen" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Update</span>
+                  </button>
+
+                  <button mat-menu-item (click)="inactiveSalaryHike(selectedSalaryHike)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="shield-ban" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>In Active</span>
+                  </button>
+
+                </ng-container>
+
+                <!-- Status = 2 -->
+                <ng-container *ngIf="selectedSalaryHike?.hikeInternalStatus === 2">
+
+                  <button mat-menu-item (click)="activateSalaryHike(selectedSalaryHike)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="shield-check" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Active</span>
+                  </button>
+
+                </ng-container>
+
+                <!-- Delete -->
+                <button
+                  mat-menu-item
+                  *ngIf="capabilities?.delete"
+                  (click)="confirmDelete(selectedSalaryHike)"
+                  class="matmenuimg"
+                >
+                  <div class="menu-action-icon-wrapper">
+                    <lucide-icon name="trash" [size]="18" class="menu-action-icon"></lucide-icon>
+                  </div>
+                  <span>Delete</span>
+                </button>
+
+              </mat-menu>
 
             </div>
           </div>
@@ -510,42 +540,6 @@
       </tr>
     </ng-template>
   </p-table>
-  <mat-menu #menu="matMenu">
-
-    <ng-container *ngIf="selectedSalaryHike?.hikeInternalStatus === 1">
-
-      <button mat-menu-item (click)="updateSalaryHike(selectedSalaryHike)" class="menu-item">
-        <lucide-icon name="square-pen" [size]="20"class="menu-icon"></lucide-icon>
-        Update
-      </button>
-
-      <button mat-menu-item (click)="inactiveSalaryHike(selectedSalaryHike)" class="menu-item">
-        <lucide-icon name="shield-ban" [size]="20"class="menu-icon"></lucide-icon>
-        In Active
-      </button>
-
-    </ng-container>
-
-    <ng-container *ngIf="selectedSalaryHike?.hikeInternalStatus === 2">
-
-      <button mat-menu-item (click)="activateSalaryHike(selectedSalaryHike)" class="menu-item">
-        <lucide-icon name="shield-check" [size]="20"class="menu-icon"></lucide-icon>
-        Active
-      </button>
-
-    </ng-container>
-
-    <button
-      mat-menu-item
-      *ngIf="capabilities?.delete"
-      (click)="confirmDelete(selectedSalaryHike)"
-      class="menu-item"
-    >
-      <lucide-icon name="trash" [size]="20"class="menu-icon"></lucide-icon>
-      Delete
-    </button>
-
-  </mat-menu>
 </div>
 <ng-template #noData> - </ng-template>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">

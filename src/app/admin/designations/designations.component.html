@@ -395,11 +395,11 @@
             </div>
           </div>
         </td> -->
-        <td>
+        <!-- <td>
           <div class="text-center">
             <div class="d-flex tableimage">
 
-              <!-- Menu Trigger -->
+
               <img
                 class="pointer-cursor"
                 src="../../../assets/images/menu/menu.svg"
@@ -411,10 +411,9 @@
                 (click)="$event.stopPropagation()"
               />
 
-              <!-- Angular Material Menu -->
+
               <mat-menu #menu="matMenu">
 
-                <!-- Status = 1 -->
                 <ng-container *ngIf="designation.designationInternalStatus === 1">
 
                   <button mat-menu-item (click)="inactiveDepartment(designation)" class="menu-item">
@@ -439,7 +438,7 @@
 
                 </ng-container>
 
-                <!-- Status = 2 -->
+
                 <ng-container *ngIf="designation.designationInternalStatus === 2">
 
                   <button mat-menu-item (click)="ActiveDepartment(designation)" class="menu-item">
@@ -453,8 +452,77 @@
 
             </div>
           </div>
-        </td>
+        </td> -->
+        <td>
+          <div class="text-center pointer-cursor tableimage">
+            <div class="d-flex">
 
+              <!-- ACTION MENU BUTTON -->
+              <button
+                class="action-icon-wrapper menu-icon-wrapper"
+                [matMenuTriggerFor]="menu"
+                aria-label="Actions"
+                matTooltip="Actions"
+                (click)="$event.stopPropagation()"
+              >
+                <lucide-icon
+                  name="MoreVertical"
+                  [size]="20"
+                  class="action-icon"
+                ></lucide-icon>
+              </button>
+
+              <!-- MAT MENU -->
+              <mat-menu #menu="matMenu">
+
+                <!-- Status = 1 -->
+                <ng-container *ngIf="designation.designationInternalStatus === 1">
+
+                  <button mat-menu-item (click)="inactiveDepartment(designation)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="shield-ban" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>In Active</span>
+                  </button>
+
+                  <button mat-menu-item (click)="updateDepartment(designation.designationId)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="square-pen" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Update</span>
+                  </button>
+
+                  <button
+                    mat-menu-item
+                    *ngIf="capabilities?.delete"
+                    (click)="confirmDelete(designation)"
+                    class="matmenuimg"
+                  >
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="trash" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Delete</span>
+                  </button>
+
+                </ng-container>
+
+                <!-- Status = 2 -->
+                <ng-container *ngIf="designation.designationInternalStatus === 2">
+
+                  <button mat-menu-item (click)="ActiveDepartment(designation)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="shield-check" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Active</span>
+                  </button>
+
+                </ng-container>
+
+              </mat-menu>
+
+            </div>
+          </div>
+        </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">

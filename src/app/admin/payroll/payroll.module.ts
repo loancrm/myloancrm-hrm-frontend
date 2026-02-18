@@ -26,7 +26,8 @@ import {LucideAngularModule,
       Trash,
       SquarePen,
       ShieldBan,
-      ShieldCheck
+      ShieldCheck,
+      MoreVertical,
 } from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: PayrollComponent },
@@ -74,7 +75,7 @@ const routes: Routes = [
     SquarePen,
     ShieldBan,
     ShieldCheck,
-    
+    MoreVertical,
      })
   ],
 })

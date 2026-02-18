@@ -425,10 +425,9 @@
     <ng-template pTemplate="caption">
       <div class="row">
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
-          <div  class="custom-calendar-wrapper position-relative">
+          <div  class="custom-calendar-wrapper position-relative"*ngIf="capabilities.adminPayroll">
             <p-calendar
             #calendar
-            *ngIf="capabilities.adminPayroll"
             [(ngModel)]="displayMonth"
             [showIcon]="false"
             view="month"
@@ -447,6 +446,7 @@
             alt="Calendar Icon"
             class="calendar-custom-img"
             *ngIf="capabilities.adminPayroll"
+            (click)="calendar.toggle()"
           />
           </div>
         </div>
@@ -674,21 +674,64 @@
               
             </div>
           </div>
-        </td> -->
+        </td> -->    
         <td>
-          <div class="text-center">
-            <div class="d-flex tableimage">
+          <div class="text-center pointer-cursor tableimage">
+            <div class="d-flex">
 
-              <img
-                class="pointer-cursor"
-                src="../../../assets/images/menu/menu.svg"
-                width="24"
-                height="24"
-                alt="Actions"
-                matTooltip="Actions"
+              <!-- ACTION MENU BUTTON -->
+              <button
+                class="action-icon-wrapper menu-icon-wrapper"
                 [matMenuTriggerFor]="payslipMenu"
+                aria-label="Actions"
+                matTooltip="Actions"
                 (click)="selectedPayslip = payslip; $event.stopPropagation()"
-              />
+              >
+                <lucide-icon
+                  name="MoreVertical"
+                  [size]="20"
+                  class="action-icon"
+                ></lucide-icon>
+              </button>
+
+              <!-- MAT MENU -->
+              <mat-menu #payslipMenu="matMenu">
+
+                <!-- Payroll Details -->
+                <button mat-menu-item (click)="showPayrollDetails(selectedPayslip)" class="matmenuimg">
+                  <div class="menu-action-icon-wrapper">
+                    <lucide-icon name="eye" [size]="18" class="menu-action-icon"></lucide-icon>
+                  </div>
+                  <span>Payroll Details</span>
+                </button>
+
+                <!-- Update -->
+                <button
+                  mat-menu-item
+                  *ngIf="capabilities?.adminPayroll"
+                  (click)="updateUser(selectedPayslip?.payslipId)"
+                  class="matmenuimg"
+                >
+                  <div class="menu-action-icon-wrapper">
+                    <lucide-icon name="square-pen" [size]="18" class="menu-action-icon"></lucide-icon>
+                  </div>
+                  <span>Update</span>
+                </button>
+
+                <!-- Delete -->
+                <button
+                  mat-menu-item
+                  *ngIf="capabilities?.delete"
+                  (click)="confirmDelete(selectedPayslip)"
+                  class="matmenuimg"
+                >
+                  <div class="menu-action-icon-wrapper">
+                    <lucide-icon name="trash" [size]="18" class="menu-action-icon"></lucide-icon>
+                  </div>
+                  <span>Delete</span>
+                </button>
+
+              </mat-menu>
 
             </div>
           </div>
@@ -708,37 +751,7 @@
       </tr>
     </ng-template>
   </p-table>
-  <mat-menu #payslipMenu="matMenu">
-
-  <!-- Payroll Details -->
-  <button mat-menu-item (click)="showPayrollDetails(selectedPayslip)" class="menu-item">
-    <lucide-icon name="eye" [size]="20" class="menu-icon"></lucide-icon>
-    Payroll Details
-  </button>
-
-  <!-- Update -->
-  <button
-    mat-menu-item
-    *ngIf="capabilities?.adminPayroll"
-    (click)="updateUser(selectedPayslip?.payslipId)"
-     class="menu-item"
-  >
-    <lucide-icon name="square-pen" [size]="20" class="menu-icon"></lucide-icon>
-    Update
-  </button>
-
-  <!-- Delete -->
-  <button
-    mat-menu-item
-    *ngIf="capabilities?.delete"
-    (click)="confirmDelete(selectedPayslip)"
-     class="menu-item"
-  >
-    <lucide-icon name="trash" [size]="20" class="menu-icon"></lucide-icon>
-    Delete
-  </button>
-
-</mat-menu>
+  
 
 </div>
 

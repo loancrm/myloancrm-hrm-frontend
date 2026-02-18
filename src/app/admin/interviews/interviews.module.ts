@@ -26,6 +26,7 @@ import {LucideAngularModule,
   CircleX,
   SquarePen,
   Trash,
+  MoreVertical,
  }from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: InterviewsComponent },
@@ -70,6 +71,7 @@ const routes: Routes = [
       CircleX,
       SquarePen,
       Trash,
+      MoreVertical,
     })
   ],
 })

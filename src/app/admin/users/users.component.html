@@ -504,62 +504,51 @@
             </div>
           </div>
         </td> -->
-        <!-- <td>
-          <div class="text-center">
-            <div class="d-flex tableimage">
-              <p-menu
-                appendTo="body"
-                #menu
-                [model]="actionItems(user)"
-                [popup]="true"
-              ></p-menu>
-              <img
-                alt="Actions"
-                src="../../../assets/images/menu/menu.svg"
-                width="24px"
-                height="24px"
-                pTooltip="Actions"
-                tooltipPosition="top"
-                (click)="menu.toggle($event); $event.stopPropagation()"
-              />
-            </div>
-          </div>
-        </td> -->
+       
         <td>
-          <div class="text-center">
-            <div class="d-flex tableimage">
+          <div class="text-center pointer-cursor tableimage">
+            <div class="d-flex">
 
-              <!-- Menu Trigger -->
-              <img
-                class="pointer-cursor"
-                src="../../../assets/images/menu/menu.svg"
-                width="24"
-                height="24"
-                alt="Actions"
-                matTooltip="Actions"
+              <!-- ACTION MENU BUTTON -->
+              <button
+                class="action-icon-wrapper menu-icon-wrapper"
                 [matMenuTriggerFor]="menu"
+                aria-label="Actions"
+                matTooltip="Actions"
                 (click)="$event.stopPropagation()"
-              />
+              >
+                <lucide-icon
+                  name="MoreVertical"
+                  [size]="20"
+                  class="action-icon"
+                ></lucide-icon>
+              </button>
 
-              <!-- Angular Material Menu -->
+              <!-- MAT MENU -->
               <mat-menu #menu="matMenu">
 
                 <!-- Status = 1 -->
                 <ng-container *ngIf="user.userInternalStatus === 1">
 
-                  <button mat-menu-item (click)="showUserDetails(user)" class="menu-item">
-                    <lucide-icon name="eye" [size]="20" class="menu-icon"></lucide-icon>
-                    User Profile
+                  <button mat-menu-item (click)="showUserDetails(user)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="eye" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>User Profile</span>
                   </button>
 
-                  <button mat-menu-item (click)="updateUser(user.userId)" class="menu-item">
-                    <lucide-icon name="square-pen" [size]="20" class="menu-icon"></lucide-icon>
-                    Update
+                  <button mat-menu-item (click)="updateUser(user.userId)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="square-pen" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Update</span>
                   </button>
 
-                  <button mat-menu-item (click)="inactiveuser(user)" class="menu-item">
-                    <lucide-icon name="shield-ban" [size]="20" class="menu-icon"></lucide-icon>
-                    InActive
+                  <button mat-menu-item (click)="inactiveuser(user)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="shield-ban" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>InActive</span>
                   </button>
 
                 </ng-container>
@@ -567,22 +556,26 @@
                 <!-- Status = 2 -->
                 <ng-container *ngIf="user.userInternalStatus === 2">
 
-                  <button mat-menu-item (click)="activateuser(user)" class="menu-item">
-                    <lucide-icon name="shield-check" [size]="20" class="menu-icon"></lucide-icon>
-                    Active
+                  <button mat-menu-item (click)="activateuser(user)" class="matmenuimg">
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon name="shield-check" [size]="18" class="menu-action-icon"></lucide-icon>
+                    </div>
+                    <span>Active</span>
                   </button>
 
                 </ng-container>
 
-                <!-- Delete (Based on Capability) -->
+                <!-- Delete -->
                 <button
                   mat-menu-item
                   *ngIf="capabilities?.delete"
                   (click)="confirmDelete(user)"
-                   class="menu-item"
+                  class="matmenuimg"
                 >
-                  <lucide-icon name="trash" [size]="20" class="menu-icon"></lucide-icon>
-                  Delete
+                  <div class="menu-action-icon-wrapper">
+                    <lucide-icon name="trash" [size]="18" class="menu-action-icon"></lucide-icon>
+                  </div>
+                  <span>Delete</span>
                 </button>
 
               </mat-menu>
@@ -590,7 +583,6 @@
             </div>
           </div>
         </td>
-
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
