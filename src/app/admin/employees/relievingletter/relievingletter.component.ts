@@ -20,6 +20,7 @@ export class RelievingletterComponent {
   moment: any;
   @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
   loading: boolean = false;
+  downloadingPDF = false;
   version = projectConstantsLocal.VERSION_DESKTOP;
   employees: any = null;
   designations: any = [];
@@ -91,23 +92,84 @@ relievingLetterContent: string;
     return lakhs.toFixed(2) + ' LPA';
   }
 
+  // generatePDF() {
+  //   const element = document.getElementById('content');
+  //   if (element) {
+  //     this.loading = true;
+  //     html2pdf()
+  //       .from(element)
+  //       .save(`${this.employees?.employeeName} Relieving Letter.pdf`)
+  //       .then(() => {
+  //         this.loading = false;
+  //       })
+  //       .catch((error) => {
+  //         console.error('PDF generation error:', error);
+  //         this.loading = false;
+  //       });
+  //   }
+  // }
+
   generatePDF() {
-    const element = document.getElementById('content');
-    if (element) {
-      this.loading = true;
-      html2pdf()
-        .from(element)
-        .save(`${this.employees?.employeeName} Relieving Letter.pdf`)
-        .then(() => {
-          this.loading = false;
+  const element = document.getElementById('content');
+  if (!element) return;
+
+  // this.loading = true;
+  this.downloadingPDF = true;
+
+  const images = element.getElementsByTagName('img');
+  const imagePromises: Promise<void>[] = [];
+
+  for (let i = 0; i < images.length; i++) {
+    const img = images[i] as HTMLImageElement;
+
+    if (img.src && !img.complete) {
+      imagePromises.push(
+        new Promise((resolve) => {
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+          setTimeout(() => resolve(), 5000);
         })
-        .catch((error) => {
-          console.error('PDF generation error:', error);
-          this.loading = false;
-        });
+      );
     }
   }
 
+  Promise.all(imagePromises).then(() => {
+
+    const options = {
+      margin: [8, 0, 10, 5],
+      filename: `${this.employees?.employeeName} Relieving Letter.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        imageTimeout: 15000
+      },
+
+      jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+      }
+    };
+
+    html2pdf()
+      .set(options)
+      .from(element)
+      .save()
+      .then(() => {
+        // this.loading = false;
+        this.downloadingPDF = false;
+      })
+      .catch((err) => {
+        console.error(err);
+        // this.loading = false;
+        this.downloadingPDF = false;
+      });
+
+  });
+}
   // getEmployeeById(id: string) {
   //   this.apiLoading = true;
   //   this.employeesService.getEmployeeById(id).subscribe(
@@ -157,9 +219,14 @@ prepareRelievingLetterHtml() {
 
   let html = this.relievingLetterContent;
 
+  // const logoUrl = this.companySettings?.companyLogo
+  //   ? 'https://' + this.companySettings.companyLogo
+  //   : '';
   const logoUrl = this.companySettings?.companyLogo
-    ? 'https://' + this.companySettings.companyLogo
-    : '';
+  ? (this.companySettings.companyLogo.startsWith('http')
+      ? this.companySettings.companyLogo
+      : 'https://' + this.companySettings.companyLogo)
+  : '';
 
   const logoHtml = logoUrl
     ? `<img src="${logoUrl}"

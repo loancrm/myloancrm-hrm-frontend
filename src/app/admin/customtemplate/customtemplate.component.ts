@@ -37,8 +37,6 @@ editorConfig: any = {
       'fontfamily',
       'fontsize',
       '|',
-      'style',
-      '|',
       'fontColor',
       'fontBackgroundColor',
       'bold',
@@ -55,6 +53,18 @@ editorConfig: any = {
       '|',
       'undo',
       'redo'
+    ]
+  },
+
+  lineHeight: {
+    options: [
+      'default',
+      1,
+      1.15,
+      1.5,
+      2,
+      2.5,
+      3
     ]
   },
 
@@ -83,27 +93,27 @@ editorConfig: any = {
       {
         name: 'Line height 1',
         element: 'p',
-        styles: { 'line-height': '1' }
+        // styles: { 'line-height': '1' }
+      },
+      {
+        name: 'Line height 1.1',
+        element: 'p',
+        // styles: { 'line-height': '1.1' }
+      },
+      {
+        name: 'Line height 1.1',
+        element: 'p',
+        // styles: { 'line-height': '1.1' }
+      },
+      {
+        name: 'Line height 1.1',
+        element: 'p',
+        styles: { 'line-height': '1.1' }
       },
       {
         name: 'Line height 1.2',
         element: 'p',
-        styles: { 'line-height': '1.2' }
-      },
-      {
-        name: 'Line height 1.5',
-        element: 'p',
-        styles: { 'line-height': '1.5' }
-      },
-      {
-        name: 'Line height 1.8',
-        element: 'p',
-        styles: { 'line-height': '1.8' }
-      },
-      {
-        name: 'Line height 2',
-        element: 'p',
-        styles: { 'line-height': '2' }
+        styles: { 'line-height': '1.1' }
       }
     ]
   },
@@ -140,6 +150,7 @@ templateVariables = [
   { label: 'Company Pincode: {{COMPANY_PINCODE}}', value: '{{COMPANY_PINCODE}}' },
   { label: 'Company Website: {{COMPANY_WEBSITE}}', value: '{{COMPANY_WEBSITE}}' },
   { label: 'Created By: {{CREATED_BY}}', value: '{{CREATED_BY}}' },
+  { label: 'Created Date {{CREATED_DATE}}', value: '{{CREATED_DATE}}'},
   { label: 'Designation: {{DESIGNATION}}', value: '{{DESIGNATION}}' },
   { label: 'Employee Name: {{EMPLOYEE_NAME}}', value: '{{EMPLOYEE_NAME}}' },
   { label: 'Employee City: {{EMPLOYEE_CITY}}', value: '{{EMPLOYEE_CITY}}' },

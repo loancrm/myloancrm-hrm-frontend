@@ -144,10 +144,15 @@
               <label for="companyLogo">Company Logo</label>
               <div class="d-flex align-items-center gap-3 mb-2">
                 <div *ngIf="companySettings?.companyLogo" class="logo-preview">
-                  <img
+                  <!-- <img
                     [src]="'https://' + companySettings?.companyLogo"
                     alt="Company Logo"
                     style="max-width: 200px; max-height: 100px; object-fit: contain; border: 1px solid #ddd; padding: 5px;"
+                  /> -->
+                  <img
+                    [src]="'//' + companySettings?.companyLogo"
+                    alt="Company Logo"
+                    style="max-width:200px;max-height:100px;object-fit:contain;border:1px solid #ddd;padding:5px;"
                   />
                 </div>
                 <div class="flex-grow-1">

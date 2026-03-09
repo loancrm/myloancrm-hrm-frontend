@@ -398,11 +398,49 @@ export class SettingsComponent implements OnInit {
     );
   }
 
-  removeLogo() {
-    this.logoFile = null;
-    this.logoPreview = null;
-    this.companySettingsForm.patchValue({ companyLogo: '' });
-  }
+ removeLogo() {
+  if (!this.companySettings?.companyLogo) return;
+
+  // Extract relative path starting after domain
+  const relativePath = this.companySettings.companyLogo.split('hrfiles.thefintalk.in/')[1];
+
+  this.loading = true;
+  this.uploadingLogo = true;
+
+  this.employeesService.deleteFile(relativePath).subscribe(
+    (res: any) => {
+      if (res.message === 'File deleted successfully.') {
+        this.logoFile = null;
+        this.logoPreview = null;
+        this.companySettingsForm.patchValue({ companyLogo: '' });
+
+        // Update DB
+        this.companySettingsService.updateCompanySettings({ companyLogo: '' }).subscribe(
+          () => {
+            this.loading = false;
+            this.uploadingLogo = false;
+            this.toastService.showSuccess('Logo removed successfully');
+            this.loadCompanySettings();
+          },
+          (error: any) => {
+            this.loading = false;
+            this.uploadingLogo = false;
+            this.toastService.showError(error);
+          }
+        );
+      } else {
+        this.loading = false;
+        this.uploadingLogo = false;
+        this.toastService.showError(res.error || 'Failed to delete logo on server');
+      }
+    },
+    (error: any) => {
+      this.loading = false;
+      this.uploadingLogo = false;
+      this.toastService.showError(error || 'Failed to delete logo on server');
+    }
+  );
+}
 
   addAttendanceReportEmail() {
     if (this.newEmail && this.newEmail.trim()) {

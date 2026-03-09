@@ -35,8 +35,12 @@
 
   <button
     pButton
-    label="Download Relieving Letter"
     class="p-button-primary mt-3  mb-5"
-    (click)="generatePDF()">
+    (click)="generatePDF()"
+    [disabled]="downloadingPDF">
+     <i class="pi pi-spin pi-spinner" *ngIf="downloadingPDF"></i>
+  <i class="pi pi-download" *ngIf="!downloadingPDF"></i>
+
+  {{ downloadingPDF ? "Downloading..." : "Download Relieving Letter" }}
   </button>
 </div>

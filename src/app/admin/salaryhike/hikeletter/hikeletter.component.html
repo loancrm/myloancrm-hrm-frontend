@@ -33,7 +33,11 @@
   <button
     pButton
     class="p-button-primary  mb-5 mt-3"
-    label="Download Increment Letter"
-    (click)="generatePDF()">
+    (click)="generatePDF()"
+    [disabled]="downloadingPDF">
+    <i class="pi pi-spin pi-spinner" *ngIf="downloadingPDF"></i>
+  <i class="pi pi-download" *ngIf="!downloadingPDF"></i>
+
+  {{ downloadingPDF ? "Downloading..." : "Download Increment Letter" }}
   </button>
 </div>

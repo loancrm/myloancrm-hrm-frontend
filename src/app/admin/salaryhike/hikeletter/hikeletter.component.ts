@@ -22,6 +22,7 @@ export class HikeletterComponent {
   moment: any;
   @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
   loading: boolean = false;
+  downloadingPDF = false;
   version = projectConstantsLocal.VERSION_DESKTOP;
   employees: any = null;
   salaryHikes: any = [];
@@ -94,22 +95,83 @@ export class HikeletterComponent {
   }
 
 
+  // generatePDF() {
+  //   const element = document.getElementById('content');
+  //   if (element) {
+  //     this.loading = true; // Show loading indicator
+  //     html2pdf()
+  //       .from(element)
+  //       .save(`${this.employees?.employeeName} Increment Letter.pdf`)
+  //       .then(() => {
+  //         this.loading = false; // Hide loading indicator after success
+  //       })
+  //       .catch((error) => {
+  //         console.error('PDF generation error:', error);
+  //         this.loading = false; // Hide loading indicator on error
+  //       });
+  //   }
+  // }
   generatePDF() {
-    const element = document.getElementById('content');
-    if (element) {
-      this.loading = true; // Show loading indicator
-      html2pdf()
-        .from(element)
-        .save(`${this.employees?.employeeName} Increment Letter.pdf`)
-        .then(() => {
-          this.loading = false; // Hide loading indicator after success
+  const element = document.getElementById('content');
+  if (!element) return;
+
+  // this.loading = true;
+  this.downloadingPDF = true;
+
+  const images = element.getElementsByTagName('img');
+  const imagePromises: Promise<void>[] = [];
+
+  for (let i = 0; i < images.length; i++) {
+    const img = images[i] as HTMLImageElement;
+
+    if (img.src && !img.complete) {
+      imagePromises.push(
+        new Promise((resolve) => {
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+          setTimeout(() => resolve(), 5000);
         })
-        .catch((error) => {
-          console.error('PDF generation error:', error);
-          this.loading = false; // Hide loading indicator on error
-        });
+      );
     }
   }
+
+  Promise.all(imagePromises).then(() => {
+
+    const options = {
+      margin: [8, 0, 10, 5],
+      filename: `${this.employees?.employeeName} Increment Letter.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        imageTimeout: 15000
+      },
+
+      jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+      }
+    };
+
+    html2pdf()
+      .set(options)
+      .from(element)
+      .save()
+      .then(() => {
+        // this.loading = false;
+        this.downloadingPDF = false;
+      })
+      .catch((err) => {
+        console.error(err);
+        // this.loading = false;
+        this.downloadingPDF = false;
+      });
+
+  });
+}
   getOfferLetterDate(hikeDate: string | Date): Date {
     const date = new Date(hikeDate);
     return new Date(date.getFullYear(), date.getMonth(), 1);
@@ -205,11 +267,21 @@ prepareHikeLetterHtml() {
   let html = this.hikeLetterContent;
 
   //  COMPANY LOGO
-  const logoHtml = this.companySettings?.companyLogo
-    ? `<img src="https://${this.companySettings.companyLogo}"
-             style="max-height:80px;object-fit:contain;" />`
-    : '';
+  // const logoHtml = this.companySettings?.companyLogo
+  //   ? `<img src="https://${this.companySettings.companyLogo}"
+  //            style="max-height:80px;object-fit:contain;" />`
+  //   : '';
 
+  const logoUrl = this.companySettings?.companyLogo
+  ? (this.companySettings.companyLogo.startsWith('http')
+      ? this.companySettings.companyLogo
+      : 'https://' + this.companySettings.companyLogo)
+  : '';
+
+const logoHtml = logoUrl
+  ? `<img src="${logoUrl}"
+           style="max-height:80px;max-width:200px;object-fit:contain;" />`
+  : '';
   // ALL PLACEHOLDERS IN ONE OBJECT
   const replacements: { [key: string]: any } = {
     '{{COMPANY_LOGO}}': logoHtml,
