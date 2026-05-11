@@ -183,7 +183,7 @@ export class DashboardComponent implements OnInit {
   //         : [];
   //       const now = this.moment();
   //       const currentTime = now.format('HH:mm');
-  //       const lateThreshold = this.moment('10:15', 'HH:mm');
+  //       const lateThreshold = this.moment('10:10', 'HH:mm');
   //       const checkOutThreshold = this.moment('18:30', 'HH:mm');
   //       let status = now.isAfter(lateThreshold) ? 'Late' : 'Present';
   //       if (!attendanceRecord) {
@@ -281,7 +281,7 @@ export class DashboardComponent implements OnInit {
               : [];
             const now = this.moment();
             const currentTime = now.format('HH:mm');
-            const lateThreshold = this.moment('10:15', 'HH:mm');
+            const lateThreshold = this.moment('10:10', 'HH:mm');
             const checkOutThreshold = this.moment('18:30', 'HH:mm');
             let status = now.isAfter(lateThreshold) ? 'Late' : 'Present';
             if (!attendanceRecord) {
@@ -692,7 +692,7 @@ export class DashboardComponent implements OnInit {
       // },
     ];
   }
-  
+
 
  cardStyles = [
   { bg: 'linear-gradient(125.56deg, #e5edf2cd 50%, #e1eff7cd 12%, #bfe1f8bc 70%)', border: '#2595f0' },
@@ -1349,7 +1349,7 @@ iconbackgroundColors = [
       borderRadius: 6,        // ✅ rounded corners
       borderRadiusApplication: 'end',
       endingShape: 'rounded',
-      
+
     },
   },
 
