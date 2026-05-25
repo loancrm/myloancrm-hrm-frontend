@@ -23,6 +23,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 })
 export class ProfileComponent implements OnInit {
   breadCrumbItems: any = [];
+  userDetails: any;
   loading: boolean = false;
   showDialog: boolean = false;
   employees: any = null;
@@ -88,7 +89,7 @@ export class ProfileComponent implements OnInit {
     private routingService: RoutingService,
     private employeesService: EmployeesService,
     private dialogService: DialogService,
-    private dateTimeProcessor: DateTimeProcessorService
+    private dateTimeProcessor: DateTimeProcessorService,
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
     this.selectedDate = this.moment(new Date()).toDate();
@@ -121,6 +122,9 @@ export class ProfileComponent implements OnInit {
   }
   ngOnInit(): void {
     this.currentYear = this.employeesService.getCurrentYear();
+    let userDetails =
+      this.localStorageService.getItemFromLocalStorage('userDetails');
+    this.userDetails = userDetails.user;
     this.employeeId = this.route.snapshot.paramMap.get('id');
     if (this.employeeId) {
       this.getEmployeeById(this.employeeId).then((data) => {
@@ -298,7 +302,7 @@ export class ProfileComponent implements OnInit {
         if (data) {
           this.loading = false;
           this.toastService.showSuccess(
-            'Resignation Details Added Successfully'
+            'Resignation Details Added Successfully',
           );
           this.changeEmployeeStatus(this.employeeId, 2);
         }
@@ -306,7 +310,7 @@ export class ProfileComponent implements OnInit {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   private getFileData(fileType: string): any[] | null {
@@ -324,7 +328,7 @@ export class ProfileComponent implements OnInit {
       this.employeeInternalStatusList.length > 0
     ) {
       let employeeStatusName = this.employeeInternalStatusList.filter(
-        (employeeStatus) => employeeStatus.id == statusId
+        (employeeStatus) => employeeStatus.id == statusId,
       );
       return (
         (employeeStatusName &&
@@ -346,7 +350,7 @@ export class ProfileComponent implements OnInit {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   onDateChange(event: any) {
@@ -366,13 +370,13 @@ export class ProfileComponent implements OnInit {
           this.attendance,
           this.month,
           this.year,
-          this.employeeId
+          this.employeeId,
         );
       },
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   getAttendanceCountsByMonth(attendanceRecords, month, year, employeeId) {
@@ -388,7 +392,7 @@ export class ProfileComponent implements OnInit {
       const recordYear = attendanceDate.getFullYear();
       if (recordMonth === month && recordYear === year) {
         const employeeAttendance = record?.attendanceData.find(
-          (data) => data.employeeId == employeeId
+          (data) => data.employeeId == employeeId,
         );
         if (
           employeeAttendance &&
@@ -419,12 +423,12 @@ export class ProfileComponent implements OnInit {
       this.loading = true;
       this.employeesService.getEmployeeById(id).subscribe(
         (employees: any) => {
-          const filter = {  'hikeInternalStatus-eq': 1 };
+          const filter = { 'hikeInternalStatus-eq': 1 };
           this.getSalaryHikes(filter).subscribe(
             (salaryHikeData: any) => {
               if (salaryHikeData) {
                 const matchingHikes = salaryHikeData.filter(
-                  (hike) => hike.employeeId == id
+                  (hike) => hike.employeeId == id,
                 );
                 if (matchingHikes.length > 0) {
                   let totalSalary = employees.salary;
@@ -446,14 +450,14 @@ export class ProfileComponent implements OnInit {
               this.loading = false;
               this.toastService.showError(error);
               resolve(false);
-            }
+            },
           );
         },
         (error) => {
           this.loading = false;
           this.toastService.showError(error);
           resolve(false);
-        }
+        },
       );
     });
   }
@@ -479,7 +483,7 @@ export class ProfileComponent implements OnInit {
       },
       (error: any) => {
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -494,7 +498,7 @@ export class ProfileComponent implements OnInit {
       (error: any) => {
         this.apiLoading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -517,7 +521,7 @@ export class ProfileComponent implements OnInit {
       },
       (error: any) => {
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -532,7 +536,7 @@ export class ProfileComponent implements OnInit {
       (error: any) => {
         this.apiLoading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -557,7 +561,7 @@ export class ProfileComponent implements OnInit {
       this.leavesInternalStatusList.length > 0
     ) {
       let leaveStatusName = this.leavesInternalStatusList.filter(
-        (leaveStatus) => leaveStatus.id == statusId
+        (leaveStatus) => leaveStatus.id == statusId,
       );
       return (
         (leaveStatusName && leaveStatusName[0] && leaveStatusName[0].name) || ''
@@ -588,7 +592,7 @@ export class ProfileComponent implements OnInit {
       },
       (error: any) => {
         this.toastService.showError(error);
-      }
+      },
     );
   }
   getIncentives(filter = {}) {
@@ -602,7 +606,7 @@ export class ProfileComponent implements OnInit {
       (error: any) => {
         this.apiLoading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -655,24 +659,24 @@ export class ProfileComponent implements OnInit {
               for (let i = 0; i < response['links'].length; i++) {
                 index || index == 0
                   ? this.selectedFiles[fileType][index]['links'].push(
-                      response['links'][i]
+                      response['links'][i],
                     )
                   : this.selectedFiles[fileType]['links'].push(
-                      response['links'][i]
+                      response['links'][i],
                     );
               }
               for (let i = 0; i < files.length; i++) {
                 files[i]['fileuploaded'] = true;
                 index || index == 0
                   ? this.selectedFiles[fileType][index]['filesData'].push(
-                      files[i]
+                      files[i],
                     )
                   : this.selectedFiles[fileType]['filesData'].push(files[i]);
               }
               console.log(
                 'this.selectedFiles',
                 this.selectedFiles[fileType],
-                files
+                files,
               );
               this.toastService.showSuccess('Files Uploaded Successfully');
             } else {
@@ -683,7 +687,7 @@ export class ProfileComponent implements OnInit {
           (error: any) => {
             this.loading = false;
             this.toastService.showError(error);
-          }
+          },
         );
     }
   }
@@ -702,7 +706,7 @@ export class ProfileComponent implements OnInit {
     fileUrl: string,
     fileType: string,
     docIndex?: number,
-    fileIndex?: number
+    fileIndex?: number,
   ) {
     const relativePath = fileUrl.substring(fileUrl.indexOf('/documents'));
     this.employeesService.deleteFile(relativePath).subscribe(
@@ -721,7 +725,7 @@ export class ProfileComponent implements OnInit {
                 document.uploadedFiles.splice(fileIndex, 1);
                 console.log(
                   `After Deletion from ${fileType}[${docIndex}]:`,
-                  document.uploadedFiles
+                  document.uploadedFiles,
                 );
               }
               console.log('After Deletion:', this.selectedFiles);
@@ -730,7 +734,7 @@ export class ProfileComponent implements OnInit {
             }
           } else {
             console.error(
-              'No uploaded files found for the specified file type.'
+              'No uploaded files found for the specified file type.',
             );
           }
           this.toastService.showSuccess('File Deleted Successfully');
@@ -742,9 +746,9 @@ export class ProfileComponent implements OnInit {
       (error) => {
         console.error('Error deleting file:', error);
         this.toastService.showError(
-          'Failed to delete file. Please try again later.'
+          'Failed to delete file. Please try again later.',
         );
-      }
+      },
     );
   }
   getStatusColor(status: string): {
@@ -762,5 +766,13 @@ export class ProfileComponent implements OnInit {
   }
   goBack() {
     this.location.back();
+  }
+  canViewOfferLetter(): boolean {
+    const isRestrictedEmployee = this.userDetails.accountId == 1234567;
+    const isAllowedUser = this.userDetails?.designation == 1;
+    if (isRestrictedEmployee) {
+      return isAllowedUser;
+    }
+    return true;
   }
 }

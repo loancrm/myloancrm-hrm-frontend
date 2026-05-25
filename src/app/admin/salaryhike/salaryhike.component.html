@@ -100,27 +100,28 @@
                     [filter]="true"
                     filterPlaceholder="Search..."
                   ></p-dropdown>
-                  <div *ngSwitchCase="'calendar'" class="custom-calendar-wrapper position-relative">
-                    <p-calendar
-                    #calendar
-                    
-                    [formControlName]="field.controlName"
-                    [placeholder]="'Select ' + field.label"
-                    [showIcon]="false"
-                    dateFormat="yy-mm-dd"
-                    appendTo="body"
-                    [showButtonBar]="true"
-                    [readonlyInput]="true"
-                    styleClass="w-100"
-                  ></p-calendar>
-                  <img
-                    src="../../../assets/images/icons/calendar.svg"
-                    alt="Calendar Icon"
-                    class="calendar-custom-img"
+                  <div
                     *ngSwitchCase="'calendar'"
-                    (click)="calendar.toggle()"
-                    
-                  />
+                    class="custom-calendar-wrapper position-relative"
+                  >
+                    <p-calendar
+                      #calendar
+                      [formControlName]="field.controlName"
+                      [placeholder]="'Select ' + field.label"
+                      [showIcon]="false"
+                      dateFormat="yy-mm-dd"
+                      appendTo="body"
+                      [showButtonBar]="true"
+                      [readonlyInput]="true"
+                      styleClass="w-100"
+                    ></p-calendar>
+                    <img
+                      src="../../../assets/images/icons/calendar.svg"
+                      alt="Calendar Icon"
+                      class="calendar-custom-img"
+                      *ngSwitchCase="'calendar'"
+                      (click)="calendar.toggle()"
+                    />
                   </div>
                 </ng-container>
               </div>
@@ -166,7 +167,7 @@
       'referenceNo',
       'customer.firstName',
       'partner.partnerName',
-      'status'
+      'status',
     ]"
     styleClass="p-datatable-customers"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Salary Hikes"
@@ -211,10 +212,7 @@
               class="input-group-text searchbtn"
               (click)="filterWithEmployeeName()"
             >
-              <img
-                src="../../../assets/images/icons/search.svg"
-                alt="Search" 
-              />
+              <img src="../../../assets/images/icons/search.svg" alt="Search" />
             </span>
           </div>
         </div>
@@ -282,9 +280,7 @@
         <th pSortableColumn="createdOn" class="text-nowrap">
           Created Date <p-sortIcon field="createdOn"></p-sortIcon>
         </th>
-        <th class="text-nowrap">
-          Hike Letter
-        </th>
+        <th class="text-nowrap" *ngIf="canViewOfferLetter()">Hike Letter</th>
         <th pSortableColumn="hikeInternalStatus" class="text-nowrap">
           Status <p-sortIcon [field]="'hikeInternalStatus'"></p-sortIcon>
         </th>
@@ -309,45 +305,45 @@
             >
           </b>
         </td> -->
-        <td  *ngIf="capabilities.adminSalaryHikes">
+        <td *ngIf="capabilities.adminSalaryHikes">
           <ng-container>
             <div class="d-flex align-items-center">
-            <span class="me-2">
-              <ng-container
-                *ngIf="
-                  salaryHike &&
-                    salaryHike.passPhoto &&
-                    salaryHike.passPhoto.length > 0;
-                  else defaultImage
-                "
-              >
-                <a [href]="'//' + salaryHike.passPhoto[0]" target="_blank">
+              <span class="me-2">
+                <ng-container
+                  *ngIf="
+                    salaryHike &&
+                      salaryHike.passPhoto &&
+                      salaryHike.passPhoto.length > 0;
+                    else defaultImage
+                  "
+                >
+                  <a [href]="'//' + salaryHike.passPhoto[0]" target="_blank">
+                    <img
+                      [src]="'//' + salaryHike.passPhoto[0]"
+                      alt="Image"
+                      class="employeeImage"
+                      style="height: 40px; width: 40px"
+                    />
+                  </a>
+                </ng-container>
+                <ng-template #defaultImage>
                   <img
-                    [src]="'//' + salaryHike.passPhoto[0]"
-                    alt="Image"
+                    src="../../../assets/images/profile/user.png"
+                    alt="Default Image"
                     class="employeeImage"
                     style="height: 40px; width: 40px"
                   />
-                </a>
-              </ng-container>
-              <ng-template #defaultImage>
-                <img
-                  src="../../../assets/images/profile/user.png"
-                  alt="Default Image"
-                  class="employeeImage"
-                  style="height: 40px; width: 40px"
-                />
-              </ng-template>
-            </span>
-            <b>
-              <span
-                *ngIf="salaryHike.employeeName; else noData"
-                class="table-column-data"
-              >
-                {{ salaryHike.employeeName | capitalizeFirst }}
+                </ng-template>
               </span>
-            </b>
-          </div>
+              <b>
+                <span
+                  *ngIf="salaryHike.employeeName; else noData"
+                  class="table-column-data"
+                >
+                  {{ salaryHike.employeeName | capitalizeFirst }}
+                </span>
+              </b>
+            </div>
           </ng-container>
         </td>
         <td>
@@ -369,7 +365,7 @@
           <span
             class="table-column-data"
             *ngIf="salaryHike.hikeDate; else noData"
-            >{{ salaryHike.hikeDate | date : "mediumDate" }}</span
+            >{{ salaryHike.hikeDate | date: "mediumDate" }}</span
           >
         </td>
         <!-- <td>
@@ -383,10 +379,10 @@
           <span
             class="table-column-data"
             *ngIf="salaryHike.createdOn; else noData"
-            >{{ salaryHike.createdOn | date : "mediumDate" }}</span
+            >{{ salaryHike.createdOn | date: "mediumDate" }}</span
           >
         </td>
-        <td>
+        <td *ngIf="canViewOfferLetter()">
           <div class="text-center">
             <div class="d-flex">
               <button
@@ -419,7 +415,7 @@
               ).textColor,
               'background-color': getStatusColor(
                 getStatusName(salaryHike.hikeInternalStatus)
-              ).backgroundColor
+              ).backgroundColor,
             }"
           >
             {{ getStatusName(salaryHike.hikeInternalStatus) }}
@@ -457,14 +453,15 @@
         <td *ngIf="capabilities.adminSalaryHikes">
           <div class="text-center pointer-cursor tableimage">
             <div class="d-flex">
-
               <!-- ACTION MENU BUTTON -->
               <button
                 class="action-icon-wrapper menu-icon-wrapper"
                 [matMenuTriggerFor]="menu"
                 aria-label="Actions"
                 matTooltip="Actions"
-                (click)="selectedSalaryHike = salaryHike; $event.stopPropagation()"
+                (click)="
+                  selectedSalaryHike = salaryHike; $event.stopPropagation()
+                "
               >
                 <lucide-icon
                   name="MoreVertical"
@@ -475,36 +472,59 @@
 
               <!-- MAT MENU -->
               <mat-menu #menu="matMenu">
-
                 <!-- Status = 1 -->
-                <ng-container *ngIf="selectedSalaryHike?.hikeInternalStatus === 1">
-
-                  <button mat-menu-item (click)="updateSalaryHike(selectedSalaryHike)" class="matmenuimg">
+                <ng-container
+                  *ngIf="selectedSalaryHike?.hikeInternalStatus === 1"
+                >
+                  <button
+                    mat-menu-item
+                    (click)="updateSalaryHike(selectedSalaryHike)"
+                    class="matmenuimg"
+                  >
                     <div class="menu-action-icon-wrapper">
-                      <lucide-icon name="square-pen" [size]="18" class="menu-action-icon"></lucide-icon>
+                      <lucide-icon
+                        name="square-pen"
+                        [size]="18"
+                        class="menu-action-icon"
+                      ></lucide-icon>
                     </div>
                     <span>Update</span>
                   </button>
 
-                  <button mat-menu-item (click)="inactiveSalaryHike(selectedSalaryHike)" class="matmenuimg">
+                  <button
+                    mat-menu-item
+                    (click)="inactiveSalaryHike(selectedSalaryHike)"
+                    class="matmenuimg"
+                  >
                     <div class="menu-action-icon-wrapper">
-                      <lucide-icon name="shield-ban" [size]="18" class="menu-action-icon"></lucide-icon>
+                      <lucide-icon
+                        name="shield-ban"
+                        [size]="18"
+                        class="menu-action-icon"
+                      ></lucide-icon>
                     </div>
                     <span>In Active</span>
                   </button>
-
                 </ng-container>
 
                 <!-- Status = 2 -->
-                <ng-container *ngIf="selectedSalaryHike?.hikeInternalStatus === 2">
-
-                  <button mat-menu-item (click)="activateSalaryHike(selectedSalaryHike)" class="matmenuimg">
+                <ng-container
+                  *ngIf="selectedSalaryHike?.hikeInternalStatus === 2"
+                >
+                  <button
+                    mat-menu-item
+                    (click)="activateSalaryHike(selectedSalaryHike)"
+                    class="matmenuimg"
+                  >
                     <div class="menu-action-icon-wrapper">
-                      <lucide-icon name="shield-check" [size]="18" class="menu-action-icon"></lucide-icon>
+                      <lucide-icon
+                        name="shield-check"
+                        [size]="18"
+                        class="menu-action-icon"
+                      ></lucide-icon>
                     </div>
                     <span>Active</span>
                   </button>
-
                 </ng-container>
 
                 <!-- Delete -->
@@ -515,13 +535,15 @@
                   class="matmenuimg"
                 >
                   <div class="menu-action-icon-wrapper">
-                    <lucide-icon name="trash" [size]="18" class="menu-action-icon"></lucide-icon>
+                    <lucide-icon
+                      name="trash"
+                      [size]="18"
+                      class="menu-action-icon"
+                    ></lucide-icon>
                   </div>
                   <span>Delete</span>
                 </button>
-
               </mat-menu>
-
             </div>
           </div>
         </td>

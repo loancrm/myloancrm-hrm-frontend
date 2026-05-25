@@ -50,7 +50,7 @@ export class PayrollComponent {
     private toastService: ToastService,
     private employeesService: EmployeesService,
     private localStorageService: LocalStorageService,
-    private dateTimeProcessor: DateTimeProcessorService
+    private dateTimeProcessor: DateTimeProcessorService,
   ) {
     // const usertype = localStorage.getItem('userType');
     const usertype = localStorageService.getItemFromLocalStorage('userType');
@@ -107,7 +107,7 @@ export class PayrollComponent {
     this.countsAnalytics = [
       {
         name: 'payrolemp', // Represents total employees in payroll
-        icon:'id-card-lanyard',
+        icon: 'id-card-lanyard',
         displayName: 'Total Payroll Employees',
         count: `${this.payrollEmployees} `, // Assuming you have a variable for total employees
         // textcolor: '#3498DB', // Blue to represent a professional/business environment
@@ -115,10 +115,10 @@ export class PayrollComponent {
       },
       {
         name: 'totlgrosssalarly', // Represents total gross salary (big earnings)
-        icon:'badge-indian-rupee',
+        icon: 'badge-indian-rupee',
         displayName: 'Total Gross Salary',
         count: `Rs. ${this.totalSalary} ( ${this.convertToReadableFormat(
-          this.totalSalary
+          this.totalSalary,
         )} )`,
         // textcolor: '#F39C12', // Warm golden yellow for money representation
         // backgroundcolor: '#FEF5E7',
@@ -128,7 +128,7 @@ export class PayrollComponent {
         displayName: 'Total Deductions',
         icon: 'banknote-arrow-down',
         count: `Rs. ${this.totalDeductions} ( ${this.convertToReadableFormat(
-          this.totalDeductions
+          this.totalDeductions,
         )} )`,
         // textcolor: '#E74C3C', // Red for deductions (represents money going out)
         // backgroundcolor: '#FDEDEC',
@@ -136,9 +136,9 @@ export class PayrollComponent {
       {
         name: 'netsalary', // Represents net salary (final savings or payout)
         displayName: 'Total Net Salary',
-        icon:'wallet',
+        icon: 'wallet',
         count: `Rs. ${this.totalNetSalary} ( ${this.convertToReadableFormat(
-          this.totalNetSalary
+          this.totalNetSalary,
         )} )`,
         // textcolor: '#27AE60', // Green to indicate received/savings amount
         // backgroundcolor: '#E9F7EF',
@@ -169,7 +169,7 @@ export class PayrollComponent {
     this.displayMonth = this.moment(event).format('MMMM YYYY');
     this.localStorageService.setItemOnLocalStorage(
       'payrollMonth',
-      this.selectedMonth
+      this.selectedMonth,
     );
     this.loadPayslips(this.currentTableEvent);
     this.getEmployeesStatusCount();
@@ -192,7 +192,8 @@ export class PayrollComponent {
                   .split('.')
                   .map(
                     (part) =>
-                      part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+                      part.charAt(0).toUpperCase() +
+                      part.slice(1).toLowerCase(),
                   )
                   .join('.');
               }
@@ -206,7 +207,7 @@ export class PayrollComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   getEmployeesStatusCount(filter = {}) {
@@ -218,16 +219,16 @@ export class PayrollComponent {
         this.totalSalary = response.reduce((sum, emp) => sum + emp.salary, 0);
         const deductions = response.reduce(
           (sum, emp) => sum + emp.deductions,
-          0
+          0,
         );
         const professionalTax = response.reduce(
           (sum, emp) => sum + emp.professionalTax,
-          0
+          0,
         );
         this.totalDeductions = deductions + professionalTax;
         this.totalNetSalary = response.reduce(
           (sum, emp) => sum + emp.netSalary,
-          0
+          0,
         );
         this.payrollEmployees = response.length;
         console.log('Total Salary:', this.totalSalary);
@@ -239,7 +240,7 @@ export class PayrollComponent {
       },
       (error: any) => {
         this.toastService.showError(error);
-      }
+      },
     );
   }
   actionItems(payslip: any): MenuItem[] {
@@ -278,7 +279,7 @@ export class PayrollComponent {
   statusChange(event: any): void {
     this.localStorageService.setItemOnLocalStorage(
       'selectedEmployee',
-      event.value
+      event.value,
     );
     this.loadPayslips(this.currentTableEvent);
   }
@@ -309,67 +310,67 @@ export class PayrollComponent {
 
       ...(this.capabilities.employeePayroll
         ? [
-          {
-            header: 'Payroll Month',
-            data: [
-              {
-                field: 'payrollMonth',
-                title: 'Payroll Month',
-                type: 'month',
-                filterType: 'eq',
-              },
-            ],
-          },
-        ]
+            {
+              header: 'Payroll Month',
+              data: [
+                {
+                  field: 'payrollMonth',
+                  title: 'Payroll Month',
+                  type: 'month',
+                  filterType: 'eq',
+                },
+              ],
+            },
+          ]
         : []),
 
       ...(this.capabilities.adminPayroll
         ? [
-          {
-            header: 'Employee Id',
-            data: [
-              {
-                field: 'employeeId',
-                title: 'Employee Id',
-                type: 'text',
-                filterType: 'like',
-              },
-            ],
-          },
-          {
-            header: 'Employee Name',
-            data: [
-              {
-                field: 'employeeName',
-                title: 'Employee Name',
-                type: 'text',
-                filterType: 'like',
-              },
-            ],
-          },
-          {
-            header: 'Custom Employee Id',
-            data: [
-              {
-                field: 'customEmployeeId',
-                title: 'Custom Employee Id',
-                type: 'text',
-                filterType: 'like',
-              },
-            ],
-          },
-          {
-            header: 'Joining Date',
-            data: [
-              {
-                field: 'joiningDate',
-                title: 'Joining Date ',
-                type: 'date',
-                filterType: 'like',
-              },
-            ],
-          },
-        ]
+            {
+              header: 'Employee Id',
+              data: [
+                {
+                  field: 'employeeId',
+                  title: 'Employee Id',
+                  type: 'text',
+                  filterType: 'like',
+                },
+              ],
+            },
+            {
+              header: 'Employee Name',
+              data: [
+                {
+                  field: 'employeeName',
+                  title: 'Employee Name',
+                  type: 'text',
+                  filterType: 'like',
+                },
+              ],
+            },
+            {
+              header: 'Custom Employee Id',
+              data: [
+                {
+                  field: 'customEmployeeId',
+                  title: 'Custom Employee Id',
+                  type: 'text',
+                  filterType: 'like',
+                },
+              ],
+            },
+            {
+              header: 'Joining Date',
+              data: [
+                {
+                  field: 'joiningDate',
+                  title: 'Joining Date ',
+                  type: 'date',
+                  filterType: 'like',
+                },
+              ],
+            },
+          ]
         : []),
       // {
       //   header: 'Custom Employee Id',
@@ -571,40 +572,40 @@ export class PayrollComponent {
       // },
       ...(this.capabilities.adminPayroll
         ? [
-          {
-            header: 'Account Number',
-            data: [
-              {
-                field: 'accountNumber',
-                title: 'Account Number',
-                type: 'text',
-                filterType: 'like',
-              },
-            ],
-          },
-          {
-            header: 'IFSC Code',
-            data: [
-              {
-                field: 'ifscCode',
-                title: 'IFSC Code',
-                type: 'text',
-                filterType: 'like',
-              },
-            ],
-          },
-          {
-            header: 'Bank Branch',
-            data: [
-              {
-                field: 'bankBranch',
-                title: 'Bank Branch',
-                type: 'text',
-                filterType: 'like',
-              },
-            ],
-          },
-        ]
+            {
+              header: 'Account Number',
+              data: [
+                {
+                  field: 'accountNumber',
+                  title: 'Account Number',
+                  type: 'text',
+                  filterType: 'like',
+                },
+              ],
+            },
+            {
+              header: 'IFSC Code',
+              data: [
+                {
+                  field: 'ifscCode',
+                  title: 'IFSC Code',
+                  type: 'text',
+                  filterType: 'like',
+                },
+              ],
+            },
+            {
+              header: 'Bank Branch',
+              data: [
+                {
+                  field: 'bankBranch',
+                  title: 'Bank Branch',
+                  type: 'text',
+                  filterType: 'like',
+                },
+              ],
+            },
+          ]
         : []),
       {
         header: 'Created Date Range',
@@ -638,7 +639,7 @@ export class PayrollComponent {
       {},
       api_filter,
       this.searchFilter,
-      this.appliedFilter
+      this.appliedFilter,
     );
     if (this.selectedEmployee) {
       if (this.selectedEmployee && this.selectedEmployee.employeeName) {
@@ -667,7 +668,7 @@ export class PayrollComponent {
       },
       (error: any) => {
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -679,7 +680,7 @@ export class PayrollComponent {
           (employeeResponse: any) => {
             this.payroll = this.mergePayrollWithEmployees(
               payrollResponse,
-              employeeResponse
+              employeeResponse,
             );
             console.log('Merged Payroll Data:', this.payroll);
             this.apiLoading = false;
@@ -687,13 +688,13 @@ export class PayrollComponent {
           (error: any) => {
             this.apiLoading = false;
             this.toastService.showError(error);
-          }
+          },
         );
       },
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   mergePayrollWithEmployees(payroll: any[], employees: any[]): any[] {
@@ -740,7 +741,7 @@ export class PayrollComponent {
             (salaryHikes: any) => {
               // Prepare attendance requests
               const attendanceRequests = employees.map((employee) =>
-                this.employeesService.getAttendance()
+                this.employeesService.getAttendance(),
               );
 
               forkJoin(attendanceRequests).subscribe(
@@ -760,7 +761,7 @@ export class PayrollComponent {
                     const presentDays = filteredAttendance.reduce(
                       (count, record) => {
                         const employeeRecord = record.attendanceData.find(
-                          (emp) => emp.employeeId === employee.employeeId
+                          (emp) => emp.employeeId === employee.employeeId,
                         );
                         if (employeeRecord) {
                           if (
@@ -775,28 +776,28 @@ export class PayrollComponent {
                         }
                         return count;
                       },
-                      0
+                      0,
                     );
                     const lateDays = filteredAttendance.reduce(
                       (count, record) => {
                         const employeeRecord = record.attendanceData.find(
                           (emp) =>
                             emp.employeeId === employee.employeeId &&
-                            emp.status === 'Late'
+                            emp.status === 'Late',
                         );
                         return employeeRecord ? count + 1 : count;
                       },
-                      0
+                      0,
                     );
                     // Apply Salary Hike
                     const matchingHikes = salaryHikes.filter(
-                      (hike) => hike.employeeId == employee.employeeId
+                      (hike) => hike.employeeId == employee.employeeId,
                     );
                     if (matchingHikes.length > 0) {
                       const totalHike = matchingHikes.reduce(
                         (accumulatedHike, hike) =>
                           accumulatedHike + hike.monthlyHike,
-                        0
+                        0,
                       );
                       employee.salary += totalHike;
                     }
@@ -806,7 +807,7 @@ export class PayrollComponent {
                     const lateLopDays = Math.floor(lateDays / 3);
                     const casualDays = this.getCasualDaysCount(
                       employee.joiningDate,
-                      payrollMonth
+                      payrollMonth,
                     );
                     const absentDays =
                       presentDays > 0 && workingDays > 0
@@ -817,7 +818,7 @@ export class PayrollComponent {
                         ? Math.max(0, absentDays - casualDays)
                         : absentDays || 0;
                     const daySalary = Number(
-                      (employee.salary / workingDays).toFixed()
+                      (employee.salary / workingDays).toFixed(),
                     );
                     const absentAndLate =
                       absentDays > 0 || lateLopDays > 0
@@ -833,10 +834,10 @@ export class PayrollComponent {
                     const paidDaysWithDLOP =
                       workingDays - totalDeductedDaysWithDLOP;
                     const baseNetSalaryWithoutDLOP = Number(
-                      (paidDaysWithoutDLOP * daySalary).toFixed()
+                      (paidDaysWithoutDLOP * daySalary).toFixed(),
                     );
                     const baseNetSalaryWithDLOP = Number(
-                      (paidDaysWithDLOP * daySalary).toFixed()
+                      (paidDaysWithDLOP * daySalary).toFixed(),
                     );
                     const baseDeductionsWithoutDLOP =
                       employee.salary - baseNetSalaryWithoutDLOP;
@@ -917,7 +918,7 @@ export class PayrollComponent {
                     console.log('Payroll Data:', payrollData);
                     // Push payroll request to array
                     payrollRequests.push(
-                      this.employeesService.createPayroll(payrollData)
+                      this.employeesService.createPayroll(payrollData),
                     );
                   });
                   // Execute all payroll requests in parallel
@@ -925,7 +926,7 @@ export class PayrollComponent {
                     (results) => {
                       this.loading = false;
                       this.toastService.showSuccess(
-                        'All Payrolls Added Successfully'
+                        'All Payrolls Added Successfully',
                       );
                       this.routingService.handleRoute('payroll', null);
                     },
@@ -933,28 +934,28 @@ export class PayrollComponent {
                       this.loading = false;
                       this.toastService.showError(error);
                       console.error(error);
-                    }
+                    },
                   );
                 },
                 (error) => {
                   this.toastService.showError(error);
                   this.loading = false;
                   console.error(error);
-                }
+                },
               );
             },
             (error) => {
               this.toastService.showError(error);
               this.loading = false;
               console.error(error);
-            }
+            },
           );
         },
         (error) => {
           this.toastService.showError('Error fetching employees.');
           this.loading = false;
           console.error(error);
-        }
+        },
       );
   }
   getWorkingDays(payrollMonth: string): number {
@@ -992,7 +993,7 @@ export class PayrollComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   getSalaryHikes(filter) {
@@ -1007,13 +1008,13 @@ export class PayrollComponent {
       eligibleCasualMonth = new Date(
         joining.getFullYear(),
         joining.getMonth() + 3,
-        1
+        1,
       );
     } else {
       eligibleCasualMonth = new Date(
         joining.getFullYear(),
         joining.getMonth() + 4,
-        1
+        1,
       );
     }
 
@@ -1035,7 +1036,7 @@ export class PayrollComponent {
     }
     this.localStorageService.setItemOnLocalStorage(
       'payrollAppliedFilter',
-      this.appliedFilter
+      this.appliedFilter,
     );
     this.loadPayslips(this.currentTableEvent);
   }
@@ -1088,7 +1089,7 @@ export class PayrollComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -1101,5 +1102,13 @@ export class PayrollComponent {
   }
   goBack() {
     this.location.back();
+  }
+  canViewOfferLetter(): boolean {
+    const isRestrictedEmployee = this.userDetails.accountId == 1234567;
+    const isAllowedUser = this.userDetails?.designation == 1;
+    if (isRestrictedEmployee) {
+      return isAllowedUser;
+    }
+    return true;
   }
 }

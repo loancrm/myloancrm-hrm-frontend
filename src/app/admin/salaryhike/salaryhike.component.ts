@@ -55,7 +55,7 @@ export class SalaryhikeComponent {
     private localStorageService: LocalStorageService,
     private confirmationService: ConfirmationService,
     private toastService: ToastService,
-    private dateTimeProcessor: DateTimeProcessorService
+    private dateTimeProcessor: DateTimeProcessorService,
   ) {
     // const usertype = localStorage.getItem('userType');
     const usertype = localStorageService.getItemFromLocalStorage('userType');
@@ -83,7 +83,7 @@ export class SalaryhikeComponent {
     this.setSalaryHikesList();
     const storedAppliedFilter =
       this.localStorageService.getItemFromLocalStorage(
-        'salaryHikesAppliedFilter'
+        'salaryHikesAppliedFilter',
       );
     if (storedAppliedFilter) {
       this.appliedFilter = storedAppliedFilter;
@@ -97,7 +97,7 @@ export class SalaryhikeComponent {
       .get('employeeName')
       ?.valueChanges.subscribe((selectedName) => {
         const selectedEmployee = this.employees.find(
-          (employee) => employee.employeeName === selectedName
+          (employee) => employee.employeeName === selectedName,
         );
         if (selectedEmployee) {
           this.salaryHikeForm.patchValue({
@@ -109,7 +109,7 @@ export class SalaryhikeComponent {
           if (!selectedEmployee.salary) missingFields.push('Salary');
           if (missingFields.length > 0) {
             const missingFieldsMessage = `The following fields are missing: ${missingFields.join(
-              ', '
+              ', ',
             )}`;
             this.confirmationService.confirm({
               message: `${missingFieldsMessage}. Please update your information.`,
@@ -389,7 +389,8 @@ export class SalaryhikeComponent {
                   .split('.')
                   .map(
                     (part) =>
-                      part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+                      part.charAt(0).toUpperCase() +
+                      part.slice(1).toLowerCase(),
                   )
                   .join('.');
               }
@@ -404,7 +405,7 @@ export class SalaryhikeComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   updateEmployee(employeeId) {
@@ -447,7 +448,7 @@ export class SalaryhikeComponent {
   statusChange(event: any): void {
     this.localStorageService.setItemOnLocalStorage(
       'selectedHikeStatus',
-      event.value
+      event.value,
     );
     this.loadSalaryHikes(this.currentTableEvent);
   }
@@ -462,7 +463,7 @@ export class SalaryhikeComponent {
     }
     this.localStorageService.setItemOnLocalStorage(
       'salaryHikesAppliedFilter',
-      this.appliedFilter
+      this.appliedFilter,
     );
     this.loadSalaryHikes(this.currentTableEvent);
   }
@@ -495,7 +496,7 @@ export class SalaryhikeComponent {
       {},
       api_filter,
       this.searchFilter,
-      this.appliedFilter
+      this.appliedFilter,
     );
 
     if (api_filter) {
@@ -511,7 +512,7 @@ export class SalaryhikeComponent {
       },
       (error: any) => {
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -523,7 +524,7 @@ export class SalaryhikeComponent {
           (employeeResponse: any) => {
             this.salaryHikes = this.mergeSalaryHikesWithEmployees(
               hikeresponse,
-              employeeResponse
+              employeeResponse,
             );
             console.log('Merged Salary Hikes Data:', this.salaryHikes);
             this.apiLoading = false;
@@ -531,13 +532,13 @@ export class SalaryhikeComponent {
           (error: any) => {
             this.apiLoading = false;
             this.toastService.showError(error);
-          }
+          },
         );
       },
       (error: any) => {
         this.apiLoading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   mergeSalaryHikesWithEmployees(hike: any[], employees: any[]): any[] {
@@ -623,7 +624,7 @@ export class SalaryhikeComponent {
           this.loading = false;
           this.toastService.showError(error);
           reject(error);
-        }
+        },
       );
     });
   }
@@ -647,11 +648,11 @@ export class SalaryhikeComponent {
           (hike) =>
             hike.employeeId === formValues.employeeId &&
             hike.hikeDate !== formValues.hikeDate &&
-            new Date(hike.hikeDate) < new Date(formValues.hikeDate)
+            new Date(hike.hikeDate) < new Date(formValues.hikeDate),
         )
         .sort(
           (a, b) =>
-            new Date(b.hikeDate).getTime() - new Date(a.hikeDate).getTime()
+            new Date(b.hikeDate).getTime() - new Date(a.hikeDate).getTime(),
         )[0];
       if (existingHike) {
         formValues.basicSalary = existingHike.totalSalary; // Take previous hike's totalSalary
@@ -684,7 +685,7 @@ export class SalaryhikeComponent {
           this.loading = false;
           console.log(error);
           this.toastService.showError(error);
-        }
+        },
       );
     } else if (this.actionType === 'update') {
       if (!this.hikeId) {
@@ -705,7 +706,7 @@ export class SalaryhikeComponent {
         (error: any) => {
           this.loading = false;
           this.toastService.showError(error);
-        }
+        },
       );
     }
   }
@@ -755,7 +756,7 @@ export class SalaryhikeComponent {
   getStatusName(statusId) {
     if (this.hikeInternalStatusList && this.hikeInternalStatusList.length > 0) {
       let hikeStatusName = this.hikeInternalStatusList.filter(
-        (hikeStatus) => hikeStatus.id == statusId
+        (hikeStatus) => hikeStatus.id == statusId,
       );
       return (
         (hikeStatusName && hikeStatusName[0] && hikeStatusName[0].name) || ''
@@ -775,7 +776,7 @@ export class SalaryhikeComponent {
     this.employeesService.changeSalaryHikeStatus(hikeId, statusId).subscribe(
       (response) => {
         this.toastService.showSuccess(
-          'Salary Hike Status Changed Successfully'
+          'Salary Hike Status Changed Successfully',
         );
         this.loading = false;
         this.loadSalaryHikes(this.currentTableEvent);
@@ -783,7 +784,7 @@ export class SalaryhikeComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   updateSalaryHike(salaryHike) {
@@ -821,7 +822,7 @@ export class SalaryhikeComponent {
           this.dataLoading = false;
           resolve(false);
           this.toastService.showError(error);
-        }
+        },
       );
     });
   }
@@ -852,7 +853,7 @@ export class SalaryhikeComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   ViewHikeletter(hikeId) {
@@ -860,5 +861,13 @@ export class SalaryhikeComponent {
   }
   goBack() {
     this.location.back();
+  }
+  canViewOfferLetter(): boolean {
+    const isRestrictedEmployee = this.userDetails.accountId == 1234567;
+    const isAllowedUser = this.userDetails?.designation == 1;
+    if (isRestrictedEmployee) {
+      return isAllowedUser;
+    }
+    return true;
   }
 }

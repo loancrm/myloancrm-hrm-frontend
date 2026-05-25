@@ -49,12 +49,12 @@
                 class="cardicons"
                 [ngStyle]="{
                   color: item.textcolor,
-                  'background-color': item.backgroundcolor
+                  'background-color': item.backgroundcolor,
                 }"
               >
                 <!-- <i class="fa fa-{{ item.name }}"></i> -->
                 <!-- <img src="../../../assets/images/{{ item.name }}.svg" alt="" /> -->
-                 <lucide-icon [name]= "item.icon" [size]="30"></lucide-icon>
+                <lucide-icon [name]="item.icon" [size]="30"></lucide-icon>
               </div>
             </div>
           </div>
@@ -96,7 +96,7 @@
           <div class="value">
             {{
               selectedPayrollDetails.payrollMonth
-                ? (selectedPayrollDetails.payrollMonth | date : "MMMM yyyy")
+                ? (selectedPayrollDetails.payrollMonth | date: "MMMM yyyy")
                 : "-"
             }}
           </div>
@@ -251,7 +251,7 @@
             {{
               selectedPayrollDetails.lastUpdatedOn
                 ? (selectedPayrollDetails.lastUpdatedOn
-                  | date : "MMM d, y, h:mm a")
+                  | date: "MMM d, y, h:mm a")
                 : "-"
             }}
           </div>
@@ -417,7 +417,7 @@
       'referenceNo',
       'customer.firstName',
       'partner.partnerName',
-      'status'
+      'status',
     ]"
     styleClass="p-datatable-customers"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Payroll"
@@ -425,29 +425,32 @@
     <ng-template pTemplate="caption">
       <div class="row">
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
-          <div  class="custom-calendar-wrapper position-relative"*ngIf="capabilities.adminPayroll">
-            <p-calendar
-            #calendar
-            [(ngModel)]="displayMonth"
-            [showIcon]="false"
-            view="month"
-            [monthNavigator]="true"
-            [yearNavigator]="true"
-            [yearRange]="'-10:+10'"
-            [readonlyInput]="true"
-            dateFormat="MM yy"
-            appendTo="body"
-            [style]="{ width: '100%' }"
-            (ngModelChange)="onDateChange($event)"
-            [placeholder]="'Select Month and Year'"
-          ></p-calendar>
-          <img
-            src="../../../assets/images/icons/calendar.svg"
-            alt="Calendar Icon"
-            class="calendar-custom-img"
+          <div
+            class="custom-calendar-wrapper position-relative"
             *ngIf="capabilities.adminPayroll"
-            (click)="calendar.toggle()"
-          />
+          >
+            <p-calendar
+              #calendar
+              [(ngModel)]="displayMonth"
+              [showIcon]="false"
+              view="month"
+              [monthNavigator]="true"
+              [yearNavigator]="true"
+              [yearRange]="'-10:+10'"
+              [readonlyInput]="true"
+              dateFormat="MM yy"
+              appendTo="body"
+              [style]="{ width: '100%' }"
+              (ngModelChange)="onDateChange($event)"
+              [placeholder]="'Select Month and Year'"
+            ></p-calendar>
+            <img
+              src="../../../assets/images/icons/calendar.svg"
+              alt="Calendar Icon"
+              class="calendar-custom-img"
+              *ngIf="capabilities.adminPayroll"
+              (click)="calendar.toggle()"
+            />
           </div>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
@@ -548,7 +551,7 @@
         <th pSortableColumn="createdOn" class="text-nowrap">
           Created Date <p-sortIcon field="createdOn"></p-sortIcon>
         </th>
-        <th class="text-nowrap">Payslip</th>
+        <th class="text-nowrap" *ngIf="canViewOfferLetter()">Payslip</th>
         <th class="text-nowrap">Actions</th>
       </tr>
     </ng-template>
@@ -602,7 +605,11 @@
           <span
             class="table-column-data"
             *ngIf="payslip.payrollMonth; else noData"
-            >{{ payslip?.payrollMonth ? (payslip.payrollMonth | date : "MMMM yyyy") : '' }}</span
+            >{{
+              payslip?.payrollMonth
+                ? (payslip.payrollMonth | date: "MMMM yyyy")
+                : ""
+            }}</span
           >
         </td>
         <td class="text-nowrap">
@@ -634,10 +641,10 @@
           <span
             class="table-column-data"
             *ngIf="payslip.createdOn; else noData"
-            >{{ payslip.createdOn | date : "mediumDate" }}</span
+            >{{ payslip.createdOn | date: "mediumDate" }}</span
           >
         </td>
-        <td>
+        <td *ngIf="canViewOfferLetter()">
           <div class="text-center">
             <div class="d-flex">
               <button
@@ -671,14 +678,13 @@
                 tooltipPosition="top"
                 (click)="menu.toggle($event); $event.stopPropagation()"
               />
-              
+
             </div>
           </div>
-        </td> -->    
+        </td> -->
         <td>
           <div class="text-center pointer-cursor tableimage">
             <div class="d-flex">
-
               <!-- ACTION MENU BUTTON -->
               <button
                 class="action-icon-wrapper menu-icon-wrapper"
@@ -696,11 +702,18 @@
 
               <!-- MAT MENU -->
               <mat-menu #payslipMenu="matMenu">
-
                 <!-- Payroll Details -->
-                <button mat-menu-item (click)="showPayrollDetails(selectedPayslip)" class="matmenuimg">
+                <button
+                  mat-menu-item
+                  (click)="showPayrollDetails(selectedPayslip)"
+                  class="matmenuimg"
+                >
                   <div class="menu-action-icon-wrapper">
-                    <lucide-icon name="eye" [size]="18" class="menu-action-icon"></lucide-icon>
+                    <lucide-icon
+                      name="eye"
+                      [size]="18"
+                      class="menu-action-icon"
+                    ></lucide-icon>
                   </div>
                   <span>Payroll Details</span>
                 </button>
@@ -713,7 +726,11 @@
                   class="matmenuimg"
                 >
                   <div class="menu-action-icon-wrapper">
-                    <lucide-icon name="square-pen" [size]="18" class="menu-action-icon"></lucide-icon>
+                    <lucide-icon
+                      name="square-pen"
+                      [size]="18"
+                      class="menu-action-icon"
+                    ></lucide-icon>
                   </div>
                   <span>Update</span>
                 </button>
@@ -726,13 +743,15 @@
                   class="matmenuimg"
                 >
                   <div class="menu-action-icon-wrapper">
-                    <lucide-icon name="trash" [size]="18" class="menu-action-icon"></lucide-icon>
+                    <lucide-icon
+                      name="trash"
+                      [size]="18"
+                      class="menu-action-icon"
+                    ></lucide-icon>
                   </div>
                   <span>Delete</span>
                 </button>
-
               </mat-menu>
-
             </div>
           </div>
         </td>
@@ -751,8 +770,6 @@
       </tr>
     </ng-template>
   </p-table>
-  
-
 </div>
 
 <ng-template #noData> - </ng-template>

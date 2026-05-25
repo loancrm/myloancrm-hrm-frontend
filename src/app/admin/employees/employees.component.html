@@ -9,9 +9,9 @@
             style="height: 36px; width: 98px; gap: 8px"
           >
             <!-- <i class="pi pi-arrow-left fw-bold back-btn-icon"></i> -->
-             <span class="me-2 d-flex align-items-center">
-                <lucide-icon name="ArrowLeft" [size]="20"></lucide-icon>
-              </span>
+            <span class="me-2 d-flex align-items-center">
+              <lucide-icon name="ArrowLeft" [size]="20"></lucide-icon>
+            </span>
             <span class="back-btn-text">Employees</span>
           </div>
         </div>
@@ -50,13 +50,10 @@
                   </div>
                 </div>
               </div>
-              <div
-                class="cardicons"
-                
-              >
+              <div class="cardicons">
                 <!-- <i class="fa fa-{{ item.name }}"></i> -->
-                 <!-- <img src="../../../assets/images/{{ item.name }}.svg" alt="" > -->
-                  <lucide-icon [name]= "item.icon" [size]="30"></lucide-icon>
+                <!-- <img src="../../../assets/images/{{ item.name }}.svg" alt="" > -->
+                <lucide-icon [name]="item.icon" [size]="30"></lucide-icon>
               </div>
             </div>
           </div>
@@ -88,7 +85,7 @@
       'referenceNo',
       'customer.firstName',
       'partner.partnerName',
-      'status'
+      'status',
     ]"
     styleClass="p-datatable-customers"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Employees"
@@ -119,10 +116,7 @@
               class="input-group-text searchbtn"
               (click)="filterWithEmployeeName()"
             >
-              <img
-                src="../../../assets/images/icons/search.svg"
-                alt="Search" 
-              />
+              <img src="../../../assets/images/icons/search.svg" alt="Search" />
             </span>
           </div>
         </div>
@@ -204,9 +198,9 @@
       <tr>
         <td>
           <b>
-          <span class="table-column-data" *ngIf="employee.employeeId">{{
-            employee.employeeId
-          }}</span>
+            <span class="table-column-data" *ngIf="employee.employeeId">{{
+              employee.employeeId
+            }}</span>
           </b>
         </td>
         <td class="text-nowrap">
@@ -238,11 +232,10 @@
                 />
               </ng-template>
             </span>
-           
-              <span *ngIf="employee.employeeName" class="table-column-data">
-                {{ employee.employeeName | capitalizeFirst }}
-              </span>
-            
+
+            <span *ngIf="employee.employeeName" class="table-column-data">
+              {{ employee.employeeName | capitalizeFirst }}
+            </span>
           </div>
         </td>
         <td class="text-nowrap">
@@ -265,7 +258,7 @@
           <span
             class="table-column-data"
             *ngIf="employee.joiningDate; else noData"
-            >{{ employee.joiningDate | date : "mediumDate" }}</span
+            >{{ employee.joiningDate | date: "mediumDate" }}</span
           >
         </td>
         <td class="text-nowrap">
@@ -279,11 +272,11 @@
           <span
             class="table-column-data"
             *ngIf="employee.createdOn; else noData"
-            >{{ employee.createdOn | date : "mediumDate" }}</span
+            >{{ employee.createdOn | date: "mediumDate" }}</span
           >
         </td>
-         <td>
-              <span
+        <td>
+          <span
             class="d-inline-flex align-items-center justify-content-start gap-2 text-nowrap"
             [ngStyle]="{
               backgroundColor: getStatusColor(
@@ -299,7 +292,7 @@
               borderRadius: '16px',
               fontSize: '12px',
               fontWeight: 500,
-              paddingLeft: '8px'
+              paddingLeft: '8px',
             }"
           >
             <!-- Dot -->
@@ -311,14 +304,14 @@
                 ).dotColor,
                 width: '8px',
                 height: '8px',
-                display: 'inline-block'
+                display: 'inline-block',
               }"
             ></span>
 
             <!-- Status Text -->
             {{ getStatusName(employee.employeeInternalStatus) }}
-          </span>   
-          </td>
+          </span>
+        </td>
         <!-- <td>
           <div class="text-center">
             <div class="d-flex tableimage">
@@ -337,111 +330,163 @@
                 tooltipPosition="top"
                 (click)="menu.toggle($event); $event.stopPropagation()"
               />
-              
+
             </div>
           </div>
         </td> -->
         <td>
-  <div class="text-center pointer-cursor tableimage">
-    <div class="d-flex">
+          <div class="text-center pointer-cursor tableimage">
+            <div class="d-flex">
+              <!-- ACTION MENU BUTTON -->
+              <button
+                class="action-icon-wrapper menu-icon-wrapper"
+                [matMenuTriggerFor]="employeeMenu"
+                aria-label="Actions"
+                pTooltip="Actions"
+                tooltipPosition="top"
+                (click)="$event.stopPropagation()"
+              >
+                <lucide-icon
+                  name="MoreVertical"
+                  [size]="20"
+                  class="action-icon"
+                ></lucide-icon>
+              </button>
 
-      <!-- ACTION MENU BUTTON -->
-      <button
-        class="action-icon-wrapper menu-icon-wrapper"
-        [matMenuTriggerFor]="employeeMenu"
-        aria-label="Actions"
-        pTooltip="Actions"
-        tooltipPosition="top"
-        (click)="$event.stopPropagation()"
-      >
-        <lucide-icon
-          name="MoreVertical"
-          [size]="20"
-          class="action-icon"
-        ></lucide-icon>
-      </button>
+              <!-- MAT MENU -->
+              <mat-menu #employeeMenu="matMenu">
+                <!-- ================= ACTIVE EMPLOYEE ================= -->
+                <ng-container *ngIf="employee.employeeInternalStatus === 1">
+                  <button
+                    mat-menu-item
+                    (click)="employeeProfile(employee.employeeId)"
+                    class="matmenuimg"
+                  >
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon
+                        name="eye"
+                        [size]="18"
+                        class="menu-action-icon"
+                      ></lucide-icon>
+                    </div>
+                    <span>Profile</span>
+                  </button>
 
-      <!-- MAT MENU -->
-      <mat-menu #employeeMenu="matMenu">
+                  <button
+                    mat-menu-item
+                    (click)="ViewOfferletter(employee.employeeId)"
+                    class="matmenuimg"
+                    *ngIf="canViewOfferLetter()"
+                  >
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon
+                        name="scroll-text"
+                        [size]="18"
+                        class="menu-action-icon"
+                      ></lucide-icon>
+                    </div>
+                    <span>Offer Letter </span>
+                  </button>
 
-        <!-- ================= ACTIVE EMPLOYEE ================= -->
-        <ng-container *ngIf="employee.employeeInternalStatus === 1">
+                  <button
+                    mat-menu-item
+                    (click)="updateEmployee(employee.employeeId)"
+                    class="matmenuimg"
+                  >
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon
+                        name="square-pen"
+                        [size]="18"
+                        class="menu-action-icon"
+                      ></lucide-icon>
+                    </div>
+                    <span>Update</span>
+                  </button>
 
-          <button mat-menu-item (click)="employeeProfile(employee.employeeId)" class="matmenuimg">
-            <div class="menu-action-icon-wrapper">
-              <lucide-icon name="eye" [size]="18" class="menu-action-icon"></lucide-icon>
+                  <button
+                    mat-menu-item
+                    (click)="inactiveEmployee(employee)"
+                    class="matmenuimg"
+                  >
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon
+                        name="shield-x"
+                        [size]="18"
+                        class="menu-action-icon"
+                      ></lucide-icon>
+                    </div>
+                    <span>InActive</span>
+                  </button>
+
+                  <button
+                    mat-menu-item
+                    *ngIf="capabilities.delete"
+                    (click)="confirmDelete(employee)"
+                    class="matmenuimg"
+                  >
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon
+                        name="trash"
+                        [size]="18"
+                        class="menu-action-icon"
+                      ></lucide-icon>
+                    </div>
+                    <span>Delete</span>
+                  </button>
+                </ng-container>
+
+                <!-- ================= INACTIVE EMPLOYEE ================= -->
+                <ng-container *ngIf="employee.employeeInternalStatus === 2">
+                  <button
+                    mat-menu-item
+                    (click)="employeeProfile(employee.employeeId)"
+                    class="matmenuimg"
+                  >
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon
+                        name="eye"
+                        [size]="18"
+                        class="menu-action-icon"
+                      ></lucide-icon>
+                    </div>
+                    <span>Profile</span>
+                  </button>
+
+                  <button
+                    mat-menu-item
+                    *ngIf="canViewOfferLetter()"
+                    (click)="ViewRelievingletter(employee.employeeId)"
+                    class="matmenuimg"
+                  >
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon
+                        name="scroll-text"
+                        [size]="18"
+                        class="menu-action-icon"
+                      ></lucide-icon>
+                    </div>
+                    <span>Relieving Letter</span>
+                  </button>
+
+                  <button
+                    mat-menu-item
+                    (click)="activateEmployee(employee)"
+                    class="matmenuimg"
+                  >
+                    <div class="menu-action-icon-wrapper">
+                      <lucide-icon
+                        name="shield-check"
+                        [size]="18"
+                        class="menu-action-icon"
+                      ></lucide-icon>
+                    </div>
+                    <span>Active</span>
+                  </button>
+                </ng-container>
+              </mat-menu>
             </div>
-            <span>Profile</span>
-          </button>
-
-          <button mat-menu-item (click)="ViewOfferletter(employee.employeeId)" class="matmenuimg">
-            <div class="menu-action-icon-wrapper">
-              <lucide-icon name="scroll-text" [size]="18" class="menu-action-icon"></lucide-icon>
-            </div>
-            <span>Offer Letter</span>
-          </button>
-
-          <button mat-menu-item (click)="updateEmployee(employee.employeeId)" class="matmenuimg">
-            <div class="menu-action-icon-wrapper">
-              <lucide-icon name="square-pen" [size]="18" class="menu-action-icon"></lucide-icon>
-            </div>
-            <span>Update</span>
-          </button>
-
-          <button mat-menu-item (click)="inactiveEmployee(employee)" class="matmenuimg">
-            <div class="menu-action-icon-wrapper">
-              <lucide-icon name="shield-x" [size]="18" class="menu-action-icon"></lucide-icon>
-            </div>
-            <span>InActive</span>
-          </button>
-
-          <button
-            mat-menu-item
-            *ngIf="capabilities.delete"
-            (click)="confirmDelete(employee)"
-            class="matmenuimg"
-          >
-            <div class="menu-action-icon-wrapper">
-              <lucide-icon name="trash" [size]="18" class="menu-action-icon"></lucide-icon>
-            </div>
-            <span>Delete</span>
-          </button>
-
-        </ng-container>
-
-        <!-- ================= INACTIVE EMPLOYEE ================= -->
-        <ng-container *ngIf="employee.employeeInternalStatus === 2">
-
-          <button mat-menu-item (click)="employeeProfile(employee.employeeId)" class="matmenuimg">
-            <div class="menu-action-icon-wrapper">
-              <lucide-icon name="eye" [size]="18" class="menu-action-icon"></lucide-icon>
-            </div>
-            <span>Profile</span>
-          </button>
-
-          <button mat-menu-item (click)="ViewRelievingletter(employee.employeeId)" class="matmenuimg">
-            <div class="menu-action-icon-wrapper">
-              <lucide-icon name="scroll-text" [size]="18" class="menu-action-icon"></lucide-icon>
-            </div>
-            <span>Relieving Letter</span>
-          </button>
-
-          <button mat-menu-item (click)="activateEmployee(employee)" class="matmenuimg">
-            <div class="menu-action-icon-wrapper">
-              <lucide-icon name="shield-check" [size]="18" class="menu-action-icon"></lucide-icon>
-            </div>
-            <span>Active</span>
-          </button>
-
-        </ng-container>
-
-      </mat-menu>
-
-    </div>
-  </div>
-</td>
-
-
+          </div>
+        </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
@@ -461,8 +506,8 @@
 <ng-template #noData> - </ng-template>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
   <div class="text-center mb-3">
-    © {{ currentYear }} <span style="color: #8E89D0">My</span>&nbsp;<b
-      style="color: #535AB4"
+    © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b
+      style="color: #535ab4"
       >HRMS</b
     >. | All Rights Reserved
   </div>

@@ -16,10 +16,11 @@ import { Table } from 'primeng/table';
 export class EmployeesComponent implements OnInit {
   breadCrumbItems: any = [];
   currentTableEvent: any;
+  userDetails: any;
   filterConfig: any[] = [];
   totalEmployeesCount: any = 0;
   loading: any;
-  appliedFilter: {}; 
+  appliedFilter: {};
   searchFilter: any = {};
   employeeStatusCount = {
     statusCount: { 1: 0, 2: 0 },
@@ -46,7 +47,7 @@ export class EmployeesComponent implements OnInit {
     private toastService: ToastService,
     private routingService: RoutingService,
     private localStorageService: LocalStorageService,
-    private branchesService: BranchesService
+    private branchesService: BranchesService,
   ) {
     this.breadCrumbItems = [
       {
@@ -61,6 +62,11 @@ export class EmployeesComponent implements OnInit {
   }
   ngOnInit(): void {
     this.currentYear = this.employeesService.getCurrentYear();
+    const userDetails =
+      this.localStorageService.getItemFromLocalStorage('userDetails');
+    if (userDetails) {
+      this.userDetails = userDetails.user;
+    }
     this.capabilities = this.employeesService.getUserRbac();
     console.log('capabilities', this.capabilities);
     this.loadBranches();
@@ -68,14 +74,14 @@ export class EmployeesComponent implements OnInit {
     // this.setFilterConfig();
     this.getEmployeesStatusCount();
     const storedStatus = this.localStorageService.getItemFromLocalStorage(
-      'selectedEmployeeStatus'
+      'selectedEmployeeStatus',
     );
     if (storedStatus) {
       this.selectedEmployeeStatus = storedStatus;
     }
     const storedAppliedFilter =
       this.localStorageService.getItemFromLocalStorage(
-        'employeesAppliedFilter'
+        'employeesAppliedFilter',
       );
     if (storedAppliedFilter) {
       this.appliedFilter = storedAppliedFilter;
@@ -83,25 +89,27 @@ export class EmployeesComponent implements OnInit {
   }
 
   loadBranches() {
-    this.branchesService.getBranches({ 'branchInternalStatus-eq': 1 }).subscribe(
-      (response: any) => {
-        this.branchDetails = response || [];
-        this.setFilterConfig();
-      },
-      (error: any) => {
-        this.toastService.showError(error);
-        // Fallback to empty array if error
-        this.branchDetails = [];
-        this.setFilterConfig();
-      }
-    );
+    this.branchesService
+      .getBranches({ 'branchInternalStatus-eq': 1 })
+      .subscribe(
+        (response: any) => {
+          this.branchDetails = response || [];
+          this.setFilterConfig();
+        },
+        (error: any) => {
+          this.toastService.showError(error);
+          // Fallback to empty array if error
+          this.branchDetails = [];
+          this.setFilterConfig();
+        },
+      );
   }
   updateCountsAnalytics() {
     this.countsAnalytics = [
       {
         name: 'allemp',
         displayName: 'All Employees',
-        icon:'id-card-lanyard',
+        icon: 'id-card-lanyard',
         count:
           this.employeeStatusCount.statusCount['1'] +
           this.employeeStatusCount.statusCount['2'],
@@ -111,7 +119,7 @@ export class EmployeesComponent implements OnInit {
       {
         name: 'newemploye',
         displayName: 'New Employees',
-        icon:'user-plus',
+        icon: 'user-plus',
         count: this.employeeStatusCount.newEmployeeCount['new'],
         textcolor: '#C7C2E8',
         boxShadow: '#C7C2E8',
@@ -540,7 +548,7 @@ export class EmployeesComponent implements OnInit {
     }
     this.localStorageService.setItemOnLocalStorage(
       'employeesAppliedFilter',
-      this.appliedFilter
+      this.appliedFilter,
     );
     this.loadEmployees(this.currentTableEvent);
   }
@@ -548,7 +556,7 @@ export class EmployeesComponent implements OnInit {
   inactiveEmployee(employee) {
     this.changeEmployeeStatus(employee.employeeId, 2);
   }
-  
+
   activateEmployee(employee) {
     this.changeEmployeeStatus(employee.employeeId, 1);
   }
@@ -563,7 +571,7 @@ export class EmployeesComponent implements OnInit {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   confirmDelete(employee) {
@@ -594,14 +602,14 @@ export class EmployeesComponent implements OnInit {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
   statusChange(event: any): void {
     this.localStorageService.setItemOnLocalStorage(
       'selectedEmployeeStatus',
-      event.value
+      event.value,
     );
     this.loadEmployees(this.currentTableEvent);
   }
@@ -640,7 +648,7 @@ export class EmployeesComponent implements OnInit {
       {},
       api_filter,
       this.searchFilter,
-      this.appliedFilter
+      this.appliedFilter,
     );
     console.log(api_filter);
     if (api_filter) {
@@ -655,7 +663,7 @@ export class EmployeesComponent implements OnInit {
       },
       (error: any) => {
         this.toastService.showError(error);
-      }
+      },
     );
   }
   countEmployeeInternalStatus(employees: any[]) {
@@ -689,7 +697,7 @@ export class EmployeesComponent implements OnInit {
       (error: any) => {
         this.apiLoading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   getEmployeesStatusCount() {
@@ -701,7 +709,7 @@ export class EmployeesComponent implements OnInit {
       },
       (error: any) => {
         this.toastService.showError(error);
-      }
+      },
     );
   }
   getStatusName(statusId) {
@@ -710,7 +718,7 @@ export class EmployeesComponent implements OnInit {
       this.employeeInternalStatusList.length > 0
     ) {
       let employeeStatusName = this.employeeInternalStatusList.filter(
-        (employeeStatus) => employeeStatus.id == statusId
+        (employeeStatus) => employeeStatus.id == statusId,
       );
       return (
         (employeeStatusName &&
@@ -735,7 +743,7 @@ export class EmployeesComponent implements OnInit {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   getStatusColor(status: string): {
@@ -746,11 +754,26 @@ export class EmployeesComponent implements OnInit {
   } {
     switch (status) {
       case 'Active':
-        return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6', dotColor: '#14BA6D',width: '100%' };
+        return {
+          textColor: '#5DCC0B',
+          backgroundColor: '#E4F7D6',
+          dotColor: '#14BA6D',
+          width: '100%',
+        };
       case 'InActive':
-        return { textColor: '#FF555A', backgroundColor: '#FFE2E3', dotColor: '#FF555A',width: '100%' };
+        return {
+          textColor: '#FF555A',
+          backgroundColor: '#FFE2E3',
+          dotColor: '#FF555A',
+          width: '100%',
+        };
       default:
-        return { textColor: 'black', backgroundColor: 'white', dotColor: '#14BA6D',width: '100%' };
+        return {
+          textColor: 'black',
+          backgroundColor: 'white',
+          dotColor: '#14BA6D',
+          width: '100%',
+        };
     }
   }
   createEmployee() {
@@ -765,16 +788,25 @@ export class EmployeesComponent implements OnInit {
   ViewOfferletter(employeeId) {
     this.routingService.handleRoute(
       'employees/offerletter/' + employeeId,
-      null
+      null,
     );
   }
   ViewRelievingletter(employeeId) {
     this.routingService.handleRoute(
       'employees/relievingletter/' + employeeId,
-      null
+      null,
     );
   }
   goBack() {
     this.location.back();
+  }
+  canViewOfferLetter(): boolean {
+    const isRestrictedEmployee = this.userDetails.accountId == 1234567;
+    const isAllowedUser = this.userDetails?.designation == 1;
+
+    if (isRestrictedEmployee) {
+      return isAllowedUser;
+    }
+    return true; 
   }
 }

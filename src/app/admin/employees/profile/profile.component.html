@@ -1657,7 +1657,7 @@
                     <th pSortableColumn="netSalary">
                       Net Salary <p-sortIcon field="netSalary"></p-sortIcon>
                     </th>
-                    <th>Payslip</th>
+                    <th *ngIf="canViewOfferLetter()">Payslip</th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-payslip>
@@ -1697,7 +1697,7 @@
                       >
                     </td>
 
-                    <td>
+                    <td *ngIf="canViewOfferLetter()">
                       <div class="text-center">
                         <div class="d-flex">
                           <button
