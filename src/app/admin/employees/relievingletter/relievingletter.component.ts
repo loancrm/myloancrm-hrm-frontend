@@ -175,7 +175,6 @@ relievingLetterContent: string;
   //   this.employeesService.getEmployeeById(id).subscribe(
   //     (response) => {
   //       this.employees = response;
-  //       console.log('Employees', this.employees);
   //       this.apiLoading = false;
   //     },
   //     (error: any) => {
@@ -260,7 +259,6 @@ prepareRelievingLetterHtml() {
   });
 
   this.relievingLetterHtml = this.sanitizer.bypassSecurityTrustHtml(html);
-  console.log('Prepared Relieving Letter HTML:', this.relievingLetterHtml);
 }
 getEmployeeById(id: string) {
   this.apiLoading = true;

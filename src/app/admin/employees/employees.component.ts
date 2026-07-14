@@ -68,7 +68,6 @@ export class EmployeesComponent implements OnInit {
       this.userDetails = userDetails.user;
     }
     this.capabilities = this.employeesService.getUserRbac();
-    console.log('capabilities', this.capabilities);
     this.loadBranches();
     this.updateCountsAnalytics();
     // this.setFilterConfig();
@@ -594,7 +593,6 @@ export class EmployeesComponent implements OnInit {
     this.loading = true;
     this.employeesService.deleteEmployee(employeeId).subscribe(
       (response: any) => {
-        console.log(response);
         this.toastService.showSuccess(response?.message);
         this.loading = false;
         this.loadEmployees(this.currentTableEvent);
@@ -617,7 +615,6 @@ export class EmployeesComponent implements OnInit {
     if (value == '') {
       this.searchFilter = {};
       // localStorage.setItem('employeeNameToSearch', value);
-      console.log(this.currentTableEvent);
       this.loadEmployees(this.currentTableEvent);
     }
   }
@@ -627,7 +624,6 @@ export class EmployeesComponent implements OnInit {
   }
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;
-    console.log(this.currentTableEvent);
     this.loadEmployees(this.currentTableEvent);
   }
   loadEmployees(event) {
@@ -643,14 +639,12 @@ export class EmployeesComponent implements OnInit {
         }
       }
     }
-    console.log(api_filter);
     api_filter = Object.assign(
       {},
       api_filter,
       this.searchFilter,
       this.appliedFilter,
     );
-    console.log(api_filter);
     if (api_filter) {
       this.getEmployeesCount(api_filter);
       this.getEmployees(api_filter);
@@ -691,7 +685,6 @@ export class EmployeesComponent implements OnInit {
     this.employeesService.getEmployees(filter).subscribe(
       (response) => {
         this.employees = response;
-        console.log('employees', this.employees);
         this.apiLoading = false;
       },
       (error: any) => {
@@ -704,7 +697,6 @@ export class EmployeesComponent implements OnInit {
     this.employeesService.getEmployees().subscribe(
       (response: any) => {
         this.employeeStatusCount = this.countEmployeeInternalStatus(response);
-        console.log(this.employeeStatusCount);
         this.updateCountsAnalytics();
       },
       (error: any) => {
@@ -735,7 +727,6 @@ export class EmployeesComponent implements OnInit {
     filter['designationInternalStatus-eq'] = 1;
     this.employeesService.getDesignations(filter).subscribe(
       (response: any) => {
-        console.log(response);
         this.designationDetails = [...response];
         this.loading = false;
         this.setFilterConfig();
@@ -807,6 +798,6 @@ export class EmployeesComponent implements OnInit {
     if (isRestrictedEmployee) {
       return isAllowedUser;
     }
-    return true; 
+    return true;
   }
 }

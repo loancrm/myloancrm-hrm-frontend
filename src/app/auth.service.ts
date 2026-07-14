@@ -51,7 +51,6 @@ export class AuthService {
 
   userLogin(data) {
     const url = 'user/login';
-    console.log(data);
     return this.serviceMeta.httpPost(url, data);
   }
 

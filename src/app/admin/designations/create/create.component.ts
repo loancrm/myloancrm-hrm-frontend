@@ -46,7 +46,6 @@ export class CreateComponent implements OnInit {
         this.heading = 'Update Department';
         this.getDesignationsById().then((data) => {
           if (data) {
-            console.log('Department Data', this.departmentData);
             this.departmentsForm.patchValue({
               designation: this.departmentData?.designation,
               displayName: this.departmentData?.displayName,
@@ -247,7 +246,6 @@ export class CreateComponent implements OnInit {
       designation: formValues.designation,
       rbac: rbacCombined,
     };
-    console.log('formData', formData);
     if (this.actionType == 'create') {
       this.loading = true;
       this.employeesService.createDesignation(formData).subscribe(
@@ -260,13 +258,11 @@ export class CreateComponent implements OnInit {
         },
         (error: any) => {
           this.loading = false;
-          console.log(error);
           this.toastService.showError(error);
         }
       );
     } else if (this.actionType == 'update') {
       this.loading = true;
-      console.log(formData);
       this.employeesService
         .updateDesignation(this.designationId, formData)
         .subscribe(

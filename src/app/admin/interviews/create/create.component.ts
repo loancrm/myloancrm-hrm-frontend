@@ -64,7 +64,6 @@ export class CreateComponent {
         this.heading = 'Update Interview';
         this.getInterviewById().then((data) => {
           if (data) {
-            console.log('Interview Data', this.interviewsData);
             this.interviewsForm.patchValue({
               candidateName: this.interviewsData?.candidateName,
               dateOfBirth: this.interviewsData?.dateOfBirth,
@@ -108,7 +107,6 @@ export class CreateComponent {
     this.loadBranches();
     this.setInterviewsList();
     this.capabilities = this.employeesService.getUserRbac();
-    console.log('capabilities', this.capabilities);
   }
 
   loadBranches() {
@@ -249,16 +247,13 @@ export class CreateComponent {
 
   deleteFile(fileUrl: string, fileType: string) {
     const relativePath = fileUrl.substring(fileUrl.indexOf('/documents'));
-    console.log('Before Deletion:', this.selectedFiles);
     this.employeesService.deleteFile(relativePath).subscribe(
       (response: any) => {
         if (response.message === 'File deleted successfully.') {
-          console.log('File deleted successfully.');
           if (this.selectedFiles[fileType]?.uploadedFiles) {
             this.selectedFiles[fileType].uploadedFiles = this.selectedFiles[
               fileType
             ].uploadedFiles.filter((f: string) => f !== fileUrl);
-            console.log('After Deletion:', this.selectedFiles);
           } else {
             console.error(
               'No uploaded files found for the specified file type.'
@@ -322,7 +317,6 @@ export class CreateComponent {
         : null,
       resume: this.getFileData('resume'),
     };
-    console.log('formData', formData);
     if (this.actionType == 'create') {
       this.loading = true;
       this.employeesService.createInterview(formData).subscribe(
@@ -335,13 +329,11 @@ export class CreateComponent {
         },
         (error: any) => {
           this.loading = false;
-          console.log(error);
           this.toastService.showError(error);
         }
       );
     } else if (this.actionType == 'update') {
       this.loading = true;
-      console.log(formData);
       this.employeesService
         .updateInterview(this.interviewId, formData)
         .subscribe(
@@ -408,7 +400,6 @@ export class CreateComponent {
       let attendedInterviewName = this.attendedInterviewEntities.filter(
         (name) => name.id == interviewId
       );
-      console.log(attendedInterviewName);
       return (
         (attendedInterviewName &&
           attendedInterviewName[0] &&
@@ -419,7 +410,6 @@ export class CreateComponent {
     return '';
   }
   uploadFiles(fileType, acceptableTypes, index?) {
-    console.log(acceptableTypes);
     let data = {
       acceptableTypes: acceptableTypes,
       files:
@@ -447,21 +437,16 @@ export class CreateComponent {
   saveFiles(files, fileType, index) {
     this.loading = true;
     if (files && files.length > 0) {
-      console.log(files);
       const formData = new FormData();
       for (let file of files) {
         if (file && !file['fileuploaded']) {
           formData.append('files', file);
         }
       }
-      console.log(formData);
-      console.log(this.interviewId);
-      console.log(fileType);
       this.employeesService
         .uploadFiles(formData, this.interviewId, fileType)
         .subscribe(
           (response: any) => {
-            console.log(response);
             if (response && response['links'] && response['links'].length > 0) {
               for (let i = 0; i < response['links'].length; i++) {
                 index || index == 0
@@ -480,11 +465,6 @@ export class CreateComponent {
                     )
                   : this.selectedFiles[fileType]['filesData'].push(files[i]);
               }
-              console.log(
-                'this.selectedFiles',
-                this.selectedFiles[fileType],
-                files
-              );
               this.toastService.showSuccess('Files Uploaded Successfully');
             } else {
               this.toastService.showError({ error: 'Something went wrong' });

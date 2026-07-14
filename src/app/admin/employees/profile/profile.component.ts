@@ -93,13 +93,11 @@ export class ProfileComponent implements OnInit {
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
     this.selectedDate = this.moment(new Date()).toDate();
-    console.log(this.selectedDate);
     this.month = this.selectedDate.getMonth() + 1;
     this.year = this.selectedDate.getFullYear();
     this.selectedDate = this.moment(new Date()).format('YYYY-MM');
     this.displayMonth = this.moment(new Date()).format('MMMM YYYY');
     this.capabilities = this.employeesService.getUserRbac();
-    console.log('capabilities', this.capabilities);
     this.userType = localStorageService.getItemFromLocalStorage('userType');
     this.breadCrumbItems = [
       {
@@ -129,7 +127,6 @@ export class ProfileComponent implements OnInit {
     if (this.employeeId) {
       this.getEmployeeById(this.employeeId).then((data) => {
         if (data) {
-          console.log('Employee Data', this.employees);
           this.resignationForm.patchValue({
             resignedDate: this.employees?.resignedDate,
             resignedReason: this.employees?.resignedReason,
@@ -153,7 +150,6 @@ export class ProfileComponent implements OnInit {
             this.selectedFiles['terminationLetter']['uploadedFiles'] =
               this.employees.terminationLetter;
           }
-          console.log(this.selectedFiles);
         }
       });
       this.getAttendance();
@@ -278,7 +274,6 @@ export class ProfileComponent implements OnInit {
   //   );
   // }
   onSubmit(formValues) {
-    console.log(formValues);
     let formData: any = {
       employeeName: this.employees.employeeName,
       resignedDate: formValues?.resignedDate
@@ -295,7 +290,6 @@ export class ProfileComponent implements OnInit {
       experienceLetter: this.getFileData('experienceLetter'),
       terminationLetter: this.getFileData('terminationLetter'),
     };
-    console.log('formData', formData);
     this.loading = true;
     this.employeesService.updateEmployee(this.employeeId, formData).subscribe(
       (data) => {
@@ -402,7 +396,6 @@ export class ProfileComponent implements OnInit {
         }
       }
     });
-    console.log('Attendance Status Counts:', this.attendanceStatusCounts);
   }
   selectSection(section: string) {
     this.activeSection = section;
@@ -469,7 +462,6 @@ export class ProfileComponent implements OnInit {
     let api_filter = this.employeesService.setFiltersFromPrimeTable(event);
     api_filter['employeeId-eq'] = this.employeeId;
     api_filter = Object.assign({}, api_filter);
-    console.log(api_filter);
     if (api_filter) {
       this.getPayrollCount(api_filter);
       this.getPayroll(api_filter);
@@ -492,7 +484,6 @@ export class ProfileComponent implements OnInit {
     this.employeesService.getPayroll(filter).subscribe(
       (payrollResponse: any) => {
         this.payroll = payrollResponse;
-        console.log('Payroll Data:', this.payroll);
         this.apiLoading = false;
       },
       (error: any) => {
@@ -507,7 +498,6 @@ export class ProfileComponent implements OnInit {
     let api_filter = this.employeesService.setFiltersFromPrimeTable(event);
     api_filter['employeeId-eq'] = this.employeeId;
     api_filter = Object.assign({}, api_filter);
-    console.log(api_filter);
     if (api_filter) {
       this.getLeavesCount(api_filter);
       this.getLeaves(api_filter);
@@ -530,7 +520,6 @@ export class ProfileComponent implements OnInit {
     this.employeesService.getLeaves(filter).subscribe(
       (response) => {
         this.leaves = response;
-        console.log('leaves', this.leaves);
         this.apiLoading = false;
       },
       (error: any) => {
@@ -600,7 +589,6 @@ export class ProfileComponent implements OnInit {
     this.employeesService.getIncentives(filter).subscribe(
       (response) => {
         this.incentives = response;
-        console.log('incentives', this.incentives);
         this.apiLoading = false;
       },
       (error: any) => {
@@ -611,7 +599,6 @@ export class ProfileComponent implements OnInit {
   }
 
   uploadFiles(fileType, acceptableTypes, index?) {
-    console.log(acceptableTypes);
     let data = {
       acceptableTypes: acceptableTypes,
       files:
@@ -623,7 +610,6 @@ export class ProfileComponent implements OnInit {
           ? this.selectedFiles[fileType][index]['uploadedFiles']
           : this.selectedFiles[fileType]['uploadedFiles'],
     };
-    console.log(data);
     let fileUploadRef = this.dialogService.open(FileUploadComponent, {
       header: 'Select Files',
       width: '90%',
@@ -640,21 +626,16 @@ export class ProfileComponent implements OnInit {
   saveFiles(files, fileType, index) {
     this.loading = true;
     if (files && files.length > 0) {
-      console.log(files);
       const formData = new FormData();
       for (let file of files) {
         if (file && !file['fileuploaded']) {
           formData.append('files', file);
         }
       }
-      console.log(formData);
-      console.log(this.employeeId);
-      console.log(fileType);
       this.employeesService
         .uploadFiles(formData, this.employeeId, fileType)
         .subscribe(
           (response: any) => {
-            console.log(response);
             if (response && response['links'] && response['links'].length > 0) {
               for (let i = 0; i < response['links'].length; i++) {
                 index || index == 0
@@ -673,11 +654,6 @@ export class ProfileComponent implements OnInit {
                     )
                   : this.selectedFiles[fileType]['filesData'].push(files[i]);
               }
-              console.log(
-                'this.selectedFiles',
-                this.selectedFiles[fileType],
-                files,
-              );
               this.toastService.showSuccess('Files Uploaded Successfully');
             } else {
               this.toastService.showError({ error: 'Something went wrong' });
@@ -692,7 +668,6 @@ export class ProfileComponent implements OnInit {
     }
   }
   confirmDelete(file, controlName, docIndex?, fileIndex?) {
-    console.log('Before Deletion:', this.selectedFiles);
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete this File?',
       header: 'Confirm Deletion',
@@ -712,23 +687,16 @@ export class ProfileComponent implements OnInit {
     this.employeesService.deleteFile(relativePath).subscribe(
       (response: any) => {
         if (response.message === 'File deleted successfully.') {
-          console.log('File deleted successfully.');
           if (this.selectedFiles[fileType]?.uploadedFiles) {
             this.selectedFiles[fileType].uploadedFiles = this.selectedFiles[
               fileType
             ].uploadedFiles.filter((f: string) => f !== fileUrl);
-            console.log('After Deletion:', this.selectedFiles);
           } else if (Array.isArray(this.selectedFiles[fileType])) {
             if (docIndex !== undefined && fileIndex !== undefined) {
               const document = this.selectedFiles[fileType][docIndex];
               if (Array.isArray(document?.uploadedFiles)) {
                 document.uploadedFiles.splice(fileIndex, 1);
-                console.log(
-                  `After Deletion from ${fileType}[${docIndex}]:`,
-                  document.uploadedFiles,
-                );
               }
-              console.log('After Deletion:', this.selectedFiles);
             } else {
               console.error('docIndex or fileIndex is missing.');
             }

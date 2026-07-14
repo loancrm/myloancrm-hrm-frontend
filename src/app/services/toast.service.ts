@@ -35,7 +35,6 @@ export class ToastService {
     });
   }
   showError(message) {
-    console.log(message);
     this.messageService.add({
       severity: 'error',
       summary: 'Error',

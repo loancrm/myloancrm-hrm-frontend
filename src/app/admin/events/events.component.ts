@@ -77,7 +77,6 @@ export class EventsComponent implements OnInit {
               })
               .join(' '),
           }));
-          console.log(this.employees);
           this.loading = false;
           resolve(true);
         },
@@ -119,7 +118,6 @@ export class EventsComponent implements OnInit {
               .join(' '),
           }));
           this.loading = false;
-          console.log(this.interviews);
           resolve(true);
         },
         (error: any) => {
@@ -169,7 +167,6 @@ export class EventsComponent implements OnInit {
           };
         });
       this.birthdayEvents = [...this.birthdayEvents, ...interviewEvents];
-      console.log(this.birthdayEvents);
       this.calendarOptions = {
         plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
         initialView: 'dayGridMonth',
@@ -185,7 +182,6 @@ export class EventsComponent implements OnInit {
         eventClick: this.handleEventClick.bind(this),
       };
     } else {
-      console.log('No employees found.');
     }
   }
 
@@ -196,7 +192,6 @@ export class EventsComponent implements OnInit {
 
   handleEventClick(info: any) {
     // alert(`Event clicked: ${info.event.title}`);
-    console.log(info.event);
     this.toastService.showInfo(`${info.event.extendedProps.description}`);
   }
 

@@ -90,7 +90,6 @@ export class DashboardComponent implements OnInit {
     this.clientIp =
       this.localStorageService.getItemFromLocalStorage('clientIp');
     this.capabilities = this.employeesService.getUserRbac();
-    console.log('capabilities', this.capabilities);
     this.selectedDate = this.moment().format('YYYY-MM-DD');
     if (this.capabilities.employee) {
       this.getIpAddress();
@@ -116,7 +115,6 @@ export class DashboardComponent implements OnInit {
         this.allowedIps = response.map((row) =>
           row.ipAddress.split('.').slice(0, 2).join('.')
         );
-        console.log('Allowed IP Addresses:', this.allowedIps);
         this.apiLoading = false;
       },
       error: (error) => {
@@ -460,7 +458,6 @@ export class DashboardComponent implements OnInit {
   }
 
   calculateLiveLoggedHours(): string {
-    // console.log(this.checkInTime);
     if (this.checkInTime) {
       const checkInMoment = this.moment(this.checkInTime, 'HH:mm');
       const nowMoment = this.moment();
@@ -493,11 +490,9 @@ export class DashboardComponent implements OnInit {
     this.loggedHours = '0 : 0 : 0';
   }
   onImageLoad1() {
-    console.log('Image loaded');
     this.isLoading = false;
   }
   onImageError1() {
-    console.log('Image failed to load');
     this.isLoading = false;
   }
   initializeDashboardData() {
@@ -507,7 +502,6 @@ export class DashboardComponent implements OnInit {
     this.getDepartmentCounts();
   }
   onDateChange(event: any) {
-    console.log(event);
     this.selectedDate = this.moment(event).format('YYYY-MM-DD');
     this.attendanceData = [];
     this.employeeDetails = [];
@@ -908,9 +902,6 @@ iconbackgroundColors = [
       }
     });
     this.updateCountsAnalytics();
-    console.log(
-      `Present: ${this.totalPresentCount}, Absent: ${this.totalAbsentCount}, Half-day: ${this.totalHalfDayCount}, Late: ${this.totalLateCount}`
-    );
   }
   loadEmployees(event) {
     this.currentTableEvent = event;
@@ -919,7 +910,6 @@ iconbackgroundColors = [
     if ('from' in api_filter) {
       delete api_filter.from;
     }
-    console.log(api_filter);
     if (api_filter) {
       this.getEmployees(api_filter);
     }
@@ -943,7 +933,6 @@ iconbackgroundColors = [
           checkOutTime: attendance?.checkOutTime,
         };
       });
-    console.log('Absent Employee Details:', this.employeeDetails);
   }
   getEmployees(filter = {}) {
     this.apiLoading = true;
@@ -951,7 +940,6 @@ iconbackgroundColors = [
       next: (response: any) => {
         if (response) {
           this.employees = response;
-          console.log('employees', this.employees);
           this.setDefaultAttendanceData();
         } else {
           console.warn('No employees data received');
@@ -972,7 +960,6 @@ iconbackgroundColors = [
     return new Promise((resolve, reject) => {
       this.employeesService.getAttendance(filter).subscribe(
         (response: any) => {
-          console.log('attendanceData:', response);
           this.attendanceData = response;
           this.apiLoading = false;
           this.calculateAttendanceCounts();
@@ -1062,8 +1049,6 @@ iconbackgroundColors = [
       (response: any) => {
         this.maleCount = response.maleCount;
         this.femaleCount = response.femaleCount;
-        console.log('Male Count:', this.maleCount);
-        console.log('Female Count:', this.femaleCount);
         this.setChartOptions();
         this.loading = false;
       },
@@ -1089,7 +1074,6 @@ iconbackgroundColors = [
       (counts: any) => {
         // this.designationCounts = counts.map((count) => count || 0);
         this.designationCounts = counts;
-        console.log(this.designationCounts);
         this.setChartOptions();
         this.loading = false;
       },
@@ -1106,7 +1090,6 @@ iconbackgroundColors = [
   //     if (departmentsData) {
   //       this.departments = departmentsData;
   //       const ids = this.departments?.map((item) => item.id);
-  //       console.log(ids);
   //       const filters = ids.map((designation) => ({
   //         ...filter,
   //         'designation-eq': designation,
@@ -1120,7 +1103,6 @@ iconbackgroundColors = [
   //             displayName: this.departments[index].displayName,
   //             count: count || 0,
   //           }));
-  //           console.log(this.designationCounts);
   //           this.setChartOptions();
   //           this.loading = false;
   //         },
@@ -1159,22 +1141,18 @@ iconbackgroundColors = [
           'ofcBranch-eq': branch.branchId || branch.id,
         }));
 
-        console.log('Branch Filters:', branchFilters);
-        console.log('Branches:', this.branches.map(b => ({ id: b.id, branchId: b.branchId, name: b.displayName || b.name })));
 
         // Get employee counts for each branch
         forkJoin(
           branchFilters.map((f) => this.employeesService.getEmployeesCount(f))
         ).subscribe(
           (counts: any) => {
-            console.log('Raw Counts from API:', counts);
             this.branchCounts = this.branches.map((branch: any, index: number) => ({
               branchId: branch.id,
               branchName: branch.displayName || branch.name || `Branch ${branch.id}`,
               count: counts[index] || 0,
             }));
 
-            console.log('Branch Counts:', this.branchCounts);
             this.setChartOptions();
             this.loading = false;
           },

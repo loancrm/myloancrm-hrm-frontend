@@ -34,7 +34,6 @@ export class ExtendhttpInterceptor implements HttpInterceptor {
   // ): Observable<HttpEvent<unknown>> {
   //   const authToken =
   //     this.localStorageService.getItemFromLocalStorage('accessToken');
-  //     // console.log(authToken)
   //   if (authToken) {
   //     request = request.clone({
   //       setHeaders: {
@@ -57,7 +56,6 @@ export class ExtendhttpInterceptor implements HttpInterceptor {
   //       //   }
   //       // }
   //       (error) => {
-  //         console.log(error);
   //         if (error.status === 401 || error.status === 419) {
   //           this.localStorageService.clearAllFromLocalStorage();
   //           this.router.navigate(['user', 'login']);
@@ -83,8 +81,6 @@ export class ExtendhttpInterceptor implements HttpInterceptor {
   //   return from(this.employeesService.getClientIp()).pipe(
   //     switchMap((clientIp) => {
   //       const userType = localStorage.getItem('userType') || '';
-  //       console.log(userType)
-  //       console.log(clientIp);
   //       request = request.clone({
   //         url: request.url.startsWith('http')
   //           ? request.url
@@ -107,7 +103,6 @@ export class ExtendhttpInterceptor implements HttpInterceptor {
   //     tap(
   //       () => {},
   //       (error) => {
-  //         console.log(error);
   //         if (error.status === 401 || error.status === 419) {
   //           this.localStorageService.clearAllFromLocalStorage();
   //           this.router.navigate(['user', 'login']);
@@ -188,7 +183,6 @@ export class ExtendhttpInterceptor implements HttpInterceptor {
   //     tap(
   //       () => {},
   //       (error) => {
-  //         console.log(error);
   //         if (error.status === 401 || error.status === 419) {
   //           this.localStorageService.clearAllFromLocalStorage();
   //           this.router.navigate(['user', 'login']);
@@ -236,7 +230,6 @@ export class ExtendhttpInterceptor implements HttpInterceptor {
       tap(
         () => {},
         (error) => {
-          console.log(error);
           if (error.status === 401 || error.status === 419) {
             this.localStorageService.clearAllFromLocalStorage();
             this.router.navigate(['user', 'login']);

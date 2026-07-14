@@ -100,7 +100,6 @@ export class AttendanceComponent implements OnInit {
       api_filter['attendanceDate-lte'] = endOfMonth;
     }
     api_filter = Object.assign({}, api_filter, this.searchFilter);
-    console.log(api_filter);
     if (api_filter) {
       this.getAttendanceCount(api_filter);
       if (this.capabilities.employeeAttendance) {
@@ -123,7 +122,6 @@ export class AttendanceComponent implements OnInit {
   filterByDate(): void {
     if (this.selectedDate) {
       const formattedDate = this.moment(this.selectedDate).format('YYYY-MM-DD');
-      console.log('Formatted Date:', formattedDate);
       this.localStorageService.setItemOnLocalStorage(
         'selectedAttendanceDate',
         formattedDate
@@ -141,7 +139,6 @@ export class AttendanceComponent implements OnInit {
 
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;
-    console.log(this.currentTableEvent);
     this.loadAttendance(this.currentTableEvent);
   }
   getAttendanceCount(filter = {}) {
@@ -180,7 +177,6 @@ export class AttendanceComponent implements OnInit {
             lateCount,
           };
         });
-        console.log('attendance', this.attendance);
         this.apiLoading = false;
       },
       (error: any) => {
@@ -193,7 +189,6 @@ export class AttendanceComponent implements OnInit {
     this.apiLoading = true;
     this.employeesService.getAttendance(filter).subscribe(
       (response: any) => {
-        console.log('Full API response:', response);
         this.attendance = response;
         if (this.userDetails?.employeeId) {
           const employeeAttendance = this.attendance?.flatMap(
@@ -214,16 +209,8 @@ export class AttendanceComponent implements OnInit {
                 }))
           );
           if (employeeAttendance && employeeAttendance.length > 0) {
-            console.log(
-              'Filtered attendance for employee:',
-              employeeAttendance
-            );
             this.attendance = employeeAttendance;
-          } else {
-            console.log(
-              'No attendance found for employee with ID:',
-              this.userDetails.employeeId
-            );
+          } else {  
           }
         }
         this.apiLoading = false;
@@ -254,7 +241,6 @@ export class AttendanceComponent implements OnInit {
     this.loading = true;
     this.employeesService.deleteAttendance(attendanceId).subscribe(
       (response: any) => {
-        console.log(response);
         this.toastService.showSuccess(response?.message);
         this.loading = false;
         this.loadAttendance(this.currentTableEvent);

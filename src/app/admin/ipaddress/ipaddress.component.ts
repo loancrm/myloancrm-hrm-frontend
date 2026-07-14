@@ -62,7 +62,6 @@ export class IpaddressComponent {
   ngOnInit(): void {
     this.currentYear = this.employeesService.getCurrentYear();
     this.capabilities = this.employeesService.getUserRbac();
-    console.log('capabilities', this.capabilities);
     this.setFilterConfig();
     this.createForm();
     this.setIpAddressList();
@@ -177,7 +176,6 @@ export class IpaddressComponent {
 
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;
-    console.log(this.currentTableEvent);
     this.loadIpAddresses(this.currentTableEvent);
   }
   loadIpAddresses(event) {
@@ -211,7 +209,6 @@ export class IpaddressComponent {
     this.employeesService.getIpAddress(filter).subscribe(
       (response) => {
         this.ipAddresses = response;
-        console.log('ipAddresses', this.ipAddresses);
         this.apiLoading = false;
       },
       (error: any) => {
@@ -238,7 +235,6 @@ export class IpaddressComponent {
       ipAddressName: formValues.ipAddressName,
       ipAddress: formValues.ipAddress,
     };
-    console.log('formData', formData);
     if (this.actionType == 'create') {
       this.loading = true;
       this.employeesService.createIpAddress(formData).subscribe(
@@ -253,13 +249,11 @@ export class IpaddressComponent {
         },
         (error: any) => {
           this.loading = false;
-          console.log(error);
           this.toastService.showError(error);
         }
       );
     } else if (this.actionType == 'update') {
       this.loading = true;
-      console.log(formData);
       this.employeesService
         .updateIpAddress(this.ipAddressId, formData)
         .subscribe(
@@ -286,11 +280,9 @@ export class IpaddressComponent {
       this.ipAddressId = ipAddress.ipAddressId;
       this.actionType = 'update';
       this.heading = 'Update Ip Address';
-      console.log(this.ipAddressId);
 
       this.getIpAddressById().then((data) => {
         if (data) {
-          console.log(this.ipAddressData);
           this.ipAddressForm.patchValue({
             ipAddress: this.ipAddressData?.ipAddress,
             ipAddressName: this.ipAddressData?.ipAddressName,
@@ -338,7 +330,6 @@ export class IpaddressComponent {
     this.loading = true;
     this.employeesService.deleteIpAddress(ipAddressId).subscribe(
       (response: any) => {
-        console.log(response);
         this.toastService.showSuccess(response?.message);
         this.loading = false;
         this.loadIpAddresses(this.currentTableEvent);

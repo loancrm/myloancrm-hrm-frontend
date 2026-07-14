@@ -46,7 +46,6 @@ export class CreateComponent implements OnInit {
         this.heading = 'Update Holiday';
         this.getHolidayById().then((data) => {
           if (data) {
-            console.log('Holiday Data', this.holidayData);
             this.holidayForm.patchValue({
               holidayName: this.holidayData?.holidayName,
               day: this.holidayData?.day,
@@ -115,7 +114,6 @@ export class CreateComponent implements OnInit {
   }
   onDateSelect(selectedDate: Date) {
     const dayOfWeek = this.getDayOfWeek(selectedDate);
-    console.log(dayOfWeek);
     this.holidayForm.controls['day'].enable();
     this.holidayForm.patchValue({ day: dayOfWeek });
   }
@@ -140,7 +138,6 @@ export class CreateComponent implements OnInit {
       day: formValues.day,
       description: formValues.description,
     };
-    console.log('formData', formData);
     if (this.actionType == 'create') {
       this.loading = true;
       this.employeesService.createHoliday(formData).subscribe(
@@ -153,13 +150,11 @@ export class CreateComponent implements OnInit {
         },
         (error: any) => {
           this.loading = false;
-          console.log(error);
           this.toastService.showError(error);
         }
       );
     } else if (this.actionType == 'update') {
       this.loading = true;
-      console.log(formData);
       this.employeesService.updateHoliday(this.holidayId, formData).subscribe(
         (data) => {
           if (data) {

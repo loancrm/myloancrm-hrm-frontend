@@ -59,7 +59,6 @@ export class CreateComponent {
         this.heading = 'Update Leave';
         this.getLeaveById().then((data) => {
           if (data) {
-            console.log('Leaves Data', this.leavesData);
             this.leavesForm.patchValue({
               employeeName: this.leavesData?.employeeName,
               employeeId: this.leavesData?.employeeId,
@@ -100,7 +99,6 @@ export class CreateComponent {
       this.userDetails = userDetails.user;
     }
     this.capabilities = this.employeesService.getUserRbac();
-    console.log('capabilities', this.capabilities);
     this.getEmployees();
     this.leavesForm
       .get('employeeName')
@@ -146,7 +144,6 @@ export class CreateComponent {
             })
             .join(' '),
         }));
-        console.log('employees', this.employees);
         this.loading = false;
         this.setLeavesList();
       },
@@ -243,7 +240,6 @@ export class CreateComponent {
         : null,
     };
 
-    console.log('formData', formData);
     if (this.actionType == 'create') {
       this.loading = true;
       this.employeesService.createLeave(formData).subscribe(
@@ -256,13 +252,11 @@ export class CreateComponent {
         },
         (error: any) => {
           this.loading = false;
-          console.log(error);
           this.toastService.showError(error);
         }
       );
     } else if (this.actionType == 'update') {
       this.loading = true;
-      console.log(formData);
       this.employeesService.updateLeave(this.leavesId, formData).subscribe(
         (data) => {
           if (data) {

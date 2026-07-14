@@ -59,7 +59,6 @@ export class MonthattendanceComponent implements OnInit {
   }
   exportToExcel() {
     this.loading = true;
-    console.log(this.loading);
     try {
       const exportData = this.filteredEmployees.map((employee) => {
         const row: any = {
@@ -135,7 +134,6 @@ export class MonthattendanceComponent implements OnInit {
       { length: daysInMonth },
       (_, i) => new Date(year, month, i + 1)
     );
-    console.log(this.monthDates);
   }
   countAttendanceStatus(employeeId: number, status: string): number {
     return this.monthDates.filter(
@@ -217,7 +215,6 @@ export class MonthattendanceComponent implements OnInit {
       this.employeesService.getAttendance().subscribe(
         (response) => {
           this.attendance = response;
-          console.log('Attendance:', this.attendance);
           this.apiLoading = false;
           resolve();
         },
@@ -232,13 +229,11 @@ export class MonthattendanceComponent implements OnInit {
 
   loadEmployees(event) {
     this.currentTableEvent = event;
-    console.log(event.first);
     let api_filter = this.employeesService.setFiltersFromPrimeTable(event);
     api_filter = Object.assign({}, api_filter, this.searchFilter);
     if ('from' in api_filter) {
       delete api_filter.from;
     }
-    console.log(api_filter);
     if (api_filter) {
       this.getEmployeesCount(api_filter);
       this.getEmployees(api_filter);
@@ -260,7 +255,6 @@ export class MonthattendanceComponent implements OnInit {
     this.employeesService.getEmployees(filter).subscribe(
       (response: any) => {
         this.employees = response;
-        console.log('Employees:', this.employees);
         this.getAttendance()
           .then(() => {
             if (this.attendance && this.attendance.length > 0) {
@@ -269,9 +263,7 @@ export class MonthattendanceComponent implements OnInit {
                   this.isAttendanceMatchedforemployee(employee.employeeId, date)
                 );
               });
-              console.log('Filtered Employees:', this.filteredEmployees);
             } else {
-              console.log('No attendance data available');
             }
             this.apiLoading = false;
           })
@@ -293,13 +285,11 @@ export class MonthattendanceComponent implements OnInit {
   }
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;
-    console.log(this.currentTableEvent);
     this.loadEmployees(this.currentTableEvent);
   }
   inputValueChangeEvent(dataType, value) {
     if (value == '') {
       this.searchFilter = {};
-      console.log(this.currentTableEvent);
       this.loadEmployees(this.currentTableEvent);
     }
   }

@@ -135,7 +135,6 @@ getEmployeesCount(filter = {}) {
     this.employeesService.getTemplatesCount(filter).subscribe(
       (response) => {
         this.totaltemplatesCount = response;
-        console.log('Total Templates Count:', this.totaltemplatesCount);
       },
       (error: any) => {
         this.toastService.showError(error);

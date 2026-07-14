@@ -180,8 +180,6 @@ export class HikeletterComponent {
     if (oldSalary <= 0) {
       return 'Invalid old salary';
     }
-    console.log(oldSalary);
-    console.log(newSalary);
     const hikePercentage = ((newSalary - oldSalary) / oldSalary) * 100;
     return hikePercentage.toFixed(2) + '%';
   }
@@ -190,7 +188,6 @@ export class HikeletterComponent {
     this.employeesService.getSalaryHikesById(id).subscribe(
       (response) => {
         this.salaryHikes = response;
-        console.log('Salary Hikes', this.salaryHikes);
         if (this.salaryHikes.employeeId) {
           this.getEmployeeById(this.salaryHikes.employeeId);
         }
@@ -223,7 +220,6 @@ export class HikeletterComponent {
   //   this.employeesService.getEmployeeById(id).subscribe(
   //     (response) => {
   //       this.employees = response;
-  //       console.log('Employees', this.employees);
   //       this.apiLoading = false;
   //     },
   //     (error: any) => {

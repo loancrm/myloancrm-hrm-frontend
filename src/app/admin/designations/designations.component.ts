@@ -149,7 +149,6 @@ export class DesignationsComponent implements OnInit {
   ngOnInit(): void {
     this.currentYear = this.employeesService.getCurrentYear();
     this.capabilities = this.employeesService.getUserRbac();
-    console.log('capabilities', this.capabilities);
     this.setFilterConfig();
     // this.createForm();
     // this.setDepartmentsList();
@@ -303,7 +302,6 @@ export class DesignationsComponent implements OnInit {
   inputValueChangeEvent(dataType, value) {
     if (value == '') {
       this.searchFilter = {};
-      console.log(this.currentTableEvent);
       this.loadDesignations(this.currentTableEvent);
     }
   }
@@ -325,7 +323,6 @@ export class DesignationsComponent implements OnInit {
   //     }
   //   }
 
-  //   console.log(this.selectedCheckboxes);
   // }
   statusChange(event: any): void {
     this.localStorageService.setItemOnLocalStorage(
@@ -356,7 +353,6 @@ export class DesignationsComponent implements OnInit {
 
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;
-    console.log(this.currentTableEvent);
     this.loadDesignations(this.currentTableEvent);
   }
   loadDesignations(event) {
@@ -400,7 +396,6 @@ export class DesignationsComponent implements OnInit {
     this.employeesService.getDesignations(filter).subscribe(
       (response) => {
         this.designations = response;
-        console.log('designations', this.designations);
         this.apiLoading = false;
       },
       (error: any) => {
@@ -434,7 +429,6 @@ export class DesignationsComponent implements OnInit {
   //     designation: formValues.designation,
   //     rbac: rbacCombined,
   //   };
-  //   console.log('formData', formData);
   //   if (this.actionType == 'create') {
   //     this.loading = true;
   //     this.employeesService.createDesignation(formData).subscribe(
@@ -449,13 +443,11 @@ export class DesignationsComponent implements OnInit {
   //       },
   //       (error: any) => {
   //         this.loading = false;
-  //         console.log(error);
   //         this.toastService.showError(error);
   //       }
   //     );
   //   } else if (this.actionType == 'update') {
   //     this.loading = true;
-  //     console.log(formData);
   //     this.employeesService
   //       .updateDesignation(this.designationId, formData)
   //       .subscribe(
@@ -498,7 +490,6 @@ export class DesignationsComponent implements OnInit {
   //     this.designationId = department.designationId;
   //     this.actionType = 'update';
   //     this.heading = 'Update Department';
-  //     console.log(this.designationId);
   //     this.getDesignationsById().then((data) => {
   //       if (data) {
   //         this.departmentsForm.patchValue({
@@ -515,11 +506,9 @@ export class DesignationsComponent implements OnInit {
   //     this.designationId = department.designationId;
   //     this.actionType = 'update';
   //     this.heading = 'Update Department';
-  //     console.log(this.designationId);
 
   //     this.getDesignationsById().then((data) => {
   //       if (data) {
-  //         console.log(this.departmentData);
   //         this.departmentsForm.patchValue({
   //           designation: this.departmentData?.designation,
   //           displayName: this.departmentData?.displayName,
@@ -712,7 +701,6 @@ export class DesignationsComponent implements OnInit {
     this.loading = true;
     this.employeesService.deleteDesignation(designationId).subscribe(
       (response: any) => {
-        console.log(response);
         this.toastService.showSuccess(response?.message);
         this.loading = false;
         this.loadDesignations(this.currentTableEvent);

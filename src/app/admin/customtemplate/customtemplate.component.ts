@@ -180,9 +180,7 @@ editorInstance: any;
 ngOnInit() {
   this.employeesService.getTemplateTypes().subscribe({
     next: (res: any) => {
-      console.log('API RESPONSE:', res);
       this.templateTypes = res;
-      console.log('DROPDOWN DATA:', this.templateTypes);
     },
     error: (err) => {
       console.error('API ERROR:', err);

@@ -54,7 +54,6 @@ export class CreateComponent {
         this.heading = 'Update Payroll';
         this.getPayrollById().then((data) => {
           if (data) {
-            console.log('Payroll Data', this.payrollData);
             this.payrollForm.patchValue({
               payrollMonth: this.payrollData.payrollMonth,
               employeeName: this.payrollData.employeeName,
@@ -201,7 +200,6 @@ export class CreateComponent {
       this.employeesService.getAttendance().subscribe(
         (response) => {
           this.attendance = response;
-          console.log('Attendance:', this.attendance);
           this.loading = false;
           resolve();
         },
@@ -258,7 +256,6 @@ export class CreateComponent {
             attendanceDate.getFullYear() === payroll.getFullYear()
           );
         });
-        console.log(filteredAttendance);
         const presentDays = filteredAttendance.reduce((count, record) => {
           const employeeRecord = record.attendanceData.find(
             (emp) => emp.employeeId === employeeId
@@ -322,7 +319,6 @@ export class CreateComponent {
     this.employeesService.getHolidays(filter).subscribe(
       (response) => {
         this.holidays = response;
-        console.log('holidays', this.holidays);
         this.loading = false;
       },
       (error: any) => {
@@ -358,7 +354,6 @@ export class CreateComponent {
             })
             .join(' '),
         }));
-        console.log('employees', this.employees);
         this.loading = false;
         this.setPayrollList();
       },
@@ -464,7 +459,6 @@ export class CreateComponent {
   }
 
   onSubmit(formValues) {
-    console.log(formValues.payrollMonth);
     const {
       payrollMonth,
       employeeName,
@@ -573,7 +567,6 @@ export class CreateComponent {
       paidDays,
       professionalTax,
     };
-    console.log('formData', formData);
     if (this.actionType == 'create') {
       this.loading = true;
       this.employeesService.createPayroll(formData).subscribe(
@@ -586,13 +579,11 @@ export class CreateComponent {
         },
         (error: any) => {
           this.loading = false;
-          console.log(error);
           this.toastService.showError(error);
         }
       );
     } else if (this.actionType == 'update') {
       this.loading = true;
-      console.log(formData);
       this.employeesService.updatePayroll(this.payslipId, formData).subscribe(
         (data) => {
           if (data) {
@@ -642,7 +633,6 @@ export class CreateComponent {
   //                 attendanceDate.getFullYear() === payroll.getFullYear()
   //               );
   //             });
-  //             console.log(filteredAttendance);
   //             const presentDays = filteredAttendance.reduce((count, record) => {
   //               const employeeRecord = record.attendanceData.find(
   //                 (emp) => emp.employeeId === employee.employeeId
@@ -682,7 +672,6 @@ export class CreateComponent {
   //                     0
   //                   );
   //                   employee.salary += totalHike;
-  //                   console.log(employee.salary);
   //                 }
   //               },
   //               (error) => {
@@ -801,7 +790,6 @@ export class CreateComponent {
   //               paidDays,
   //               professionalTax,
   //             };
-  //             console.log('Payroll Data:', payrollData);
   //             this.employeesService.createPayroll(payrollData).subscribe(
   //               (data) => {
   //                 if (data) {
@@ -812,7 +800,6 @@ export class CreateComponent {
   //               },
   //               (error: any) => {
   //                 this.loading = false;
-  //                 console.log(error);
   //                 this.toastService.showError(error);
   //               }
   //             );

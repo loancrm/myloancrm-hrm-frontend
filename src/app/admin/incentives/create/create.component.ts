@@ -56,7 +56,6 @@ export class CreateComponent implements OnInit {
         this.heading = 'Update Incentive';
         this.getEmployeeById().then((data) => {
           if (data) {
-            console.log('Employee Data', this.incentiveData);
             this.incentiveForm.patchValue({
               employeeName: this.incentiveData?.employeeName,
               employeeId: this.incentiveData?.employeeId,
@@ -283,7 +282,6 @@ export class CreateComponent implements OnInit {
           ? formatMonthFiles(this.thirdMonthFiles)
           : null,
     };
-    console.log('formData', formData);
     if (this.actionType == 'create') {
       this.loading = true;
       this.employeesService.createIncentive(formData).subscribe(
@@ -296,7 +294,6 @@ export class CreateComponent implements OnInit {
         },
         (error: any) => {
           this.loading = false;
-          console.log(error);
           this.toastService.showError(error);
         }
       );

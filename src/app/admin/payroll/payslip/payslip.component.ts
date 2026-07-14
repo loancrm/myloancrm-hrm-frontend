@@ -146,7 +146,6 @@ export class PayslipComponent {
     this.apiLoading = true;
     this.employeesService.getPayrollById(id).subscribe(
       (payrollresponse: any) => {
-        console.log(payrollresponse);
         this.employeesService
           .getEmployeeById(payrollresponse.employeeId)
           .subscribe(
@@ -155,7 +154,6 @@ export class PayslipComponent {
                 payrollresponse,
                 employeeResponse
               );
-              console.log('Merged Payroll Data:', this.payroll);
               this.apiLoading = false;
             },
             (error: any) => {

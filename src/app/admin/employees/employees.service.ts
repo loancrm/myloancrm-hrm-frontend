@@ -38,7 +38,6 @@ export class EmployeesService {
       const url = 'https://s3.thefintalk.in/offerletterformat/index.html';
       this.serviceMeta.httpGetText(url).subscribe(
         (htmlContent: any) => {
-          console.log(htmlContent);
           let renderedTemplateData = this.renderTemplate(htmlContent, data);
           resolve(renderedTemplateData);
         },
@@ -113,7 +112,6 @@ export class EmployeesService {
   }
 
   // getClientIp(): Promise<string> {
-  //   console.log("Fetch client ip called")
   //   return axios.get('https://api.ipify.org?format=json')
   //     .then(response => response.data.ip)
   //     .catch(error => {
@@ -123,7 +121,6 @@ export class EmployeesService {
   // }
 
   async getClientIp(): Promise<string> {
-    console.log('Fetching client IP...');
     try {
       const response = await axios.get('https://api.ipify.org?format=json');
       return response.data.ip;
@@ -154,7 +151,6 @@ export class EmployeesService {
             'clientIpTime',
             currentTime.toString()
           );
-          console.log('Client IP updated:', newIp);
         }
       }
     }
@@ -560,19 +556,14 @@ export class EmployeesService {
   // }
 
   uploadFiles(data: FormData, employeeId, type = 'default') {
-    console.log(FormData);
-    console.log(data);
     const url = `https://hrfiles.thefintalk.in/hrfiles?type=${type}&employeeId=${employeeId}`;
-    console.log(url);
     return this.serviceMeta.httpPost(url, data);
   }
 
   deleteFile(filePath: string) {
-    console.log(filePath);
     const url = `https://hrfiles.thefintalk.in/hrfiles?file_path=${encodeURIComponent(
       filePath
     )}`;
-    console.log(url);
     return this.serviceMeta.httpDelete(url);
   }
   getFileIcon(fileType: string): string {

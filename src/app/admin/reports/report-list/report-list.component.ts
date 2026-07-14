@@ -51,7 +51,6 @@ export class ReportListComponent {
   ngOnInit(): void {
     this.currentYear = this.employeesService.getCurrentYear();
     this.capabilities = this.employeesService.getUserRbac();
-    console.log('capabilities', this.capabilities);
     this.setFilterConfig();
     const storedReportType =
       this.localStorageService.getItemFromLocalStorage('reportType');
@@ -129,7 +128,6 @@ export class ReportListComponent {
     ];
   }
   loadReports(event) {
-    console.log(event);
     this.currentTableEvent = event;
     let api_filter = this.employeesService.setFiltersFromPrimeTable(event);
     api_filter = Object.assign(
@@ -139,7 +137,6 @@ export class ReportListComponent {
       this.appliedFilter
     );
     if (api_filter) {
-      console.log(api_filter);
       this.getReportsCount(api_filter);
       this.getReports(api_filter);
     }
@@ -148,7 +145,6 @@ export class ReportListComponent {
     this.employeesService.getReportsCount(filter).subscribe(
       (response) => {
         this.reportsCount = response;
-        console.log(this.reportsCount);
       },
       (error: any) => {
         this.toastService.showError(error);
@@ -160,7 +156,6 @@ export class ReportListComponent {
     this.employeesService.getReports(filter).subscribe(
       (response) => {
         this.reportsData = response;
-        console.log(this.reportsData);
         this.apiLoading = false;
       },
       (error: any) => {
@@ -181,14 +176,12 @@ export class ReportListComponent {
   }
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;
-    console.log(this.currentTableEvent);
     this.loadReports(this.currentTableEvent);
   }
   inputValueChangeEvent(dataType: string, value: string): void {
     if (value === '') {
       this.searchFilter = {};
       this.localStorageService.setItemOnLocalStorage('reportType', value);
-      console.log(this.currentTableEvent);
       this.loadReports(this.currentTableEvent);
     } else {
       this.localStorageService.setItemOnLocalStorage('reportType', value);
@@ -227,7 +220,6 @@ export class ReportListComponent {
     this.loading = true;
     this.employeesService.deleteReport(reportId).subscribe(
       (response: any) => {
-        console.log(response);
         this.toastService.showSuccess(response?.message);
         this.loading = false;
         this.loadReports(this.currentTableEvent);

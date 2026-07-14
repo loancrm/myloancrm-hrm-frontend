@@ -78,7 +78,6 @@ export class HeaderComponent implements OnInit {
         (response: any) => {
           this.employees = response;
           this.loading = false;
-          console.log(this.employees);
           resolve(true);
         },
         (error: any) => {
@@ -98,7 +97,6 @@ export class HeaderComponent implements OnInit {
         (response: any) => {
           this.interviews = response;
           this.loading = false;
-          console.log(this.interviews);
           resolve(true);
         },
         (error: any) => {
@@ -158,9 +156,7 @@ export class HeaderComponent implements OnInit {
         (event) => event.date === todayDateString
       );
       this.todayEventCount = todayEvents.length;
-      console.log(`Today's event count: ${this.todayEventCount}`);
     } else {
-      console.log('No employees found.');
     }
   }
 
@@ -168,7 +164,6 @@ export class HeaderComponent implements OnInit {
     this.routingService.handleRoute('events', null);
   }
  showSidebarMenu() {
-  console.log("object")
     this.showSidebar = !this.showSidebar;
     this.subscriptionService.sendMessage({
       ttype: 'showSidebar',

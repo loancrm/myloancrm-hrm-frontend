@@ -157,7 +157,6 @@ export class HolidaysComponent implements OnInit {
 
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;
-    console.log(this.currentTableEvent);
     this.loadHolidays(this.currentTableEvent);
   }
 
@@ -178,7 +177,6 @@ export class HolidaysComponent implements OnInit {
   inputValueChangeEvent(dataType, value) {
     if (value == '') {
       this.searchFilter = {};
-      console.log(this.currentTableEvent);
       this.loadHolidays(this.currentTableEvent);
     }
   }
@@ -187,7 +185,6 @@ export class HolidaysComponent implements OnInit {
     this.loading = true;
     this.employeesService.deleteHoliday(holidayId).subscribe(
       (response: any) => {
-        console.log(response);
         this.toastService.showSuccess(response?.message);
         this.loading = false;
         this.loadHolidays(this.currentTableEvent);
@@ -221,8 +218,6 @@ export class HolidaysComponent implements OnInit {
   generateYears() {
   const today = new Date();
   let year = today.getFullYear();
-  console.log(year);
-  
 
   if (today.getMonth() === 11 && today.getDate() >= 21) {
     year = year + 1;
@@ -234,8 +229,6 @@ export class HolidaysComponent implements OnInit {
   }
 
   this.selectedYear = year;
-  console.log(this.selectedYear);
-  
 }
 
 
@@ -285,7 +278,6 @@ export class HolidaysComponent implements OnInit {
     this.employeesService.getHolidays(filter).subscribe(
       (response) => {
         this.holidays = response;
-        console.log('holidays', this.holidays);
         this.apiLoading = false;
       },
       (error: any) => {

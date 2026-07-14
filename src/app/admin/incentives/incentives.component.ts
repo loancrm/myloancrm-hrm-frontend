@@ -70,7 +70,6 @@ export class IncentivesComponent implements OnInit {
       this.userDetails = userDetails.user;
     }
     this.capabilities = this.employeesService.getUserRbac();
-    console.log('capabilities', this.capabilities);
     this.setupActiveItemTabs();
     const storedMonth = this.localStorageService.getItemFromLocalStorage(
       'selectedIncentiveMonth'
@@ -119,7 +118,6 @@ export class IncentivesComponent implements OnInit {
   inputValueChangeEvent(dataType, value) {
     if (value == '') {
       this.searchFilter = {};
-      console.log(this.currentTableEvent);
       this.loadIncentives(this.currentTableEvent);
     }
   }
@@ -130,7 +128,6 @@ export class IncentivesComponent implements OnInit {
   }
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;
-    console.log(this.currentTableEvent);
     this.loadIncentives(this.currentTableEvent);
   }
 
@@ -178,7 +175,6 @@ export class IncentivesComponent implements OnInit {
               incentiveresponse,
               employeeResponse
             );
-            console.log('Merged Incentives Data:', this.incentives);
             this.apiLoading = false;
           },
           (error: any) => {
@@ -218,7 +214,6 @@ export class IncentivesComponent implements OnInit {
     this.loading = true;
     this.employeesService.deleteIncentive(incentiveId).subscribe(
       (response: any) => {
-        console.log(response);
         this.toastService.showSuccess(response?.message);
         this.loading = false;
         this.loadIncentives(this.currentTableEvent);

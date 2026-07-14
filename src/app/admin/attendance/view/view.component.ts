@@ -72,7 +72,6 @@ export class ViewComponent implements OnInit {
         this.selectedDate = this.moment(
           this.attendanceData?.attendanceDate
         ).format('MM/DD/YYYY');
-        console.log('Attendance Data:', this.attendanceData);
         this.calculateAttendanceCounts();
         this.setDefaultAttendanceData();
       }
@@ -147,20 +146,15 @@ export class ViewComponent implements OnInit {
           break;
       }
     });
-    console.log(
-      `Present: ${this.totalPresentCount}, Absent: ${this.totalAbsentCount}, Half-day: ${this.totalHalfDayCount}, Late: ${this.totalLateCount}`
-    );
     this.updateCountsAnalytics();
   }
   loadEmployees(event) {
     this.currentTableEvent = event;
-    console.log(event.first);
     let api_filter = this.employeesService.setFiltersFromPrimeTable(event);
     api_filter = Object.assign({}, api_filter, this.searchFilter);
     if ('from' in api_filter) {
       delete api_filter.from;
     }
-    console.log(api_filter);
     if (api_filter) {
       this.getEmployeesCount(api_filter);
       this.getEmployees(api_filter);
@@ -196,17 +190,12 @@ export class ViewComponent implements OnInit {
           reason: attendance?.reason,
         };
       });
-    console.log(
-      'Employee Details with Attendance Data for View:',
-      this.employeeDetails
-    );
   }
   getEmployees(filter = {}) {
     this.apiLoading = true;
     this.employeesService.getEmployees(filter).subscribe(
       (response: any) => {
         this.employees = response;
-        console.log('employees', this.employees);
         this.apiLoading = false;
         this.setDefaultAttendanceData();
       },
@@ -247,7 +236,6 @@ export class ViewComponent implements OnInit {
   }
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;
-    console.log(this.currentTableEvent);
     this.loadEmployees(this.currentTableEvent);
   }
   goBack() {

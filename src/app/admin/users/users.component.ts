@@ -53,7 +53,6 @@ export class UsersComponent implements OnInit {
   ngOnInit(): void {
     this.currentYear = this.employeesService.getCurrentYear();
     this.capabilities = this.employeesService.getUserRbac();
-    console.log('capabilities', this.capabilities);
     this.setFilterConfig();
     const storedAppliedFilter =
       this.localStorageService.getItemFromLocalStorage('usersAppliedFilter');
@@ -229,7 +228,6 @@ export class UsersComponent implements OnInit {
     this.employeesService.getUsers(filter).subscribe(
       (response) => {
         this.users = response;
-        console.log('users', this.users);
         this.apiLoading = false;
       },
       (error: any) => {
@@ -317,7 +315,6 @@ export class UsersComponent implements OnInit {
   inputValueChangeEvent(dataType, value) {
     if (value == '') {
       this.searchFilter = {};
-      console.log(this.currentTableEvent);
       this.loadUsers(this.currentTableEvent);
     }
   }
@@ -343,7 +340,6 @@ export class UsersComponent implements OnInit {
 
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;
-    console.log(this.currentTableEvent);
     this.loadUsers(this.currentTableEvent);
   }
   confirmDelete(user) {
@@ -364,7 +360,6 @@ export class UsersComponent implements OnInit {
     this.loading = true;
     this.employeesService.deleteUser(userId).subscribe(
       (response: any) => {
-        console.log(response);
         this.toastService.showSuccess(response?.message);
         this.loading = false;
         this.loadUsers(this.currentTableEvent);

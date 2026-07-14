@@ -142,7 +142,6 @@ export class CreateComponent {
     filter['designationInternalStatus-eq'] = 1;
     this.employeesService.getDesignations(filter).subscribe(
       (response: any) => {
-        console.log(response);
         this.designationEntities = [...response];
         this.setReportsList();
         this.loading = false;
@@ -593,8 +592,6 @@ export class CreateComponent {
       apiFilter['date-lte'] = endOfYear;
     }
     Object.assign(selectedReportData, apiFilter);
-    console.log(reportType);
-    console.log(selectedReportData);
     const reportServiceMap = {
       EMPLOYEES: () =>
         this.employeesService.exportEmployees(selectedReportData),

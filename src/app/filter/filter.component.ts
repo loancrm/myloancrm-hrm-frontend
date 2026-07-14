@@ -62,7 +62,6 @@ export class FilterComponent {
     api_filter['from'] = 0;
     api_filter['count'] = 10;
     api_filter['reset'] = true;
-    console.log('this.filterConfig', api_filter);
     this.filterEvent.emit(api_filter);
   }
 
@@ -183,7 +182,6 @@ export class FilterComponent {
         }
       });
     });
-    console.log(api_filter);
     if (Object.keys(api_filter).length == 0) {
       if (this.isListViewSelected) {
         api_filter['from'] = 0;

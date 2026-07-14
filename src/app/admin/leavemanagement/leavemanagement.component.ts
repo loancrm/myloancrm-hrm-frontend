@@ -65,7 +65,6 @@ export class LeavemanagementComponent {
       this.localStorageService.getItemFromLocalStorage('userDetails');
     this.userDetails = userDetails.user;
     this.capabilities = this.employeesService.getUserRbac();
-    console.log('capabilities', this.capabilities);
     this.updateCountsAnalytics();
     this.setFilterConfig();
     this.getLeavesStatusCount();
@@ -274,7 +273,6 @@ export class LeavemanagementComponent {
     this.selectedLeavesStatus = this.leavesInternalStatusList.find(
       (status) => status.name === item.name
     );
-    console.log(this.selectedLeavesStatus)
     this.statusChange({ value: this.selectedLeavesStatus });
   }
 
@@ -308,7 +306,6 @@ export class LeavemanagementComponent {
         }
       }
     }
-    console.log(api_filter);
     if (api_filter) {
       this.getLeavesCount(api_filter);
       this.getLeaves(api_filter);
@@ -396,7 +393,6 @@ export class LeavemanagementComponent {
     this.loading = true;
     this.employeesService.deleteLeave(leaveId).subscribe(
       (response: any) => {
-        console.log(response);
         this.toastService.showSuccess(response?.message);
         this.loading = false;
         this.loadLeaves(this.currentTableEvent);
@@ -451,7 +447,6 @@ export class LeavemanagementComponent {
               leaveresponse,
               employeeResponse
             );
-            console.log('Merged Leaves Data:', this.leaves);
             this.apiLoading = false;
           },
           (error: any) => {
@@ -481,7 +476,6 @@ export class LeavemanagementComponent {
     this.employeesService.getLeaves(filter).subscribe({
       next: (response) => {
         this.leavesStatusCount = this.countleaveInternalStatus(response);
-        console.log(this.leavesStatusCount);
         this.updateCountsAnalytics();
         this.loading = false;
       },
@@ -559,7 +553,6 @@ export class LeavemanagementComponent {
             })
             .join(' '),
         }));
-        console.log('employees', this.employees);
         this.loading = false;
       },
       (error: any) => {
@@ -571,7 +564,6 @@ export class LeavemanagementComponent {
   inputValueChangeEvent(dataType, value) {
     if (value == '') {
       this.searchFilter = {};
-      console.log(this.currentTableEvent);
       this.loadLeaves(this.currentTableEvent);
     }
   }
@@ -581,7 +573,6 @@ export class LeavemanagementComponent {
   }
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;
-    console.log(this.currentTableEvent);
     this.loadLeaves(this.currentTableEvent);
   }
 

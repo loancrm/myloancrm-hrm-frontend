@@ -71,10 +71,8 @@ export class SidebarMenuComponent implements OnChanges {
             this.sidebarVisible = message.value;
             break;
         }
-        console.log("showsidebar ", message)
         this.setMenuItems();
       });
-    console.log(this.sidebarVisible)
   }
   @HostListener('window:resize')
   checkIfMobile() {
@@ -117,7 +115,6 @@ export class SidebarMenuComponent implements OnChanges {
         this.userDetails.userImage = JSON.parse(this.userDetails.userImage);
       }
     }
-    console.log(this.userDetails);
   }
 
 
@@ -500,7 +497,6 @@ export class SidebarMenuComponent implements OnChanges {
 
   minimizeSideBar() {
     this.minimizeMenu = !this.minimizeMenu;
-    // console.log(this.minimizeMenu);
     this.subscriptionService.sendMessage({
       ttype: 'smallMenu',
       value: this.minimizeMenu,
@@ -517,7 +513,6 @@ export class SidebarMenuComponent implements OnChanges {
   }
 
   ngOnChanges(changes) {
-    console.log(changes)
     if (changes && changes.showSidebar) {
       if (this.sidebarMenu && !this.sidebarMenu.visible) {
         this.sidebarVisible = true;
@@ -708,7 +703,6 @@ export class SidebarMenuComponent implements OnChanges {
 //         this.userDetails.userImage = JSON.parse(this.userDetails.userImage);
 //       }
 //     }
-//     console.log(this.userDetails);
 //   }
 
 //   setMenuItems() {
@@ -869,7 +863,6 @@ export class SidebarMenuComponent implements OnChanges {
 
 //   minimizeSideBar() {
 //     this.minimizeMenu = !this.minimizeMenu;
-//     console.log(this.minimizeMenu);
 //     this.subscriptionService.sendMessage({
 //       ttype: 'smallMenu',
 //       value: this.minimizeMenu,

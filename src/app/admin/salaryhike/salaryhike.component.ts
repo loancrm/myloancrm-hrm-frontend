@@ -76,7 +76,6 @@ export class SalaryhikeComponent {
       this.localStorageService.getItemFromLocalStorage('userDetails');
     this.userDetails = userDetails.user;
     this.capabilities = this.employeesService.getUserRbac();
-    console.log('capabilities', this.capabilities);
     this.setFilterConfig();
     this.createForm();
     this.getEmployees();
@@ -104,7 +103,6 @@ export class SalaryhikeComponent {
             employeeId: selectedEmployee.employeeId,
             basicSalary: selectedEmployee.salary,
           });
-          console.log(selectedEmployee);
           const missingFields: any = [];
           if (!selectedEmployee.salary) missingFields.push('Salary');
           if (missingFields.length > 0) {
@@ -398,7 +396,6 @@ export class SalaryhikeComponent {
             })
             .join(' '),
         }));
-        console.log('employees', this.employees);
         this.loading = false;
         this.setSalaryHikesList();
       },
@@ -440,7 +437,6 @@ export class SalaryhikeComponent {
   inputValueChangeEvent(dataType, value) {
     if (value == '') {
       this.searchFilter = {};
-      console.log(this.currentTableEvent);
       this.loadSalaryHikes(this.currentTableEvent);
     }
   }
@@ -474,7 +470,6 @@ export class SalaryhikeComponent {
 
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;
-    console.log(this.currentTableEvent);
     this.loadSalaryHikes(this.currentTableEvent);
   }
   loadSalaryHikes(event) {
@@ -526,7 +521,6 @@ export class SalaryhikeComponent {
               hikeresponse,
               employeeResponse,
             );
-            console.log('Merged Salary Hikes Data:', this.salaryHikes);
             this.apiLoading = false;
           },
           (error: any) => {
@@ -570,7 +564,6 @@ export class SalaryhikeComponent {
   //       : null,
   //     totalSalary: formValues.basicSalary + formValues.monthlyHike,
   //   };
-  //   console.log('salaryhikeformData', formData);
   //   if (this.actionType == 'create') {
   //     this.loading = true;
   //     this.employeesService.createSalaryHike(formData).subscribe(
@@ -585,13 +578,11 @@ export class SalaryhikeComponent {
   //       },
   //       (error: any) => {
   //         this.loading = false;
-  //         console.log(error);
   //         this.toastService.showError(error);
   //       }
   //     );
   //   } else if (this.actionType == 'update') {
   //     this.loading = true;
-  //     console.log(formData);
   //     this.employeesService.updateSalaryHike(this.hikeId, formData).subscribe(
   //       (data) => {
   //         if (data) {
@@ -616,7 +607,6 @@ export class SalaryhikeComponent {
       this.employeesService.getSalaryHikes(filter).subscribe(
         (response) => {
           this.salaryHikes1 = response;
-          console.log('salaryHikes1', this.salaryHikes1);
           this.loading = false;
           resolve();
         },
@@ -668,7 +658,6 @@ export class SalaryhikeComponent {
         : null,
       totalSalary: formValues.basicSalary + formValues.monthlyHike,
     };
-    console.log('salaryhikeformData', formData);
     if (this.actionType === 'create') {
       this.loading = true;
       this.employeesService.createSalaryHike(formData).subscribe(
@@ -683,7 +672,6 @@ export class SalaryhikeComponent {
         },
         (error: any) => {
           this.loading = false;
-          console.log(error);
           this.toastService.showError(error);
         },
       );
@@ -793,7 +781,6 @@ export class SalaryhikeComponent {
       this.hikeId = salaryHike.hikeId;
       this.actionType = 'update';
       this.heading = 'Update Salary Hike';
-      console.log(this.hikeId);
       this.getSalaryHikesById().then((data) => {
         if (data) {
           this.salaryHikeForm.patchValue({
@@ -845,7 +832,6 @@ export class SalaryhikeComponent {
     this.loading = true;
     this.employeesService.deleteSalaryHike(hikeId).subscribe(
       (response: any) => {
-        console.log(response);
         this.toastService.showSuccess(response?.message);
         this.loading = false;
         this.loadSalaryHikes(this.currentTableEvent);

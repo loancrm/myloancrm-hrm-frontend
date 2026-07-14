@@ -77,7 +77,6 @@ export class PayrollComponent {
       this.localStorageService.getItemFromLocalStorage('userDetails');
     this.userDetails = userDetails.user;
     this.capabilities = this.employeesService.getUserRbac();
-    console.log('capabilities', this.capabilities);
     if (this.capabilities.adminPayroll) {
       this.getEmployees();
       this.getHolidays();
@@ -178,7 +177,6 @@ export class PayrollComponent {
     this.loading = true;
     filter['employeeInternalStatus-eq'] = 1;
     filter['sort'] = 'joiningDate,asc';
-    console.log(filter);
     this.employeesService.getEmployees(filter).subscribe(
       (response: any) => {
         this.employees = [{ employeeName: 'All' }, ...response];
@@ -201,7 +199,6 @@ export class PayrollComponent {
             })
             .join(' '),
         }));
-        console.log('employees', this.employees);
         this.loading = false;
       },
       (error: any) => {
@@ -215,7 +212,6 @@ export class PayrollComponent {
     this.employeesService.getPayroll(filter).subscribe(
       (response: any) => {
         // Ensure response is treated as an array
-        console.log(response);
         this.totalSalary = response.reduce((sum, emp) => sum + emp.salary, 0);
         const deductions = response.reduce(
           (sum, emp) => sum + emp.deductions,
@@ -231,10 +227,6 @@ export class PayrollComponent {
           0,
         );
         this.payrollEmployees = response.length;
-        console.log('Total Salary:', this.totalSalary);
-        console.log('Total Deductions:', this.totalDeductions);
-        console.log('Total Net Salary:', this.totalNetSalary);
-        console.log('Total Payroll Employees:', this.payrollEmployees);
 
         this.updateCountsAnalytics();
       },
@@ -654,7 +646,6 @@ export class PayrollComponent {
     } else {
       api_filter['payrollMonth-eq'] = this.selectedMonth;
     }
-    console.log(api_filter);
     if (api_filter) {
       this.getPayrollCount(api_filter);
       this.getPayroll(api_filter);
@@ -682,7 +673,6 @@ export class PayrollComponent {
               payrollResponse,
               employeeResponse,
             );
-            console.log('Merged Payroll Data:', this.payroll);
             this.apiLoading = false;
           },
           (error: any) => {
@@ -915,7 +905,6 @@ export class PayrollComponent {
                       paidDays,
                       professionalTax,
                     };
-                    console.log('Payroll Data:', payrollData);
                     // Push payroll request to array
                     payrollRequests.push(
                       this.employeesService.createPayroll(payrollData),
@@ -987,7 +976,6 @@ export class PayrollComponent {
     this.employeesService.getHolidays(filter).subscribe(
       (response) => {
         this.holidays = response;
-        console.log('holidays', this.holidays);
         this.loading = false;
       },
       (error: any) => {
@@ -1022,7 +1010,6 @@ export class PayrollComponent {
   }
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;
-    console.log(this.currentTableEvent);
     this.loadPayslips(this.currentTableEvent);
   }
 
@@ -1081,7 +1068,6 @@ export class PayrollComponent {
     this.loading = true;
     this.employeesService.deletePayroll(payslipId).subscribe(
       (response: any) => {
-        console.log(response);
         this.toastService.showSuccess(response?.message);
         this.loading = false;
         this.loadPayslips(this.currentTableEvent);

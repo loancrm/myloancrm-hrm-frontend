@@ -62,7 +62,6 @@ export class InterviewsComponent implements OnInit {
   ngOnInit(): void {
     this.currentYear = this.employeesService.getCurrentYear();
     this.capabilities = this.employeesService.getUserRbac();
-    console.log('capabilities', this.capabilities);
     this.updateCountsAnalytics();
     this.loadBranches();
     this.setFilterConfig();
@@ -321,7 +320,6 @@ export class InterviewsComponent implements OnInit {
     this.selectedInterviewStatus = this.interviewInternalStatusList.find(
       (status) => status.name === item.name
     );
-    console.log(this.selectedInterviewStatus)
     this.statusChange({ value: this.selectedInterviewStatus });
   }
 
@@ -398,7 +396,6 @@ export class InterviewsComponent implements OnInit {
   inputValueChangeEvent(dataType, value) {
     if (value == '') {
       this.searchFilter = {};
-      console.log(this.currentTableEvent);
       this.loadInterviews(this.currentTableEvent);
     }
   }
@@ -409,7 +406,6 @@ export class InterviewsComponent implements OnInit {
   }
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;
-    console.log(this.currentTableEvent);
     this.loadInterviews(this.currentTableEvent);
   }
   statusChange(event: any): void {
@@ -445,11 +441,9 @@ export class InterviewsComponent implements OnInit {
       qualification: interview.qualification,
       permanentAddress: interview.permanentAddress,
     };
-    console.log('Form Data:', formData);
     this.employeesService.createEmployeeFromInterview(formData).subscribe(
       (employeeData: any) => {
         if (employeeData?.id) {
-          console.log('Created Employee ID:', employeeData.id);
           this.toastService.showSuccess('Employee Created Successfully');
           this.routingService.handleRoute(
             `employees/update/${employeeData.id}`,
@@ -459,13 +453,11 @@ export class InterviewsComponent implements OnInit {
             candidateName: interview.candidateName,
             referenceNo: employeeData.id,
           };
-          console.log('interviewFormData', interviewFormData);
           this.employeesService
             .updateInterview(interview.interviewId, interviewFormData)
             .subscribe(
               (updateResponse: any) => {
                 this.loading = false;
-                console.log('Update Response:', updateResponse);
               },
               (error: any) => {
                 this.loading = false;
@@ -538,7 +530,6 @@ export class InterviewsComponent implements OnInit {
     this.loading = true;
     this.employeesService.deleteInterview(interviewId).subscribe(
       (response: any) => {
-        console.log(response);
         this.toastService.showSuccess(response?.message);
         this.loading = false;
         this.loadInterviews(this.currentTableEvent);
@@ -590,7 +581,6 @@ export class InterviewsComponent implements OnInit {
     this.employeesService.getInterviews(filter).subscribe(
       (response) => {
         this.interviews = response;
-        console.log('Interviews', this.interviews);
         this.apiLoading = false;
       },
       (error: any) => {

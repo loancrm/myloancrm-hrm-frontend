@@ -12,12 +12,9 @@ export class RoutingService {
   constructor(private router: Router) {}
   handleRoute(activeRoute: any, params, options?) {
     let relativeRoute = this.projectRoute;
-    console.log('Relative Route:', relativeRoute);
     if (this.featureRoute) {
       relativeRoute = relativeRoute + '/' + this.featureRoute;
     }
-    console.log('Relative Route:', relativeRoute);
-    console.log('Active Route:', activeRoute);
     if (options) {
       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
       this.router.onSameUrlNavigation = 'reload';
@@ -33,11 +30,9 @@ export class RoutingService {
   }
   setParentRoute(route) {
     this.projectRoute = route;
-    console.log('Project route:', this.projectRoute);
   }
   setFeatureRoute(route) {
     this.featureRoute = route;
-    console.log('Feature route:', this.featureRoute);
   }
   setVersion(version) {
     this.version = version;

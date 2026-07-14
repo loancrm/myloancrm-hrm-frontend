@@ -61,8 +61,6 @@ export class ServiceMeta {
       options.params = httpParams;
       options.showLoader = true;
     }
-    console.log('Request Options:', options);
-    console.log('Request URL:', url);
     return this.http.get(url, options);
   }
 

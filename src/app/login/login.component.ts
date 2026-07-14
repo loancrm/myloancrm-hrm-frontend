@@ -84,10 +84,8 @@ export class LoginComponent implements OnInit {
       encryptedPassword: loginData.encryptedPassword,
     };
     this.api_loading = true;
-    console.log(payload);
     this.authService.userLogin(payload).subscribe(
       (data: any) => {
-        console.log(data);
         this.api_loading = false;
         if (data && data['accessToken']) {
           this.localStorageService.setItemOnLocalStorage(

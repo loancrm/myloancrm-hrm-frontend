@@ -47,7 +47,6 @@ export class CreateComponent {
           .then((data) => {
             if (data) {
               (this.selectedDate = this.attendanceData?.attendanceDate),
-                console.log('Attendance Data', this.attendanceData);
                 this.getLeaves();
             }
           })
@@ -98,7 +97,6 @@ export class CreateComponent {
 
   loadEmployees(event) {
     this.currentTableEvent = event;
-    console.log(event.first);
     let api_filter = this.employeesService.setFiltersFromPrimeTable(event);
     if (this.actionType === 'create') {
       api_filter['employeeInternalStatus-eq'] = 1;
@@ -107,7 +105,6 @@ export class CreateComponent {
     if ('from' in api_filter) {
       delete api_filter.from;
     }
-    console.log(api_filter);
     if (api_filter) {
       this.getEmployeesCount(api_filter);
       this.getEmployees(api_filter);
@@ -129,7 +126,6 @@ export class CreateComponent {
     this.employeesService.getEmployees(filter).subscribe(
       (response: any) => {
         this.employees = response;
-        console.log('employees', this.employees);
         this.loading = false;
         this.setDefaultAttendanceData();
       },
@@ -148,7 +144,6 @@ export class CreateComponent {
     this.employeesService.getLeaves(filter).subscribe(
       (response: any) => {
         this.leaves = response;
-        console.log('Leaves', this.leaves);
         this.loading = false;
         this.setDefaultAttendanceData();
         if (this.leaves && this.leaves.length > 0) {
@@ -166,7 +161,6 @@ export class CreateComponent {
   // setDefaultAttendanceData() {
   //   const defaultCheckInTime = this.formatTime(new Date(0, 0, 0, 10, 0));
   //   // const defaultCheckOutTime = this.formatTime(new Date(0, 0, 0, 18, 30));
-  //   console.log(this.actionType);
   //   if (this.actionType === 'create') {
   //     this.employeeDetails = this.employees.map((employee) => ({
   //       employeeId: employee.employeeId,
@@ -180,10 +174,6 @@ export class CreateComponent {
   //       checkOutTime: '',
   //       reason: '',
   //     }));
-  //     console.log(
-  //       'Employee Details with Default Data for Create:',
-  //       this.employeeDetails
-  //     );
   //   } else if (this.actionType === 'update') {
   //     this.employeeDetails = this.employees
   //       .filter((employee) =>
@@ -208,23 +198,17 @@ export class CreateComponent {
   //           reason: attendance?.reason,
   //         };
   //       });
-  //     console.log(
-  //       'Employee Details with Attendance Data for Update:',
-  //       this.employeeDetails
-  //     );
   //   }
   // }
 
   setDefaultAttendanceData() {
     const defaultCheckInTime = this.formatTime(new Date(0, 0, 0, 10, 0));
-    console.log(this.actionType);
     if (this.actionType === 'create') {
       this.employeeDetails = this.employees.map((employee) => {
         // Find leave record for the employee if today's date falls within their leave period
         const leaveRecord = this.leaves?.find(
           (leave) => leave.employeeId === employee.employeeId
         );
-        console.log(leaveRecord);
         return {
           employeeId: employee.employeeId,
           customEmployeeId: employee.customEmployeeId,
@@ -246,10 +230,6 @@ export class CreateComponent {
           reason: leaveRecord ? leaveRecord.reason : '',
         };
       });
-      console.log(
-        'Employee Details with Default Data for Create:',
-        this.employeeDetails
-      );
     } else if (this.actionType === 'update') {
       this.employeeDetails = this.employees
         .filter((employee) =>
@@ -286,16 +266,9 @@ export class CreateComponent {
             reason: leaveRecord ? leaveRecord.reason : attendance?.reason || '',
           };
         });
-      console.log(
-        'Employee Details with Attendance Data for Update:',
-        this.employeeDetails
-      );
     }
   }
   updateAttendanceStatus(employee: any) {
-    console.log(
-      `Attendance status for employee ID ${employee.employeeId} updated to ${employee.status}`
-    );
     if (employee.status === 'Absent') {
       employee.checkInTime = '';
       employee.checkOutTime = '';
@@ -320,7 +293,6 @@ export class CreateComponent {
         reason: employee.reason,
       })),
     };
-    console.log('Formatted Form Data:', formData);
     if (this.actionType == 'create') {
       this.loading = true;
       this.employeesService.createAttendance(formData).subscribe(
@@ -336,7 +308,6 @@ export class CreateComponent {
       );
     } else if (this.actionType == 'update') {
       this.loading = true;
-      console.log(formData);
       this.employeesService
         .updateAttendance(this.attendanceId, formData)
         .subscribe(
