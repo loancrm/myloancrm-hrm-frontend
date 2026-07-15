@@ -736,10 +736,19 @@ export class ProfileComponent implements OnInit {
     this.location.back();
   }
   canViewOfferLetter(): boolean {
-    const isRestrictedEmployee = this.userDetails.accountId == 1234567;
-    const isAllowedUser = this.userDetails?.designation == 1;
-    if (isRestrictedEmployee) {
-      return isAllowedUser;
+    const isRestrictedAccount = this.userDetails?.accountId == 1234567;
+
+    const rbacList: string[] = (this.userDetails?.rbac || '')
+      .split(',')
+      .map((r: string) => r.trim());
+
+    const isAdminEmployeeUser = rbacList.includes('adminEmployees');
+
+    const isSuperAdmin =
+      isAdminEmployeeUser && this.userDetails?.designation == '1';
+
+    if (isRestrictedAccount) {
+      return isSuperAdmin;
     }
     return true;
   }

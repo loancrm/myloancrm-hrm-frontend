@@ -35,7 +35,7 @@ export class PayslipComponent {
     private toastService: ToastService,
     private employeesService: EmployeesService,
     private dateTimeProcessor: DateTimeProcessorService,
-    private companySettingsService: CompanySettingsService
+    private companySettingsService: CompanySettingsService,
   ) {
     const usertype = localStorageService.getItemFromLocalStorage('userType');
     this.moment = this.dateTimeProcessor.getMoment();
@@ -72,20 +72,26 @@ export class PayslipComponent {
       },
       (error: any) => {
         console.error('Error loading company settings:', error);
-      }
+      },
     );
   }
 
   generatePDF() {
     this.loading = true;
     const pdfContent = this.pdfContent.nativeElement;
-    html2canvas(pdfContent).then((canvas) => {
+    html2canvas(pdfContent, {
+      useCORS: true,
+      allowTaint: false,
+      scale: 2, // sharper output, optional
+    }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const imgWidth = 190;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-      pdf.save(`${this.payroll?.employeeName}  ${this.getMonthNameAndYear(this.payroll?.payrollMonth)} Payslip.pdf`);
+      pdf.save(
+        `${this.payroll?.employeeName}  ${this.getMonthNameAndYear(this.payroll?.payrollMonth)} Payslip.pdf`,
+      );
       this.loading = false;
     });
   }
@@ -152,20 +158,20 @@ export class PayslipComponent {
             (employeeResponse: any) => {
               this.payroll = this.mergePayrollWithEmployee(
                 payrollresponse,
-                employeeResponse
+                employeeResponse,
               );
               this.apiLoading = false;
             },
             (error: any) => {
               this.apiLoading = false;
               this.toastService.showError(error);
-            }
+            },
           );
       },
       (error: any) => {
         this.apiLoading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -257,7 +263,7 @@ export class PayslipComponent {
   getDesignationName(userId) {
     if (this.designations && this.designations.length > 0) {
       let designationName = this.designations.filter(
-        (designation) => designation.id == userId
+        (designation) => designation.id == userId,
       );
       return (
         (designationName &&
@@ -279,7 +285,7 @@ export class PayslipComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   goBack() {
