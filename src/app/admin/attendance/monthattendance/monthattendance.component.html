@@ -51,7 +51,7 @@
       'referenceNo',
       'customer.firstName',
       'partner.partnerName',
-      'status'
+      'status',
     ]"
     styleClass="p-datatable-customers"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Employees"
@@ -78,42 +78,39 @@
               [disabled]="!employeeNameToSearch"
               (click)="filterWithEmployeeName()"
             ></button> -->
-             <span
+            <span
               class="input-group-text searchbtn"
               (click)="filterWithEmployeeName()"
             >
-              <img
-                src="../../../assets/images/icons/search.svg"
-                alt="Search" 
-              />
+              <img src="../../../assets/images/icons/search.svg" alt="Search" />
             </span>
           </div>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
-          <div  class="custom-calendar-wrapper position-relative">
+          <div class="custom-calendar-wrapper position-relative">
             <div class="selecteddate">
-            <p-calendar
-            #calendar
-              [(ngModel)]="displayMonth"
-              [showIcon]="false"
-              view="month"
-              [monthNavigator]="true"
-              [yearNavigator]="true"
-              [yearRange]="'-10:+10'"
-              dateFormat="MM yy"
-              appendTo="body"
-              [readonlyInput]="true"
-              [style]="{ width: '100%' }"
-              (ngModelChange)="onDateChange($event)"
-              [placeholder]="'Select Month and Year'"
-            ></p-calendar>
-             <img
-            src="../../../assets/images/icons/calendar.svg"
-            alt="Calendar Icon"
-            class="calendar-custom-img"
-            (click)="calendar.toggle()"
-          />
-          </div>
+              <p-calendar
+                #calendar
+                [(ngModel)]="displayMonth"
+                [showIcon]="false"
+                view="month"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                [yearRange]="'-10:+10'"
+                dateFormat="MM yy"
+                appendTo="body"
+                [readonlyInput]="true"
+                [style]="{ width: '100%' }"
+                (ngModelChange)="onDateChange($event)"
+                [placeholder]="'Select Month and Year'"
+              ></p-calendar>
+              <img
+                src="../../../assets/images/icons/calendar.svg"
+                alt="Calendar Icon"
+                class="calendar-custom-img"
+                (click)="calendar.toggle()"
+              />
+            </div>
           </div>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
@@ -148,7 +145,7 @@
         <th>Late</th>
         <th>Absent</th>
         <ng-container *ngFor="let date of monthDates">
-          <th>{{ date | date : "dd" }}</th>
+          <th>{{ date | date: "dd" }}</th>
         </ng-container>
       </tr>
     </ng-template>
@@ -198,7 +195,7 @@
         </td>
         <td class="text-nowrap">
           <span class="table-column-data" *ngIf="employee.joiningDate">{{
-            employee.joiningDate | date : "mediumDate"
+            employee.joiningDate | date: "mediumDate"
           }}</span>
         </td>
         <td>
@@ -254,7 +251,7 @@
                 title="Absent"
                 pTooltip="Absent"
               /> -->
-              
+
               <!-- Absent -->
               <lucide-icon
                 *ngSwitchCase="'Absent'"
@@ -286,7 +283,10 @@
                   name="timer"
                   size="20"
                   title="Half-day"
-                  pTooltip="Half-day"
+                  pTooltipPosition="top"
+                  pTooltip="{{
+                    getCheckinTimeCheckOutTime(employee.employeeId, date)
+                  }}"
                   class="text-primary"
                 ></lucide-icon>
               </ng-container>
@@ -306,12 +306,15 @@
                   title="Late"
                   pTooltip="Late"
                 /> -->
-                 <lucide-icon
+                <lucide-icon
                   *ngSwitchCase="'Late'"
                   name="calendar-clock"
                   size="20"
+                  pTooltipPosition="top"
                   title="Late"
-                  pTooltip="Late"
+                  pTooltip="{{
+                    getCheckinTimeCheckOutTime(employee.employeeId, date)
+                  }}"
                   class="text-warning"
                 ></lucide-icon>
               </ng-container>
@@ -356,20 +359,20 @@
   <u>Note:</u>
   <!-- <i class="fa fa-star text-muted" title="Holiday"></i>  -->
   <!-- <img src="../../../../assets/images/menu/holidayhrmlogo.svg" alt="" /> -->
-   <lucide-icon name="sun" [size]="24"></lucide-icon>
+  <lucide-icon name="sun" [size]="24"></lucide-icon>
   Holiday |
   <!-- <img src="../../../../assets/images/presenthrmicon.svg" alt="" /> -->
-   <lucide-icon
+  <lucide-icon
     name="user-check"
     size="20"
     title="Present"
     pTooltip="Present"
     class="text-success"
   ></lucide-icon>
-   Present |
+  Present |
   <!-- <i class="fa fa-circle-half-stroke text-warning" title="Half-day"></i> -->
   <!-- <img src="../../../../assets/images/halfdayicon.svg" alt="" /> -->
-   <lucide-icon
+  <lucide-icon
     name="timer"
     size="20"
     title="Half-day"
@@ -379,7 +382,7 @@
   Half-Day |
   <!-- <i class="fa fa-circle-exclamation text-primary" title="Late"></i> -->
   <!-- <img src="../../../../assets/images/lateloginicon (2).svg" alt="" /> -->
-   <lucide-icon
+  <lucide-icon
     name="calendar-clock"
     size="20"
     title="Late"
@@ -389,7 +392,7 @@
   Late |
   <!-- <i class="fa fa-circle-xmark text-danger" title="Absent"></i> -->
   <!-- <img src="../../../../assets/images/onleaveicon.svg" alt="" /> -->
-   <lucide-icon
+  <lucide-icon
     name="user-round-x"
     size="20"
     title="Absent"
