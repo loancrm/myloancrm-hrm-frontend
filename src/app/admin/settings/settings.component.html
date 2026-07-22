@@ -52,6 +52,26 @@
         <li class="nav-item" role="presentation">
           <button
             class="nav-link"
+            [class.active]="activeTab === 'office'"
+            (click)="setActiveTab('office')"
+            type="button"
+          >
+            <i class="fas fa-clock me-2"></i>Office &amp; Payroll Policy
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'incentive'"
+            (click)="setActiveTab('incentive')"
+            type="button"
+          >
+            <i class="fas fa-percentage me-2"></i>Incentive Policy
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
             [class.active]="activeTab === 'templates'"
             (click)="setActiveTab('templates')"
             type="button"
@@ -99,7 +119,7 @@
               <tr *ngFor="let branch of branches">
                 <td>{{ branch.displayName }}</td>
                 <td>{{ branch.name }}</td>
-                <td>{{ branch.address || '-' }}</td>
+                <td>{{ branch.address || "-" }}</td>
                 <td>
                   <div class="text-center">
                     <div class="d-flex">
@@ -110,21 +130,27 @@
                         (click)="openBranchDialog('update', branch)"
                         pTooltip="Edit"
                       >
-                      <lucide-icon name="square-pen" [size]="18" class="action-icon"></lucide-icon>
+                        <lucide-icon
+                          name="square-pen"
+                          [size]="18"
+                          class="action-icon"
+                        ></lucide-icon>
                       </button>
                       <button
                         pRipple
                         type="button"
-                        
                         class="action-icon-wrapper me-2"
                         (click)="deleteBranch(branch)"
                         pTooltip="Delete"
                       >
-                      <lucide-icon name="trash" [size]="18" class="action-icon"></lucide-icon>
+                        <lucide-icon
+                          name="trash"
+                          [size]="18"
+                          class="action-icon"
+                        ></lucide-icon>
                       </button>
                     </div>
                   </div>
-                  
                 </td>
               </tr>
               <tr *ngIf="branches.length === 0">
@@ -138,7 +164,10 @@
       <!-- Company Address Tab -->
       <div *ngIf="activeTab === 'company'" class="tab-content">
         <h5 class="mb-4">Company Address Details</h5>
-        <form [formGroup]="companySettingsForm" (ngSubmit)="saveCompanySettings()">
+        <form
+          [formGroup]="companySettingsForm"
+          (ngSubmit)="saveCompanySettings()"
+        >
           <div class="row">
             <div class="col-md-12 mb-3">
               <label for="companyLogo">Company Logo</label>
@@ -152,7 +181,13 @@
                   <img
                     [src]="'//' + companySettings?.companyLogo"
                     alt="Company Logo"
-                    style="max-width:200px;max-height:100px;object-fit:contain;border:1px solid #ddd;padding:5px;"
+                    style="
+                      max-width: 200px;
+                      max-height: 100px;
+                      object-fit: contain;
+                      border: 1px solid #ddd;
+                      padding: 5px;
+                    "
                   />
                 </div>
                 <div class="flex-grow-1">
@@ -162,7 +197,7 @@
                     accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
                     (change)="onLogoFileSelect($event)"
                     class="form-control"
-                    style="display: none;"
+                    style="display: none"
                     #logoInput
                   />
                   <div class="d-flex gap-2">
@@ -195,13 +230,16 @@
                     ></button>
                   </div>
                   <small class="text-muted d-block mt-2">
-                    Recommended: PNG or JPG, max 5MB. Logo will appear on all documents.
+                    Recommended: PNG or JPG, max 5MB. Logo will appear on all
+                    documents.
                   </small>
                 </div>
               </div>
             </div>
             <div class="col-md-12 mb-3">
-              <label for="companyName">Company Name <sup class="text-danger">*</sup></label>
+              <label for="companyName"
+                >Company Name <sup class="text-danger">*</sup></label
+              >
               <input
                 pInputText
                 id="companyName"
@@ -231,7 +269,9 @@
               />
             </div>
             <div class="col-md-12 mb-3">
-              <label for="companyAddress">Company Address <sup class="text-danger">*</sup></label>
+              <label for="companyAddress"
+                >Company Address <sup class="text-danger">*</sup></label
+              >
               <textarea
                 pInputTextarea
                 id="companyAddress"
@@ -281,7 +321,9 @@
                 class="w-100"
                 placeholder="support@company.com"
               />
-              <small class="text-muted">Email address for customer support inquiries</small>
+              <small class="text-muted"
+                >Email address for customer support inquiries</small
+              >
             </div>
             <div class="col-md-6 mb-3">
               <label for="hrEmail">HR Email</label>
@@ -293,7 +335,9 @@
                 class="w-100"
                 placeholder="hr@company.com"
               />
-              <small class="text-muted">Email address for HR-related inquiries</small>
+              <small class="text-muted"
+                >Email address for HR-related inquiries</small
+              >
             </div>
             <div class="col-md-12">
               <button
@@ -312,20 +356,27 @@
       <!-- Email Settings Tab -->
       <div *ngIf="activeTab === 'email'" class="tab-content">
         <h5 class="mb-4">Email Settings</h5>
-        
+
         <!-- Email Credentials Section -->
         <div class="mb-5">
           <h6 class="mb-3">Email Credentials</h6>
           <p class="text-muted mb-3">
-            Configure your email credentials to send notifications. Use your Gmail address and App Password (not your regular password).
-            <br><small class="text-info">
-              <i class="fas fa-info-circle"></i> To generate an App Password: Gmail → Account → Security → 2-Step Verification → App Passwords
+            Configure your email credentials to send notifications. Use your
+            Gmail address and App Password (not your regular password).
+            <br /><small class="text-info">
+              <i class="fas fa-info-circle"></i> To generate an App Password:
+              Gmail → Account → Security → 2-Step Verification → App Passwords
             </small>
           </p>
-          <form [formGroup]="companySettingsForm" (ngSubmit)="saveEmailCredentials()">
+          <form
+            [formGroup]="companySettingsForm"
+            (ngSubmit)="saveEmailCredentials()"
+          >
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label for="email">Email Address <sup class="text-danger">*</sup></label>
+                <label for="email"
+                  >Email Address <sup class="text-danger">*</sup></label
+                >
                 <input
                   pInputText
                   id="email"
@@ -334,10 +385,14 @@
                   class="w-100"
                   placeholder="your-email@gmail.com"
                 />
-                <small class="text-muted">Gmail address to send emails from</small>
+                <small class="text-muted"
+                  >Gmail address to send emails from</small
+                >
               </div>
               <div class="col-md-6 mb-3">
-                <label for="appPassword">App Password <sup class="text-danger">*</sup></label>
+                <label for="appPassword"
+                  >App Password <sup class="text-danger">*</sup></label
+                >
                 <input
                   pInputText
                   id="appPassword"
@@ -346,7 +401,9 @@
                   class="w-100"
                   placeholder="Enter Gmail App Password"
                 />
-                <small class="text-muted">Gmail App Password (16 characters)</small>
+                <small class="text-muted"
+                  >Gmail App Password (16 characters)</small
+                >
               </div>
               <div class="col-md-12 mb-3">
                 <button
@@ -355,7 +412,11 @@
                   label="Save Email Credentials"
                   icon="pi pi-save"
                   class="p-button-primary"
-                  [disabled]="loading || !companySettingsForm.get('email')?.value || !companySettingsForm.get('appPassword')?.value"
+                  [disabled]="
+                    loading ||
+                    !companySettingsForm.get('email')?.value ||
+                    !companySettingsForm.get('appPassword')?.value
+                  "
                 ></button>
               </div>
             </div>
@@ -366,9 +427,10 @@
         <div class="mt-5 pt-4 border-top">
           <h6 class="mb-3">Attendance Report Emails</h6>
           <p class="text-muted mb-3">
-            Add email addresses to receive daily attendance reports. Multiple emails can be added.
+            Add email addresses to receive daily attendance reports. Multiple
+            emails can be added.
           </p>
-          
+
           <div class="mb-3">
             <div class="d-flex gap-2 mb-3">
               <input
@@ -411,7 +473,8 @@
             </div>
           </div>
           <div *ngIf="attendanceReportEmails.length === 0" class="text-muted">
-            No emails added yet. Add email addresses to receive attendance reports.
+            No emails added yet. Add email addresses to receive attendance
+            reports.
           </div>
         </div>
 
@@ -419,9 +482,11 @@
         <div class="mt-5 pt-4 border-top">
           <h6 class="mb-3">Employee Update Notification Emails</h6>
           <p class="text-muted mb-3">
-            Add email addresses to receive notifications for employee updates such as leave requests, leave approvals/rejections, and other employee-related changes. Multiple emails can be added.
+            Add email addresses to receive notifications for employee updates
+            such as leave requests, leave approvals/rejections, and other
+            employee-related changes. Multiple emails can be added.
           </p>
-          
+
           <div class="mb-3">
             <div class="d-flex gap-2 mb-3">
               <input
@@ -439,7 +504,11 @@
                 icon="pi pi-plus"
                 class="p-button-primary"
                 (click)="addEmployeeUpdateEmail()"
-                [disabled]="loading || !newEmployeeUpdateEmail || !newEmployeeUpdateEmail.trim()"
+                [disabled]="
+                  loading ||
+                  !newEmployeeUpdateEmail ||
+                  !newEmployeeUpdateEmail.trim()
+                "
               ></button>
             </div>
           </div>
@@ -464,7 +533,484 @@
             </div>
           </div>
           <div *ngIf="employeeUpdateEmails.length === 0" class="text-muted">
-            No emails added yet. Add email addresses to receive employee update notifications.
+            No emails added yet. Add email addresses to receive employee update
+            notifications.
+          </div>
+        </div>
+      </div>
+
+      <!-- Office & Payroll Policy Tab -->
+      <div *ngIf="activeTab === 'office'" class="tab-content">
+        <h5 class="mb-2">Office Timing &amp; Payroll Policy</h5>
+        <p class="text-muted mb-4">
+          Configure office hours, late grace period, late-to-LOP rules, and
+          payroll cycle for this account. Attendance late marking and payroll
+          (working days / present days / LOP) use these values.
+        </p>
+
+        <form
+          [formGroup]="officePayrollForm"
+          (ngSubmit)="saveOfficePayrollSettings()"
+        >
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <h6 class="mb-3">Office Timings</h6>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="officeStartTime"
+                >Office Start Time <sup class="text-danger">*</sup></label
+              >
+              <input
+                pInputText
+                id="officeStartTime"
+                type="time"
+                formControlName="officeStartTime"
+                class="w-100"
+              />
+              <small class="text-muted"
+                >Official check-in time (e.g. 10:00)</small
+              >
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="officeEndTime"
+                >Office End Time <sup class="text-danger">*</sup></label
+              >
+              <input
+                pInputText
+                id="officeEndTime"
+                type="time"
+                formControlName="officeEndTime"
+                class="w-100"
+              />
+              <small class="text-muted"
+                >Expected logout time (e.g. 18:30). Leaving earlier marks
+                <strong>Early-logout</strong>.</small
+              >
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="graceMinutes"
+                >Grace Period (minutes) <sup class="text-danger">*</sup></label
+              >
+              <input
+                pInputText
+                id="graceMinutes"
+                type="number"
+                min="0"
+                max="180"
+                formControlName="graceMinutes"
+                class="w-100"
+              />
+              <small class="text-muted">
+                Check-in after <strong>{{ lateCutoffPreview }}</strong> is
+                marked Late.
+              </small>
+            </div>
+
+            <div class="col-md-12 mb-3 mt-3">
+              <h6 class="mb-3">Late → Loss of Pay (LOP)</h6>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="latesPerLop"
+                >Lates equal to 1 LOP <sup class="text-danger">*</sup></label
+              >
+              <input
+                pInputText
+                id="latesPerLop"
+                type="number"
+                min="1"
+                max="31"
+                formControlName="latesPerLop"
+                class="w-100"
+              />
+              <small class="text-muted">
+                Example: if set to 3, then 3 late check-ins + early logouts
+                combined = 1 day LOP deduction.
+              </small>
+            </div>
+
+            <div class="col-md-12 mb-3 mt-3">
+              <div
+                class="d-flex justify-content-between align-items-center mb-2"
+              >
+                <h6 class="mb-0">Professional Tax (by salary)</h6>
+                <button
+                  pButton
+                  type="button"
+                  label="Add Slab"
+                  icon="pi pi-plus"
+                  class="p-button-secondary p-button-sm"
+                  (click)="addProfessionalTaxTier()"
+                ></button>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Min Salary (₹)</th>
+                      <th>Professional Tax (₹)</th>
+                      <th style="width: 90px">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      *ngFor="let tier of professionalTaxTiers; let i = index"
+                    >
+                      <td>
+                        <input
+                          pInputText
+                          type="number"
+                          min="0"
+                          class="w-100"
+                          [(ngModel)]="tier.minSalary"
+                          [ngModelOptions]="{ standalone: true }"
+                          placeholder="e.g. 15001"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          pInputText
+                          type="number"
+                          min="0"
+                          class="w-100"
+                          [(ngModel)]="tier.taxAmount"
+                          [ngModelOptions]="{ standalone: true }"
+                          placeholder="e.g. 150"
+                        />
+                      </td>
+                      <td>
+                        <button
+                          pButton
+                          type="button"
+                          icon="pi pi-trash"
+                          class="p-button-danger p-button-text"
+                          (click)="removeProfessionalTaxTier(i)"
+                          [disabled]="professionalTaxTiers.length <= 1"
+                        ></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <small class="text-muted">
+                Highest matching min salary wins. Default: ≥ ₹20,001 → ₹200 | ≥
+                ₹15,001 → ₹150 | else ₹0
+              </small>
+            </div>
+
+            <div class="col-md-12 mb-3 mt-3">
+              <h6 class="mb-3">Payroll Cycle</h6>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="payrollCycleType"
+                >Cycle Type <sup class="text-danger">*</sup></label
+              >
+              <p-dropdown
+                inputId="payrollCycleType"
+                [options]="payrollCycleOptions"
+                formControlName="payrollCycleType"
+                optionLabel="label"
+                optionValue="value"
+                [style]="{ width: '100%' }"
+                placeholder="Select payroll cycle"
+              ></p-dropdown>
+              <small class="text-muted d-block mt-1">
+                Full month uses 1st–last day. Custom cycle uses a start day
+                (e.g. 26th of previous month to 25th of salary month).
+              </small>
+            </div>
+            <div class="col-md-4 mb-3" *ngIf="isCustomPayrollCycle">
+              <label for="payrollCycleStartDay"
+                >Cycle Start Day <sup class="text-danger">*</sup></label
+              >
+              <input
+                pInputText
+                id="payrollCycleStartDay"
+                type="number"
+                min="1"
+                max="28"
+                formControlName="payrollCycleStartDay"
+                class="w-100"
+              />
+              <small class="text-muted">
+                For day 26: June payroll = 26 May – 25 June. Working days &amp;
+                attendance are counted in this range.
+              </small>
+            </div>
+
+            <div class="col-md-12 mb-3 mt-3">
+              <h6 class="mb-3">Paid Leave (Payroll)</h6>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="casualLeavesPerMonth"
+                >Paid Leaves per Month <sup class="text-danger">*</sup></label
+              >
+              <input
+                pInputText
+                id="casualLeavesPerMonth"
+                type="number"
+                min="0"
+                max="31"
+                formControlName="casualLeavesPerMonth"
+                class="w-100"
+              />
+              <small class="text-muted"
+                >Default 1. How many paid leave days to credit each eligible
+                payroll month.</small
+              >
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="casualLeaveAfterMonths"
+                >Eligible After (Months) <sup class="text-danger">*</sup></label
+              >
+              <input
+                pInputText
+                id="casualLeaveAfterMonths"
+                type="number"
+                min="0"
+                max="60"
+                formControlName="casualLeaveAfterMonths"
+                class="w-100"
+              />
+              <small class="text-muted">
+                Joining month is not counted. After this many months, paid leave
+                starts. Example: join in Jan, set 3 → eligible from May (5th
+                month).
+              </small>
+            </div>
+
+            <div class="col-md-12 mb-3 mt-3">
+              <h6 class="mb-3">IP Address Restriction</h6>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="ipRestrictionEnabled"
+                  formControlName="ipRestrictionEnabled"
+                />
+                <label class="form-check-label" for="ipRestrictionEnabled">
+                  Enable IP address restriction (default: ON)
+                </label>
+              </div>
+              <small class="text-muted d-block mt-1">
+                When enabled, users must be on an allowed IP (managed under IP
+                Address menu) to access the system / check-in. Turn OFF to
+                disable IP checks for this account everywhere.
+              </small>
+            </div>
+
+            <div class="col-md-12 mt-2">
+              <div class="alert alert-light border">
+                <strong>How it works</strong>
+                <ul class="mb-0 mt-2">
+                  <li>
+                    Late check-in if check-in is after start time + grace
+                    (currently after {{ lateCutoffPreview }}).
+                  </li>
+                  <li>
+                    Early logout before office end time is marked
+                    <strong>Early-logout</strong> (separate from Late).
+                  </li>
+                  <li>
+                    Payroll LOP = floor((late check-ins + early logouts) ÷
+                    {{ officePayrollForm.get("latesPerLop")?.value || 3 }}).
+                  </li>
+                  <li>
+                    Paid leave =
+                    {{
+                      officePayrollForm.get("casualLeavesPerMonth")?.value || 1
+                    }}
+                    day(s) / month. Joining month not counted; eligible after
+                    {{
+                      officePayrollForm.get("casualLeaveAfterMonths")?.value ||
+                        3
+                    }}
+                    month(s) (e.g. join Jan + 3 → from May).
+                  </li>
+                  <li>
+                    Working days / present days follow the selected payroll
+                    cycle (Sundays &amp; holidays excluded from working days).
+                  </li>
+                  <li>
+                    IP restriction is
+                    {{
+                      officePayrollForm.get("ipRestrictionEnabled")?.value
+                        ? "ENABLED"
+                        : "DISABLED"
+                    }}
+                    for this account.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <button
+                pButton
+                type="submit"
+                label="Save Office &amp; Payroll Policy"
+                icon="pi pi-save"
+                class="p-button-primary"
+                [disabled]="loading || officePayrollForm.invalid"
+              ></button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Incentive Policy Tab -->
+      <div *ngIf="activeTab === 'incentive'" class="tab-content">
+        <h5 class="mb-2">Incentive Calculation Policy</h5>
+        <p class="text-muted mb-4">
+          Configure how incentive amount is calculated from disbursed file
+          amounts. Default matches the existing tiered formula. Change
+          pattern/rates per account as needed.
+        </p>
+
+        <div class="row" *ngIf="incentiveConfig">
+          <div class="col-md-6 mb-3">
+            <label>Calculation Pattern</label>
+            <p-dropdown
+              [options]="incentivePatternOptions"
+              [(ngModel)]="incentiveConfig.pattern"
+              optionLabel="label"
+              optionValue="value"
+              [style]="{ width: '100%' }"
+            ></p-dropdown>
+          </div>
+          <div class="col-md-4 mb-3" *ngIf="incentiveConfig.pattern === 'flat'">
+            <label>Flat Rate (%)</label>
+            <input
+              pInputText
+              type="number"
+              min="0"
+              step="1"
+              class="w-100"
+              [(ngModel)]="incentiveConfig.flatRatePercent"
+            />
+            <small class="text-muted"
+              >Example: enter 20 → uses 0.20% of disbursed amount</small
+            >
+          </div>
+
+          <div
+            class="col-md-12 mb-3"
+            *ngIf="incentiveConfig.pattern === 'tiered'"
+          >
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 class="mb-0">Tiers (highest matching min amount wins)</h6>
+              <button
+                pButton
+                type="button"
+                label="Add Tier"
+                icon="pi pi-plus"
+                class="p-button-secondary p-button-sm"
+                (click)="addIncentiveTier()"
+              ></button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Min Disbursed Amount (₹)</th>
+                    <th>Reward Type</th>
+                    <th>Rate (%)</th>
+                    <th>Fixed Amount (₹)</th>
+                    <th style="width: 90px">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let tier of incentiveConfig.tiers; let i = index">
+                    <td>
+                      <input
+                        pInputText
+                        type="number"
+                        min="0"
+                        class="w-100"
+                        [(ngModel)]="tier.minAmount"
+                        placeholder="e.g. 100000"
+                      />
+                    </td>
+                    <td>
+                      <p-dropdown
+                        [options]="incentiveTierRewardOptions"
+                        [(ngModel)]="tier.rewardType"
+                        optionLabel="label"
+                        appendTo="body"
+                        optionValue="value"
+                        [style]="{ width: '100%' }"
+                      ></p-dropdown>
+                    </td>
+                    <td>
+                      <input
+                        pInputText
+                        type="number"
+                        min="0"
+                        step="1"
+                        class="w-100"
+                        [(ngModel)]="tier.ratePercent"
+                        [disabled]="tier.rewardType !== 'rate'"
+                        placeholder="e.g. 20"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        pInputText
+                        type="number"
+                        min="0"
+                        step="1"
+                        class="w-100"
+                        [(ngModel)]="tier.fixedAmount"
+                        [disabled]="tier.rewardType !== 'fixed'"
+                        placeholder="e.g. 5000"
+                      />
+                    </td>
+                    <td>
+                      <button
+                        pButton
+                        type="button"
+                        icon="pi pi-trash"
+                        class="p-button-danger p-button-text"
+                        (click)="removeIncentiveTier(i)"
+                        [disabled]="incentiveConfig.tiers.length <= 1"
+                      ></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="alert alert-light border">
+              <strong>Examples:</strong>
+              <ul class="mb-0 mt-1">
+                <li>
+                  <strong>Rate:</strong> enter <code>20</code> → system uses
+                  <strong>0.20%</strong> of that month’s disbursed amount (enter
+                  <code>30</code> → 0.30%)
+                </li>
+                <li>
+                  <strong>Fixed Amount:</strong> Min ₹1,00,000 + Fixed ₹5,000 →
+                  if that month’s disbursed ≥ ₹1 lakh, incentive = ₹5,000
+                </li>
+              </ul>
+              <div class="mt-2">
+                <strong>Default (current system):</strong>
+                ≥ ₹1,00,00,000 → 30 (0.30%) | ≥ ₹49,00,000 → 20 (0.20%) | ≥
+                ₹15,00,000 → 15 (0.15%) | else 0
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <button
+              pButton
+              type="button"
+              label="Save Incentive Policy"
+              icon="pi pi-save"
+              class="p-button-primary"
+              [disabled]="loading"
+              (click)="saveIncentiveSettings()"
+            ></button>
           </div>
         </div>
       </div>
@@ -474,49 +1020,55 @@
         <app-template-list></app-template-list>
       </div>
 
-      <div *ngIf="activeTab === 'templateselection'" class="tab-content d-flex flex-row gap-4">
-         <div class="col-md-3">
-          <label for="offerLetterTemplate">Offer Letter Template Selection</label>
+      <div
+        *ngIf="activeTab === 'templateselection'"
+        class="tab-content d-flex flex-row gap-4"
+      >
+        <div class="col-md-3">
+          <label for="offerLetterTemplate"
+            >Offer Letter Template Selection</label
+          >
           <p-dropdown
-              [options]="offerLetterTemplates"
-              [style]="{ width: '100%' }"
-              optionLabel="templateName"
-              optionValue="id"
-              placeholder="Select Offer Letter Template"
-              [(ngModel)]="selectedOfferTemplate"
-              (onChange)="saveTemplateSelection('offerLetter')"
-              
-              >
-            </p-dropdown>
-         </div>
-          <div class="col-md-3">
-            <label for="relievingLetterTemplate">Relieving Letter Template Selection</label>
-            <p-dropdown
-              [options]="relievingTemplates"
-              [style]="{ width: '100%' }"
-              optionLabel="templateName"
-              optionValue="id"
-              placeholder="Select Relieving Letter Template"
-              [(ngModel)]="selectedRelievingTemplate"
-              (onChange)="saveTemplateSelection('relievingLetter')"
-              class="w-100"
-              >
-            </p-dropdown>
-          </div>
-          <div class="col-md-3">
-            <label for="hikeLetterTemplate">Hike Letter Template Selection</label>
-            <p-dropdown
-              [options]="hikeLetterTemplates"
-              [style]="{ width: '100%' }"
-              optionLabel="templateName"
-              optionValue="id"
-              placeholder="Select Hike Letter Template"
-              [(ngModel)]="selectedHikeTemplate"
-              (onChange)="saveTemplateSelection('hikeLetter')"
-              class="w-100"
-              >
-            </p-dropdown>
-          </div>
+            [options]="offerLetterTemplates"
+            [style]="{ width: '100%' }"
+            optionLabel="templateName"
+            optionValue="id"
+            placeholder="Select Offer Letter Template"
+            [(ngModel)]="selectedOfferTemplate"
+            (onChange)="saveTemplateSelection('offerLetter')"
+          >
+          </p-dropdown>
+        </div>
+        <div class="col-md-3">
+          <label for="relievingLetterTemplate"
+            >Relieving Letter Template Selection</label
+          >
+          <p-dropdown
+            [options]="relievingTemplates"
+            [style]="{ width: '100%' }"
+            optionLabel="templateName"
+            optionValue="id"
+            placeholder="Select Relieving Letter Template"
+            [(ngModel)]="selectedRelievingTemplate"
+            (onChange)="saveTemplateSelection('relievingLetter')"
+            class="w-100"
+          >
+          </p-dropdown>
+        </div>
+        <div class="col-md-3">
+          <label for="hikeLetterTemplate">Hike Letter Template Selection</label>
+          <p-dropdown
+            [options]="hikeLetterTemplates"
+            [style]="{ width: '100%' }"
+            optionLabel="templateName"
+            optionValue="id"
+            placeholder="Select Hike Letter Template"
+            [(ngModel)]="selectedHikeTemplate"
+            (onChange)="saveTemplateSelection('hikeLetter')"
+            class="w-100"
+          >
+          </p-dropdown>
+        </div>
       </div>
     </div>
   </div>
@@ -585,4 +1137,3 @@
     </div>
   </form>
 </p-dialog>
-

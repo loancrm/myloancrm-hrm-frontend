@@ -99,6 +99,12 @@
                 ? (selectedPayrollDetails.payrollMonth | date: "MMMM yyyy")
                 : "-"
             }}
+            <div
+              class="text-muted small"
+              *ngIf="selectedPayrollDetails.payrollMonth"
+            >
+              {{ getPeriodLabelForMonth(selectedPayrollDetails.payrollMonth) }}
+            </div>
           </div>
         </div>
         <div class="info-line">
@@ -297,7 +303,7 @@
         <div class="info-line">
           <span class="icon"><i class="fas fa-umbrella-beach"></i></span>
           <div class="label d-flex justify-content-between">
-            Casual Days <b>:&nbsp;</b>
+            Paid Leave Days <b>:&nbsp;</b>
           </div>
           <div class="value">
             {{ selectedPayrollDetails.casualDays }}
@@ -442,7 +448,7 @@
               appendTo="body"
               [style]="{ width: '100%' }"
               (ngModelChange)="onDateChange($event)"
-              [placeholder]="'Select Month and Year'"
+              [placeholder]="'Select Salary Month'"
             ></p-calendar>
             <img
               src="../../../assets/images/icons/calendar.svg"
@@ -452,6 +458,9 @@
               (click)="calendar.toggle()"
             />
           </div>
+          <small class="text-muted d-block mt-1" *ngIf="periodRangeLabel && capabilities.adminPayroll">
+            Period: {{ periodRangeLabel }}
+          </small>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
           <p-dropdown
@@ -503,10 +512,10 @@
                 pButton
                 pRipple
                 type="button"
-                pTooltip="Last Month Payroll"
+                pTooltip="Calculate payroll for selected month using account settings"
                 tooltipPosition="top"
                 class="p-button-primary"
-                icon="fa fa-plus"
+                icon="fa fa-calculator"
                 (click)="confirmCalculate()"
               >
                 &nbsp;Calculate

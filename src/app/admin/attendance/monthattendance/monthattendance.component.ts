@@ -5,6 +5,11 @@ import * as XLSX from 'xlsx';
 import { EmployeesService } from '../../employees/employees.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { DateTimeProcessorService } from 'src/app/services/date-time-processor.service';
+import { CompanySettingsService } from 'src/app/services/company-settings.service';
+import {
+  OfficePayrollPolicy,
+  OfficePayrollPolicyService,
+} from 'src/app/services/office-payroll-policy.service';
 @Component({
   selector: 'app-monthattendance',
   templateUrl: './monthattendance.component.html',
@@ -28,16 +33,20 @@ export class MonthattendanceComponent implements OnInit {
   loading: boolean = false;
   currentYear: number;
   apiLoading: any;
+  officePolicy: OfficePayrollPolicy;
+  periodRangeLabel: string = '';
   constructor(
     private location: Location,
     private toastService: ToastService,
     private dateTimeProcessor: DateTimeProcessorService,
-    private employeesService: EmployeesService
+    private employeesService: EmployeesService,
+    private companySettingsService: CompanySettingsService,
+    private officePayrollPolicyService: OfficePayrollPolicyService,
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
+    this.officePolicy = this.officePayrollPolicyService.defaults;
     this.selectedMonth = this.moment(new Date()).toDate();
     this.generateMonthDates(this.selectedMonth);
-    // this.selectedMonth = this.moment(new Date()).format('YYYY-MM');
     this.displayMonth = this.moment(new Date()).format('MMMM YYYY');
     this.breadCrumbItems = [
       {
@@ -56,6 +65,21 @@ export class MonthattendanceComponent implements OnInit {
   }
   ngOnInit(): void {
     this.currentYear = this.employeesService.getCurrentYear();
+    this.loadOfficePolicy();
+  }
+  loadOfficePolicy() {
+    this.companySettingsService.getCompanySettings().subscribe(
+      (response: any) => {
+        this.officePolicy = this.officePayrollPolicyService.normalize(
+          response || {},
+        );
+        this.generateMonthDates(this.selectedMonth);
+      },
+      () => {
+        this.officePolicy = this.officePayrollPolicyService.defaults;
+        this.generateMonthDates(this.selectedMonth);
+      },
+    );
   }
   exportToExcel() {
     this.loading = true;
@@ -71,20 +95,25 @@ export class MonthattendanceComponent implements OnInit {
         let presentCount = 0,
           absentCount = 0,
           lateCount = 0,
+          earlyLogoutCount = 0,
           halfDayCount = 0;
         this.monthDates.forEach((date) => {
           const dateStr = this.moment(date).format('YYYY-MM-DD');
           const attendanceEntry = this.attendance.find(
-            (entry) => entry.attendanceDate === dateStr
+            (entry) => entry.attendanceDate === dateStr,
           );
           if (!attendanceEntry) {
             row[dateStr] = 'H';
           } else {
             const employeeData = attendanceEntry?.attendanceData.find(
-              (data) => data.employeeId === employee.employeeId
+              (data) => data.employeeId === employee.employeeId,
             );
             let status = employeeData?.status || '-';
-            if (status === 'Late' || status === 'Half-day') {
+            if (
+              status === 'Late' ||
+              status === 'Half-day' ||
+              status === 'Early-logout'
+            ) {
               const checkInTime = employeeData?.checkInTime || '-';
               const checkOutTime = employeeData?.checkOutTime || '-';
               status += ` (Check-in: ${checkInTime}, Check-out: ${checkOutTime})`;
@@ -100,6 +129,9 @@ export class MonthattendanceComponent implements OnInit {
               case 'Late':
                 lateCount++;
                 break;
+              case 'Early-logout':
+                earlyLogoutCount++;
+                break;
               case 'Half-day':
                 halfDayCount++;
                 break;
@@ -109,13 +141,15 @@ export class MonthattendanceComponent implements OnInit {
         row['Total Present'] = presentCount;
         row['Total Half-day'] = halfDayCount;
         row['Total Late'] = lateCount;
+        row['Total Early Logout'] = earlyLogoutCount;
         row['Total Absent'] = absentCount;
         return row;
       });
       const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Attendance Data');
-      XLSX.writeFile(wb, `${this.displayMonth} Attendance.xlsx`);
+      const fileLabel = this.periodRangeLabel || this.displayMonth;
+      XLSX.writeFile(wb, `${fileLabel} Attendance.xlsx`);
       this.loading = false;
     } catch (error) {
       console.error('Error exporting to Excel:', error);
@@ -127,23 +161,27 @@ export class MonthattendanceComponent implements OnInit {
 
   generateMonthDates(selectedMonth) {
     if (!selectedMonth) return;
-    const year = selectedMonth.getFullYear();
-    const month = selectedMonth.getMonth();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    this.monthDates = Array.from(
-      { length: daysInMonth },
-      (_, i) => new Date(year, month, i + 1)
+    const payrollMonth = this.moment(selectedMonth).format('YYYY-MM');
+    this.monthDates = this.officePayrollPolicyService.getPeriodDates(
+      this.moment,
+      payrollMonth,
+      this.officePolicy,
+    );
+    this.periodRangeLabel = this.officePayrollPolicyService.formatPeriodLabel(
+      this.moment,
+      payrollMonth,
+      this.officePolicy,
     );
   }
   countAttendanceStatus(employeeId: number, status: string): number {
     return this.monthDates.filter(
-      (date) => this.getAttendanceForDate(employeeId, date) === status
+      (date) => this.getAttendanceForDate(employeeId, date) === status,
     ).length;
   }
   isAttendanceMatched(employeeId: number, date: Date): boolean {
     const formattedDate = this.moment(date).format('YYYY-MM-DD');
     const result = this.attendance.some(
-      (entry) => entry.attendanceDate == formattedDate
+      (entry) => entry.attendanceDate == formattedDate,
     );
     return result;
   }
@@ -151,48 +189,51 @@ export class MonthattendanceComponent implements OnInit {
   isAttendanceMatchedforemployee(employeeId: number, date: Date): boolean {
     const formattedDate = this.moment(date).format('YYYY-MM-DD');
     const attendanceEntry = this.attendance.find(
-      (entry) => entry.attendanceDate == formattedDate
+      (entry) => entry.attendanceDate == formattedDate,
     );
     return attendanceEntry?.attendanceData?.some(
-      (data) => data.employeeId == employeeId
+      (data) => data.employeeId == employeeId,
     );
   }
 
   isEmployeePresent(employeeId: number): boolean {
     return this.attendance.some((entry) =>
-      entry?.attendanceData?.some((data) => data.employeeId === employeeId)
+      entry?.attendanceData?.some((data) => data.employeeId === employeeId),
     );
   }
 
   getAttendanceForDate(employeeId: number, date: Date): string {
     const formattedDate = this.moment(date).format('YYYY-MM-DD');
     const attendanceEntry = this.attendance.find(
-      (entry) => entry.attendanceDate == formattedDate
+      (entry) => entry.attendanceDate == formattedDate,
     );
     if (!attendanceEntry) {
       return 'No Data';
     }
     const employeeAttendance = attendanceEntry.attendanceData.find(
-      (data) => data.employeeId == employeeId
+      (data) => data.employeeId == employeeId,
     );
     return employeeAttendance ? employeeAttendance.status : '-';
   }
   getCheckinTimeCheckOutTime(employeeId: number, date: Date): string {
     const formattedDate = this.moment(date).format('YYYY-MM-DD');
     const attendanceEntry = this.attendance.find(
-      (entry) => entry.attendanceDate == formattedDate
+      (entry) => entry.attendanceDate == formattedDate,
     );
     if (!attendanceEntry) {
       return 'No Data';
     }
     const employeeAttendance = attendanceEntry.attendanceData.find(
-      (data) => data.employeeId == employeeId
+      (data) => data.employeeId == employeeId,
     );
     if (!employeeAttendance) {
       return '-';
     }
     if (employeeAttendance.status === 'Late') {
       return `Late - Check-in: ${employeeAttendance.checkInTime}, Check-out: ${employeeAttendance.checkOutTime}`;
+    }
+    if (employeeAttendance.status === 'Early-logout') {
+      return `Early Logout - Check-in: ${employeeAttendance.checkInTime}, Check-out: ${employeeAttendance.checkOutTime}`;
     }
     if (employeeAttendance.status === 'Half-day') {
       return `Half-Day - Check-in: ${employeeAttendance.checkInTime}, Check-out: ${employeeAttendance.checkOutTime}`;
@@ -222,7 +263,7 @@ export class MonthattendanceComponent implements OnInit {
           this.apiLoading = false;
           this.toastService.showError(error);
           reject(error);
-        }
+        },
       );
     });
   }
@@ -247,7 +288,7 @@ export class MonthattendanceComponent implements OnInit {
       },
       (error: any) => {
         this.toastService.showError(error);
-      }
+      },
     );
   }
   getEmployees(filter = {}) {
@@ -260,7 +301,10 @@ export class MonthattendanceComponent implements OnInit {
             if (this.attendance && this.attendance.length > 0) {
               this.filteredEmployees = this.employees.filter((employee) => {
                 return this.monthDates.some((date) =>
-                  this.isAttendanceMatchedforemployee(employee.employeeId, date)
+                  this.isAttendanceMatchedforemployee(
+                    employee.employeeId,
+                    date,
+                  ),
                 );
               });
             } else {
@@ -275,7 +319,7 @@ export class MonthattendanceComponent implements OnInit {
       (error: any) => {
         this.apiLoading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
 

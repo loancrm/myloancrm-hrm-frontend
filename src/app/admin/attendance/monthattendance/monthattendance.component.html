@@ -102,7 +102,7 @@
                 [readonlyInput]="true"
                 [style]="{ width: '100%' }"
                 (ngModelChange)="onDateChange($event)"
-                [placeholder]="'Select Month and Year'"
+                [placeholder]="'Select Salary Month'"
               ></p-calendar>
               <img
                 src="../../../assets/images/icons/calendar.svg"
@@ -112,6 +112,9 @@
               />
             </div>
           </div>
+          <small class="text-muted d-block mt-1" *ngIf="periodRangeLabel">
+            Period: {{ periodRangeLabel }}
+          </small>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
           <div class="d-flex">
@@ -143,6 +146,7 @@
         <th class="text-nowrap">Total Present</th>
         <th class="text-nowrap">Half Day</th>
         <th>Late</th>
+        <th>Early Logout</th>
         <th>Absent</th>
         <ng-container *ngFor="let date of monthDates">
           <th>{{ date | date: "dd" }}</th>
@@ -206,6 +210,9 @@
         </td>
         <td>
           {{ countAttendanceStatus(employee.employeeId, "Late") }}
+        </td>
+        <td>
+          {{ countAttendanceStatus(employee.employeeId, "Early-logout") }}
         </td>
         <td>
           {{ countAttendanceStatus(employee.employeeId, "Absent") }}
@@ -318,6 +325,18 @@
                   class="text-warning"
                 ></lucide-icon>
               </ng-container>
+              <ng-container *ngSwitchCase="'Early-logout'">
+                <lucide-icon
+                  name="log-out"
+                  size="20"
+                  pTooltipPosition="top"
+                  title="Early Logout"
+                  pTooltip="{{
+                    getCheckinTimeCheckOutTime(employee.employeeId, date)
+                  }}"
+                  class="text-danger"
+                ></lucide-icon>
+              </ng-container>
               <span *ngSwitchDefault>{{
                 getAttendanceForDate(employee.employeeId, date)
               }}</span>
@@ -390,6 +409,14 @@
     class="text-warning"
   ></lucide-icon>
   Late |
+  <lucide-icon
+    name="log-out"
+    size="20"
+    title="Early Logout"
+    pTooltip="Early Logout"
+    class="text-danger"
+  ></lucide-icon>
+  Early Logout |
   <!-- <i class="fa fa-circle-xmark text-danger" title="Absent"></i> -->
   <!-- <img src="../../../../assets/images/onleaveicon.svg" alt="" /> -->
   <lucide-icon

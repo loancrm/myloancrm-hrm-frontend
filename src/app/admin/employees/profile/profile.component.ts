@@ -15,6 +15,11 @@ import { ConfirmationService } from 'primeng/api';
 import { FileUploadComponent } from '../../file-upload/file-upload.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { CompanySettingsService } from 'src/app/services/company-settings.service';
+import {
+  OfficePayrollPolicy,
+  OfficePayrollPolicyService,
+} from 'src/app/services/office-payroll-policy.service';
 
 @Component({
   selector: 'app-profile',
@@ -72,6 +77,7 @@ export class ProfileComponent implements OnInit {
     Present: 0,
     Absent: 0,
     Late: 0,
+    'Early-logout': 0,
     'Half-day': 0,
   };
   capabilities: any;
@@ -79,6 +85,8 @@ export class ProfileComponent implements OnInit {
   terminationForm: UntypedFormGroup;
   currentYear: number;
   userType: any;
+  officePolicy: OfficePayrollPolicy;
+  periodRangeLabel: string = '';
   constructor(
     private location: Location,
     private confirmationService: ConfirmationService,
@@ -90,13 +98,17 @@ export class ProfileComponent implements OnInit {
     private employeesService: EmployeesService,
     private dialogService: DialogService,
     private dateTimeProcessor: DateTimeProcessorService,
+    private companySettingsService: CompanySettingsService,
+    private officePayrollPolicyService: OfficePayrollPolicyService,
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
+    this.officePolicy = this.officePayrollPolicyService.defaults;
     this.selectedDate = this.moment(new Date()).toDate();
     this.month = this.selectedDate.getMonth() + 1;
     this.year = this.selectedDate.getFullYear();
     this.selectedDate = this.moment(new Date()).format('YYYY-MM');
     this.displayMonth = this.moment(new Date()).format('MMMM YYYY');
+    this.updatePeriodLabel();
     this.capabilities = this.employeesService.getUserRbac();
     this.userType = localStorageService.getItemFromLocalStorage('userType');
     this.breadCrumbItems = [
@@ -120,6 +132,7 @@ export class ProfileComponent implements OnInit {
   }
   ngOnInit(): void {
     this.currentYear = this.employeesService.getCurrentYear();
+    this.loadOfficePolicy();
     let userDetails =
       this.localStorageService.getItemFromLocalStorage('userDetails');
     this.userDetails = userDetails.user;
@@ -352,8 +365,45 @@ export class ProfileComponent implements OnInit {
     this.displayMonth = this.moment(event).format('MMMM YYYY');
     this.month = selectedDate.getMonth() + 1;
     this.year = selectedDate.getFullYear();
+    this.selectedDate = this.moment(event).format('YYYY-MM');
+    this.updatePeriodLabel();
     this.getAttendance();
   }
+
+  loadOfficePolicy() {
+    this.companySettingsService.getCompanySettings().subscribe(
+      (response: any) => {
+        this.officePolicy = this.officePayrollPolicyService.normalize(
+          response || {},
+        );
+        this.updatePeriodLabel();
+        if (this.attendance?.length) {
+          this.getAttendanceCountsByMonth(
+            this.attendance,
+            this.month,
+            this.year,
+            this.employeeId,
+          );
+        }
+      },
+      () => {
+        this.officePolicy = this.officePayrollPolicyService.defaults;
+        this.updatePeriodLabel();
+      },
+    );
+  }
+
+  updatePeriodLabel() {
+    const payrollMonth = this.moment(
+      this.selectedDate || this.displayMonth,
+    ).format('YYYY-MM');
+    this.periodRangeLabel = this.officePayrollPolicyService.formatPeriodLabel(
+      this.moment,
+      payrollMonth,
+      this.officePolicy,
+    );
+  }
+
   getAttendance() {
     this.loading = true;
     this.employeesService.getAttendance().subscribe(
@@ -378,22 +428,36 @@ export class ProfileComponent implements OnInit {
       Present: 0,
       Absent: 0,
       Late: 0,
+      'Early-logout': 0,
       'Half-day': 0,
     };
+    const payrollMonth = this.moment(
+      `${year}-${String(month).padStart(2, '0')}`,
+      'YYYY-MM',
+    ).format('YYYY-MM');
+    const period = this.officePayrollPolicyService.getPayrollPeriod(
+      this.moment,
+      payrollMonth,
+      this.officePolicy,
+    );
     attendanceRecords.forEach((record) => {
-      const attendanceDate = new Date(record.attendanceDate);
-      const recordMonth = attendanceDate.getMonth() + 1;
-      const recordYear = attendanceDate.getFullYear();
-      if (recordMonth === month && recordYear === year) {
-        const employeeAttendance = record?.attendanceData.find(
-          (data) => data.employeeId == employeeId,
-        );
-        if (
-          employeeAttendance &&
-          this.attendanceStatusCounts[employeeAttendance.status] !== undefined
-        ) {
-          this.attendanceStatusCounts[employeeAttendance.status]++;
-        }
+      if (
+        !this.officePayrollPolicyService.isAttendanceInPeriod(
+          record.attendanceDate,
+          period,
+          this.moment,
+        )
+      ) {
+        return;
+      }
+      const employeeAttendance = record?.attendanceData.find(
+        (data) => data.employeeId == employeeId,
+      );
+      if (
+        employeeAttendance &&
+        this.attendanceStatusCounts[employeeAttendance.status] !== undefined
+      ) {
+        this.attendanceStatusCounts[employeeAttendance.status]++;
       }
     });
   }

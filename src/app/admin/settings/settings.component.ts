@@ -13,6 +13,14 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import {
+  OfficePayrollPolicyService,
+  ProfessionalTaxTier,
+} from 'src/app/services/office-payroll-policy.service';
+import {
+  IncentiveCalcConfig,
+  IncentivePolicyService,
+} from 'src/app/services/incentive-policy.service';
 
 @Component({
   selector: 'app-settings',
@@ -27,6 +35,7 @@ export class SettingsComponent implements OnInit {
   branches: any = [];
   companySettings: any = {};
   companySettingsForm: UntypedFormGroup;
+  officePayrollForm: UntypedFormGroup;
   showBranchDialog: boolean = false;
   branchForm: UntypedFormGroup;
   actionType: string = 'create';
@@ -46,9 +55,18 @@ export class SettingsComponent implements OnInit {
   offerLetterTemplates: any[] = [];
   relievingTemplates: any[] = [];
   hikeLetterTemplates: any[] = [];
+  payrollCycleOptions = [
+    { label: 'Full Calendar Month (1st – Month End)', value: 'calendar_month' },
+    { label: 'Custom Cycle (e.g. 26th → Next 25th)', value: 'custom_day' },
+  ];
+  incentivePatternOptions = [
+    { label: 'Tiered % (min amount slabs)', value: 'tiered' },
+    { label: 'Flat % of disbursed amount', value: 'flat' },
+  ];
+  incentiveConfig: IncentiveCalcConfig;
+  professionalTaxTiers: ProfessionalTaxTier[] = [];
+  ipRestrictionEnabled: boolean = true;
 
-
-  
   constructor(
     private location: Location,
     private router: Router,
@@ -58,7 +76,9 @@ export class SettingsComponent implements OnInit {
     private companySettingsService: CompanySettingsService,
     private toastService: ToastService,
     private formBuilder: UntypedFormBuilder,
-    private employeesService: EmployeesService
+    private employeesService: EmployeesService,
+    private officePayrollPolicyService: OfficePayrollPolicyService,
+    private incentivePolicyService: IncentivePolicyService,
   ) {
     this.breadCrumbItems = [
       {
@@ -76,40 +96,50 @@ export class SettingsComponent implements OnInit {
     // Double-check if user has showSettings capability (guard should handle this, but extra safety)
     const capabilities: any = this.employeesService.getUserRbac();
     if (!capabilities?.showSettings) {
-      this.toastService.showError('You do not have permission to access Settings.');
-      this.router.navigate(['/user/dashboard'], { queryParams: { v: this.version } });
+      this.toastService.showError(
+        'You do not have permission to access Settings.',
+      );
+      this.router.navigate(['/user/dashboard'], {
+        queryParams: { v: this.version },
+      });
       return;
     }
-    
+
     this.loadBranches();
     this.loadCompanySettings();
-      //   this.employeesService.getTemplatesForSelection().subscribe(res => {
-      //   this.offerLetterTemplates = res.offerLetter || [];
-      //   this.relievingTemplates = res.relievingLetter || [];
-      // });
-      this.employeesService.getAllTemplates().subscribe((res: any) => {
-        
+    //   this.employeesService.getTemplatesForSelection().subscribe(res => {
+    //   this.offerLetterTemplates = res.offerLetter || [];
+    //   this.relievingTemplates = res.relievingLetter || [];
+    // });
+    this.employeesService.getAllTemplates().subscribe((res: any) => {
       this.offerLetterTemplates = res.filter(
-        t => t.templateType === 'offerLetter' && t.status === 1
-        
+        (t) => t.templateType === 'offerLetter' && t.status === 1,
       );
 
       this.relievingTemplates = res.filter(
-        t => t.templateType === 'relievingLetter' && t.status === 1
+        (t) => t.templateType === 'relievingLetter' && t.status === 1,
       );
 
       this.hikeLetterTemplates = res.filter(
-        t => t.templateType === 'hikeLetter' && t.status === 1
+        (t) => t.templateType === 'hikeLetter' && t.status === 1,
       );
 
       // ✅ ADD EXACTLY HERE
-      this.selectedOfferTemplate = this.companySettings?.offerLetterTemplateId || null;
-      this.selectedRelievingTemplate = this.companySettings?.relievingLetterTemplateId || null;
-      this.selectedHikeTemplate = this.companySettings?.hikeLetterTemplateId || null;
+      this.selectedOfferTemplate =
+        this.companySettings?.offerLetterTemplateId || null;
+      this.selectedRelievingTemplate =
+        this.companySettings?.relievingLetterTemplateId || null;
+      this.selectedHikeTemplate =
+        this.companySettings?.hikeLetterTemplateId || null;
     });
   }
 
   initializeForms() {
+    const defaults = this.officePayrollPolicyService.defaults;
+    this.professionalTaxTiers = defaults.professionalTaxTiers.map((t) => ({
+      ...t,
+    }));
+    this.incentiveConfig = this.incentivePolicyService.normalize(null);
     this.companySettingsForm = this.formBuilder.group({
       companyName: [''],
       companyPhone: [''],
@@ -125,6 +155,33 @@ export class SettingsComponent implements OnInit {
       hrEmail: [''],
     });
 
+    this.officePayrollForm = this.formBuilder.group({
+      officeStartTime: [defaults.officeStartTime, Validators.required],
+      officeEndTime: [defaults.officeEndTime, Validators.required],
+      graceMinutes: [
+        defaults.graceMinutes,
+        [Validators.required, Validators.min(0), Validators.max(180)],
+      ],
+      latesPerLop: [
+        defaults.latesPerLop,
+        [Validators.required, Validators.min(1), Validators.max(31)],
+      ],
+      payrollCycleType: [defaults.payrollCycleType, Validators.required],
+      payrollCycleStartDay: [
+        defaults.payrollCycleStartDay,
+        [Validators.required, Validators.min(1), Validators.max(28)],
+      ],
+      ipRestrictionEnabled: [true],
+      casualLeavesPerMonth: [
+        defaults.casualLeavesPerMonth,
+        [Validators.required, Validators.min(0), Validators.max(31)],
+      ],
+      casualLeaveAfterMonths: [
+        defaults.casualLeaveAfterMonths,
+        [Validators.required, Validators.min(0), Validators.max(60)],
+      ],
+    });
+
     this.branchForm = this.formBuilder.group({
       displayName: ['', Validators.required],
       name: ['', Validators.required],
@@ -132,18 +189,39 @@ export class SettingsComponent implements OnInit {
     });
   }
 
+  get lateCutoffPreview(): string {
+    const start =
+      this.officePayrollForm?.get('officeStartTime')?.value || '10:00';
+    const grace = Number(
+      this.officePayrollForm?.get('graceMinutes')?.value || 0,
+    );
+    const [h, m] = start.split(':').map(Number);
+    const total = h * 60 + m + (Number.isFinite(grace) ? grace : 0);
+    const hh = String(Math.floor(total / 60) % 24).padStart(2, '0');
+    const mm = String(total % 60).padStart(2, '0');
+    return `${hh}:${mm}`;
+  }
+
+  get isCustomPayrollCycle(): boolean {
+    return (
+      this.officePayrollForm?.get('payrollCycleType')?.value === 'custom_day'
+    );
+  }
+
   loadBranches() {
     this.loading = true;
-    this.branchesService.getBranches({ 'branchInternalStatus-eq': 1 }).subscribe(
-      (response: any) => {
-        this.branches = response || [];
-        this.loading = false;
-      },
-      (error: any) => {
-        this.loading = false;
-        this.toastService.showError(error);
-      }
-    );
+    this.branchesService
+      .getBranches({ 'branchInternalStatus-eq': 1 })
+      .subscribe(
+        (response: any) => {
+          this.branches = response || [];
+          this.loading = false;
+        },
+        (error: any) => {
+          this.loading = false;
+          this.toastService.showError(error);
+        },
+      );
   }
 
   loadCompanySettings() {
@@ -168,23 +246,29 @@ export class SettingsComponent implements OnInit {
         if (this.companySettings.companyLogo) {
           this.logoPreview = this.companySettings.companyLogo;
         }
-        
+
         // Load attendance report emails
         if (this.companySettings.attendanceReportEmails) {
           // Check if it's already an array (parsed by parseNestedJSON middleware)
           if (Array.isArray(this.companySettings.attendanceReportEmails)) {
-            this.attendanceReportEmails = this.companySettings.attendanceReportEmails;
-          } else if (typeof this.companySettings.attendanceReportEmails === 'string') {
+            this.attendanceReportEmails =
+              this.companySettings.attendanceReportEmails;
+          } else if (
+            typeof this.companySettings.attendanceReportEmails === 'string'
+          ) {
             // It's a string, try to parse it
             try {
-              const parsed = JSON.parse(this.companySettings.attendanceReportEmails);
+              const parsed = JSON.parse(
+                this.companySettings.attendanceReportEmails,
+              );
               this.attendanceReportEmails = Array.isArray(parsed) ? parsed : [];
             } catch (e) {
               // If not JSON, try comma-separated
-              this.attendanceReportEmails = this.companySettings.attendanceReportEmails
-                .split(',')
-                .map((email: string) => email.trim())
-                .filter((email: string) => email.length > 0);
+              this.attendanceReportEmails =
+                this.companySettings.attendanceReportEmails
+                  .split(',')
+                  .map((email: string) => email.trim())
+                  .filter((email: string) => email.length > 0);
             }
           } else {
             this.attendanceReportEmails = [];
@@ -192,23 +276,29 @@ export class SettingsComponent implements OnInit {
         } else {
           this.attendanceReportEmails = [];
         }
-        
+
         // Load employee update emails
         if (this.companySettings.employeeUpdateEmails) {
           // Check if it's already an array (parsed by parseNestedJSON middleware)
           if (Array.isArray(this.companySettings.employeeUpdateEmails)) {
-            this.employeeUpdateEmails = this.companySettings.employeeUpdateEmails;
-          } else if (typeof this.companySettings.employeeUpdateEmails === 'string') {
+            this.employeeUpdateEmails =
+              this.companySettings.employeeUpdateEmails;
+          } else if (
+            typeof this.companySettings.employeeUpdateEmails === 'string'
+          ) {
             // It's a string, try to parse it
             try {
-              const parsed = JSON.parse(this.companySettings.employeeUpdateEmails);
+              const parsed = JSON.parse(
+                this.companySettings.employeeUpdateEmails,
+              );
               this.employeeUpdateEmails = Array.isArray(parsed) ? parsed : [];
             } catch (e) {
               // If not JSON, try comma-separated
-              this.employeeUpdateEmails = this.companySettings.employeeUpdateEmails
-                .split(',')
-                .map((email: string) => email.trim())
-                .filter((email: string) => email.length > 0);
+              this.employeeUpdateEmails =
+                this.companySettings.employeeUpdateEmails
+                  .split(',')
+                  .map((email: string) => email.trim())
+                  .filter((email: string) => email.length > 0);
             }
           } else {
             this.employeeUpdateEmails = [];
@@ -216,12 +306,133 @@ export class SettingsComponent implements OnInit {
         } else {
           this.employeeUpdateEmails = [];
         }
+
+        const policy = this.officePayrollPolicyService.normalize(
+          this.companySettings,
+        );
+        this.professionalTaxTiers = policy.professionalTaxTiers.map((t) => ({
+          ...t,
+        }));
+        this.officePayrollForm.patchValue({
+          ...policy,
+          ipRestrictionEnabled:
+            this.companySettings.ipRestrictionEnabled === 0 ||
+            this.companySettings.ipRestrictionEnabled === false ||
+            this.companySettings.ipRestrictionEnabled === '0'
+              ? false
+              : true,
+        });
+        this.ipRestrictionEnabled =
+          this.officePayrollForm.get('ipRestrictionEnabled')?.value !== false;
+        this.incentiveConfig =
+          this.incentivePolicyService.normalizeFromSettings(
+            this.companySettings,
+          );
         this.loading = false;
       },
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
+    );
+  }
+
+  addIncentiveTier() {
+    this.incentiveConfig.tiers = [
+      ...(this.incentiveConfig.tiers || []),
+      this.incentivePolicyService.createEmptyTier(),
+    ];
+  }
+
+  incentiveTierRewardOptions = [
+    { label: 'Rate (%)', value: 'rate' },
+    { label: 'Fixed Amount (₹)', value: 'fixed' },
+  ];
+
+  removeIncentiveTier(index: number) {
+    this.incentiveConfig.tiers = this.incentiveConfig.tiers.filter(
+      (_, i) => i !== index,
+    );
+  }
+
+  saveIncentiveSettings() {
+    const config = this.incentivePolicyService.normalize(this.incentiveConfig);
+    if (
+      config.pattern === 'tiered' &&
+      (!config.tiers || !config.tiers.length)
+    ) {
+      this.toastService.showError('Add at least one incentive tier');
+      return;
+    }
+    this.loading = true;
+    this.companySettingsService
+      .updateCompanySettings({
+        incentiveCalcConfig: this.incentivePolicyService.toStorageJson(config),
+      })
+      .subscribe(
+        () => {
+          this.loading = false;
+          this.toastService.showSuccess(
+            'Incentive calculation settings updated',
+          );
+          this.loadCompanySettings();
+        },
+        (error: any) => {
+          this.loading = false;
+          this.toastService.showError(error);
+        },
+      );
+  }
+
+  addProfessionalTaxTier() {
+    this.professionalTaxTiers = [
+      ...(this.professionalTaxTiers || []),
+      { minSalary: 0, taxAmount: 0 },
+    ];
+  }
+
+  removeProfessionalTaxTier(index: number) {
+    this.professionalTaxTiers = this.professionalTaxTiers.filter(
+      (_, i) => i !== index,
+    );
+  }
+
+  saveOfficePayrollSettings() {
+    if (this.officePayrollForm.invalid) {
+      this.toastService.showError(
+        'Please fill all office & payroll policy fields correctly',
+      );
+      return;
+    }
+    const formValue = this.officePayrollForm.value;
+    const payload = {
+      officeStartTime: formValue.officeStartTime,
+      officeEndTime: formValue.officeEndTime,
+      graceMinutes: Number(formValue.graceMinutes),
+      latesPerLop: Number(formValue.latesPerLop),
+      payrollCycleType: formValue.payrollCycleType,
+      payrollCycleStartDay: Number(formValue.payrollCycleStartDay),
+      ipRestrictionEnabled: formValue.ipRestrictionEnabled ? 1 : 0,
+      casualLeavesPerMonth: Number(formValue.casualLeavesPerMonth),
+      casualLeaveAfterMonths: Number(formValue.casualLeaveAfterMonths),
+      professionalTaxConfig:
+        this.officePayrollPolicyService.toProfessionalTaxStorageJson(
+          this.professionalTaxTiers,
+        ),
+    };
+    this.loading = true;
+    this.companySettingsService.updateCompanySettings(payload).subscribe(
+      () => {
+        this.loading = false;
+        this.toastService.showSuccess(
+          'Office & payroll policy updated successfully',
+        );
+        this.loadCompanySettings();
+      },
+      (error: any) => {
+        this.loading = false;
+        this.toastService.showError(error);
+      },
     );
   }
 
@@ -233,13 +444,15 @@ export class SettingsComponent implements OnInit {
         .subscribe(
           (response: any) => {
             this.loading = false;
-            this.toastService.showSuccess('Company settings updated successfully');
+            this.toastService.showSuccess(
+              'Company settings updated successfully',
+            );
             this.loadCompanySettings();
           },
           (error: any) => {
             this.loading = false;
             this.toastService.showError(error);
-          }
+          },
         );
     }
   }
@@ -269,7 +482,7 @@ export class SettingsComponent implements OnInit {
     if (this.branchForm.valid) {
       this.loading = true;
       const branchData = this.branchForm.value;
-      
+
       if (this.actionType === 'create') {
         this.branchesService.createBranch(branchData).subscribe(
           (response: any) => {
@@ -281,7 +494,7 @@ export class SettingsComponent implements OnInit {
           (error: any) => {
             this.loading = false;
             this.toastService.showError(error);
-          }
+          },
         );
       } else if (this.actionType === 'update' && this.selectedBranch) {
         this.branchesService
@@ -296,7 +509,7 @@ export class SettingsComponent implements OnInit {
             (error: any) => {
               this.loading = false;
               this.toastService.showError(error);
-            }
+            },
           );
       }
     }
@@ -313,7 +526,7 @@ export class SettingsComponent implements OnInit {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -326,7 +539,9 @@ export class SettingsComponent implements OnInit {
     if (file) {
       // Validate file type
       if (!file.type.match(/image\/(png|jpg|jpeg|gif|webp)/)) {
-        this.toastService.showError('Please select a valid image file (PNG, JPG, JPEG, GIF, or WEBP)');
+        this.toastService.showError(
+          'Please select a valid image file (PNG, JPG, JPEG, GIF, or WEBP)',
+        );
         return;
       }
       // Validate file size (max 5MB)
@@ -353,94 +568,106 @@ export class SettingsComponent implements OnInit {
     // Get accountId from companySettings - required for file upload
     const accountId = this.companySettings?.accountId;
     if (!accountId) {
-      this.toastService.showError('Account ID not found. Please refresh and try again.');
+      this.toastService.showError(
+        'Account ID not found. Please refresh and try again.',
+      );
       return;
     }
 
     this.uploadingLogo = true;
     const formData = new FormData();
     formData.append('files', this.logoFile);
-    
+
     // Upload to file service: https://hrfiles.thefintalk.in/hrfiles?type=companyLogo&employeeId={accountId}
     // Using 'companyLogo' as type and accountId as the identifier
-    this.employeesService.uploadFiles(formData, accountId, 'companyLogo').subscribe(
-      (response: any) => {
-        if (response && response.links && response.links.length > 0) {
-          const logoUrl = response.links[0];
-          // Update company settings with logo URL
-          this.companySettingsForm.patchValue({ companyLogo: logoUrl });
-          // Save the logo URL to company settings in database
-          this.loading = true;
+    this.employeesService
+      .uploadFiles(formData, accountId, 'companyLogo')
+      .subscribe(
+        (response: any) => {
+          if (response && response.links && response.links.length > 0) {
+            const logoUrl = response.links[0];
+            // Update company settings with logo URL
+            this.companySettingsForm.patchValue({ companyLogo: logoUrl });
+            // Save the logo URL to company settings in database
+            this.loading = true;
+            this.companySettingsService
+              .updateCompanySettings({ companyLogo: logoUrl })
+              .subscribe(
+                (updateResponse: any) => {
+                  this.loading = false;
+                  this.uploadingLogo = false;
+                  this.toastService.showSuccess('Logo uploaded successfully');
+                  this.loadCompanySettings(); // Reload to get updated settings
+                },
+                (error: any) => {
+                  this.loading = false;
+                  this.uploadingLogo = false;
+                  this.toastService.showError(error);
+                },
+              );
+          } else {
+            this.uploadingLogo = false;
+            this.toastService.showError(
+              'Failed to upload logo - no URL returned',
+            );
+          }
+        },
+        (error: any) => {
+          this.uploadingLogo = false;
+          this.toastService.showError(error);
+        },
+      );
+  }
+
+  removeLogo() {
+    if (!this.companySettings?.companyLogo) return;
+
+    // Extract relative path starting after domain
+    const relativePath = this.companySettings.companyLogo.split(
+      'hrfiles.thefintalk.in/',
+    )[1];
+
+    this.loading = true;
+    this.uploadingLogo = true;
+
+    this.employeesService.deleteFile(relativePath).subscribe(
+      (res: any) => {
+        if (res.message === 'File deleted successfully.') {
+          this.logoFile = null;
+          this.logoPreview = null;
+          this.companySettingsForm.patchValue({ companyLogo: '' });
+
+          // Update DB
           this.companySettingsService
-            .updateCompanySettings({ companyLogo: logoUrl })
+            .updateCompanySettings({ companyLogo: '' })
             .subscribe(
-              (updateResponse: any) => {
+              () => {
                 this.loading = false;
                 this.uploadingLogo = false;
-                this.toastService.showSuccess('Logo uploaded successfully');
-                this.loadCompanySettings(); // Reload to get updated settings
+                this.toastService.showSuccess('Logo removed successfully');
+                this.loadCompanySettings();
               },
               (error: any) => {
                 this.loading = false;
                 this.uploadingLogo = false;
                 this.toastService.showError(error);
-              }
+              },
             );
         } else {
+          this.loading = false;
           this.uploadingLogo = false;
-          this.toastService.showError('Failed to upload logo - no URL returned');
+          this.toastService.showError(
+            res.error || 'Failed to delete logo on server',
+          );
         }
       },
       (error: any) => {
-        this.uploadingLogo = false;
-        this.toastService.showError(error);
-      }
-    );
-  }
-
- removeLogo() {
-  if (!this.companySettings?.companyLogo) return;
-
-  // Extract relative path starting after domain
-  const relativePath = this.companySettings.companyLogo.split('hrfiles.thefintalk.in/')[1];
-
-  this.loading = true;
-  this.uploadingLogo = true;
-
-  this.employeesService.deleteFile(relativePath).subscribe(
-    (res: any) => {
-      if (res.message === 'File deleted successfully.') {
-        this.logoFile = null;
-        this.logoPreview = null;
-        this.companySettingsForm.patchValue({ companyLogo: '' });
-
-        // Update DB
-        this.companySettingsService.updateCompanySettings({ companyLogo: '' }).subscribe(
-          () => {
-            this.loading = false;
-            this.uploadingLogo = false;
-            this.toastService.showSuccess('Logo removed successfully');
-            this.loadCompanySettings();
-          },
-          (error: any) => {
-            this.loading = false;
-            this.uploadingLogo = false;
-            this.toastService.showError(error);
-          }
-        );
-      } else {
         this.loading = false;
         this.uploadingLogo = false;
-        this.toastService.showError(res.error || 'Failed to delete logo on server');
-      }
-    },
-    (error: any) => {
-      this.loading = false;
-      this.uploadingLogo = false;
-      this.toastService.showError(error || 'Failed to delete logo on server');
-    }
-  );
-}
+        this.toastService.showError(error || 'Failed to delete logo on server');
+      },
+    );
+  }
 
   addAttendanceReportEmail() {
     if (this.newEmail && this.newEmail.trim()) {
@@ -463,7 +690,9 @@ export class SettingsComponent implements OnInit {
   }
 
   removeAttendanceReportEmail(email: string) {
-    this.attendanceReportEmails = this.attendanceReportEmails.filter(e => e !== email);
+    this.attendanceReportEmails = this.attendanceReportEmails.filter(
+      (e) => e !== email,
+    );
     this.saveAttendanceReportEmails();
   }
 
@@ -475,13 +704,15 @@ export class SettingsComponent implements OnInit {
       .subscribe(
         (response: any) => {
           this.loading = false;
-          this.toastService.showSuccess('Attendance report emails updated successfully');
+          this.toastService.showSuccess(
+            'Attendance report emails updated successfully',
+          );
           this.loadCompanySettings();
         },
         (error: any) => {
           this.loading = false;
           this.toastService.showError(error);
-        }
+        },
       );
   }
 
@@ -506,7 +737,9 @@ export class SettingsComponent implements OnInit {
   }
 
   removeEmployeeUpdateEmail(email: string) {
-    this.employeeUpdateEmails = this.employeeUpdateEmails.filter(e => e !== email);
+    this.employeeUpdateEmails = this.employeeUpdateEmails.filter(
+      (e) => e !== email,
+    );
     this.saveEmployeeUpdateEmails();
   }
 
@@ -518,105 +751,108 @@ export class SettingsComponent implements OnInit {
       .subscribe(
         (response: any) => {
           this.loading = false;
-          this.toastService.showSuccess('Employee update emails updated successfully');
+          this.toastService.showSuccess(
+            'Employee update emails updated successfully',
+          );
           this.loadCompanySettings();
         },
         (error: any) => {
           this.loading = false;
           this.toastService.showError(error);
-        }
+        },
       );
   }
 
   saveEmailCredentials() {
-    if (this.companySettingsForm.get('email')?.value && this.companySettingsForm.get('appPassword')?.value) {
+    if (
+      this.companySettingsForm.get('email')?.value &&
+      this.companySettingsForm.get('appPassword')?.value
+    ) {
       this.loading = true;
       const emailData = {
         email: this.companySettingsForm.get('email')?.value,
         appPassword: this.companySettingsForm.get('appPassword')?.value,
       };
-      this.companySettingsService
-        .updateCompanySettings(emailData)
-        .subscribe(
-          (response: any) => {
-            this.loading = false;
-            this.toastService.showSuccess('Email credentials saved successfully');
-            // Clear password field after saving
-            this.companySettingsForm.patchValue({ appPassword: '' });
-            this.loadCompanySettings();
-          },
-          (error: any) => {
-            this.loading = false;
-            this.toastService.showError(error);
-          }
-        );
+      this.companySettingsService.updateCompanySettings(emailData).subscribe(
+        (response: any) => {
+          this.loading = false;
+          this.toastService.showSuccess('Email credentials saved successfully');
+          // Clear password field after saving
+          this.companySettingsForm.patchValue({ appPassword: '' });
+          this.loadCompanySettings();
+        },
+        (error: any) => {
+          this.loading = false;
+          this.toastService.showError(error);
+        },
+      );
     } else {
       this.toastService.showError('Please enter both email and app password');
     }
   }
-//   goToCustomTemplate() {
-//   this.router.navigate(['/user/customtemplate']);
-// }
-goToCustomTemplate() {
-  this.routingService.handleRoute('settings/customtemplate', null);
-}
-// saveTemplateSelection(type: string) {
-//   const templateId =
-//     type === 'offerLetter'
-//       ? this.selectedOfferTemplate
-//       : this.selectedRelievingTemplate;
+  //   goToCustomTemplate() {
+  //   this.router.navigate(['/user/customtemplate']);
+  // }
+  goToCustomTemplate() {
+    this.routingService.handleRoute('settings/customtemplate', null);
+  }
+  // saveTemplateSelection(type: string) {
+  //   const templateId =
+  //     type === 'offerLetter'
+  //       ? this.selectedOfferTemplate
+  //       : this.selectedRelievingTemplate;
 
-//   // 🔥 HARD GUARD — NO NULL ALLOWED
-//   if (!templateId) {
-//     this.toastService.showError('Please select a template');
-//     return;
-//   }
+  //   // 🔥 HARD GUARD — NO NULL ALLOWED
+  //   if (!templateId) {
+  //     this.toastService.showError('Please select a template');
+  //     return;
+  //   }
 
-//   this.employeesService.selectTemplate({
-//     templateId: templateId,   // ✅ always string
-//     templateType: type
-//   }).subscribe(() => {
-//     this.toastService.showSuccess('Template selected');
-//   });
-// }
-saveTemplateSelection(type: string) {
-  let templateId: string | null = null;
+  //   this.employeesService.selectTemplate({
+  //     templateId: templateId,   // ✅ always string
+  //     templateType: type
+  //   }).subscribe(() => {
+  //     this.toastService.showSuccess('Template selected');
+  //   });
+  // }
+  saveTemplateSelection(type: string) {
+    let templateId: string | null = null;
 
-  if (type === 'offerLetter') {
-    templateId = this.selectedOfferTemplate;
-  } else if (type === 'relievingLetter') {
-    templateId = this.selectedRelievingTemplate;
-  } else if (type === 'hikeLetter') {
-    templateId = this.selectedHikeTemplate;
+    if (type === 'offerLetter') {
+      templateId = this.selectedOfferTemplate;
+    } else if (type === 'relievingLetter') {
+      templateId = this.selectedRelievingTemplate;
+    } else if (type === 'hikeLetter') {
+      templateId = this.selectedHikeTemplate;
+    }
+
+    // 🔒 HARD GUARD
+    if (!templateId) {
+      this.toastService.showError('Please select a template');
+      return;
+    }
+
+    this.employeesService
+      .selectTemplate({
+        templateId: templateId,
+        templateType: type,
+      })
+      .subscribe(() => {
+        this.toastService.showSuccess('Template selected');
+      });
   }
 
-  // 🔒 HARD GUARD
-  if (!templateId) {
-    this.toastService.showError('Please select a template');
-    return;
-  }
+  // saveTemplateSelection(type: string) {
+  //   const templateId =
+  //     type === 'offerLetter'
+  //       ? this.selectedOfferTemplate
+  //       : this.selectedRelievingTemplate;
 
-  this.employeesService.selectTemplate({
-    templateId: templateId,
-    templateType: type
-  }).subscribe(() => {
-    this.toastService.showSuccess('Template selected');
-  });
+  //   this.employeesService.selectTemplate({
+  //     templateId,
+  //     templateType: type
+  //   }).subscribe(() => {
+  //     this.toastService.showSuccess('Template selected');
+  //   });
+  // }
 }
-
-// saveTemplateSelection(type: string) {
-//   const templateId =
-//     type === 'offerLetter'
-//       ? this.selectedOfferTemplate
-//       : this.selectedRelievingTemplate;
-
-//   this.employeesService.selectTemplate({
-//     templateId,
-//     templateType: type
-//   }).subscribe(() => {
-//     this.toastService.showSuccess('Template selected');
-//   });
-// }
-
-}
-

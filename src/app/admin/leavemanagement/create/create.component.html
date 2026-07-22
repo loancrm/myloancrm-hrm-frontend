@@ -45,8 +45,12 @@
             <div
               *ngFor="let field of formFields"
               [ngClass]="{
-                'col-md-12': field.controlName === 'reason',
-                'col-md-4': field.controlName !== 'reason'
+                'col-md-12':
+                  field.controlName === 'reason' ||
+                  field.controlName === 'leaveDocument',
+                'col-md-4':
+                  field.controlName !== 'reason' &&
+                  field.controlName !== 'leaveDocument'
               }"
               class="mt-2"
             >
@@ -111,6 +115,47 @@
                     [placeholder]="'Enter ' + field.label"
                     [cols]="30"
                   ></textarea>
+                  <div *ngSwitchCase="'file'">
+                    <small class="text-muted d-block mb-2" *ngIf="field.hint">{{
+                      field.hint
+                    }}</small>
+                    <button
+                      pButton
+                      type="button"
+                      icon="fa fa-cloud-arrow-up"
+                      class="p-button-secondary"
+                      (click)="uploadLeaveDocument()"
+                    >
+                      &nbsp;Upload {{ field.label }}
+                    </button>
+                    <div
+                      class="mt-2"
+                      *ngIf="selectedFiles.leaveDocument.links?.length"
+                    >
+                      <div
+                        class="d-flex align-items-center mb-2"
+                        *ngFor="
+                          let link of selectedFiles.leaveDocument.links;
+                          let i = index
+                        "
+                      >
+                        <a
+                          [href]="getFileUrl(link)"
+                          target="_blank"
+                          class="me-2"
+                        >
+                          View document {{ i + 1 }}
+                        </a>
+                        <button
+                          pButton
+                          type="button"
+                          icon="pi pi-trash"
+                          class="p-button-danger p-button-text p-button-sm"
+                          (click)="confirmDeleteLeaveDocument(i)"
+                        ></button>
+                      </div>
+                    </div>
+                  </div>
                 </ng-container>
               </div>
             </div>
@@ -151,3 +196,4 @@
     >. | All Rights Reserved
   </div>
 </footer>
+<p-confirmDialog></p-confirmDialog>

@@ -55,8 +55,9 @@
                     class="card p-3 shadow-sm pointer-cursor m-2 cards cardkname"
                     (click)="goToRoute(item.routerLink)"
                     [ngStyle]="{
-                      'background': cardStyles[i % cardStyles.length].bg,
-                      'border': '1px solid ' + cardStyles[i % cardStyles.length].border
+                      background: cardStyles[i % cardStyles.length].bg,
+                      border:
+                        '1px solid ' + cardStyles[i % cardStyles.length].border,
                     }"
                   >
                     <div class="d-flex justify-content-between">
@@ -69,10 +70,10 @@
                             {{ item.displayName | uppercase }}
                           </div>
                           <div
-                            class=" cardsdisplayname"
+                            class="cardsdisplayname"
                             *ngIf="capabilities.employee"
                           >
-                            {{ item.displayName  | uppercase}}
+                            {{ item.displayName | uppercase }}
                           </div>
                           <div
                             class="count-title"
@@ -104,7 +105,9 @@
                         /> -->
                         <lucide-icon
                           [name]="item.name"
-                          [ngStyle]="{ color: iconColors[i % iconColors.length] }"
+                          [ngStyle]="{
+                            color: iconColors[i % iconColors.length],
+                          }"
                         ></lucide-icon>
                       </div>
                     </div>
@@ -122,24 +125,24 @@
           <h4 class="attendance-heading">Today Attendance</h4>
           <div class="custom-calendar-wrapper position-relative">
             <p-calendar
-            #calendar
-            [(ngModel)]="selectedDate"
-            dateFormat="yy-mm-dd"
-            [showIcon]="false"
-            [style]="{ width: '200px' }"
-            appendTo="body"
-            [showButtonBar]="true"
-            [readonlyInput]="true"
-            (ngModelChange)="onDateChange($event)"
-            placeholder="Select a date"
-          >
-          </p-calendar>
-          <img
-            src="../../../assets/images/icons/calendar.svg"
-            alt="Calendar Icon"
-            class="calendar-custom-img"
-            (click)="calendar.toggle()"
-          />
+              #calendar
+              [(ngModel)]="selectedDate"
+              dateFormat="yy-mm-dd"
+              [showIcon]="false"
+              [style]="{ width: '200px' }"
+              appendTo="body"
+              [showButtonBar]="true"
+              [readonlyInput]="true"
+              (ngModelChange)="onDateChange($event)"
+              placeholder="Select a date"
+            >
+            </p-calendar>
+            <img
+              src="../../../assets/images/icons/calendar.svg"
+              alt="Calendar Icon"
+              class="calendar-custom-img"
+              (click)="calendar.toggle()"
+            />
           </div>
         </div>
         <div class="row mt-2 card-design">
@@ -147,7 +150,11 @@
             <div class="info-line">
               <span class="text-success">
                 <!-- <i class="fas fa-check"></i> -->
-                <img src="../../../assets/images/presenthrmicon.svg" alt="" class="presentimage"/>
+                <img
+                  src="../../../assets/images/presenthrmicon.svg"
+                  alt=""
+                  class="presentimage"
+                />
               </span>
               <div class="label d-flex justify-content-between">
                 TOTAL PRESENT<b>:&nbsp;</b>
@@ -157,7 +164,11 @@
             <div class="info-line">
               <span class="text-danger">
                 <!-- <i class="fas fa-xmark"></i> -->
-                <img src="../../../assets/images/onleaveicon.svg" alt="" class="leaveimage"/>
+                <img
+                  src="../../../assets/images/onleaveicon.svg"
+                  alt=""
+                  class="leaveimage"
+                />
               </span>
               <div class="label d-flex justify-content-between">
                 ON LEAVE<b>:&nbsp;</b>
@@ -169,7 +180,11 @@
             <div class="info-line">
               <span class="text-warning">
                 <!-- <i class="fas fa-circle-half-stroke"></i> -->
-                <img src="../../../assets/images/halfdayicon.svg" alt="" class="halfdayimage"/>
+                <img
+                  src="../../../assets/images/halfdayicon.svg"
+                  alt=""
+                  class="halfdayimage"
+                />
               </span>
               <div class="label d-flex justify-content-between">
                 HALF-DAY<b>:&nbsp;</b>
@@ -189,6 +204,18 @@
                 LATE LOGIN<b>:&nbsp;</b>
               </div>
               <div class="value">{{ totalLateCount }}</div>
+            </div>
+            <div class="info-line">
+              <lucide-icon
+                name="log-out"
+                size="20"
+                title="Early Logout"
+                class="text-danger"
+              ></lucide-icon>
+              <div class="label d-flex justify-content-between">
+                EARLY LOGOUT<b>:&nbsp;</b>
+              </div>
+              <div class="value">{{ totalEarlyLogoutCount }}</div>
             </div>
           </div>
         </div>
@@ -211,7 +238,7 @@
               'referenceNo',
               'customer.firstName',
               'partner.partnerName',
-              'status'
+              'status',
             ]"
             styleClass="p-datatable-customers absenttable"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Employees"
@@ -396,7 +423,10 @@
             </div>
           </div> -->
           <!-- <div class="attendance-container p-4 "> -->
-          <h3 class="attendance-heading text-center mb-3" style="color: #333333;">
+          <h3
+            class="attendance-heading text-center mb-3"
+            style="color: #333333"
+          >
             Mark Your Attendance
           </h3>
           <div
@@ -422,10 +452,16 @@
               [disabled]="checkInTime === null || checkOutTime !== null"
             ></button>
           </div>
+          <div
+            *ngIf="!checkIpAccess() && ipRestrictionEnabled"
+            class="text-center text-danger mt-2"
+          >
+            Check-in/out is blocked from this IP. Use an allowed office network,
+            or ask admin to disable IP restriction in Settings.
+          </div>
           <div class="details-container mt-4 p-3 rounded fw-bold">
             <div class="employee-info-line" *ngIf="status">
-              <span class="icon text-dark-emphasis"
-                >
+              <span class="icon text-dark-emphasis">
                 <i class="fa fa-user-check"></i>
               </span>
               <div
@@ -438,10 +474,8 @@
               </div>
             </div>
             <div class="employee-info-line" *ngIf="checkInTime">
-              <span class="icon text-success"
-                >
+              <span class="icon text-success">
                 <i class="fa fa-sign-in-alt"></i>
-
               </span>
               <div
                 class="text-success employee-label d-flex justify-content-between"
@@ -465,12 +499,31 @@
                 {{ checkOutTime }}
               </div>
             </div>
+            <div class="employee-info-line" *ngIf="reason">
+              <span class="icon text-warning"
+                ><i class="fa fa-comment-dots"></i
+              ></span>
+              <div
+                class="text-warning employee-label d-flex justify-content-between"
+              >
+                Reason<b>:&nbsp;</b>
+              </div>
+              <div class="employee-value text-warning">
+                {{ reason }}
+              </div>
+            </div>
             <div class="text-center mt-3" *ngIf="loggedHours">
               <!-- <span class="icon text-primary"><i class="fa fa-clock"></i></span> -->
-              <div class="text-primary-emphasis"  style="color: #535ab4 !important;">
+              <div
+                class="text-primary-emphasis"
+                style="color: #535ab4 !important"
+              >
                 Total Logged Hours<b>&nbsp;</b>
               </div>
-              <div class="loggedin-value mt-2 text-primary-emphasis"  style="color: #535ab4 !important;">
+              <div
+                class="loggedin-value mt-2 text-primary-emphasis"
+                style="color: #535ab4 !important"
+              >
                 {{ loggedHours }}
               </div>
             </div>
@@ -564,3 +617,54 @@
     </div>
   </footer>
 </div>
+
+<p-dialog
+  [(visible)]="attendanceReasonDialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [style]="{ width: '480px' }"
+  [header]="
+    attendanceReasonDialogType === 'checkIn'
+      ? 'Late Check In Reason'
+      : 'Early Logout Reason'
+  "
+  (onHide)="cancelAttendanceReasonDialog()"
+>
+  <p class="mb-3">{{ attendanceReasonDialogMessage }}</p>
+  <label class="fw-bold d-block mb-2">
+    Reason
+    <sup class="text-danger" *ngIf="attendanceReasonDialogRequiresReason"
+      >*</sup
+    >
+  </label>
+  <textarea
+    pInputTextarea
+    rows="4"
+    class="w-100 form-control"
+    [(ngModel)]="attendanceReasonInput"
+    [placeholder]="
+      attendanceReasonDialogType === 'checkIn'
+        ? 'Enter reason for late check-in'
+        : 'Enter reason for early logout'
+    "
+  ></textarea>
+  <div class="d-flex justify-content-end gap-2 mt-3">
+    <button
+      pButton
+      type="button"
+      label="Cancel"
+      class="p-button-secondary"
+      (click)="cancelAttendanceReasonDialog()"
+    ></button>
+    <button
+      pButton
+      type="button"
+      [label]="
+        attendanceReasonDialogType === 'checkIn' ? 'Check In' : 'Check Out'
+      "
+      class="p-button-primary"
+      (click)="confirmAttendanceReasonDialog()"
+    ></button>
+  </div>
+</p-dialog>

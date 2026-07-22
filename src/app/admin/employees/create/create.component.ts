@@ -416,7 +416,7 @@ export class CreateComponent {
         required: true,
       },
       {
-        label: 'Secondary Phone',
+        label: 'Emergency Contact',
         controlName: 'secondaryPhone',
         type: 'text',
         maxLength: 10,

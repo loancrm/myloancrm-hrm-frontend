@@ -6,6 +6,11 @@ import { ToastService } from 'src/app/services/toast.service';
 import { ActivatedRoute } from '@angular/router';
 import { DateTimeProcessorService } from 'src/app/services/date-time-processor.service';
 import { projectConstantsLocal } from 'src/app/constants/project-constants';
+import { CompanySettingsService } from 'src/app/services/company-settings.service';
+import {
+  OfficePayrollPolicy,
+  OfficePayrollPolicyService,
+} from 'src/app/services/office-payroll-policy.service';
 
 @Component({
   selector: 'app-create',
@@ -29,15 +34,19 @@ export class CreateComponent {
   attendanceId: any;
   attendanceOptions = projectConstantsLocal.ATTENDANCE_OPTIONS;
   currentYear: number;
+  officePolicy: OfficePayrollPolicy;
   constructor(
     private location: Location,
     private employeesService: EmployeesService,
     private routingService: RoutingService,
     private toastService: ToastService,
     private activatedRoute: ActivatedRoute,
-    private dateTimeProcessor: DateTimeProcessorService
+    private dateTimeProcessor: DateTimeProcessorService,
+    private companySettingsService: CompanySettingsService,
+    private officePayrollPolicyService: OfficePayrollPolicyService,
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
+    this.officePolicy = this.officePayrollPolicyService.defaults;
     this.activatedRoute.params.subscribe((params) => {
       if (params && params['id']) {
         this.attendanceId = params['id'];
@@ -46,8 +55,8 @@ export class CreateComponent {
         this.getAttendanceById(this.attendanceId)
           .then((data) => {
             if (data) {
-              (this.selectedDate = this.attendanceData?.attendanceDate),
-                this.getLeaves();
+              ((this.selectedDate = this.attendanceData?.attendanceDate),
+                this.getLeaves());
             }
           })
           .catch((error) => {
@@ -72,8 +81,32 @@ export class CreateComponent {
   }
   ngOnInit(): void {
     this.currentYear = this.employeesService.getCurrentYear();
+    this.loadOfficePolicy();
     this.loadEmployees(this.currentTableEvent);
   }
+
+  loadOfficePolicy() {
+    this.companySettingsService.getCompanySettings().subscribe(
+      (response: any) => {
+        this.officePolicy = this.officePayrollPolicyService.normalize(
+          response || {},
+        );
+        this.setDefaultAttendanceData();
+      },
+      () => {
+        this.officePolicy = this.officePayrollPolicyService.defaults;
+      },
+    );
+  }
+
+  get defaultCheckInTime(): string {
+    return this.officePolicy?.officeStartTime || '10:00';
+  }
+
+  get defaultCheckOutTime(): string {
+    return this.officePolicy?.officeEndTime || '18:30';
+  }
+
   getAttendanceById(filter = {}) {
     return new Promise((resolve, reject) => {
       this.loading = true;
@@ -90,7 +123,7 @@ export class CreateComponent {
             this.loading = false;
             resolve(false);
             this.toastService.showError(error);
-          }
+          },
         );
     });
   }
@@ -117,7 +150,7 @@ export class CreateComponent {
       },
       (error: any) => {
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -132,7 +165,7 @@ export class CreateComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   getLeaves(filter = {}) {
@@ -140,76 +173,33 @@ export class CreateComponent {
     const formattedDate = this.moment(this.selectedDate).format('YYYY-MM-DD');
     filter['leaveFrom-lte'] = formattedDate;
     filter['leaveTo-gte'] = formattedDate;
-    filter['leaveInternalStatus-or'] = "1,2";
+    filter['leaveInternalStatus-or'] = '1,2';
     this.employeesService.getLeaves(filter).subscribe(
       (response: any) => {
         this.leaves = response;
         this.loading = false;
         this.setDefaultAttendanceData();
         if (this.leaves && this.leaves.length > 0) {
-          this.toastService.showSuccess("Leaves Fetched Successfully");
+          this.toastService.showSuccess('Leaves Fetched Successfully');
         } else {
-          this.toastService.showInfo("No leaves Today");
+          this.toastService.showInfo('No leaves Today');
         }
       },
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
-  // setDefaultAttendanceData() {
-  //   const defaultCheckInTime = this.formatTime(new Date(0, 0, 0, 10, 0));
-  //   // const defaultCheckOutTime = this.formatTime(new Date(0, 0, 0, 18, 30));
-  //   if (this.actionType === 'create') {
-  //     this.employeeDetails = this.employees.map((employee) => ({
-  //       employeeId: employee.employeeId,
-  //       customEmployeeId: employee.customEmployeeId,
-  //       employeeName: employee.employeeName.trim(),
-  //       passPhoto: employee.passPhoto,
-  //       designationName: employee.designationName,
-  //       joiningDate: employee.joiningDate,
-  //       status: 'Present',
-  //       checkInTime: defaultCheckInTime,
-  //       checkOutTime: '',
-  //       reason: '',
-  //     }));
-  //   } else if (this.actionType === 'update') {
-  //     this.employeeDetails = this.employees
-  //       .filter((employee) =>
-  //         this.attendanceData?.attendanceData.some(
-  //           (att) => att.employeeId === employee.employeeId
-  //         )
-  //       )
-  //       .map((employee) => {
-  //         const attendance = this.attendanceData?.attendanceData.find(
-  //           (att) => att.employeeId === employee.employeeId
-  //         );
-  //         return {
-  //           employeeId: employee.employeeId,
-  //           customEmployeeId: employee.customEmployeeId,
-  //           employeeName: employee.employeeName.trim(),
-  //           passPhoto: employee.passPhoto,
-  //           designationName: employee.designationName,
-  //           joiningDate: employee.joiningDate,
-  //           status: attendance?.status,
-  //           checkInTime: attendance?.checkInTime,
-  //           checkOutTime: attendance?.checkOutTime,
-  //           reason: attendance?.reason,
-  //         };
-  //       });
-  //   }
-  // }
 
   setDefaultAttendanceData() {
-    const defaultCheckInTime = this.formatTime(new Date(0, 0, 0, 10, 0));
+    const defaultCheckInTime = this.defaultCheckInTime;
     if (this.actionType === 'create') {
       this.employeeDetails = this.employees.map((employee) => {
-        // Find leave record for the employee if today's date falls within their leave period
         const leaveRecord = this.leaves?.find(
-          (leave) => leave.employeeId === employee.employeeId
+          (leave) => leave.employeeId === employee.employeeId,
         );
-        return {
+        const row = {
           employeeId: employee.employeeId,
           customEmployeeId: employee.customEmployeeId,
           employeeName: employee.employeeName.trim(),
@@ -217,35 +207,39 @@ export class CreateComponent {
           designationName: employee.designationName,
           joiningDate: employee.joiningDate,
           status: leaveRecord
-            ? (leaveRecord.durationType == 'half-day'
+            ? leaveRecord.durationType == 'half-day'
               ? 'Half-day'
-              : 'Absent')
+              : 'Absent'
             : 'Present',
           checkInTime: leaveRecord
-            ? (leaveRecord.durationType == 'half-day'
+            ? leaveRecord.durationType == 'half-day'
               ? defaultCheckInTime
-              : '')
-            : defaultCheckInTime, // No check-in for leave
+              : ''
+            : defaultCheckInTime,
           checkOutTime: '',
           reason: leaveRecord ? leaveRecord.reason : '',
+          onLeave: !!leaveRecord,
         };
+        if (!leaveRecord) {
+          this.applyAttendanceRules(row, false);
+        }
+        return row;
       });
     } else if (this.actionType === 'update') {
       this.employeeDetails = this.employees
         .filter((employee) =>
           this.attendanceData?.attendanceData.some(
-            (att) => att.employeeId === employee.employeeId
-          )
+            (att) => att.employeeId === employee.employeeId,
+          ),
         )
         .map((employee) => {
           const attendance = this.attendanceData?.attendanceData.find(
-            (att) => att.employeeId === employee.employeeId
+            (att) => att.employeeId === employee.employeeId,
           );
-          // Check if employee is on leave today
           const leaveRecord = this.leaves?.find(
-            (leave) => leave.employeeId === employee.employeeId
+            (leave) => leave.employeeId === employee.employeeId,
           );
-          return {
+          const row = {
             employeeId: employee.employeeId,
             customEmployeeId: employee.customEmployeeId,
             employeeName: employee.employeeName.trim(),
@@ -253,36 +247,87 @@ export class CreateComponent {
             designationName: employee.designationName,
             joiningDate: employee.joiningDate,
             status: leaveRecord
-              ? (leaveRecord.durationType == 'half-day'
+              ? leaveRecord.durationType == 'half-day'
                 ? 'Half-day'
-                : 'Absent')
+                : 'Absent'
               : attendance?.status,
             checkInTime: leaveRecord
-              ? (leaveRecord.durationType == 'half-day'
-                ? (attendance?.checkInTime ? attendance?.checkInTime :defaultCheckInTime)
-                : '')
+              ? leaveRecord.durationType == 'half-day'
+                ? attendance?.checkInTime
+                  ? attendance?.checkInTime
+                  : defaultCheckInTime
+                : ''
               : attendance?.checkInTime,
             checkOutTime: attendance?.checkOutTime || '',
             reason: leaveRecord ? leaveRecord.reason : attendance?.reason || '',
+            onLeave: !!leaveRecord,
           };
+          return row;
         });
     }
   }
+
   updateAttendanceStatus(employee: any) {
     if (employee.status === 'Absent') {
       employee.checkInTime = '';
       employee.checkOutTime = '';
-    } else {
-      employee.checkInTime = this.formatTime(new Date(0, 0, 0, 10, 0));
-      // employee.checkOutTime = this.formatTime(new Date(0, 0, 0, 18, 30));
+      return;
+    }
+    if (!employee.checkInTime) {
+      employee.checkInTime = this.defaultCheckInTime;
+    }
+    if (employee.status === 'Present' && !employee.checkOutTime) {
+      // keep checkout empty until filled; present default uses office start
+    }
+    this.applyAttendanceRules(employee, true);
+  }
+
+  onAttendanceTimeChange(employee: any) {
+    if (employee.onLeave && employee.status === 'Absent') {
+      return;
+    }
+    this.applyAttendanceRules(employee, true);
+  }
+
+  applyAttendanceRules(employee: any, overwriteStatus: boolean) {
+    if (employee.status === 'Absent' && !employee.checkInTime) {
+      return;
+    }
+    if (employee.onLeave && employee.status === 'Absent') {
+      return;
+    }
+    const derived = this.officePayrollPolicyService.evaluateAttendanceStatus(
+      this.moment,
+      this.officePolicy,
+      employee.checkInTime,
+      employee.checkOutTime,
+      employee.status,
+    );
+    if (
+      overwriteStatus ||
+      employee.status === 'Present' ||
+      employee.status === 'Late' ||
+      employee.status === 'Early-logout'
+    ) {
+      // Do not override explicit Half-day unless times clearly indicate half-day/late
+      if (
+        employee.status === 'Half-day' &&
+        derived !== 'Half-day' &&
+        !overwriteStatus
+      ) {
+        return;
+      }
+      employee.status = derived;
     }
   }
-  private formatTime(date: Date): string {
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes}`;
-  }
+
   saveAttendance() {
+    // Re-evaluate statuses from times before save (except leave absents)
+    this.employeeDetails.forEach((employee) => {
+      if (!(employee.onLeave && employee.status === 'Absent')) {
+        this.applyAttendanceRules(employee, true);
+      }
+    });
     const formData = {
       attendanceDate: this.moment(this.selectedDate).format('YYYY-MM-DD'),
       attendanceData: this.employeeDetails.map((employee) => ({
@@ -304,7 +349,7 @@ export class CreateComponent {
         (error: any) => {
           this.loading = false;
           this.toastService.showError(error);
-        }
+        },
       );
     } else if (this.actionType == 'update') {
       this.loading = true;
@@ -321,7 +366,7 @@ export class CreateComponent {
           (error: any) => {
             this.loading = false;
             this.toastService.showError(error);
-          }
+          },
         );
     }
   }

@@ -16,16 +16,17 @@ import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
-import {LucideAngularModule,
+import {
+  LucideAngularModule,
   Eye,
   SquarePen,
   Trash,
   UserCheck,
   UserRoundX,
   Sun,
-      CalendarClock ,
-      Timer 
-
+  CalendarClock,
+  Timer,
+  LogOut,
 } from 'lucide-angular';
 const routes: Routes = [
   { path: '', component: AttendanceComponent },
@@ -47,7 +48,7 @@ const routes: Routes = [
     path: 'monthattendance',
     loadChildren: () =>
       import('./monthattendance/monthattendance.module').then(
-        (m) => m.MonthattendanceModule
+        (m) => m.MonthattendanceModule,
       ),
   },
 ];
@@ -70,16 +71,17 @@ const routes: Routes = [
     CapitalizeFirstPipe,
     MatMenuModule,
     MatButtonModule,
-    LucideAngularModule.pick({ 
+    LucideAngularModule.pick({
       Eye,
       SquarePen,
       Trash,
       UserCheck,
       UserRoundX,
       Sun,
-      CalendarClock ,
-      Timer 
-    })
+      CalendarClock,
+      Timer,
+      LogOut,
+    }),
   ],
 })
 export class AttendanceModule {}

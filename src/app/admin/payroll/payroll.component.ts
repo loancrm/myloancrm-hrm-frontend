@@ -8,6 +8,11 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { DateTimeProcessorService } from 'src/app/services/date-time-processor.service';
 import { projectConstantsLocal } from 'src/app/constants/project-constants';
 import { forkJoin } from 'rxjs';
+import { CompanySettingsService } from 'src/app/services/company-settings.service';
+import {
+  OfficePayrollPolicy,
+  OfficePayrollPolicyService,
+} from 'src/app/services/office-payroll-policy.service';
 
 @Component({
   selector: 'app-payroll',
@@ -43,6 +48,8 @@ export class PayrollComponent {
   totalDeductions: any = 0;
   totalNetSalary: any = 0;
   payrollEmployees: any = 0;
+  officePolicy: OfficePayrollPolicy;
+  periodRangeLabel: string = '';
   constructor(
     private location: Location,
     private confirmationService: ConfirmationService,
@@ -51,10 +58,13 @@ export class PayrollComponent {
     private employeesService: EmployeesService,
     private localStorageService: LocalStorageService,
     private dateTimeProcessor: DateTimeProcessorService,
+    private companySettingsService: CompanySettingsService,
+    private officePayrollPolicyService: OfficePayrollPolicyService,
   ) {
     // const usertype = localStorage.getItem('userType');
     const usertype = localStorageService.getItemFromLocalStorage('userType');
     this.moment = this.dateTimeProcessor.getMoment();
+    this.officePolicy = this.officePayrollPolicyService.defaults;
     this.selectedMonth = this.moment(new Date())
       .subtract(1, 'month')
       .format('YYYY-MM');
@@ -77,6 +87,7 @@ export class PayrollComponent {
       this.localStorageService.getItemFromLocalStorage('userDetails');
     this.userDetails = userDetails.user;
     this.capabilities = this.employeesService.getUserRbac();
+    this.loadOfficePolicy();
     if (this.capabilities.adminPayroll) {
       this.getEmployees();
       this.getHolidays();
@@ -94,6 +105,7 @@ export class PayrollComponent {
     if (storedMonth) {
       this.selectedMonth = storedMonth;
       this.displayMonth = this.moment(this.selectedMonth).format('MMMM YYYY');
+      this.updatePeriodLabel();
     }
     const storedAppliedFilter =
       this.localStorageService.getItemFromLocalStorage('payrollAppliedFilter');
@@ -166,6 +178,7 @@ export class PayrollComponent {
   onDateChange(event: any) {
     this.selectedMonth = this.moment(event).format('YYYY-MM');
     this.displayMonth = this.moment(event).format('MMMM YYYY');
+    this.updatePeriodLabel();
     this.localStorageService.setItemOnLocalStorage(
       'payrollMonth',
       this.selectedMonth,
@@ -173,6 +186,33 @@ export class PayrollComponent {
     this.loadPayslips(this.currentTableEvent);
     this.getEmployeesStatusCount();
   }
+
+  updatePeriodLabel() {
+    if (!this.selectedMonth) {
+      this.periodRangeLabel = '';
+      return;
+    }
+    const payrollMonth = this.moment(this.selectedMonth, 'YYYY-MM').format(
+      'YYYY-MM',
+    );
+    this.periodRangeLabel = this.officePayrollPolicyService.formatPeriodLabel(
+      this.moment,
+      payrollMonth,
+      this.officePolicy,
+    );
+  }
+
+  getPeriodLabelForMonth(payrollMonth: string): string {
+    if (!payrollMonth) {
+      return '';
+    }
+    return this.officePayrollPolicyService.formatPeriodLabel(
+      this.moment,
+      this.moment(payrollMonth, 'YYYY-MM').format('YYYY-MM'),
+      this.officePolicy,
+    );
+  }
+
   getEmployees(filter = {}) {
     this.loading = true;
     filter['employeeInternalStatus-eq'] = 1;
@@ -695,9 +735,28 @@ export class PayrollComponent {
   }
 
   confirmCalculate() {
+    const payrollMonth = this.moment(
+      this.selectedMonth || this.moment().subtract(1, 'month'),
+      'YYYY-MM',
+    ).format('YYYY-MM');
+    const periodLabel = this.officePayrollPolicyService.formatPeriodLabel(
+      this.moment,
+      payrollMonth,
+      this.officePolicy,
+    );
+    const cycleLabel =
+      this.officePolicy?.payrollCycleType === 'custom_day'
+        ? `Custom day cycle (from day ${this.officePolicy.payrollCycleStartDay})`
+        : 'Calendar month';
     this.confirmationService.confirm({
-      // message: 'Are you sure you want to delete this Employee?',
-      message: `Are you sure you want to Calculate Payroll for Active Employees ?
+      message: `Calculate payroll for <b>${this.moment(
+        payrollMonth,
+        'YYYY-MM',
+      ).format('MMMM YYYY')}</b>?<br/><br/>
+              Period: <b>${periodLabel}</b><br/>
+              Pattern: <b>${cycleLabel}</b><br/>
+              Late → LOP: every <b>${this.officePolicy?.latesPerLop || 3}</b> late check-ins + early logouts = 1 LOP<br/>
+              Paid leave: <b>${this.officePolicy?.casualLeavesPerMonth ?? 1}</b> / month (joining month skipped, then after ${this.officePolicy?.casualLeaveAfterMonths ?? 3} months)
               `,
       header: 'Confirm Payroll Calculation',
       icon: 'pi pi-exclamation-triangle',
@@ -711,9 +770,56 @@ export class PayrollComponent {
 
   calculatePayrollForAllEmployees() {
     this.loading = true;
-    const payrollMonth = this.moment().subtract(1, 'month').format('YYYY-MM');
+    this.companySettingsService.getCompanySettings().subscribe(
+      (settings: any) => {
+        this.officePolicy = this.officePayrollPolicyService.normalize(
+          settings || {},
+        );
+        this.ensureHolidaysThenRunPayroll();
+      },
+      () => {
+        this.officePolicy = this.officePayrollPolicyService.defaults;
+        this.ensureHolidaysThenRunPayroll();
+      },
+    );
+  }
+
+  private ensureHolidaysThenRunPayroll() {
+    if (this.holidays && this.holidays.length > 0) {
+      this.runPayrollCalculationForAllEmployees();
+      return;
+    }
+    this.employeesService.getHolidays().subscribe(
+      (response) => {
+        this.holidays = response || [];
+        this.runPayrollCalculationForAllEmployees();
+      },
+      () => {
+        this.holidays = [];
+        this.runPayrollCalculationForAllEmployees();
+      },
+    );
+  }
+
+  private runPayrollCalculationForAllEmployees() {
+    const payrollMonth = this.moment(
+      this.selectedMonth || this.moment().subtract(1, 'month'),
+      'YYYY-MM',
+    ).format('YYYY-MM');
     const workingDays = this.getWorkingDays(payrollMonth);
-    const payroll = new Date(this.moment(payrollMonth, 'YYYY-MM').toDate());
+    const payrollPeriod = this.officePayrollPolicyService.getPayrollPeriod(
+      this.moment,
+      payrollMonth,
+      this.officePolicy,
+    );
+
+    if (!workingDays || workingDays <= 0) {
+      this.loading = false;
+      this.toastService.showError(
+        'Working days is 0 for this period. Check holidays and payroll cycle settings.',
+      );
+      return;
+    }
 
     this.employeesService
       .getEmployees({ 'employeeInternalStatus-eq': 1 })
@@ -726,75 +832,50 @@ export class PayrollComponent {
             return;
           }
 
-          // Fetch salary hikes for all employees first
           this.getSalaryHikes({ 'hikeInternalStatus-eq': 1 }).subscribe(
             (salaryHikes: any) => {
-              // Prepare attendance requests
-              const attendanceRequests = employees.map((employee) =>
-                this.employeesService.getAttendance(),
-              );
+              // One attendance fetch for the configured payroll period
+              const attendanceFilter = {
+                'attendanceDate-gte': payrollPeriod.startStr,
+                'attendanceDate-lte': payrollPeriod.endStr,
+              };
+              this.employeesService.getAttendance(attendanceFilter).subscribe(
+                (attendance: any) => {
+                  const filteredAttendance = (attendance || []).filter(
+                    (record) =>
+                      this.officePayrollPolicyService.isAttendanceInPeriod(
+                        record.attendanceDate,
+                        payrollPeriod,
+                        this.moment,
+                      ),
+                  );
+                  const payrollRequests: any[] = [];
 
-              forkJoin(attendanceRequests).subscribe(
-                (attendanceResponses: any) => {
-                  let payrollRequests: any = [];
+                  employees.forEach((employee) => {
+                    const {
+                      presentDays,
+                      lateCheckInDays,
+                      earlyLogoutDays,
+                      lateLopDays,
+                    } = this.getPresentAndLateDaysForEmployee(
+                      employee.employeeId,
+                      filteredAttendance,
+                    );
 
-                  employees.forEach((employee, index) => {
-                    const attendance = attendanceResponses[index];
-                    const filteredAttendance = attendance.filter((record) => {
-                      const attendanceDate = new Date(record.attendanceDate);
-                      return (
-                        attendanceDate.getMonth() === payroll.getMonth() &&
-                        attendanceDate.getFullYear() === payroll.getFullYear()
-                      );
-                    });
-                    // Calculate Present & Late Days
-                    const presentDays = filteredAttendance.reduce(
-                      (count, record) => {
-                        const employeeRecord = record.attendanceData.find(
-                          (emp) => emp.employeeId === employee.employeeId,
-                        );
-                        if (employeeRecord) {
-                          if (
-                            employeeRecord.status === 'Present' ||
-                            employeeRecord.status === 'Late'
-                          ) {
-                            return count + 1;
-                          }
-                          if (employeeRecord.status === 'Half-day') {
-                            return count + 0.5;
-                          }
-                        }
-                        return count;
-                      },
-                      0,
-                    );
-                    const lateDays = filteredAttendance.reduce(
-                      (count, record) => {
-                        const employeeRecord = record.attendanceData.find(
-                          (emp) =>
-                            emp.employeeId === employee.employeeId &&
-                            emp.status === 'Late',
-                        );
-                        return employeeRecord ? count + 1 : count;
-                      },
-                      0,
-                    );
-                    // Apply Salary Hike
-                    const matchingHikes = salaryHikes.filter(
+                    const matchingHikes = (salaryHikes || []).filter(
                       (hike) => hike.employeeId == employee.employeeId,
                     );
+                    let salary = Number(employee.salary) || 0;
                     if (matchingHikes.length > 0) {
-                      const totalHike = matchingHikes.reduce(
+                      salary += matchingHikes.reduce(
                         (accumulatedHike, hike) =>
-                          accumulatedHike + hike.monthlyHike,
+                          accumulatedHike + (Number(hike.monthlyHike) || 0),
                         0,
                       );
-                      employee.salary += totalHike;
                     }
-                    // Calculate Payroll Data
-                    let doubleLopDays = 0;
+
+                    const doubleLopDays = 0;
                     const petrolExpenses = 0;
-                    const lateLopDays = Math.floor(lateDays / 3);
                     const casualDays = this.getCasualDaysCount(
                       employee.joiningDate,
                       payrollMonth,
@@ -807,9 +888,7 @@ export class PayrollComponent {
                       casualDays > 0 && absentDays
                         ? Math.max(0, absentDays - casualDays)
                         : absentDays || 0;
-                    const daySalary = Number(
-                      (employee.salary / workingDays).toFixed(),
-                    );
+                    const daySalary = Number((salary / workingDays).toFixed());
                     const absentAndLate =
                       absentDays > 0 || lateLopDays > 0
                         ? casualDays > 0 && absentDays == 0.5
@@ -830,16 +909,16 @@ export class PayrollComponent {
                       (paidDaysWithDLOP * daySalary).toFixed(),
                     );
                     const baseDeductionsWithoutDLOP =
-                      employee.salary - baseNetSalaryWithoutDLOP;
+                      salary - baseNetSalaryWithoutDLOP;
                     const baseDeductionsWithDLOP =
-                      employee.salary - baseNetSalaryWithDLOP;
+                      salary - baseNetSalaryWithDLOP;
                     let netSalaryWithoutDoubleLop =
                       totalDeductedDaysWithoutDLOP === 0
-                        ? employee.salary
+                        ? salary
                         : baseNetSalaryWithoutDLOP;
                     let netSalaryWithDoubleLop =
                       totalDeductedDaysWithDLOP === 0
-                        ? employee.salary
+                        ? salary
                         : baseNetSalaryWithDLOP;
                     const deductionsWithoutDLOP =
                       totalDeductedDaysWithoutDLOP === 0
@@ -862,16 +941,16 @@ export class PayrollComponent {
                       lopOption === 'withoutDoubleLOP'
                         ? paidDaysWithoutDLOP
                         : paidDaysWithDLOP;
-                    // Deduct Professional Tax
-                    let professionalTax = 0;
-                    if (employee.salary > 20000) {
-                      professionalTax = 200;
-                    } else if (employee.salary > 15000) {
-                      professionalTax = 150;
-                    }
+
+                    let professionalTax =
+                      this.officePayrollPolicyService.calculateProfessionalTax(
+                        salary,
+                        this.officePolicy,
+                      );
                     netSalary -= professionalTax;
                     netSalaryWithoutDoubleLop -= professionalTax;
                     netSalaryWithDoubleLop -= professionalTax;
+
                     const payrollData = {
                       payrollMonth,
                       employeeName: employee.employeeName,
@@ -883,9 +962,9 @@ export class PayrollComponent {
                       absentDays,
                       casualDays,
                       totalAbsentDays,
-                      doubleLopDays, // Removed DLOP logic for now
+                      doubleLopDays,
                       lateLopDays,
-                      salary: employee.salary,
+                      salary,
                       daySalary,
                       petrolExpenses,
                       accountNumber: employee.accountNumber,
@@ -905,19 +984,42 @@ export class PayrollComponent {
                       paidDays,
                       professionalTax,
                     };
-                    // Push payroll request to array
                     payrollRequests.push(
                       this.employeesService.createPayroll(payrollData),
                     );
                   });
-                  // Execute all payroll requests in parallel
+
+                  if (!payrollRequests.length) {
+                    this.loading = false;
+                    this.toastService.showError(
+                      'No payroll records to create.',
+                    );
+                    return;
+                  }
+
                   forkJoin(payrollRequests).subscribe(
-                    (results) => {
+                    () => {
                       this.loading = false;
                       this.toastService.showSuccess(
-                        'All Payrolls Added Successfully',
+                        `Payroll calculated for ${this.moment(
+                          payrollMonth,
+                          'YYYY-MM',
+                        ).format('MMMM YYYY')} using account settings`,
                       );
-                      this.routingService.handleRoute('payroll', null);
+                      this.selectedMonth = payrollMonth;
+                      this.displayMonth = this.moment(
+                        payrollMonth,
+                        'YYYY-MM',
+                      ).format('MMMM YYYY');
+                      this.localStorageService.setItemOnLocalStorage(
+                        'payrollMonth',
+                        payrollMonth,
+                      );
+                      this.updatePeriodLabel();
+                      this.getEmployeesStatusCount();
+                      if (this.currentTableEvent) {
+                        this.loadPayslips(this.currentTableEvent);
+                      }
                     },
                     (error) => {
                       this.loading = false;
@@ -947,25 +1049,57 @@ export class PayrollComponent {
         },
       );
   }
+
+  private getPresentAndLateDaysForEmployee(
+    employeeId: any,
+    filteredAttendance: any[],
+  ): {
+    presentDays: number;
+    lateCheckInDays: number;
+    earlyLogoutDays: number;
+    lateLopDays: number;
+  } {
+    const counts =
+      this.officePayrollPolicyService.countEmployeeAttendanceForPeriod(
+        this.moment,
+        this.officePolicy,
+        employeeId,
+        filteredAttendance,
+      );
+    const lateLopDays =
+      this.officePayrollPolicyService.calculateAttendanceLopDays(
+        counts.lateCheckInDays,
+        counts.earlyLogoutDays,
+        this.officePolicy,
+      );
+    return {
+      presentDays: counts.presentDays,
+      lateCheckInDays: counts.lateCheckInDays,
+      earlyLogoutDays: counts.earlyLogoutDays,
+      lateLopDays,
+    };
+  }
+  loadOfficePolicy() {
+    this.companySettingsService.getCompanySettings().subscribe(
+      (response: any) => {
+        this.officePolicy = this.officePayrollPolicyService.normalize(
+          response || {},
+        );
+        this.updatePeriodLabel();
+      },
+      () => {
+        this.officePolicy = this.officePayrollPolicyService.defaults;
+        this.updatePeriodLabel();
+      },
+    );
+  }
   getWorkingDays(payrollMonth: string): number {
-    if (!payrollMonth) {
-      return 0;
-    }
-
-    const startOfMonth = this.moment(payrollMonth, 'YYYY-MM').startOf('month');
-    const endOfMonth = this.moment(payrollMonth, 'YYYY-MM').endOf('month');
-    let workingDaysCount = 0;
-
-    for (
-      let day = startOfMonth.clone();
-      day.isBefore(endOfMonth) || day.isSame(endOfMonth, 'day');
-      day.add(1, 'days')
-    ) {
-      if (day.isoWeekday() !== 7 && !this.isHoliday(day)) {
-        workingDaysCount++;
-      }
-    }
-    return workingDaysCount;
+    return this.officePayrollPolicyService.countWorkingDays(
+      this.moment,
+      payrollMonth,
+      this.officePolicy,
+      (day) => this.isHoliday(day),
+    );
   }
   isHoliday(day: any): boolean {
     const dayStr = day.format('YYYY-MM-DD');
@@ -988,25 +1122,12 @@ export class PayrollComponent {
     return this.employeesService.getSalaryHikes(filter);
   }
   getCasualDaysCount(joiningDate: Date, payrollMonth: string): number {
-    const joining = new Date(joiningDate);
-    const payroll = new Date(this.moment(payrollMonth, 'YYYY-MM').toDate());
-
-    let eligibleCasualMonth: Date;
-    if (joining.getDate() < 4) {
-      eligibleCasualMonth = new Date(
-        joining.getFullYear(),
-        joining.getMonth() + 3,
-        1,
-      );
-    } else {
-      eligibleCasualMonth = new Date(
-        joining.getFullYear(),
-        joining.getMonth() + 4,
-        1,
-      );
-    }
-
-    return payroll >= eligibleCasualMonth ? 1 : 0;
+    return this.officePayrollPolicyService.getCasualDaysCount(
+      joiningDate,
+      payrollMonth,
+      this.officePolicy,
+      this.moment,
+    );
   }
   applyFilters(searchFilter = {}) {
     this.searchFilter = searchFilter;

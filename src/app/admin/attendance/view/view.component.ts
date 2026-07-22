@@ -27,6 +27,7 @@ export class ViewComponent implements OnInit {
   totalAbsentCount: number = 0;
   totalHalfDayCount: number = 0;
   totalLateCount: number = 0;
+  totalEarlyLogoutCount: number = 0;
   employeeNameToSearch: any;
   searchFilter: any = {};
   currentYear: number;
@@ -90,7 +91,8 @@ export class ViewComponent implements OnInit {
           this.totalPresentCount +
           this.totalAbsentCount +
           this.totalHalfDayCount +
-          this.totalLateCount,
+          this.totalLateCount +
+          this.totalEarlyLogoutCount,
         textcolor: '#6C5FFC',
         backgroundcolor: '#F0EFFF',
       },
@@ -107,6 +109,13 @@ export class ViewComponent implements OnInit {
         count: this.totalLateCount,
         textcolor: '#0D6EFD',
         backgroundcolor: '#E0F3FF',
+      },
+      {
+        name: 'log-out',
+        displayName: 'Early Logout',
+        count: this.totalEarlyLogoutCount,
+        textcolor: '#DC3545',
+        backgroundcolor: '#FDEDEC',
       },
       {
         name: 'circle-half-stroke',
@@ -129,6 +138,7 @@ export class ViewComponent implements OnInit {
       this.totalAbsentCount =
       this.totalHalfDayCount =
       this.totalLateCount =
+      this.totalEarlyLogoutCount =
         0;
     this.attendanceData?.attendanceData.forEach((attendance) => {
       switch (attendance.status) {
@@ -140,6 +150,9 @@ export class ViewComponent implements OnInit {
           break;
         case 'Late':
           this.totalLateCount++;
+          break;
+        case 'Early-logout':
+          this.totalEarlyLogoutCount++;
           break;
         case 'Half-day':
           this.totalHalfDayCount++;

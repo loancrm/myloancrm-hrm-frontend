@@ -156,6 +156,25 @@
         }}
       </div>
     </div>
+    <div
+      class="info-line"
+      *ngIf="selectedLeave.leaveDocument && getLeaveDocuments(selectedLeave).length"
+    >
+      <span class="icon"><i class="fas fa-paperclip"></i></span>
+      <div class="label d-flex justify-content-between">
+        Document<b>:&nbsp;</b>
+      </div>
+      <div class="value">
+        <a
+          *ngFor="let doc of getLeaveDocuments(selectedLeave); let i = index"
+          [href]="getLeaveDocumentUrl(doc)"
+          target="_blank"
+          class="d-block"
+        >
+          View document {{ i + 1 }}
+        </a>
+      </div>
+    </div>
     <div class="info-line">
       <span class="icon"><i class="fas fa-calendar-alt"></i></span>
       <div class="label d-flex justify-content-between">

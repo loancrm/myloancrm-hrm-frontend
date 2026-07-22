@@ -53,11 +53,20 @@
                 class="cardicons"
                 [ngStyle]="{
                   color: item.textcolor,
-                  'background-color': item.backgroundcolor
+                  'background-color': item.backgroundcolor,
                 }"
               >
                 <!-- <i class="{{ item.name }}.svg"></i> -->
-                <img src="../../../assets/images/{{ item.name }}.svg" alt="">
+                <lucide-icon
+                  *ngIf="item.useLucide"
+                  [name]="item.name"
+                  size="22"
+                ></lucide-icon>
+                <img
+                  *ngIf="!item.useLucide"
+                  src="../../../assets/images/{{ item.name }}.svg"
+                  alt=""
+                />
               </div>
             </div>
           </div>
@@ -85,7 +94,7 @@
       'referenceNo',
       'customer.firstName',
       'partner.partnerName',
-      'status'
+      'status',
     ]"
     styleClass="p-datatable-customers"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Employees"
@@ -134,7 +143,7 @@
       <tr>
         <td>{{ i + 1 }}</td>
         <!-- <td>{{ employee.employeeId }}</td> -->
-        <td>{{ employee.customEmployeeId  }}</td>
+        <td>{{ employee.customEmployeeId }}</td>
         <td>
           <div class="d-flex align-items-center">
             <span class="me-2">
@@ -176,7 +185,7 @@
         </td>
         <td>
           <span class="table-column-data" *ngIf="employee.joiningDate">{{
-            employee.joiningDate | date : "mediumDate"
+            employee.joiningDate | date: "mediumDate"
           }}</span>
         </td>
         <td>
@@ -187,21 +196,39 @@
               class="fa fa-check-circle text-success"
               title="Present"
             ></i> -->
-            <img src="../../../../assets/images/presenthrmicon.svg" alt="" title="Present" pTooltip="Present" *ngSwitchCase="'Present'">
+            <img
+              src="../../../../assets/images/presenthrmicon.svg"
+              alt=""
+              title="Present"
+              pTooltip="Present"
+              *ngSwitchCase="'Present'"
+            />
             <!-- <i
               *ngSwitchCase="'Absent'"
               pTooltip="Absent"
               class="fa fa-circle-xmark text-danger"
               title="Absent"
             ></i> -->
-            <img src="../../../../assets/images/onleaveicon.svg" alt=""  title="Absent" pTooltip="Absent" *ngSwitchCase="'Absent'">
+            <img
+              src="../../../../assets/images/onleaveicon.svg"
+              alt=""
+              title="Absent"
+              pTooltip="Absent"
+              *ngSwitchCase="'Absent'"
+            />
             <!-- <i
               *ngSwitchCase="'Half-day'"
               pTooltip="Half-day"
               class="fa fa-circle-half-stroke text-warning"
               title="Half-day"
             ></i> -->
-            <img src="../../../../assets/images/halfdayicon.svg" alt="" title="Half-day"  pTooltip="Half-day" *ngSwitchCase="'Half-day'">
+            <img
+              src="../../../../assets/images/halfdayicon.svg"
+              alt=""
+              title="Half-day"
+              pTooltip="Half-day"
+              *ngSwitchCase="'Half-day'"
+            />
             <!-- <i
 
               *ngSwitchCase="'Late'"
@@ -209,7 +236,21 @@
               class="fa fa-circle-exclamation text-primary"
               title="Late"
             ></i> -->
-            <img src="../../../../assets/images/lateloginicon (2).svg" alt="" title="Late" pTooltip="Late"  *ngSwitchCase="'Late'">
+            <img
+              src="../../../../assets/images/lateloginicon (2).svg"
+              alt=""
+              title="Late"
+              pTooltip="Late"
+              *ngSwitchCase="'Late'"
+            />
+            <lucide-icon
+              *ngSwitchCase="'Early-logout'"
+              name="log-out"
+              size="20"
+              title="Early Logout"
+              pTooltip="Early Logout"
+              class="text-danger"
+            ></lucide-icon>
             <span *ngSwitchDefault>{{ employee.status }}</span>
           </ng-container>
         </td>
@@ -233,8 +274,8 @@
 </div>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
   <div class="text-center mb-3">
-    © {{ currentYear }} <span style="color: #8E89D0">My</span>&nbsp;<b
-      style="color: #535AB4"
+    © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b
+      style="color: #535ab4"
       >HRMS</b
     >. | All Rights Reserved
   </div>

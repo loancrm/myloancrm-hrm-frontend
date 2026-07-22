@@ -51,7 +51,7 @@
       'referenceNo',
       'customer.firstName',
       'partner.partnerName',
-      'status'
+      'status',
     ]"
     styleClass="p-datatable-customers"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Attendance"
@@ -59,56 +59,58 @@
     <ng-template pTemplate="caption">
       <div class="row">
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
-          <div  class="custom-calendar-wrapper position-relative">
+          <div class="custom-calendar-wrapper position-relative">
             <div class="p-inputgroup">
-            <p-calendar
-            #calendar
-              [(ngModel)]="selectedDate"
-              [showIcon]="false"
-              dateFormat="yy-mm-dd"
-              [style]="{ width: '100%' }"
-              placeholder="Select Date"
-              appendTo="body"
-              [readonlyInput]="true"
-              [showButtonBar]="true"
-              (ngModelChange)="filterByDate()"
-            >
-            </p-calendar>
-            
-             <img
-            src="../../../assets/images/icons/calendar.svg"
-            alt="Calendar Icon"
-            class="calendar-custom-img"
-            (click)="calendar.toggle()"
-          />
+              <p-calendar
+                #calendar
+                [(ngModel)]="selectedDate"
+                [showIcon]="false"
+                dateFormat="yy-mm-dd"
+                [style]="{ width: '100%' }"
+                placeholder="Select Date"
+                appendTo="body"
+                [readonlyInput]="true"
+                [showButtonBar]="true"
+                (ngModelChange)="filterByDate()"
+              >
+              </p-calendar>
+
+              <img
+                src="../../../assets/images/icons/calendar.svg"
+                alt="Calendar Icon"
+                class="calendar-custom-img"
+                (click)="calendar.toggle()"
+              />
+            </div>
           </div>
-          </div>
-          
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small">
-          <div  class="custom-calendar-wrapper position-relative">
-          <p-calendar
-            #calendar1
-            [(ngModel)]="displayMonth"
-            [showIcon]="false"
-            view="month"
-            [monthNavigator]="true"
-            [yearNavigator]="true"
-            [yearRange]="'-10:+10'"
-            dateFormat="MM yy"
-            appendTo="body"
-            [style]="{ width: '100%' }"
-            [readonlyInput]="true"
-            (ngModelChange)="onDateChange($event)"
-            [placeholder]="'Select Month and Year'"
+          <div class="custom-calendar-wrapper position-relative">
+            <p-calendar
+              #calendar1
+              [(ngModel)]="displayMonth"
+              [showIcon]="false"
+              view="month"
+              [monthNavigator]="true"
+              [yearNavigator]="true"
+              [yearRange]="'-10:+10'"
+              dateFormat="MM yy"
+              appendTo="body"
+              [style]="{ width: '100%' }"
+              [readonlyInput]="true"
+              (ngModelChange)="onDateChange($event)"
+              [placeholder]="'Select Salary Month'"
             ></p-calendar>
             <img
-            src="../../../assets/images/icons/calendar.svg"
-            alt="Calendar Icon"
-            class="calendar-custom-img"
-            (click)="calendar1.toggle()"
-          />
+              src="../../../assets/images/icons/calendar.svg"
+              alt="Calendar Icon"
+              class="calendar-custom-img"
+              (click)="calendar1.toggle()"
+            />
           </div>
+          <small class="text-muted d-block mt-1" *ngIf="periodRangeLabel">
+            Period: {{ periodRangeLabel }}
+          </small>
         </div>
         <div class="col-md-4 mt-1 mb-1 no-padding-small text-right">
           <div class="d-flex">
@@ -153,6 +155,7 @@
         </th>
         <th>Present</th>
         <th>Late</th>
+        <th class="text-nowrap">Early Logout</th>
         <th class="text-nowrap">Half Day</th>
         <th>Leave</th>
         <th pSortableColumn="createdBy" class="text-nowrap">
@@ -196,6 +199,9 @@
         </td>
         <td>
           {{ attendance.lateCount }}
+        </td>
+        <td>
+          {{ attendance.earlyLogoutCount }}
         </td>
         <td>
           {{ attendance.halfDayCount }}
@@ -254,7 +260,11 @@
                 class="action-icon-wrapper me-2"
                 (click)="ViewAttendance(attendance.attendanceId)"
               >
-                <lucide-icon name="eye" [size]="20"class="action-icon"></lucide-icon>
+                <lucide-icon
+                  name="eye"
+                  [size]="20"
+                  class="action-icon"
+                ></lucide-icon>
               </button>
 
               <!-- UPDATE BUTTON -->
@@ -265,7 +275,11 @@
                 class="action-icon-wrapper me-2"
                 (click)="updateAttendance(attendance.attendanceId)"
               >
-                <lucide-icon name="square-pen" [size]="18" class="action-icon"></lucide-icon>
+                <lucide-icon
+                  name="square-pen"
+                  [size]="18"
+                  class="action-icon"
+                ></lucide-icon>
               </button>
 
               <!-- DELETE BUTTON -->
@@ -277,7 +291,11 @@
                 class="action-icon-wrapper me-2"
                 (click)="confirmDelete(attendance)"
               >
-                <lucide-icon name="trash" [size]="18"class="action-icon"></lucide-icon>
+                <lucide-icon
+                  name="trash"
+                  [size]="18"
+                  class="action-icon"
+                ></lucide-icon>
               </button>
             </div>
           </div>
@@ -300,10 +318,9 @@
               [ngStyle]="{
                 color: 'green',
                 'font-size': '20px',
-                'margin-right': '8px'
+                'margin-right': '8px',
               }"
-              ></span
-            >
+            ></span>
             <!-- <i
               *ngSwitchCase="'Present'"
               pTooltip="Present"
@@ -312,57 +329,55 @@
             ></i> -->
             <!-- <img src="../../../assets/images/presenthrmicon.svg" alt="" *ngSwitchCase="'Present'"
               pTooltip="Present" title="Present"> -->
-              <lucide-icon
-                  *ngSwitchCase="'Present'"
-                  name="user-check"
-                  size="20"
-                  title="Present"
-                  pTooltip="Present"
-                  class="text-success"
-                ></lucide-icon>
+            <lucide-icon
+              *ngSwitchCase="'Present'"
+              name="user-check"
+              size="20"
+              title="Present"
+              pTooltip="Present"
+              class="text-success"
+            ></lucide-icon>
             <!-- Absent Status with Red Dot -->
             <span
               *ngSwitchCase="'Absent'"
               [ngStyle]="{
                 color: 'red',
                 'font-size': '20px',
-                'margin-right': '8px'
+                'margin-right': '8px',
               }"
-              ></span
-            >
+            ></span>
             <!-- <i
               *ngSwitchCase="'Absent'"
               pTooltip="Absent"
               class="fa fa-circle-xmark text-danger"
               title="Absent"
             ></i> -->
-              <!-- <img src="../../../assets/images/onleaveicon.svg" alt="" *ngSwitchCase="'Absent'"
+            <!-- <img src="../../../assets/images/onleaveicon.svg" alt="" *ngSwitchCase="'Absent'"
               pTooltip="Absent" title="Absent"> -->
-              <lucide-icon
-                *ngSwitchCase="'Absent'"
-                name="user-round-x"
-                size="20"
-                title="Absent"
-                pTooltip="Absent"
-                class="text-danger"
-              ></lucide-icon>
+            <lucide-icon
+              *ngSwitchCase="'Absent'"
+              name="user-round-x"
+              size="20"
+              title="Absent"
+              pTooltip="Absent"
+              class="text-danger"
+            ></lucide-icon>
             <!-- Half-day Status with Orange Dot -->
             <span
               *ngSwitchCase="'Half-day'"
               [ngStyle]="{
                 color: 'orange',
                 'font-size': '20px',
-                'margin-right': '8px'
+                'margin-right': '8px',
               }"
-              ></span
-            >
+            ></span>
             <!-- <i
               *ngSwitchCase="'Half-day'"
               pTooltip="Half-day"
               class="fa fa-circle-half-stroke text-warning"
               title="Half-day"
             ></i> -->
-              <!-- <img src="../../../assets/images/halfdayicon.svg" alt="" *ngSwitchCase="'Half-day'"
+            <!-- <img src="../../../assets/images/halfdayicon.svg" alt="" *ngSwitchCase="'Half-day'"
               pTooltip="Half-day" title="Half-day"> -->
             <!-- Late Status with Blue Dot -->
             <!-- <span
@@ -374,29 +389,37 @@
               }"
               ></span
             > -->
-             <lucide-icon
-                  *ngSwitchCase="'Half-day'"
-                  name="timer"
-                  size="20"
-                  title="Half-day"
-                  pTooltip="Half-day"
-                  class="text-primary"
-                ></lucide-icon>
+            <lucide-icon
+              *ngSwitchCase="'Half-day'"
+              name="timer"
+              size="20"
+              title="Half-day"
+              pTooltip="Half-day"
+              class="text-primary"
+            ></lucide-icon>
             <!-- <i
               *ngSwitchCase="'Late'"
               pTooltip="Late"
               class="fa fa-circle-exclamation text-primary"
               title="Late"
             ></i> -->
-              <!-- <img src="../../../assets/images/lateloginicon (2).svg" alt="" title="Late" pTooltip="Late" *ngSwitchCase="'Late'"> -->
-               <lucide-icon
-                  *ngSwitchCase="'Late'"
-                  name="calendar-clock"
-                  size="20"
-                  title="Late"
-                  pTooltip="Late"
-                  class="text-warning"
-                ></lucide-icon>
+            <!-- <img src="../../../assets/images/lateloginicon (2).svg" alt="" title="Late" pTooltip="Late" *ngSwitchCase="'Late'"> -->
+            <lucide-icon
+              *ngSwitchCase="'Late'"
+              name="calendar-clock"
+              size="20"
+              title="Late"
+              pTooltip="Late"
+              class="text-warning"
+            ></lucide-icon>
+            <lucide-icon
+              *ngSwitchCase="'Early-logout'"
+              name="log-out"
+              size="20"
+              title="Early Logout"
+              pTooltip="Early Logout"
+              class="text-danger"
+            ></lucide-icon>
             <!-- Default Case for Other Statuses -->
             <span *ngSwitchDefault>{{ employee.status }}</span>
           </ng-container>

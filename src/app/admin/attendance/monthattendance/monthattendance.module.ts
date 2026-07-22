@@ -15,7 +15,8 @@ import {LucideAngularModule,
   UserRoundX,
   Sun,
   CalendarClock,
-  Timer 
+  Timer,
+  LogOut
 } from 'lucide-angular';
 const routes: Routes = [{ path: '', component: MonthattendanceComponent }];
 
@@ -36,8 +37,9 @@ const routes: Routes = [{ path: '', component: MonthattendanceComponent }];
       UserCheck,
       UserRoundX,
       Sun,
-      CalendarClock ,
-      Timer 
+      CalendarClock,
+      Timer,
+      LogOut
     })
   ],
 })

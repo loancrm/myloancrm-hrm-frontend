@@ -10,6 +10,14 @@ import { ViewComponent } from './view.component';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import {
+  LucideAngularModule,
+  CalendarClock,
+  LogOut,
+  Timer,
+  UserRoundX,
+  UserCheck,
+} from 'lucide-angular';
 
 const routes: Routes = [{ path: '', component: ViewComponent }];
 
@@ -26,6 +34,13 @@ const routes: Routes = [{ path: '', component: ViewComponent }];
     ButtonModule,
     PreloaderModule,
     CapitalizeFirstPipe,
+    LucideAngularModule.pick({
+      CalendarClock,
+      LogOut,
+      Timer,
+      UserRoundX,
+      UserCheck,
+    }),
   ],
 })
 export class ViewModule {}

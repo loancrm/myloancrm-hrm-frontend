@@ -43,7 +43,7 @@ export class LeavemanagementComponent {
     private confirmationService: ConfirmationService,
     private toastService: ToastService,
     private routingService: RoutingService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
   ) {
     // const usertype = localStorage.getItem('userType');
     const usertype = localStorageService.getItemFromLocalStorage('userType');
@@ -69,13 +69,13 @@ export class LeavemanagementComponent {
     this.setFilterConfig();
     this.getLeavesStatusCount();
     const storedStatus = this.localStorageService.getItemFromLocalStorage(
-      'selectedLeaveStatus'
+      'selectedLeaveStatus',
     );
     if (storedStatus) {
       this.selectedLeavesStatus = storedStatus;
     }
     const storedEmployee = this.localStorageService.getItemFromLocalStorage(
-      'selectedEmployeeStatus'
+      'selectedEmployeeStatus',
     );
     if (storedEmployee) {
       this.selectedEmployee = storedEmployee;
@@ -124,29 +124,29 @@ export class LeavemanagementComponent {
       // },
       ...(this.capabilities.adminLeaves
         ? [
-          {
-            header: 'Employee Id',
-            data: [
-              {
-                field: 'employeeId',
-                title: 'Employee Id',
-                type: 'text',
-                filterType: 'like',
-              },
-            ],
-          },
-          {
-            header: 'Employee Name',
-            data: [
-              {
-                field: 'employeeName',
-                title: 'Employee Name',
-                type: 'text',
-                filterType: 'like',
-              },
-            ],
-          },
-        ]
+            {
+              header: 'Employee Id',
+              data: [
+                {
+                  field: 'employeeId',
+                  title: 'Employee Id',
+                  type: 'text',
+                  filterType: 'like',
+                },
+              ],
+            },
+            {
+              header: 'Employee Name',
+              data: [
+                {
+                  field: 'employeeName',
+                  title: 'Employee Name',
+                  type: 'text',
+                  filterType: 'like',
+                },
+              ],
+            },
+          ]
         : []),
       {
         header: 'Created Date Range',
@@ -229,7 +229,7 @@ export class LeavemanagementComponent {
     this.countsAnalytics = [
       {
         // icon: 'totlleaves',
-        icon:'file-user',
+        icon: 'file-user',
         name: 'all',
         displayName: 'Total Leaves',
         count:
@@ -250,7 +250,7 @@ export class LeavemanagementComponent {
       },
       {
         // icon: 'aprovedleaves',
-        icon:'shield-check',
+        icon: 'shield-check',
         name: 'approved',
         displayName: 'Approved Leaves',
         count: this.leavesStatusCount[2],
@@ -259,7 +259,7 @@ export class LeavemanagementComponent {
       },
       {
         // icon: 'rejectleaves',
-        icon:'shield-x',
+        icon: 'shield-x',
         name: 'rejected',
         displayName: 'Rejected Leaves',
         count: this.leavesStatusCount[3],
@@ -271,7 +271,7 @@ export class LeavemanagementComponent {
 
   cardClick(item: any) {
     this.selectedLeavesStatus = this.leavesInternalStatusList.find(
-      (status) => status.name === item.name
+      (status) => status.name === item.name,
     );
     this.statusChange({ value: this.selectedLeavesStatus });
   }
@@ -283,7 +283,7 @@ export class LeavemanagementComponent {
       {},
       api_filter,
       this.searchFilter,
-      this.appliedFilter
+      this.appliedFilter,
     );
     if (this.selectedLeavesStatus) {
       if (this.selectedLeavesStatus && this.selectedLeavesStatus.name) {
@@ -316,6 +316,32 @@ export class LeavemanagementComponent {
     this.selectedLeave = user;
     this.isDialogVisible = true;
   }
+
+  getLeaveDocuments(leave: any): string[] {
+    let docs = leave?.leaveDocument;
+    if (!docs) {
+      return [];
+    }
+    if (typeof docs === 'string' && docs.trim()) {
+      try {
+        docs = JSON.parse(docs);
+      } catch {
+        docs = [docs];
+      }
+    }
+    return Array.isArray(docs) ? docs.filter((d) => !!d) : [];
+  }
+
+  getLeaveDocumentUrl(link: string): string {
+    if (!link) {
+      return '';
+    }
+    if (link.startsWith('http') || link.startsWith('//')) {
+      return link;
+    }
+    return '//' + link;
+  }
+
   clearDialog(): void {
     this.selectedLeave = null;
     this.isDialogVisible = false;
@@ -400,7 +426,7 @@ export class LeavemanagementComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   approveLeave(leave) {
@@ -423,7 +449,7 @@ export class LeavemanagementComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   getLeavesCount(filter = {}) {
@@ -433,7 +459,7 @@ export class LeavemanagementComponent {
       },
       (error: any) => {
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -445,20 +471,20 @@ export class LeavemanagementComponent {
           (employeeResponse: any) => {
             this.leaves = this.mergeLeavesWithEmployees(
               leaveresponse,
-              employeeResponse
+              employeeResponse,
             );
             this.apiLoading = false;
           },
           (error: any) => {
             this.apiLoading = false;
             this.toastService.showError(error);
-          }
+          },
         );
       },
       (error: any) => {
         this.apiLoading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   mergeLeavesWithEmployees(leave: any[], employees: any[]): any[] {
@@ -504,13 +530,33 @@ export class LeavemanagementComponent {
   } {
     switch (status) {
       case 'approved':
-        return { textColor: '#5DCC0B', backgroundColor: '#E4F7D6', dotColor: '#14BA6D', width: '85px' };
+        return {
+          textColor: '#5DCC0B',
+          backgroundColor: '#E4F7D6',
+          dotColor: '#14BA6D',
+          width: '85px',
+        };
       case 'pending':
-        return { textColor: '#FFBA15', backgroundColor: '#FFF3D6', dotColor: '#FFBA15', width: '85px' };
+        return {
+          textColor: '#FFBA15',
+          backgroundColor: '#FFF3D6',
+          dotColor: '#FFBA15',
+          width: '85px',
+        };
       case 'rejected':
-        return { textColor: '#FF555A', backgroundColor: '#FFE2E3', dotColor: '#FF555A', width: '85px' };
+        return {
+          textColor: '#FF555A',
+          backgroundColor: '#FFE2E3',
+          dotColor: '#FF555A',
+          width: '85px',
+        };
       default:
-        return { textColor: 'black', backgroundColor: 'white', dotColor: '#14BA6D', width: '100px' };
+        return {
+          textColor: 'black',
+          backgroundColor: 'white',
+          dotColor: '#14BA6D',
+          width: '100px',
+        };
     }
   }
   getStatusName(statusId) {
@@ -519,7 +565,7 @@ export class LeavemanagementComponent {
       this.leavesInternalStatusList.length > 0
     ) {
       let leaveStatusName = this.leavesInternalStatusList.filter(
-        (leaveStatus) => leaveStatus.id == statusId
+        (leaveStatus) => leaveStatus.id == statusId,
       );
       return (
         (leaveStatusName && leaveStatusName[0] && leaveStatusName[0].name) || ''
@@ -545,7 +591,8 @@ export class LeavemanagementComponent {
                   .split('.')
                   .map(
                     (part) =>
-                      part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+                      part.charAt(0).toUpperCase() +
+                      part.slice(1).toLowerCase(),
                   )
                   .join('.');
               }
@@ -558,7 +605,7 @@ export class LeavemanagementComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   inputValueChangeEvent(dataType, value) {
@@ -579,7 +626,7 @@ export class LeavemanagementComponent {
   statusChange(event: any): void {
     this.localStorageService.setItemOnLocalStorage(
       'selectedLeaveStatus',
-      event.value
+      event.value,
     );
     this.loadLeaves(this.currentTableEvent);
   }
@@ -587,7 +634,7 @@ export class LeavemanagementComponent {
   statusChangeEmployee(event: any): void {
     this.localStorageService.setItemOnLocalStorage(
       'selectedEmployeeStatus',
-      event.value
+      event.value,
     );
     this.loadLeaves(this.currentTableEvent);
   }
@@ -601,7 +648,7 @@ export class LeavemanagementComponent {
     }
     this.localStorageService.setItemOnLocalStorage(
       'leavesAppliedFilter',
-      this.appliedFilter
+      this.appliedFilter,
     );
     this.loadLeaves(this.currentTableEvent);
   }

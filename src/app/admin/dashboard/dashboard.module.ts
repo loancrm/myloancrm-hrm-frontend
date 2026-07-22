@@ -6,11 +6,26 @@ import { CalendarModule } from 'primeng/calendar';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DashboardComponent } from './dashboard.component';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { ApexChartsModule } from '../apex-charts/apex-charts.module';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
-import { LucideAngularModule, UserCheck, BriefcaseBusiness, CalendarCheck2, Wallet, CalendarClock, CableCar, Gift, Landmark, ShieldUser } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  UserCheck,
+  BriefcaseBusiness,
+  CalendarCheck2,
+  Wallet,
+  CalendarClock,
+  CableCar,
+  Gift,
+  Landmark,
+  ShieldUser,
+  LogOut,
+} from 'lucide-angular';
 const routes: Routes = [{ path: '', component: DashboardComponent }];
 
 @NgModule({
@@ -23,6 +38,9 @@ const routes: Routes = [{ path: '', component: DashboardComponent }];
     LazyLoadImageModule,
     SkeletonModule,
     TableModule,
+    DialogModule,
+    ButtonModule,
+    InputTextareaModule,
     PreloaderModule,
     ApexChartsModule,
     CapitalizeFirstPipe,
@@ -35,8 +53,9 @@ const routes: Routes = [{ path: '', component: DashboardComponent }];
       CableCar,
       Gift,
       Landmark,
-      ShieldUser
-    })
+      ShieldUser,
+      LogOut,
+    }),
   ],
 })
 export class DashboardModule {}

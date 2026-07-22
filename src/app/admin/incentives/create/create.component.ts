@@ -12,6 +12,11 @@ import { RoutingService } from 'src/app/services/routing-service';
 import { ActivatedRoute } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { DateTimeProcessorService } from 'src/app/services/date-time-processor.service';
+import { CompanySettingsService } from 'src/app/services/company-settings.service';
+import {
+  IncentiveCalcConfig,
+  IncentivePolicyService,
+} from 'src/app/services/incentive-policy.service';
 
 @Component({
   selector: 'app-create',
@@ -37,6 +42,7 @@ export class CreateComponent implements OnInit {
   secondMonthFiles: any[] = [];
   thirdMonthFiles: any[] = [];
   currentYear: number;
+  incentiveConfig: IncentiveCalcConfig;
   constructor(
     private location: Location,
     private formBuilder: UntypedFormBuilder,
@@ -45,9 +51,12 @@ export class CreateComponent implements OnInit {
     private routingService: RoutingService,
     private activatedRoute: ActivatedRoute,
     private localStorageService: LocalStorageService,
-    private dateTimeProcessor: DateTimeProcessorService
+    private dateTimeProcessor: DateTimeProcessorService,
+    private companySettingsService: CompanySettingsService,
+    private incentivePolicyService: IncentivePolicyService,
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
+    this.incentiveConfig = this.incentivePolicyService.normalize(null);
     this.initializeBreadcrumb();
     this.activatedRoute.params.subscribe((params) => {
       if (params && params['id']) {
@@ -88,6 +97,19 @@ export class CreateComponent implements OnInit {
     this.setupDropdownListener();
     this.loadEmployees();
     this.setupActiveItemTabs();
+    this.loadIncentivePolicy();
+  }
+
+  loadIncentivePolicy() {
+    this.companySettingsService.getCompanySettings().subscribe(
+      (response: any) => {
+        this.incentiveConfig =
+          this.incentivePolicyService.normalizeFromSettings(response || {});
+      },
+      () => {
+        this.incentiveConfig = this.incentivePolicyService.normalize(null);
+      },
+    );
   }
 
   initializeBreadcrumb() {
@@ -120,7 +142,7 @@ export class CreateComponent implements OnInit {
       .get('employeeName')
       ?.valueChanges.subscribe((selectedName) => {
         const selectedEmployee = this.employees.find(
-          (employee) => employee.employeeName === selectedName
+          (employee) => employee.employeeName === selectedName,
         );
         if (selectedEmployee) {
           this.incentiveForm.patchValue({
@@ -149,7 +171,8 @@ export class CreateComponent implements OnInit {
                   .split('.')
                   .map(
                     (part) =>
-                      part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+                      part.charAt(0).toUpperCase() +
+                      part.slice(1).toLowerCase(),
                   )
                   .join('.');
               }
@@ -162,7 +185,7 @@ export class CreateComponent implements OnInit {
       (error) => {
         this.loading = false;
         this.toastService.showError('Failed to load employees');
-      }
+      },
     );
   }
 
@@ -233,40 +256,29 @@ export class CreateComponent implements OnInit {
           ? this.moment(file.disbursedMonth, 'YYYY-MM').format('YYYY-MM')
           : null,
       }));
-    const calculateIncentive = (totalDisbursedAmount: number): number => {
-      if (totalDisbursedAmount >= 10000000) {
-        return Math.round(totalDisbursedAmount * 0.003);
-      } else if (totalDisbursedAmount >= 4900000) {
-        return Math.round(totalDisbursedAmount * 0.002);
-      } else if (totalDisbursedAmount >= 1500000) {
-        return Math.round(totalDisbursedAmount * 0.0015);
-      }
-      return 0;
-    };
     const getTotalDisbursedAmount = (files: any[]) =>
       files.reduce(
         (sum, file) =>
           sum + (file.disbursedAmount ? Number(file.disbursedAmount) : 0),
-        0
+        0,
       );
     const firstMonthTotal = getTotalDisbursedAmount(this.firstMonthFiles || []);
     const secondMonthTotal = getTotalDisbursedAmount(
-      this.secondMonthFiles || []
+      this.secondMonthFiles || [],
     );
     const thirdMonthTotal = getTotalDisbursedAmount(this.thirdMonthFiles || []);
-    // const totalDisbursedAmount =
-    //   firstMonthTotal + secondMonthTotal + thirdMonthTotal;
     const incentiveAmount =
-      calculateIncentive(firstMonthTotal) +
-      calculateIncentive(secondMonthTotal) +
-      calculateIncentive(thirdMonthTotal);
+      this.incentivePolicyService.calculateIncentiveAmount(
+        [firstMonthTotal, secondMonthTotal, thirdMonthTotal],
+        this.incentiveConfig,
+      );
     const formData: any = {
       employeeName: formValues.employeeName,
       employeeId: formValues.employeeId,
       incentiveAmount,
       incentiveApplicableMonth: formValues.incentiveApplicableMonth
         ? this.moment(formValues.incentiveApplicableMonth, 'YYYY-MM').format(
-            'YYYY-MM'
+            'YYYY-MM',
           )
         : null,
       firstMonthFiles:
@@ -295,7 +307,7 @@ export class CreateComponent implements OnInit {
         (error: any) => {
           this.loading = false;
           this.toastService.showError(error);
-        }
+        },
       );
     } else if (this.actionType == 'update') {
       this.loading = true;
@@ -312,7 +324,7 @@ export class CreateComponent implements OnInit {
           (error: any) => {
             this.loading = false;
             this.toastService.showError(error);
-          }
+          },
         );
     }
   }
@@ -331,7 +343,7 @@ export class CreateComponent implements OnInit {
             this.loading = false;
             resolve(false);
             this.toastService.showError(error);
-          }
+          },
         );
     });
   }

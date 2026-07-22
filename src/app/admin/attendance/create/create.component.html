@@ -41,214 +41,224 @@
       </div>
       <div class="custom-calendar-wrapper position-relative">
         <p-calendar
-        #calendar
-        [(ngModel)]="selectedDate"
-        dateFormat="yy-mm-dd"
-        [showIcon]="false"
-        [style]="{ width: '100%' }"
-        appendTo="body"
-        [showButtonBar]="true"
-        [readonlyInput]="true"
-        placeholder="Select Attendance date"
-        (onSelect)="getLeaves()"
-      >
-      </p-calendar>
-      <img
-        src="../../../assets/images/icons/calendar.svg"
-        alt="Calendar Icon"
-        class="calendar-custom-img"
-        (click)="calendar.toggle()"
-        
-      />
+          #calendar
+          [(ngModel)]="selectedDate"
+          dateFormat="yy-mm-dd"
+          [showIcon]="false"
+          [style]="{ width: '100%' }"
+          appendTo="body"
+          [showButtonBar]="true"
+          [readonlyInput]="true"
+          placeholder="Select Attendance date"
+          (onSelect)="getLeaves()"
+        >
+        </p-calendar>
+        <img
+          src="../../../assets/images/icons/calendar.svg"
+          alt="Calendar Icon"
+          class="calendar-custom-img"
+          (click)="calendar.toggle()"
+        />
+      </div>
+      <small class="text-muted ms-2">
+        Default check-in {{ defaultCheckInTime }}. Late after
+        {{ officePolicy?.officeStartTime }} +
+        {{ officePolicy?.graceMinutes }} min ({{
+          officePolicy?.officeEndTime
+        }}
+        logout).
+      </small>
     </div>
-  </div>
-  <p-table
-    #employeesTable
-    [value]="employeeDetails"
-    [sortOrder]="1"
-    [sortField]="'joiningDate'"
-    [lazy]="true"
-    (onLazyLoad)="loadEmployees($event)"
-    dataKey="id"
-    [showCurrentPageReport]="true"
-    class="p-datatable-striped table"
-    [totalRecords]="totalEmployeesCount"
-    [loading]="loading"
-    responsiveLayout="scroll"
-    scrollHeight="flex"
-    [scrollable]="true"
-    [globalFilterFields]="[
-      'referenceNo',
-      'customer.firstName',
-      'partner.partnerName',
-      'status'
-    ]"
-    styleClass="p-datatable-customers"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Employees"
-  >
-    <ng-template pTemplate="header">
-      <tr>
-        <th>#</th>
-        <!-- <th class="text-nowrap">Employee Id</th> -->
-        <th class="text-nowrap">Custom Employee Id</th>
-        <th>Employee Name</th>
-        <th>Designation</th>
-        <th class="text-nowrap">Joining Date</th>
-        <th>Attendance Status</th>
-        <th>Check-in Time</th>
-        <th>Check-Out Time</th>
-        <th>Reason For leave</th>
-      </tr>
-    </ng-template>
+    <p-table
+      #employeesTable
+      [value]="employeeDetails"
+      [sortOrder]="1"
+      [sortField]="'joiningDate'"
+      [lazy]="true"
+      (onLazyLoad)="loadEmployees($event)"
+      dataKey="id"
+      [showCurrentPageReport]="true"
+      class="p-datatable-striped table"
+      [totalRecords]="totalEmployeesCount"
+      [loading]="loading"
+      responsiveLayout="scroll"
+      scrollHeight="flex"
+      [scrollable]="true"
+      [globalFilterFields]="[
+        'referenceNo',
+        'customer.firstName',
+        'partner.partnerName',
+        'status',
+      ]"
+      styleClass="p-datatable-customers"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Employees"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>#</th>
+          <!-- <th class="text-nowrap">Employee Id</th> -->
+          <th class="text-nowrap">Custom Employee Id</th>
+          <th>Employee Name</th>
+          <th>Designation</th>
+          <th class="text-nowrap">Joining Date</th>
+          <th>Attendance Status</th>
+          <th>Check-in Time</th>
+          <th>Check-Out Time</th>
+          <th>Reason For leave</th>
+        </tr>
+      </ng-template>
 
-    <ng-template pTemplate="body" let-employee let-i="rowIndex">
-      <tr>
-        <td>{{ i + 1 }}</td>
-        <!-- <td>{{ employee.employeeId }}</td> -->
-        <td>{{ employee.customEmployeeId }}</td>
-        <td>
-          <div class="d-flex align-items-center">
-            <span class="me-2">
-              <ng-container
-                *ngIf="
-                  employee &&
-                    employee.passPhoto &&
-                    employee.passPhoto.length > 0;
-                  else defaultImage
-                "
-              >
-                <a [href]="'//' + employee.passPhoto[0]" target="_blank">
+      <ng-template pTemplate="body" let-employee let-i="rowIndex">
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <!-- <td>{{ employee.employeeId }}</td> -->
+          <td>{{ employee.customEmployeeId }}</td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="me-2">
+                <ng-container
+                  *ngIf="
+                    employee &&
+                      employee.passPhoto &&
+                      employee.passPhoto.length > 0;
+                    else defaultImage
+                  "
+                >
+                  <a [href]="'//' + employee.passPhoto[0]" target="_blank">
+                    <img
+                      [src]="'//' + employee.passPhoto[0]"
+                      alt="Image"
+                      class="employeeImage"
+                      style="height: 40px; width: 40px"
+                    />
+                  </a>
+                </ng-container>
+                <ng-template #defaultImage>
                   <img
-                    [src]="'//' + employee.passPhoto[0]"
-                    alt="Image"
+                    src="../../../assets/images/profile/user.png"
+                    alt="Default Image"
                     class="employeeImage"
                     style="height: 40px; width: 40px"
                   />
-                </a>
-              </ng-container>
-              <ng-template #defaultImage>
-                <img
-                  src="../../../assets/images/profile/user.png"
-                  alt="Default Image"
-                  class="employeeImage"
-                  style="height: 40px; width: 40px"
-                />
-              </ng-template>
-            </span>
-            <b>
-              <span *ngIf="employee.employeeName" class="table-column-data">
-                {{ employee.employeeName | capitalizeFirst }}
+                </ng-template>
               </span>
-            </b>
-          </div>
-        </td>
-        <td>
-          <span class="table-column-data" *ngIf="employee.designationName">{{
-            employee.designationName
-          }}</span>
-        </td>
-        <td>
-          <span class="table-column-data" *ngIf="employee.joiningDate">{{
-            employee.joiningDate | date : "mediumDate"
-          }}</span>
-        </td>
-        <td>
-          <p-dropdown
-            [options]="attendanceOptions"
-            [(ngModel)]="employee.status"
-            [showClear]="false"
-            appendTo="body"
-            (onChange)="updateAttendanceStatus(employee)"
-            [style]="{ width: '150px' }"
-          ></p-dropdown>
-        </td>
-        <td>
-          <ng-container
-            *ngIf="employee.status === 'Absent'; else editableCheckIn"
-          >
-          </ng-container>
-          <ng-template #editableCheckIn>
-            <input
-              pInputText
-              type="time"
-              class="rounded-lg"
-              [(ngModel)]="employee.checkInTime"
-              [disabled]="employee.status === 'Absent'"
-              class="form-control"
-              [style]="{ width: '130px' }"
+              <b>
+                <span *ngIf="employee.employeeName" class="table-column-data">
+                  {{ employee.employeeName | capitalizeFirst }}
+                </span>
+              </b>
+            </div>
+          </td>
+          <td>
+            <span class="table-column-data" *ngIf="employee.designationName">{{
+              employee.designationName
+            }}</span>
+          </td>
+          <td>
+            <span class="table-column-data" *ngIf="employee.joiningDate">{{
+              employee.joiningDate | date: "mediumDate"
+            }}</span>
+          </td>
+          <td>
+            <p-dropdown
+              [options]="attendanceOptions"
+              [(ngModel)]="employee.status"
+              [showClear]="false"
+              appendTo="body"
+              (onChange)="updateAttendanceStatus(employee)"
+              [style]="{ width: '150px' }"
+            ></p-dropdown>
+          </td>
+          <td>
+            <ng-container
+              *ngIf="employee.status === 'Absent'; else editableCheckIn"
+            >
+            </ng-container>
+            <ng-template #editableCheckIn>
+              <input
+                pInputText
+                type="time"
+                class="rounded-lg"
+                [(ngModel)]="employee.checkInTime"
+                (ngModelChange)="onAttendanceTimeChange(employee)"
+                [disabled]="employee.status === 'Absent'"
+                class="form-control"
+                [style]="{ width: '130px' }"
+              />
+            </ng-template>
+          </td>
+          <td>
+            <ng-container
+              *ngIf="employee.status === 'Absent'; else editableCheckOut"
+            >
+            </ng-container>
+            <ng-template #editableCheckOut>
+              <input
+                pInputText
+                type="time"
+                class="rounded-lg"
+                [(ngModel)]="employee.checkOutTime"
+                (ngModelChange)="onAttendanceTimeChange(employee)"
+                [disabled]="employee.status === 'Absent'"
+                class="form-control"
+                [style]="{ width: '130px' }"
+              />
+            </ng-template>
+          </td>
+          <td>
+            <textarea
+              pInputTextarea
+              rows="1"
+              cols="30"
+              class="rounded-lg form-control"
+              [(ngModel)]="employee.reason"
+              [style]="{ width: '200px' }"
+              placeholder="Enter reason"
+            ></textarea>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="10" class="text-center fw-bold">
+            <img
+              src="../../../assets/images/menu/no data found.svg"
+              width="300"
+              height="300"
             />
-          </ng-template>
-        </td>
-        <td>
-          <ng-container
-            *ngIf="employee.status === 'Absent'; else editableCheckOut"
-          >
-          </ng-container>
-          <ng-template #editableCheckOut>
-            <input
-              pInputText
-              type="time"
-              class="rounded-lg"
-              [(ngModel)]="employee.checkOutTime"
-              [disabled]="employee.status === 'Absent'"
-              class="form-control"
-              [style]="{ width: '130px' }"
-            />
-          </ng-template>
-        </td>
-        <td>
-          <textarea
-            pInputTextarea
-            rows="1"
-            cols="30"
-            class="rounded-lg form-control"
-            [(ngModel)]="employee.reason"
-            [style]="{ width: '200px' }"
-            placeholder="Enter reason"
-          ></textarea>
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="10" class="text-center fw-bold">
-          <img
-            src="../../../assets/images/menu/no data found.svg"
-            width="300"
-            height="300"
-          />
-          <p>No Data Found</p>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-</div>
-<div class="d-flex justify-content-center mt-5 mb-5">
-  <button
-    pButton
-    pRipple
-    type="button"
-    class="p-button-info goback-button p-button-raised me-3"
-    (click)="goBack()"
-  >
-    Go Back
-  </button>
-  <button
-    pButton
-    pRipple
-    type="submit"
-    [disabled]="!selectedDate"
-    (click)="saveAttendance()"
-    class="p-button-primary p-button-raised"
-  >
-    {{ actionType === "create" ? "Add" : "Update" }} Attendance
-  </button>
-</div>
-<footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
-  <div class="text-center mb-3">
-    © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b
-      style="color: #535ab4"
-      >HRMS</b
-    >. | All Rights Reserved
+            <p>No Data Found</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
-</footer>
+  <div class="d-flex justify-content-center mt-5 mb-5">
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-info goback-button p-button-raised me-3"
+      (click)="goBack()"
+    >
+      Go Back
+    </button>
+    <button
+      pButton
+      pRipple
+      type="submit"
+      [disabled]="!selectedDate"
+      (click)="saveAttendance()"
+      class="p-button-primary p-button-raised"
+    >
+      {{ actionType === "create" ? "Add" : "Update" }} Attendance
+    </button>
+  </div>
+  <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
+    <div class="text-center mb-3">
+      © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b
+        style="color: #535ab4"
+        >HRMS</b
+      >. | All Rights Reserved
+    </div>
+  </footer>
+</div>

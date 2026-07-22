@@ -10,6 +10,10 @@ import jsPDF from 'jspdf';
 import * as html2pdf from 'html2pdf.js';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { CompanySettingsService } from 'src/app/services/company-settings.service';
+import {
+  OfficePayrollPolicy,
+  OfficePayrollPolicyService,
+} from 'src/app/services/office-payroll-policy.service';
 @Component({
   selector: 'app-payslip',
   templateUrl: './payslip.component.html',
@@ -28,6 +32,8 @@ export class PayslipComponent {
   currentYear: number;
   apiLoading: any;
   companySettings: any = {};
+  officePolicy: OfficePayrollPolicy;
+  payrollPeriodLabel: string = '';
   constructor(
     private location: Location,
     private route: ActivatedRoute,
@@ -36,9 +42,11 @@ export class PayslipComponent {
     private employeesService: EmployeesService,
     private dateTimeProcessor: DateTimeProcessorService,
     private companySettingsService: CompanySettingsService,
+    private officePayrollPolicyService: OfficePayrollPolicyService,
   ) {
     const usertype = localStorageService.getItemFromLocalStorage('userType');
     this.moment = this.dateTimeProcessor.getMoment();
+    this.officePolicy = this.officePayrollPolicyService.defaults;
     this.breadCrumbItems = [
       {
         icon: 'fa fa-house',
@@ -69,10 +77,29 @@ export class PayslipComponent {
     this.companySettingsService.getCompanySettings().subscribe(
       (response: any) => {
         this.companySettings = response || {};
+        this.officePolicy = this.officePayrollPolicyService.normalize(
+          response || {},
+        );
+        this.updatePayrollPeriodLabel();
       },
       (error: any) => {
         console.error('Error loading company settings:', error);
       },
+    );
+  }
+
+  updatePayrollPeriodLabel() {
+    if (!this.payroll?.payrollMonth) {
+      this.payrollPeriodLabel = '';
+      return;
+    }
+    const month = this.moment(this.payroll.payrollMonth, 'YYYY-MM').format(
+      'YYYY-MM',
+    );
+    this.payrollPeriodLabel = this.officePayrollPolicyService.formatPeriodLabel(
+      this.moment,
+      month,
+      this.officePolicy,
     );
   }
 
@@ -160,6 +187,7 @@ export class PayslipComponent {
                 payrollresponse,
                 employeeResponse,
               );
+              this.updatePayrollPeriodLabel();
               this.apiLoading = false;
             },
             (error: any) => {

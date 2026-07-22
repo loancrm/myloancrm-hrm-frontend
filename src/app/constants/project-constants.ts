@@ -85,6 +85,7 @@ export const projectConstantsLocal = {
     { label: 'Absent', value: 'Absent' },
     { label: 'Half-day', value: 'Half-day' },
     { label: 'Late', value: 'Late' },
+    { label: 'Early Logout', value: 'Early-logout' },
   ],
   ISSUED_PAYSLIPS: [
     { label: 'Yes', value: 'Yes' },

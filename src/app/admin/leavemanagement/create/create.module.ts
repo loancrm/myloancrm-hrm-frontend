@@ -9,6 +9,10 @@ import { CalendarModule } from 'primeng/calendar';
 import { CreateComponent } from './create.component';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { FileUploadModule } from '../../file-upload/file-upload.module';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
 
 const routes: Routes = [{ path: '', component: CreateComponent }];
 
@@ -24,7 +28,11 @@ const routes: Routes = [{ path: '', component: CreateComponent }];
     DropdownModule,
     CalendarModule,
     PreloaderModule,
-    InputTextareaModule
+    InputTextareaModule,
+    ButtonModule,
+    ConfirmDialogModule,
+    FileUploadModule,
+    DynamicDialogModule,
   ],
 })
 export class CreateModule {}

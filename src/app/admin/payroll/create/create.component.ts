@@ -14,6 +14,11 @@ import { RoutingService } from 'src/app/services/routing-service';
 import { projectConstantsLocal } from 'src/app/constants/project-constants';
 import { ConfirmationService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
+import { CompanySettingsService } from 'src/app/services/company-settings.service';
+import {
+  OfficePayrollPolicy,
+  OfficePayrollPolicyService,
+} from 'src/app/services/office-payroll-policy.service';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -35,6 +40,8 @@ export class CreateComponent {
   actionType: any = 'create';
   currentYear: number;
   presentDaysCount = 0;
+  officePolicy: OfficePayrollPolicy;
+  periodRangeLabel: string = '';
   constructor(
     private location: Location,
     private routingService: RoutingService,
@@ -44,9 +51,12 @@ export class CreateComponent {
     private activatedRoute: ActivatedRoute,
     private confirmationService: ConfirmationService,
     private localStorageService: LocalStorageService,
-    private dateTimeProcessor: DateTimeProcessorService
+    private dateTimeProcessor: DateTimeProcessorService,
+    private companySettingsService: CompanySettingsService,
+    private officePayrollPolicyService: OfficePayrollPolicyService,
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
+    this.officePolicy = this.officePayrollPolicyService.defaults;
     this.activatedRoute.params.subscribe((params) => {
       if (params && params['id']) {
         this.payslipId = params['id'];
@@ -113,11 +123,12 @@ export class CreateComponent {
     this.setPayrollList();
     this.getHolidays();
     this.getEmployees();
+    this.loadOfficePolicy();
     this.payrollForm
       .get('employeeName')
       ?.valueChanges.subscribe((selectedName) => {
         const selectedEmployee = this.employees.find(
-          (employee) => employee.employeeName === selectedName
+          (employee) => employee.employeeName === selectedName,
         );
         if (selectedEmployee) {
           this.payrollForm.patchValue({
@@ -140,7 +151,7 @@ export class CreateComponent {
           if (!selectedEmployee.salary) missingFields.push('Salary');
           if (missingFields.length > 0) {
             const missingFieldsMessage = `The following fields are missing: ${missingFields.join(
-              ', '
+              ', ',
             )}`;
             this.confirmationService.confirm({
               message: `${missingFieldsMessage}. Please update this Fields.`,
@@ -156,12 +167,12 @@ export class CreateComponent {
           this.getSalaryHikes(filter).subscribe(
             (salaryHikes: any) => {
               const matchingHikes = salaryHikes.filter(
-                (hike) => hike.employeeId == selectedEmployee.employeeId
+                (hike) => hike.employeeId == selectedEmployee.employeeId,
               );
               if (matchingHikes.length > 0) {
                 const totalHike = matchingHikes.reduce(
                   (accumulatedHike, hike) => accumulatedHike + hike.monthlyHike,
-                  0
+                  0,
                 );
                 selectedEmployee.salary += totalHike;
                 this.payrollForm.patchValue({
@@ -171,15 +182,23 @@ export class CreateComponent {
             },
             (error) => {
               console.error(error);
-            }
+            },
           );
         }
       });
     this.payrollForm
       .get('payrollMonth')
-      ?.valueChanges.subscribe((payrollMonth) =>
-        this.calculateWorkingDays(payrollMonth)
-      );
+      ?.valueChanges.subscribe((payrollMonth) => {
+        this.calculateWorkingDays(payrollMonth);
+        this.updatePeriodLabel(payrollMonth);
+        const joiningDate = this.payrollForm.get('joiningDate')?.value;
+        if (joiningDate) {
+          this.handleCasualDays(joiningDate);
+        }
+        if (this.payrollForm.get('employeeId')?.value) {
+          this.handlePresentDays();
+        }
+      });
     this.payrollForm
       .get('joiningDate')
       ?.valueChanges.subscribe((joiningDate) => {
@@ -192,6 +211,21 @@ export class CreateComponent {
         this.handlePresentDays();
       }
     });
+  }
+
+  updatePeriodLabel(payrollMonth?: string) {
+    const month =
+      payrollMonth || this.payrollForm?.get('payrollMonth')?.value || '';
+    if (!month) {
+      this.periodRangeLabel = '';
+      return;
+    }
+    const normalized = this.moment(month).format('YYYY-MM');
+    this.periodRangeLabel = this.officePayrollPolicyService.formatPeriodLabel(
+      this.moment,
+      normalized,
+      this.officePolicy,
+    );
   }
 
   getAttendance(): Promise<void> {
@@ -207,7 +241,7 @@ export class CreateComponent {
           this.loading = false;
           this.toastService.showError(error);
           reject(error);
-        }
+        },
       );
     });
   }
@@ -220,23 +254,12 @@ export class CreateComponent {
   }
   handleCasualDays(joiningDate: Date): void {
     const payrollMonth = this.payrollForm.get('payrollMonth')?.value;
-    const joining = new Date(joiningDate);
-    const payroll = new Date(this.moment(payrollMonth, 'YYYY-MM').toDate());
-    let eligibleCasualMonth;
-    if (joining.getDate() < 4) {
-      eligibleCasualMonth = new Date(
-        joining.getFullYear(),
-        joining.getMonth() + 3,
-        1
-      );
-    } else {
-      eligibleCasualMonth = new Date(
-        joining.getFullYear(),
-        joining.getMonth() + 4,
-        1
-      );
-    }
-    const casualDays = payroll >= eligibleCasualMonth ? 1 : 0;
+    const casualDays = this.officePayrollPolicyService.getCasualDaysCount(
+      joiningDate,
+      payrollMonth ? this.moment(payrollMonth).format('YYYY-MM') : '',
+      this.officePolicy,
+      this.moment,
+    );
     this.payrollForm.patchValue({
       casualDays,
     });
@@ -245,43 +268,36 @@ export class CreateComponent {
   handlePresentDays(): void {
     const payrollMonth = this.payrollForm.get('payrollMonth')?.value;
     const employeeId = this.payrollForm.get('employeeId')?.value;
-    const payroll = new Date(this.moment(payrollMonth, 'YYYY-MM').toDate());
+    const payrollPeriod = this.officePayrollPolicyService.getPayrollPeriod(
+      this.moment,
+      payrollMonth,
+      this.officePolicy,
+    );
     this.loading = true;
     this.getAttendance()
       .then(() => {
-        const filteredAttendance = this.attendance.filter((record) => {
-          const attendanceDate = new Date(record.attendanceDate);
-          return (
-            attendanceDate.getMonth() === payroll.getMonth() &&
-            attendanceDate.getFullYear() === payroll.getFullYear()
+        const filteredAttendance = this.attendance.filter((record) =>
+          this.officePayrollPolicyService.isAttendanceInPeriod(
+            record.attendanceDate,
+            payrollPeriod,
+            this.moment,
+          ),
+        );
+        const counts =
+          this.officePayrollPolicyService.countEmployeeAttendanceForPeriod(
+            this.moment,
+            this.officePolicy,
+            employeeId,
+            filteredAttendance,
           );
-        });
-        const presentDays = filteredAttendance.reduce((count, record) => {
-          const employeeRecord = record.attendanceData.find(
-            (emp) => emp.employeeId === employeeId
+        const lateLopDays =
+          this.officePayrollPolicyService.calculateAttendanceLopDays(
+            counts.lateCheckInDays,
+            counts.earlyLogoutDays,
+            this.officePolicy,
           );
-          if (employeeRecord) {
-            if (
-              employeeRecord.status === 'Present' ||
-              employeeRecord.status === 'Late'
-            ) {
-              return count + 1;
-            }
-            if (employeeRecord.status === 'Half-day') {
-              return count + 0.5;
-            }
-          }
-          return count;
-        }, 0);
-        const lateDays = filteredAttendance.reduce((count, record) => {
-          const employeeRecord = record.attendanceData.find(
-            (emp) => emp.employeeId === employeeId && emp.status === 'Late'
-          );
-          return employeeRecord ? count + 1 : count;
-        }, 0);
-        const lateLopDays = Math.floor(lateDays / 3);
         this.payrollForm.patchValue({
-          presentDays: presentDays,
+          presentDays: counts.presentDays,
           lateLopDays: lateLopDays,
         });
       })
@@ -296,19 +312,37 @@ export class CreateComponent {
     if (!payrollMonth) {
       return;
     }
-    const startOfMonth = this.moment(payrollMonth, 'YYYY-MM').startOf('month');
-    const endOfMonth = this.moment(payrollMonth, 'YYYY-MM').endOf('month');
-    let workingDaysCount = 0;
-    for (
-      let day = startOfMonth;
-      day.isBefore(endOfMonth) || day.isSame(endOfMonth, 'day');
-      day.add(1, 'days')
-    ) {
-      if (day.isoWeekday() !== 7 && !this.isHoliday(day)) {
-        workingDaysCount++;
-      }
-    }
+    const workingDaysCount = this.officePayrollPolicyService.countWorkingDays(
+      this.moment,
+      payrollMonth,
+      this.officePolicy,
+      (day) => this.isHoliday(day),
+    );
     this.payrollForm.get('workingDays')?.setValue(workingDaysCount);
+  }
+  loadOfficePolicy() {
+    this.companySettingsService.getCompanySettings().subscribe(
+      (response: any) => {
+        this.officePolicy = this.officePayrollPolicyService.normalize(
+          response || {},
+        );
+        const payrollMonth = this.payrollForm?.get('payrollMonth')?.value;
+        if (payrollMonth) {
+          this.calculateWorkingDays(payrollMonth);
+          this.updatePeriodLabel(payrollMonth);
+        }
+        const joiningDate = this.payrollForm?.get('joiningDate')?.value;
+        if (joiningDate) {
+          this.handleCasualDays(joiningDate);
+        }
+        if (this.payrollForm?.get('employeeId')?.value) {
+          this.handlePresentDays();
+        }
+      },
+      () => {
+        this.officePolicy = this.officePayrollPolicyService.defaults;
+      },
+    );
   }
   isHoliday(day: any): boolean {
     const dayStr = day.format('YYYY-MM-DD');
@@ -324,7 +358,7 @@ export class CreateComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   getEmployees(filter = {}) {
@@ -346,7 +380,8 @@ export class CreateComponent {
                   .split('.')
                   .map(
                     (part) =>
-                      part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+                      part.charAt(0).toUpperCase() +
+                      part.slice(1).toLowerCase(),
                   )
                   .join('.');
               }
@@ -360,7 +395,7 @@ export class CreateComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   setPayrollList() {
@@ -393,7 +428,7 @@ export class CreateComponent {
         required: true,
       },
       {
-        label: 'Casual Days',
+        label: 'Paid Leave Days',
         controlName: 'casualDays',
         type: 'number',
         required: true,
@@ -500,10 +535,10 @@ export class CreateComponent {
     const paidDaysWithoutDLOP = workingDays - totalDeductedDaysWithoutDLOP;
     const paidDaysWithDLOP = workingDays - totalDeductedDaysWithDLOP;
     const baseNetSalaryWithoutDLOP = Number(
-      (paidDaysWithoutDLOP * daySalary).toFixed()
+      (paidDaysWithoutDLOP * daySalary).toFixed(),
     );
     const baseNetSalaryWithDLOP = Number(
-      (paidDaysWithDLOP * daySalary).toFixed()
+      (paidDaysWithDLOP * daySalary).toFixed(),
     );
     const baseDeductionsWithoutDLOP = salary - baseNetSalaryWithoutDLOP;
     const baseDeductionsWithDLOP = salary - baseNetSalaryWithDLOP;
@@ -525,12 +560,11 @@ export class CreateComponent {
         : deductionsWithDLOP;
     const paidDays =
       lopOption === 'withoutDoubleLOP' ? paidDaysWithoutDLOP : paidDaysWithDLOP;
-    let professionalTax = 0;
-    if (salary > 20000) {
-      professionalTax = 200;
-    } else if (salary > 15000) {
-      professionalTax = 150;
-    }
+    let professionalTax =
+      this.officePayrollPolicyService.calculateProfessionalTax(
+        salary,
+        this.officePolicy,
+      );
     netSalary = netSalary - professionalTax;
     netSalaryWithoutDoubleLop = netSalaryWithoutDoubleLop - professionalTax;
     netSalaryWithDoubleLop = netSalaryWithDoubleLop - professionalTax;
@@ -580,7 +614,7 @@ export class CreateComponent {
         (error: any) => {
           this.loading = false;
           this.toastService.showError(error);
-        }
+        },
       );
     } else if (this.actionType == 'update') {
       this.loading = true;
@@ -595,7 +629,7 @@ export class CreateComponent {
         (error: any) => {
           this.loading = false;
           this.toastService.showError(error);
-        }
+        },
       );
     }
   }
@@ -832,7 +866,7 @@ export class CreateComponent {
           this.loading = false;
           resolve(false);
           this.toastService.showError(error);
-        }
+        },
       );
     });
   }

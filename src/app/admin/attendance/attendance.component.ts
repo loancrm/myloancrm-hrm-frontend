@@ -7,6 +7,11 @@ import { ConfirmationService } from 'primeng/api';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { DateTimeProcessorService } from 'src/app/services/date-time-processor.service';
 import { projectConstantsLocal } from 'src/app/constants/project-constants';
+import { CompanySettingsService } from 'src/app/services/company-settings.service';
+import {
+  OfficePayrollPolicy,
+  OfficePayrollPolicyService,
+} from 'src/app/services/office-payroll-policy.service';
 @Component({
   selector: 'app-attendance',
   templateUrl: './attendance.component.html',
@@ -24,12 +29,14 @@ export class AttendanceComponent implements OnInit {
   displayMonth: Date;
   displayDialog = false;
   attendance: any = [];
-  selectedMonth: Date;
+  selectedMonth: any;
   apiLoading: any;
   version = projectConstantsLocal.VERSION_DESKTOP;
   filteredData: any[] = [];
   capabilities: any;
   currentYear: number;
+  officePolicy: OfficePayrollPolicy;
+  periodRangeLabel: string = '';
   constructor(
     private location: Location,
     private confirmationService: ConfirmationService,
@@ -37,13 +44,17 @@ export class AttendanceComponent implements OnInit {
     private routingService: RoutingService,
     private toastService: ToastService,
     private dateTimeProcessor: DateTimeProcessorService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private companySettingsService: CompanySettingsService,
+    private officePayrollPolicyService: OfficePayrollPolicyService,
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
+    this.officePolicy = this.officePayrollPolicyService.defaults;
     // const usertype = localStorage.getItem('userType');
     const usertype = localStorageService.getItemFromLocalStorage('userType');
     this.selectedMonth = this.moment(new Date()).format('YYYY-MM');
     this.displayMonth = this.moment(new Date()).format('MMMM YYYY');
+    this.updatePeriodLabel();
     this.breadCrumbItems = [
       // {
       //   icon: 'fa fa-house',
@@ -67,20 +78,55 @@ export class AttendanceComponent implements OnInit {
       this.localStorageService.getItemFromLocalStorage('userDetails');
     this.userDetails = userDetails.user;
     this.capabilities = this.employeesService.getUserRbac();
+    this.loadOfficePolicy();
     const storedDate = this.localStorageService.getItemFromLocalStorage(
-      'selectedAttendanceDate'
+      'selectedAttendanceDate',
     );
     if (storedDate) {
       this.selectedDate = storedDate;
       this.filterByDate();
     }
     const storedMonth = this.localStorageService.getItemFromLocalStorage(
-      'selectedAttendanceMonth'
+      'selectedAttendanceMonth',
     );
     if (storedMonth) {
       this.selectedMonth = storedMonth;
       this.displayMonth = this.moment(this.selectedMonth).format('MMMM YYYY');
+      this.updatePeriodLabel();
     }
+  }
+
+  loadOfficePolicy() {
+    this.companySettingsService.getCompanySettings().subscribe(
+      (response: any) => {
+        this.officePolicy = this.officePayrollPolicyService.normalize(
+          response || {},
+        );
+        this.updatePeriodLabel();
+        if (this.currentTableEvent) {
+          this.loadAttendance(this.currentTableEvent);
+        }
+      },
+      () => {
+        this.officePolicy = this.officePayrollPolicyService.defaults;
+        this.updatePeriodLabel();
+      },
+    );
+  }
+
+  updatePeriodLabel() {
+    if (!this.selectedMonth) {
+      this.periodRangeLabel = '';
+      return;
+    }
+    const payrollMonth = this.moment(this.selectedMonth, 'YYYY-MM').format(
+      'YYYY-MM',
+    );
+    this.periodRangeLabel = this.officePayrollPolicyService.formatPeriodLabel(
+      this.moment,
+      payrollMonth,
+      this.officePolicy,
+    );
   }
 
   loadAttendance(event) {
@@ -88,16 +134,16 @@ export class AttendanceComponent implements OnInit {
     let api_filter = this.employeesService.setFiltersFromPrimeTable(event);
     if (this.selectedMonth) {
       this.selectedMonth = this.moment(this.selectedMonth, 'YYYY-MM').format(
-        'YYYY-MM'
+        'YYYY-MM',
       );
-      const startOfMonth = this.moment(`${this.selectedMonth}-01`)
-        .startOf('month')
-        .format('YYYY-MM-DD');
-      const endOfMonth = this.moment(startOfMonth)
-        .endOf('month')
-        .format('YYYY-MM-DD');
-      api_filter['attendanceDate-gte'] = startOfMonth;
-      api_filter['attendanceDate-lte'] = endOfMonth;
+      const period = this.officePayrollPolicyService.getPayrollPeriod(
+        this.moment,
+        this.selectedMonth,
+        this.officePolicy,
+      );
+      api_filter['attendanceDate-gte'] = period.startStr;
+      api_filter['attendanceDate-lte'] = period.endStr;
+      this.updatePeriodLabel();
     }
     api_filter = Object.assign({}, api_filter, this.searchFilter);
     if (api_filter) {
@@ -112,9 +158,10 @@ export class AttendanceComponent implements OnInit {
   onDateChange(event: any) {
     this.selectedMonth = this.moment(event).format('YYYY-MM');
     this.displayMonth = this.moment(event).format('MMMM YYYY');
+    this.updatePeriodLabel();
     this.localStorageService.setItemOnLocalStorage(
       'selectedAttendanceMonth',
-      this.selectedMonth
+      this.selectedMonth,
     );
     this.loadAttendance(this.currentTableEvent);
   }
@@ -124,14 +171,14 @@ export class AttendanceComponent implements OnInit {
       const formattedDate = this.moment(this.selectedDate).format('YYYY-MM-DD');
       this.localStorageService.setItemOnLocalStorage(
         'selectedAttendanceDate',
-        formattedDate
+        formattedDate,
       );
       const searchFilter = { 'attendanceDate-like': formattedDate };
       this.applyFilters(searchFilter);
     } else {
       this.searchFilter = {};
       this.localStorageService.removeItemFromLocalStorage(
-        'selectedAttendanceDate'
+        'selectedAttendanceDate',
       );
       this.loadAttendance(this.currentTableEvent);
     }
@@ -148,7 +195,7 @@ export class AttendanceComponent implements OnInit {
       },
       (error: any) => {
         this.toastService.showError(error);
-      }
+      },
     );
   }
   getAttendance(filter = {}) {
@@ -158,16 +205,19 @@ export class AttendanceComponent implements OnInit {
         this.attendance = response;
         this.attendance = response.map((record: any) => {
           const presentCount = record.attendanceData.filter(
-            (data: any) => data.status === 'Present'
+            (data: any) => data.status === 'Present',
           ).length;
           const absentCount = record.attendanceData.filter(
-            (data: any) => data.status === 'Absent'
+            (data: any) => data.status === 'Absent',
           ).length;
           const halfDayCount = record.attendanceData.filter(
-            (data: any) => data.status === 'Half-day'
+            (data: any) => data.status === 'Half-day',
           ).length;
           const lateCount = record.attendanceData.filter(
-            (data: any) => data.status === 'Late'
+            (data: any) => data.status === 'Late',
+          ).length;
+          const earlyLogoutCount = record.attendanceData.filter(
+            (data: any) => data.status === 'Early-logout',
           ).length;
           return {
             ...record,
@@ -175,6 +225,7 @@ export class AttendanceComponent implements OnInit {
             absentCount,
             halfDayCount,
             lateCount,
+            earlyLogoutCount,
           };
         });
         this.apiLoading = false;
@@ -182,7 +233,7 @@ export class AttendanceComponent implements OnInit {
       (error: any) => {
         this.apiLoading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   getEmployeeAttendance(filter = {}) {
@@ -206,11 +257,11 @@ export class AttendanceComponent implements OnInit {
                   checkOutTime: record.checkOutTime,
                   createdBy: attendanceRecord.createdBy,
                   createdOn: attendanceRecord.createdOn,
-                }))
+                })),
           );
           if (employeeAttendance && employeeAttendance.length > 0) {
             this.attendance = employeeAttendance;
-          } else {  
+          } else {
           }
         }
         this.apiLoading = false;
@@ -218,7 +269,7 @@ export class AttendanceComponent implements OnInit {
       (error: any) => {
         this.apiLoading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   updateAttendance(attendanceId) {
@@ -248,7 +299,7 @@ export class AttendanceComponent implements OnInit {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   createAttendance() {

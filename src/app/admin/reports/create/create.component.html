@@ -69,53 +69,74 @@
             [style]="{ width: field.fieldWidth ? field.fieldWidth : '100%' }"
             (keypress)="onNumberInputChange($event)"
           />
-          <div *ngIf="field && field.type == 'date'" class="custom-calendar-wrapper position-relative">
+          <div
+            *ngIf="field && field.type == 'date'"
+            class="custom-calendar-wrapper position-relative"
+          >
             <span *ngIf="field && field.type == 'date'">
-            <p-calendar
-            #calender
-              [placeholder]="'Select ' + field.title"
-              appendTo="body"
-              [showIcon]="false"
-              [style]="{ width: field.fieldWidth ? field.fieldWidth : '100%' }"
-              [dateFormat]="field.dateFormat ? field.dateFormat : 'yy-mm-dd'"
-              [(ngModel)]="reportData[field.field + '-' + field.filterType]"
-              [readonlyInput]="true"
-              [showButtonBar]="true"
-              [readonlyInput]="true"
-            ></p-calendar>
-            <img
-              src="../../../assets/images/icons/calendar.svg"
-              alt="Calendar Icon"
-              class="calendar-custom-img"
-              (click)="calender.toggle()"
-              
-            />
-          </span>
+              <p-calendar
+                #calender
+                [placeholder]="'Select ' + field.title"
+                appendTo="body"
+                [showIcon]="false"
+                [style]="{
+                  width: field.fieldWidth ? field.fieldWidth : '100%',
+                }"
+                [dateFormat]="field.dateFormat ? field.dateFormat : 'yy-mm-dd'"
+                [(ngModel)]="reportData[field.field + '-' + field.filterType]"
+                [readonlyInput]="true"
+                [showButtonBar]="true"
+                [readonlyInput]="true"
+              ></p-calendar>
+              <img
+                src="../../../assets/images/icons/calendar.svg"
+                alt="Calendar Icon"
+                class="calendar-custom-img"
+                (click)="calender.toggle()"
+              />
+            </span>
           </div>
-          <div *ngIf="field && field.type == 'month'" class="custom-calendar-wrapper position-relative">
-            <span *ngIf="field && field.type == 'month'">
-            <p-calendar
-            #calender
-              [(ngModel)]="reportData[field.field + '-' + field.filterType]"
-              [showIcon]="false"
-              view="month"
-              [monthNavigator]="true"
-              [yearNavigator]="true"
-              [yearRange]="'-10:+10'"
-              [style]="{ width: field.fieldWidth ? field.fieldWidth : '100%' }"
-              dateFormat="yy-mm"
-              appendTo="body"
-              [showButtonBar]="true"
-              [readonlyInput]="true"
-              [placeholder]="'Select ' + field.title"
-            ></p-calendar>
-            <img
-              src="../../../assets/images/icons/calendar.svg"
-              alt="Calendar Icon"
-              class="calendar-custom-img"
-              (click)="calender.toggle()"
-            />
-          </span>
+          <div *ngIf="field && field.type == 'month'">
+            <div class="custom-calendar-wrapper position-relative">
+              <span *ngIf="field && field.type == 'month'">
+                <p-calendar
+                  #calender
+                  [(ngModel)]="reportData[field.field + '-' + field.filterType]"
+                  (ngModelChange)="onReportMonthChange(field)"
+                  [showIcon]="false"
+                  view="month"
+                  [monthNavigator]="true"
+                  [yearNavigator]="true"
+                  [yearRange]="'-10:+10'"
+                  [style]="{
+                    width: field.fieldWidth ? field.fieldWidth : '100%',
+                  }"
+                  dateFormat="yy-mm"
+                  appendTo="body"
+                  [showButtonBar]="true"
+                  [readonlyInput]="true"
+                  [placeholder]="'Select ' + field.title"
+                ></p-calendar>
+                <img
+                  src="../../../assets/images/icons/calendar.svg"
+                  alt="Calendar Icon"
+                  class="calendar-custom-img"
+                  (click)="calender.toggle()"
+                />
+              </span>
+            </div>
+            <small
+              class="text-muted d-block mt-1"
+              *ngIf="field.field === 'payrollMonth' && salarySheetPeriodLabel"
+            >
+              Policy period: {{ salarySheetPeriodLabel }}
+            </small>
+            <small
+              class="text-muted d-block mt-1"
+              *ngIf="field.field === 'salaryMonth' && attendancePeriodLabel"
+            >
+              Fills From/To as: {{ attendancePeriodLabel }}
+            </small>
           </div>
           <span *ngIf="field && field.type == 'dropdown'">
             <p-dropdown

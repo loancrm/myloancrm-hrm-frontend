@@ -8,6 +8,11 @@ import { DateTimeProcessorService } from 'src/app/services/date-time-processor.s
 import { Table } from 'primeng/table';
 import { ConfirmationService } from 'primeng/api';
 import { BranchesService } from 'src/app/services/branches.service';
+import { CompanySettingsService } from 'src/app/services/company-settings.service';
+import {
+  OfficePayrollPolicy,
+  OfficePayrollPolicyService,
+} from 'src/app/services/office-payroll-policy.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,6 +40,7 @@ export class DashboardComponent implements OnInit {
   totalAbsentCount: number = 0;
   totalHalfDayCount: number = 0;
   totalLateCount: number = 0;
+  totalEarlyLogoutCount: number = 0;
   attendanceData: any;
   totalUsersCount: any = 0;
   totalLeavesCount: any = 0;
@@ -62,6 +68,14 @@ export class DashboardComponent implements OnInit {
   reason: any;
   clientIp: any;
   allowedIps: string[] = [];
+  officePolicy: OfficePayrollPolicy;
+  ipRestrictionEnabled: boolean = true;
+  attendanceReasonDialogVisible = false;
+  attendanceReasonDialogType: 'checkIn' | 'checkOut' = 'checkIn';
+  attendanceReasonDialogRequiresReason = false;
+  attendanceReasonDialogMessage = '';
+  attendanceReasonInput = '';
+  pendingAttendanceReason = '';
   constructor(
     private localStorageService: LocalStorageService,
     private routingService: RoutingService,
@@ -69,9 +83,12 @@ export class DashboardComponent implements OnInit {
     private toastService: ToastService,
     private confirmationService: ConfirmationService,
     private dateTimeProcessor: DateTimeProcessorService,
-    private branchesService: BranchesService
+    private branchesService: BranchesService,
+    private companySettingsService: CompanySettingsService,
+    private officePayrollPolicyService: OfficePayrollPolicyService
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
+    this.officePolicy = this.officePayrollPolicyService.defaults;
     this.selectedDateforIncentive = this.moment(new Date())
       .subtract(1, 'month')
       .format('YYYY-MM');
@@ -90,10 +107,10 @@ export class DashboardComponent implements OnInit {
     this.clientIp =
       this.localStorageService.getItemFromLocalStorage('clientIp');
     this.capabilities = this.employeesService.getUserRbac();
-    this.selectedDate = this.moment().format('YYYY-MM-DD');
-    if (this.capabilities.employee) {
-      this.getIpAddress();
-    }
+    this.dateTimeProcessor.syncServerTime().subscribe(() => {
+      this.selectedDate = this.moment().format('YYYY-MM-DD');
+    });
+    this.loadOfficePolicy();
     if (!this.capabilities.employee) {
       this.getAttendanceByDate();
     }
@@ -109,6 +126,10 @@ export class DashboardComponent implements OnInit {
   }
 
   getIpAddress(filter = {}) {
+    if (!this.ipRestrictionEnabled) {
+      this.allowedIps = [];
+      return;
+    }
     this.apiLoading = true;
     this.employeesService.getIpAddress(filter).subscribe({
       next: (response: any) => {
@@ -124,42 +145,131 @@ export class DashboardComponent implements OnInit {
     });
   }
   checkIpAccess(): boolean {
+    // Account setting: IP restriction disabled → allow check-in/out everywhere
+    if (!this.ipRestrictionEnabled) {
+      return true;
+    }
+    if (!this.clientIp) {
+      return false;
+    }
     const ip = this.clientIp.split('.').slice(0, 2).join('.');
     return ip !== null && this.allowedIps.includes(ip);
   }
-  checkIn() {
-    // this.saveAttendance(true);
-    this.confirmationService.confirm({
-      // message: 'Are you sure you want to delete this Employee?',
-      message: `Are you sure you want to Check In ?<br>
-              `,
-      header: 'Confirm Check In ',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Yes',
-      rejectLabel: 'No',
-      accept: () => {
-        this.saveAttendance(true);
-      },
-    });
-  }
-  checkOut() {
-    // this.saveAttendance(false);
-    // this.stopLoggedHoursTimer();
 
-    this.confirmationService.confirm({
-      // message: 'Are you sure you want to delete this Employee?',
-      message: `Are you sure you want to Check Out ?<br>
-              `,
-      header: 'Confirm Check Out',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Yes',
-      rejectLabel: 'No',
-      accept: () => {
-        this.saveAttendance(false);
-        this.stopLoggedHoursTimer();
-      },
+  isLateCheckInNow(): boolean {
+    const lateThreshold = this.officePayrollPolicyService.getLateThreshold(
+      this.moment,
+      this.officePolicy
+    );
+    return this.dateTimeProcessor.now().isAfter(lateThreshold);
+  }
+
+  isEarlyCheckOutNow(): boolean {
+    const checkOutThreshold =
+      this.officePayrollPolicyService.getCheckOutThreshold(
+        this.moment,
+        this.officePolicy
+      );
+    return this.dateTimeProcessor.now().isBefore(checkOutThreshold);
+  }
+
+  getLateCutoffLabel(): string {
+    return this.officePayrollPolicyService.getLateCutoffLabel(
+      this.moment,
+      this.officePolicy
+    );
+  }
+
+  checkIn() {
+    this.dateTimeProcessor.syncServerTime().subscribe(() => {
+      if (this.isLateCheckInNow()) {
+        this.openAttendanceReasonDialog(
+          'checkIn',
+          true,
+          `You are checking in after ${this.getLateCutoffLabel()} (office start ${this.officePolicy.officeStartTime} + ${this.officePolicy.graceMinutes} min grace). Please enter the reason for late check-in.`
+        );
+        return;
+      }
+      this.confirmationService.confirm({
+        message: `Are you sure you want to Check In ?<br>
+                `,
+        header: 'Confirm Check In ',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: 'Yes',
+        rejectLabel: 'No',
+        accept: () => {
+          this.pendingAttendanceReason = '';
+          this.saveAttendance(true);
+        },
+      });
     });
   }
+
+  checkOut() {
+    this.dateTimeProcessor.syncServerTime().subscribe(() => {
+      if (this.isEarlyCheckOutNow()) {
+        this.openAttendanceReasonDialog(
+          'checkOut',
+          true,
+          `You are checking out before office end time (${this.officePolicy.officeEndTime}). Please enter the reason for early logout.`
+        );
+        return;
+      }
+      this.confirmationService.confirm({
+        message: `Are you sure you want to Check Out ?<br>
+                `,
+        header: 'Confirm Check Out',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: 'Yes',
+        rejectLabel: 'No',
+        accept: () => {
+          this.pendingAttendanceReason = '';
+          this.saveAttendance(false);
+          this.stopLoggedHoursTimer();
+        },
+      });
+    });
+  }
+
+  openAttendanceReasonDialog(
+    type: 'checkIn' | 'checkOut',
+    requiresReason: boolean,
+    message: string
+  ) {
+    this.attendanceReasonDialogType = type;
+    this.attendanceReasonDialogRequiresReason = requiresReason;
+    this.attendanceReasonDialogMessage = message;
+    this.attendanceReasonInput = '';
+    this.attendanceReasonDialogVisible = true;
+  }
+
+  cancelAttendanceReasonDialog() {
+    this.attendanceReasonDialogVisible = false;
+    this.attendanceReasonInput = '';
+    this.attendanceReasonDialogMessage = '';
+  }
+
+  confirmAttendanceReasonDialog() {
+    const reason = (this.attendanceReasonInput || '').trim();
+    if (this.attendanceReasonDialogRequiresReason && !reason) {
+      this.toastService.showError(
+        this.attendanceReasonDialogType === 'checkIn'
+          ? 'Please enter reason for late check-in'
+          : 'Please enter reason for early logout'
+      );
+      return;
+    }
+    this.pendingAttendanceReason = reason;
+    this.attendanceReasonDialogVisible = false;
+    if (this.attendanceReasonDialogType === 'checkIn') {
+      this.saveAttendance(true);
+    } else {
+      this.saveAttendance(false);
+      this.stopLoggedHoursTimer();
+    }
+    this.attendanceReasonInput = '';
+  }
+
   startLoggedHoursTimer() {
     if (this.checkInTime) {
       this.timerInterval = setInterval(() => {
@@ -258,7 +368,34 @@ export class DashboardComponent implements OnInit {
   //     }
   //   );
   // }
+
+  loadOfficePolicy() {
+    this.companySettingsService.getCompanySettings().subscribe(
+      (response: any) => {
+        this.officePolicy = this.officePayrollPolicyService.normalize(response || {});
+        this.ipRestrictionEnabled = !(
+          response?.ipRestrictionEnabled === 0 ||
+          response?.ipRestrictionEnabled === false ||
+          response?.ipRestrictionEnabled === '0'
+        );
+        if (this.capabilities?.employee && this.ipRestrictionEnabled) {
+          this.getIpAddress();
+        }
+      },
+      () => {
+        this.officePolicy = this.officePayrollPolicyService.defaults;
+        this.ipRestrictionEnabled = true;
+      }
+    );
+  }
+
   saveAttendance(isCheckIn: boolean, filter = {}) {
+    this.dateTimeProcessor.syncServerTime().subscribe(() => {
+      this.performSaveAttendance(isCheckIn, filter);
+    });
+  }
+
+  private performSaveAttendance(isCheckIn: boolean, filter = {}) {
     const attendanceDate = this.moment(this.selectedDate).format('YYYY-MM-DD');
     const attendanceFilter = { ...filter, 'attendanceDate-eq': attendanceDate };
     this.loading = true;
@@ -277,10 +414,17 @@ export class DashboardComponent implements OnInit {
             let updatedAttendanceData = attendanceRecord
               ? [...attendanceRecord.attendanceData]
               : [];
-            const now = this.moment();
+            const now = this.dateTimeProcessor.now();
             const currentTime = now.format('HH:mm');
-            const lateThreshold = this.moment('10:10', 'HH:mm');
-            const checkOutThreshold = this.moment('18:30', 'HH:mm');
+            const lateThreshold = this.officePayrollPolicyService.getLateThreshold(
+              this.moment,
+              this.officePolicy
+            );
+            const checkOutThreshold =
+              this.officePayrollPolicyService.getCheckOutThreshold(
+                this.moment,
+                this.officePolicy
+              );
             let status = now.isAfter(lateThreshold) ? 'Late' : 'Present';
             if (!attendanceRecord) {
               // ✅ No attendance record → Initialize attendance from active employees
@@ -294,21 +438,30 @@ export class DashboardComponent implements OnInit {
                     const leaveRecord = this.leaves.find(
                       (leave) => leave.employeeId === employee.employeeId
                     );
+                    const isSelf =
+                      employee.employeeId === this.employeeData.employeeId;
+                    let selfReason = '';
+                    if (isSelf) {
+                      selfReason = leaveRecord
+                        ? leaveRecord.reason
+                        : this.pendingAttendanceReason || '';
+                    }
                     return {
                       employeeId: employee.employeeId,
                       status: leaveRecord
-                        ? (leaveRecord.durationType == 'half-day'
+                        ? leaveRecord.durationType == 'half-day'
                           ? 'Half-day'
-                          : 'Absent')
-                        : (employee.employeeId === this.employeeData.employeeId
-                          ? status
-                          : 'Absent'),
-                      checkInTime:
-                        employee.employeeId === this.employeeData.employeeId
-                          ? currentTime
-                          : null,
+                          : 'Absent'
+                        : isSelf
+                        ? status
+                        : 'Absent',
+                      checkInTime: isSelf ? currentTime : null,
                       checkOutTime: null,
-                      reason: leaveRecord ? leaveRecord.reason : '',
+                      reason: isSelf
+                        ? selfReason
+                        : leaveRecord
+                        ? leaveRecord.reason
+                        : '',
                     };
                   });
 
@@ -318,6 +471,7 @@ export class DashboardComponent implements OnInit {
                     attendanceDate,
                     updatedAttendanceData
                   );
+                  this.pendingAttendanceReason = '';
                 });
             } else {
               // ✅ Attendance exists → Check if employee record needs updating
@@ -331,6 +485,10 @@ export class DashboardComponent implements OnInit {
                   updatedAttendanceData[employeeIndex].status = status;
                   updatedAttendanceData[employeeIndex].checkInTime =
                     currentTime;
+                  if (this.pendingAttendanceReason) {
+                    updatedAttendanceData[employeeIndex].reason =
+                      this.pendingAttendanceReason;
+                  }
                 } else {
                   // ✅ Check-out: Update checkout time & duration
                   const checkInMoment = this.moment(
@@ -344,21 +502,27 @@ export class DashboardComponent implements OnInit {
                   if (totalDuration >= 3.5 && totalDuration <= 6) {
                     updatedStatus = 'Half-day';
                   } else if (now.isBefore(checkOutThreshold)) {
-                    updatedStatus = 'Late';
+                    updatedStatus = this.officePayrollPolicyService.EARLY_LOGOUT_STATUS;
                   }
                   updatedAttendanceData[employeeIndex].checkOutTime =
                     currentTime;
                   updatedAttendanceData[employeeIndex].status = updatedStatus;
+                  if (this.pendingAttendanceReason) {
+                    const existingReason =
+                      updatedAttendanceData[employeeIndex].reason || '';
+                    updatedAttendanceData[employeeIndex].reason = existingReason
+                      ? `${existingReason} | Early logout: ${this.pendingAttendanceReason}`
+                      : this.pendingAttendanceReason;
+                  }
                 }
-              }
-              else {
+              } else {
                 // ✅ If employee is missing in attendance, add them
                 updatedAttendanceData.push({
                   employeeId: this.employeeData.employeeId,
                   status: status,
                   checkInTime: isCheckIn ? currentTime : null,
                   checkOutTime: isCheckIn ? null : currentTime,
-                  reason: '',
+                  reason: this.pendingAttendanceReason || '',
                 });
               }
               // Save the updated attendance record
@@ -367,6 +531,7 @@ export class DashboardComponent implements OnInit {
                 attendanceDate,
                 updatedAttendanceData
               );
+              this.pendingAttendanceReason = '';
             }
           },
           (error: any) => {
@@ -460,7 +625,7 @@ export class DashboardComponent implements OnInit {
   calculateLiveLoggedHours(): string {
     if (this.checkInTime) {
       const checkInMoment = this.moment(this.checkInTime, 'HH:mm');
-      const nowMoment = this.moment();
+      const nowMoment = this.dateTimeProcessor.now();
       const duration = this.moment.duration(nowMoment.diff(checkInMoment));
       return `${duration.hours()} : ${duration.minutes()} : ${duration.seconds()}`;
     }
@@ -598,7 +763,10 @@ export class DashboardComponent implements OnInit {
           ? 'Attendance'
           : 'Today Attendance',
         count:
-          this.totalPresentCount + this.totalLateCount + this.totalHalfDayCount,
+          this.totalPresentCount +
+          this.totalLateCount +
+          this.totalEarlyLogoutCount +
+          this.totalHalfDayCount,
         routerLink: 'attendance',
         condition:
           this.capabilities.adminAttendance ||
@@ -884,6 +1052,7 @@ iconbackgroundColors = [
       this.totalAbsentCount =
       this.totalHalfDayCount =
       this.totalLateCount =
+      this.totalEarlyLogoutCount =
       0;
     this.attendanceData[0]?.attendanceData.forEach((attendance) => {
       switch (attendance.status) {
@@ -895,6 +1064,9 @@ iconbackgroundColors = [
           break;
         case 'Late':
           this.totalLateCount++;
+          break;
+        case 'Early-logout':
+          this.totalEarlyLogoutCount++;
           break;
         case 'Half-day':
           this.totalHalfDayCount++;

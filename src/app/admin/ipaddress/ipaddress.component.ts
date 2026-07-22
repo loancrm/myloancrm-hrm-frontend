@@ -11,6 +11,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ConfirmationService } from 'primeng/api';
 import { ToastService } from 'src/app/services/toast.service';
 import { projectConstantsLocal } from 'src/app/constants/project-constants';
+import { CompanySettingsService } from 'src/app/services/company-settings.service';
 
 @Component({
   selector: 'app-ipaddress',
@@ -40,6 +41,7 @@ export class IpaddressComponent {
   capabilities: any;
   dataLoading: any;
   currentYear: number;
+  ipRestrictionEnabled: boolean = true;
   constructor(
     private employeesService: EmployeesService,
     private location: Location,
@@ -47,7 +49,8 @@ export class IpaddressComponent {
     private formBuilder: UntypedFormBuilder,
     private localStorageService: LocalStorageService,
     private confirmationService: ConfirmationService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private companySettingsService: CompanySettingsService,
   ) {
     this.breadCrumbItems = [
       {
@@ -65,13 +68,33 @@ export class IpaddressComponent {
     this.setFilterConfig();
     this.createForm();
     this.setIpAddressList();
+    this.loadIpRestrictionSetting();
     const storedAppliedFilter =
       this.localStorageService.getItemFromLocalStorage(
-        'ipAddressAppliedFilter'
+        'ipAddressAppliedFilter',
       );
     if (storedAppliedFilter) {
       this.appliedFilter = storedAppliedFilter;
     }
+  }
+
+  loadIpRestrictionSetting() {
+    this.companySettingsService.getCompanySettings().subscribe(
+      (response: any) => {
+        this.ipRestrictionEnabled = !(
+          response?.ipRestrictionEnabled === 0 ||
+          response?.ipRestrictionEnabled === false ||
+          response?.ipRestrictionEnabled === '0'
+        );
+      },
+      () => {
+        this.ipRestrictionEnabled = true;
+      },
+    );
+  }
+
+  goToIpSettings() {
+    this.routingService.handleRoute('settings', null);
   }
   createForm() {
     this.ipAddressForm = this.formBuilder.group({
@@ -169,7 +192,7 @@ export class IpaddressComponent {
     }
     this.localStorageService.setItemOnLocalStorage(
       'ipAddressAppliedFilter',
-      this.appliedFilter
+      this.appliedFilter,
     );
     this.loadIpAddresses(this.currentTableEvent);
   }
@@ -185,7 +208,7 @@ export class IpaddressComponent {
       {},
       api_filter,
       this.searchFilter,
-      this.appliedFilter
+      this.appliedFilter,
     );
     if (api_filter) {
       this.getIpAddressCount(api_filter);
@@ -200,7 +223,7 @@ export class IpaddressComponent {
       },
       (error: any) => {
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -214,7 +237,7 @@ export class IpaddressComponent {
       (error: any) => {
         this.apiLoading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -250,7 +273,7 @@ export class IpaddressComponent {
         (error: any) => {
           this.loading = false;
           this.toastService.showError(error);
-        }
+        },
       );
     } else if (this.actionType == 'update') {
       this.loading = true;
@@ -269,7 +292,7 @@ export class IpaddressComponent {
           (error: any) => {
             this.loading = false;
             this.toastService.showError(error);
-          }
+          },
         );
     }
   }
@@ -307,7 +330,7 @@ export class IpaddressComponent {
             this.dataLoading = false;
             resolve(false);
             this.toastService.showError(error);
-          }
+          },
         );
     });
   }
@@ -337,7 +360,7 @@ export class IpaddressComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
 

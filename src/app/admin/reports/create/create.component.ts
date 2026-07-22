@@ -8,6 +8,11 @@ import { ToastService } from 'src/app/services/toast.service';
 import { DateTimeProcessorService } from 'src/app/services/date-time-processor.service';
 import { projectConstantsLocal } from 'src/app/constants/project-constants';
 import { BranchesService } from 'src/app/services/branches.service';
+import { CompanySettingsService } from 'src/app/services/company-settings.service';
+import {
+  OfficePayrollPolicy,
+  OfficePayrollPolicyService,
+} from 'src/app/services/office-payroll-policy.service';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -63,6 +68,9 @@ export class CreateComponent {
   invoiceCategories: any;
   version = projectConstantsLocal.VERSION_DESKTOP;
   currentYear: number;
+  officePolicy: OfficePayrollPolicy;
+  salarySheetPeriodLabel: string = '';
+  attendancePeriodLabel: string = '';
   constructor(
     private location: Location,
     private employeesService: EmployeesService,
@@ -70,7 +78,9 @@ export class CreateComponent {
     private routingService: RoutingService,
     private toastService: ToastService,
     private dateTimeProcessor: DateTimeProcessorService,
-    private branchesService: BranchesService
+    private branchesService: BranchesService,
+    private companySettingsService: CompanySettingsService,
+    private officePayrollPolicyService: OfficePayrollPolicyService,
   ) {
     this.breadCrumbItems = [
       {
@@ -88,6 +98,7 @@ export class CreateComponent {
     ];
 
     this.moment = this.dateTimeProcessor.getMoment();
+    this.officePolicy = this.officePayrollPolicyService.defaults;
     this.activatedRoute.queryParams.subscribe((queryParams: any) => {
       if (queryParams && queryParams['reportType']) {
         this.reportType = queryParams['reportType'];
@@ -99,20 +110,73 @@ export class CreateComponent {
   }
   ngOnInit() {
     this.currentYear = this.employeesService.getCurrentYear();
+    this.loadOfficePolicy();
     this.loadBranches();
     this.getDesignations();
     this.generateYears();
   }
-  loadBranches() {
-    this.branchesService.getBranches({ 'branchInternalStatus-eq': 1 }).subscribe(
+
+  loadOfficePolicy() {
+    this.companySettingsService.getCompanySettings().subscribe(
       (response: any) => {
-        this.officebranchEntities = response || [];
-        this.setReportsList();
+        this.officePolicy = this.officePayrollPolicyService.normalize(
+          response || {},
+        );
       },
-      (error: any) => {
-        this.toastService.showError(error);
-      }
+      () => {
+        this.officePolicy = this.officePayrollPolicyService.defaults;
+      },
     );
+  }
+
+  onReportMonthChange(field: any) {
+    const key = field.field + '-' + field.filterType;
+    const value = this.reportData[key];
+    if (!value) {
+      if (field.field === 'payrollMonth') {
+        this.salarySheetPeriodLabel = '';
+      }
+      if (field.field === 'salaryMonth') {
+        this.attendancePeriodLabel = '';
+      }
+      return;
+    }
+    const payrollMonth = this.moment(value).format('YYYY-MM');
+    const period = this.officePayrollPolicyService.getPayrollPeriod(
+      this.moment,
+      payrollMonth,
+      this.officePolicy,
+    );
+    const label = this.officePayrollPolicyService.formatPeriodLabel(
+      this.moment,
+      payrollMonth,
+      this.officePolicy,
+    );
+    if (field.field === 'payrollMonth') {
+      this.salarySheetPeriodLabel = label;
+    }
+    if (field.field === 'salaryMonth') {
+      this.attendancePeriodLabel = label;
+      this.reportData['attendanceDate-gte'] = this.moment(
+        period.startStr,
+      ).toDate();
+      this.reportData['attendanceDate-lte'] = this.moment(
+        period.endStr,
+      ).toDate();
+    }
+  }
+  loadBranches() {
+    this.branchesService
+      .getBranches({ 'branchInternalStatus-eq': 1 })
+      .subscribe(
+        (response: any) => {
+          this.officebranchEntities = response || [];
+          this.setReportsList();
+        },
+        (error: any) => {
+          this.toastService.showError(error);
+        },
+      );
   }
   updateBreadcrumb(): void {
     this.breadCrumbItems = [
@@ -149,7 +213,7 @@ export class CreateComponent {
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   generateYears() {
@@ -272,7 +336,7 @@ export class CreateComponent {
         fields: [
           {
             field: 'payrollMonth',
-            title: 'Payroll Month',
+            title: 'Payroll / Salary Month',
             type: 'month',
             filterType: 'eq',
           },
@@ -367,6 +431,12 @@ export class CreateComponent {
         reportType: 'ATTENDANCE',
         condition: true,
         fields: [
+          {
+            field: 'salaryMonth',
+            title: 'Salary Month (auto period)',
+            type: 'month',
+            filterType: 'eq',
+          },
           {
             field: 'attendanceDate',
             title: 'Attendance Date',
@@ -501,7 +571,7 @@ export class CreateComponent {
       },
     ];
     this.selectedReportConfig = reportsListConfig.filter(
-      (report) => report.condition && report.reportType == this.reportType
+      (report) => report.condition && report.reportType == this.reportType,
     )[0];
     this.updateBreadcrumb();
     if (!this.isQuestionaire) {
@@ -527,7 +597,7 @@ export class CreateComponent {
     const apiFilter = {};
     if (this.reportData['createdOn-gte']) {
       apiFilter['createdOn-gte'] = this.moment(
-        this.reportData['createdOn-gte']
+        this.reportData['createdOn-gte'],
       ).format('YYYY-MM-DD');
     }
     if (this.reportData['createdOn-lte']) {
@@ -537,55 +607,69 @@ export class CreateComponent {
     }
     if (this.reportData['attendanceDate-gte']) {
       apiFilter['attendanceDate-gte'] = this.moment(
-        this.reportData['attendanceDate-gte']
+        this.reportData['attendanceDate-gte'],
       ).format('YYYY-MM-DD');
     }
     if (this.reportData['attendanceDate-lte']) {
       apiFilter['attendanceDate-lte'] = this.moment(
-        this.reportData['attendanceDate-lte']
+        this.reportData['attendanceDate-lte'],
       ).format('YYYY-MM-DD');
     }
     if (this.reportData['hikeDate-gte']) {
       apiFilter['hikeDate-gte'] = this.moment(
-        this.reportData['hikeDate-gte']
+        this.reportData['hikeDate-gte'],
       ).format('YYYY-MM-DD');
     }
     if (this.reportData['hikeDate-lte']) {
       apiFilter['hikeDate-lte'] = this.moment(
-        this.reportData['hikeDate-lte']
+        this.reportData['hikeDate-lte'],
       ).format('YYYY-MM-DD');
     }
     if (this.reportData['joiningDate-gte']) {
       apiFilter['joiningDate-gte'] = this.moment(
-        this.reportData['joiningDate-gte']
+        this.reportData['joiningDate-gte'],
       ).format('YYYY-MM-DD');
     }
     if (this.reportData['joiningDate-lte']) {
       apiFilter['joiningDate-lte'] = this.moment(
-        this.reportData['joiningDate-lte']
+        this.reportData['joiningDate-lte'],
       ).format('YYYY-MM-DD');
     }
     if (this.reportData['payrollMonth-eq']) {
       apiFilter['payrollMonth-eq'] = this.moment(
-        this.reportData['payrollMonth-eq']
+        this.reportData['payrollMonth-eq'],
       ).format('YYYY-MM');
     }
     if (this.reportData['incentiveApplicableMonth-eq']) {
       apiFilter['incentiveApplicableMonth-eq'] = this.moment(
-        this.reportData['incentiveApplicableMonth-eq']
+        this.reportData['incentiveApplicableMonth-eq'],
       ).format('YYYY-MM');
     }
     if (this.reportData['attendanceDate-eq']) {
       apiFilter['attendanceDate-eq'] = this.moment(
-        this.reportData['attendanceDate-eq']
+        this.reportData['attendanceDate-eq'],
       ).format('YYYY-MM-DD');
+    }
+    // salaryMonth is UI-only helper for custom payroll cycle periods
+    if (this.reportData['salaryMonth-eq']) {
+      delete selectedReportData['salaryMonth-eq'];
+      const payrollMonth = this.moment(
+        this.reportData['salaryMonth-eq'],
+      ).format('YYYY-MM');
+      const period = this.officePayrollPolicyService.getPayrollPeriod(
+        this.moment,
+        payrollMonth,
+        this.officePolicy,
+      );
+      apiFilter['attendanceDate-gte'] = period.startStr;
+      apiFilter['attendanceDate-lte'] = period.endStr;
     }
     if (this.reportData['date-eq']) {
       const startOfYear = this.moment(
-        `${this.reportData['date-eq']}-01-01`
+        `${this.reportData['date-eq']}-01-01`,
       ).format('YYYY-MM-DD');
       const endOfYear = this.moment(
-        `${this.reportData['date-eq']}-12-31`
+        `${this.reportData['date-eq']}-12-31`,
       ).format('YYYY-MM-DD');
       delete selectedReportData['date-eq'];
       apiFilter['date-gte'] = startOfYear;
@@ -630,7 +714,7 @@ export class CreateComponent {
       (error: any) => {
         this.toastService.showError(error);
         this.loading = false;
-      }
+      },
     );
   }
 

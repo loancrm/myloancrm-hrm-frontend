@@ -96,6 +96,12 @@
                     
                   />
                    </div>
+                  <small
+                    class="text-muted d-block mt-1"
+                    *ngIf="field.controlName === 'payrollMonth' && periodRangeLabel"
+                  >
+                    Attendance &amp; working days period: {{ periodRangeLabel }}
+                  </small>
                   <div *ngSwitchCase="'calendar'" class="custom-calendar-wrapper position-relative">
                     <p-calendar
                     #calendar1

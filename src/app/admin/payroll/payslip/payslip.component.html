@@ -60,6 +60,9 @@
               getMonthNameAndYear(payroll.payrollMonth)
             }}</span></b
           >
+          <div class="text-muted small mt-1" *ngIf="payrollPeriodLabel">
+            Period: {{ payrollPeriodLabel }}
+          </div>
         </div>
       </div>
 

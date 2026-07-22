@@ -85,7 +85,7 @@
               ).textColor,
               'background-color': getStatusColor(
                 getStatusName(employees.employeeInternalStatus)
-              ).backgroundColor
+              ).backgroundColor,
             }"
           >
             {{ getStatusName(employees.employeeInternalStatus) }}
@@ -371,7 +371,7 @@
                 <div class="info-line">
                   <span class="icon"><i class="fas fa-phone-alt"></i></span>
                   <div class="label d-flex justify-content-between">
-                    Secondary Phone<b>:&nbsp;</b>
+                    Emergency Contact<b>:&nbsp;</b>
                   </div>
                   <div class="value">
                     {{
@@ -906,7 +906,7 @@
                   <div class="value">
                     {{
                       employees.lastUpdatedOn
-                        ? (employees.lastUpdatedOn | date : "MMM d, y, h:mm a")
+                        ? (employees.lastUpdatedOn | date: "MMM d, y, h:mm a")
                         : "-"
                     }}
                   </div>
@@ -1289,7 +1289,7 @@
             </div>
             <div class="card-body" *ngIf="attendanceStatusCounts">
               <div class="row">
-                <div class="d-flex justify-content-end mb-4">
+                <div class="d-flex flex-column align-items-end mb-4">
                   <p-calendar
                     [(ngModel)]="displayMonth"
                     [showIcon]="true"
@@ -1302,8 +1302,11 @@
                     [readonlyInput]="true"
                     styleClass="w-100"
                     (ngModelChange)="onDateChange($event)"
-                    placeholder="Select Month and Year"
+                    placeholder="Select Salary Month"
                   ></p-calendar>
+                  <small class="text-muted mt-1" *ngIf="periodRangeLabel">
+                    Period: {{ periodRangeLabel }}
+                  </small>
                 </div>
                 <div class="info-line">
                   <img
@@ -1325,14 +1328,25 @@
                     src="../../../../assets/images/lateloginicon (2).svg"
                     alt=""
                   />
-                  <!-- <span class="icon text-primary"
-                    ><i class="fas fa-circle-exclamation"></i
-                  ></span> -->
                   <div class="label d-flex justify-content-between">
                     Late<b>:&nbsp;</b>
                   </div>
                   <div class="value">
                     {{ attendanceStatusCounts["Late"] }}
+                  </div>
+                </div>
+                <div class="info-line">
+                  <lucide-icon
+                    name="log-out"
+                    size="20"
+                    title="Early Logout"
+                    class="text-danger"
+                  ></lucide-icon>
+                  <div class="label d-flex justify-content-between">
+                    Early Logout<b>:&nbsp;</b>
+                  </div>
+                  <div class="value">
+                    {{ attendanceStatusCounts["Early-logout"] }}
                   </div>
                 </div>
                 <div class="info-line">
@@ -1392,7 +1406,7 @@
                   'referenceNo',
                   'customer.firstName',
                   'partner.partnerName',
-                  'status'
+                  'status',
                 ]"
                 styleClass="p-datatable-customers"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Leaves"
@@ -1460,7 +1474,7 @@
                       <span
                         class="table-column-data"
                         *ngIf="leave.leaveTo; else noData"
-                        >{{ leave.leaveTo | date : "mediumDate" }}</span
+                        >{{ leave.leaveTo | date: "mediumDate" }}</span
                       >
                     </td>
                     <td>
@@ -1494,7 +1508,7 @@
                           ).textColor,
                           'background-color': getLeavesStatusColor(
                             getLeavesStatusName(leave.leaveInternalStatus)
-                          ).backgroundColor
+                          ).backgroundColor,
                         }"
                       >
                         {{ getLeavesStatusName(leave.leaveInternalStatus) }}
@@ -1576,7 +1590,7 @@
                         class="table-column-data"
                         *ngIf="incentive.incentiveApplicableMonth; else noData"
                         >{{
-                          incentive.incentiveApplicableMonth | date : "MMM yyyy"
+                          incentive.incentiveApplicableMonth | date: "MMM yyyy"
                         }}</span
                       >
                     </td>
@@ -1634,7 +1648,7 @@
                   'referenceNo',
                   'customer.firstName',
                   'partner.partnerName',
-                  'status'
+                  'status',
                 ]"
                 styleClass="p-datatable-customers"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Payroll"
@@ -1673,7 +1687,7 @@
                       <span
                         class="table-column-data"
                         *ngIf="payslip.payrollMonth; else noData"
-                        >{{ payslip.payrollMonth | date : "MMMM yyyy" }}</span
+                        >{{ payslip.payrollMonth | date: "MMMM yyyy" }}</span
                       >
                     </td>
                     <td>

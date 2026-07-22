@@ -13,6 +13,7 @@ import { TableModule } from 'primeng/table';
 import { ProfileComponent } from './profile.component';
 import { CapitalizeFirstPipe } from 'src/app/pipes/capitalize.pipe';
 import { PreloaderModule } from 'src/app/preloader/preloader.module';
+import { LucideAngularModule, LogOut, CalendarClock } from 'lucide-angular';
 
 const routes: Routes = [{ path: '', component: ProfileComponent }];
 
@@ -33,6 +34,7 @@ const routes: Routes = [{ path: '', component: ProfileComponent }];
     TableModule,
     CapitalizeFirstPipe,
     PreloaderModule,
+    LucideAngularModule.pick({ LogOut, CalendarClock }),
   ],
 })
 export class ProfileModule {}
