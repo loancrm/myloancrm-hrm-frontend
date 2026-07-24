@@ -325,6 +325,10 @@ export class CreateComponent {
   }
 
   confirmDeleteLeaveDocument(fileIndex: number) {
+    if (this.capabilities?.employee) {
+      this.toastService.showError('Employees cannot delete leave documents');
+      return;
+    }
     this.confirmationService.confirm({
       message: 'Are you sure you want to remove this document?',
       header: 'Confirm',

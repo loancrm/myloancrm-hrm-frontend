@@ -147,6 +147,7 @@
                           View document {{ i + 1 }}
                         </a>
                         <button
+                          *ngIf="!capabilities?.employee"
                           pButton
                           type="button"
                           icon="pi pi-trash"

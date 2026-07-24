@@ -76,6 +76,9 @@ export class DashboardComponent implements OnInit {
   attendanceReasonDialogMessage = '';
   attendanceReasonInput = '';
   pendingAttendanceReason = '';
+  todaysBirthdays: any[] = [];
+  showBirthdayCard = false;
+  birthdayCardIndex = 0;
   constructor(
     private localStorageService: LocalStorageService,
     private routingService: RoutingService,
@@ -122,7 +125,86 @@ export class DashboardComponent implements OnInit {
     if (!this.capabilities.employee) {
       this.initializeDashboardData();
     }
+    this.loadTodaysBirthdays();
     this.fetchAttendance();
+  }
+
+  /** Same source as header calendar: active employees whose DOB is today. */
+  loadTodaysBirthdays() {
+    const todayKey = this.moment().format('YYYY-MM-DD');
+    const dismissedKey = this.localStorageService.getItemFromLocalStorage(
+      'birthdayCardDismissedDate'
+    );
+    if (dismissedKey === todayKey) {
+      this.showBirthdayCard = false;
+      return;
+    }
+
+    this.employeesService
+      .getEmployees({ 'employeeInternalStatus-eq': 1 })
+      .subscribe({
+        next: (response: any) => {
+          const employees = Array.isArray(response) ? response : [];
+          const today = new Date();
+          this.todaysBirthdays = employees
+            .filter((employee) => {
+              if (!employee?.dateOfBirth) {
+                return false;
+              }
+              const dob = new Date(employee.dateOfBirth);
+              return (
+                dob.getMonth() === today.getMonth() &&
+                dob.getDate() === today.getDate()
+              );
+            })
+            .map((employee) => ({
+              employeeId: employee.employeeId,
+              employeeName: employee.employeeName,
+              designationName: employee.designationName,
+              photo: this.getEmployeePhoto(employee.passPhoto),
+            }));
+          this.birthdayCardIndex = 0;
+          this.showBirthdayCard = this.todaysBirthdays.length > 0;
+        },
+        error: () => {
+          this.todaysBirthdays = [];
+          this.showBirthdayCard = false;
+        },
+      });
+  }
+
+  dismissBirthdayCard() {
+    this.showBirthdayCard = false;
+    this.localStorageService.setItemOnLocalStorage(
+      'birthdayCardDismissedDate',
+      this.moment().format('YYYY-MM-DD')
+    );
+  }
+
+  getEmployeePhoto(passPhoto: any): string | null {
+    if (!passPhoto) {
+      return null;
+    }
+    let photos = passPhoto;
+    if (typeof passPhoto === 'string') {
+      try {
+        photos = JSON.parse(passPhoto);
+      } catch {
+        return passPhoto.startsWith('http') || passPhoto.startsWith('//')
+          ? passPhoto
+          : '//' + passPhoto;
+      }
+    }
+    if (Array.isArray(photos) && photos.length > 0) {
+      const link = photos[0];
+      if (!link) {
+        return null;
+      }
+      return link.startsWith('http') || link.startsWith('//')
+        ? link
+        : '//' + link;
+    }
+    return null;
   }
 
   getIpAddress(filter = {}) {

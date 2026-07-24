@@ -618,6 +618,75 @@
   </footer>
 </div>
 
+<div
+  class="birthday-float-card"
+  *ngIf="showBirthdayCard && todaysBirthdays?.length"
+>
+  <div class="birthday-float-glow" aria-hidden="true"></div>
+  <div class="birthday-float-sparkles" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <button
+    type="button"
+    class="birthday-float-close"
+    (click)="dismissBirthdayCard()"
+    aria-label="Close birthday wishes"
+  >
+    <i class="pi pi-times"></i>
+  </button>
+
+  <div class="birthday-float-hero">
+    <img
+      class="birthday-float-illustration"
+      src="../../../assets/images/dashboard/birthday-wishes.svg"
+      alt=""
+    />
+  </div>
+
+  <p class="birthday-float-eyebrow">Today’s celebration</p>
+  <h3 class="birthday-float-title">Happy Birthday!</h3>
+  <p class="birthday-float-wish">Wishing you a wonderful day ahead</p>
+
+  <div class="birthday-float-avatar-wrap">
+    <div class="birthday-float-ring" aria-hidden="true"></div>
+    <img
+      class="birthday-float-avatar"
+      [src]="
+        todaysBirthdays[birthdayCardIndex].photo ||
+        '../../../assets/images/profile/user.png'
+      "
+      [alt]="todaysBirthdays[birthdayCardIndex].employeeName"
+    />
+    <span class="birthday-float-badge" aria-hidden="true">🎈</span>
+  </div>
+
+  <div class="birthday-float-person text-capitalize">
+    <div class="birthday-float-name">
+      {{ todaysBirthdays[birthdayCardIndex].employeeName }}
+    </div>
+    <div
+      class="birthday-float-role"
+      *ngIf="todaysBirthdays[birthdayCardIndex].designationName"
+    >
+      {{ todaysBirthdays[birthdayCardIndex].designationName }}
+    </div>
+  </div>
+
+  <p class="birthday-float-footer">Have a fantastic birthday</p>
+
+  <div class="birthday-float-dots" *ngIf="todaysBirthdays.length > 1">
+    <button
+      type="button"
+      class="birthday-float-dot"
+      *ngFor="let person of todaysBirthdays; let i = index"
+      [class.active]="i === birthdayCardIndex"
+      (click)="birthdayCardIndex = i"
+      [attr.aria-label]="'Show birthday ' + (i + 1)"
+    ></button>
+  </div>
+</div>
+
 <p-dialog
   [(visible)]="attendanceReasonDialogVisible"
   [modal]="true"

@@ -103,9 +103,11 @@
 .cardkname {
   height: 95px;
 }
-.cardkname:hover{
+.cardkname:hover {
   transform: translateY(-5px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
 }
 .custom-scroll-container {
@@ -186,8 +188,8 @@
   border-radius: 12px;
   color: #ffffff;
   cursor: pointer;
-  font-family: -apple-system, system-ui, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
+  font-family:
+    -apple-system, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   font-size: 16px;
   font-weight: 600;
   outline: transparent;
@@ -213,22 +215,345 @@
   font-size: 30px;
 }
 
-.leaveimage{
-  filter: brightness(0) saturate(100%) invert(56%) sepia(69%) saturate(6372%) hue-rotate(339deg) brightness(99%) contrast(88%);
+.leaveimage {
+  filter: brightness(0) saturate(100%) invert(56%) sepia(69%) saturate(6372%)
+    hue-rotate(339deg) brightness(99%) contrast(88%);
 }
 
-.presentimage{
-  filter: brightness(0) saturate(100%) invert(71%) sepia(89%) saturate(445%) hue-rotate(55deg) brightness(101%) contrast(85%);
+.presentimage {
+  filter: brightness(0) saturate(100%) invert(71%) sepia(89%) saturate(445%)
+    hue-rotate(55deg) brightness(101%) contrast(85%);
 }
 
-.lateloginimage{
-  filter: brightness(0) saturate(100%) invert(73%) sepia(60%) saturate(3631%) hue-rotate(343deg) brightness(106%) contrast(92%);
+.lateloginimage {
+  filter: brightness(0) saturate(100%) invert(73%) sepia(60%) saturate(3631%)
+    hue-rotate(343deg) brightness(106%) contrast(92%);
 }
-.halfdayimage{
-  filter: brightness(0) saturate(100%) invert(17%) sepia(75%) saturate(5602%) hue-rotate(235deg) brightness(100%) contrast(92%);
+.halfdayimage {
+  filter: brightness(0) saturate(100%) invert(17%) sepia(75%) saturate(5602%)
+    hue-rotate(235deg) brightness(100%) contrast(92%);
 }
-.card-design{
+.card-design {
   border: 2px solid #535ab4;
   border-radius: 5px;
   padding: 5px !important;
+}
+
+.birthday-float-card {
+  --bd-ink: #2a2d45;
+  --bd-muted: #7a7f96;
+  --bd-brand: #535ab4;
+  --bd-soft: #eceaf8;
+  --bd-coral: #f06a8a;
+  --bd-gold: #f0c35a;
+
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 1200;
+  width: 280px;
+  padding: 0 0 18px;
+  overflow: hidden;
+  text-align: center;
+  border-radius: 22px;
+  background:
+    radial-gradient(
+      120% 80% at 100% 0%,
+      rgba(240, 106, 138, 0.12),
+      transparent 55%
+    ),
+    radial-gradient(
+      100% 70% at 0% 100%,
+      rgba(83, 90, 180, 0.14),
+      transparent 50%
+    ),
+    linear-gradient(180deg, #ffffff 0%, #f8f7fd 100%);
+  border: 1px solid rgba(83, 90, 180, 0.12);
+  box-shadow:
+    0 18px 40px rgba(42, 45, 69, 0.16),
+    0 4px 12px rgba(83, 90, 180, 0.08);
+  animation: birthdayFloatIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.birthday-float-glow {
+  position: absolute;
+  inset: auto -20% -30% -20%;
+  height: 55%;
+  background: radial-gradient(
+    circle,
+    rgba(240, 195, 90, 0.18),
+    transparent 65%
+  );
+  pointer-events: none;
+}
+
+.birthday-float-sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.birthday-float-sparkles span {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  opacity: 0;
+  animation: birthdaySparkle 3.2s ease-in-out infinite;
+}
+
+.birthday-float-sparkles span:nth-child(1) {
+  top: 18%;
+  left: 14%;
+  background: var(--bd-coral);
+  animation-delay: 0.2s;
+}
+
+.birthday-float-sparkles span:nth-child(2) {
+  top: 28%;
+  right: 16%;
+  background: var(--bd-gold);
+  animation-delay: 0.8s;
+}
+
+.birthday-float-sparkles span:nth-child(3) {
+  top: 46%;
+  left: 10%;
+  background: var(--bd-brand);
+  animation-delay: 1.4s;
+}
+
+.birthday-float-sparkles span:nth-child(4) {
+  top: 58%;
+  right: 12%;
+  background: var(--bd-coral);
+  animation-delay: 1.9s;
+}
+
+.birthday-float-sparkles span:nth-child(5) {
+  top: 12%;
+  left: 48%;
+  background: var(--bd-gold);
+  animation-delay: 0.5s;
+}
+
+@keyframes birthdayFloatIn {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes birthdaySparkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(0) scale(0.6);
+  }
+  35% {
+    opacity: 0.9;
+    transform: translateY(-8px) scale(1);
+  }
+  70% {
+    opacity: 0.2;
+    transform: translateY(-14px) scale(0.8);
+  }
+}
+
+@keyframes birthdayBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes birthdayRing {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.55;
+  }
+  70% {
+    transform: scale(1.08);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.08);
+    opacity: 0;
+  }
+}
+
+.birthday-float-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  border: none;
+  background: rgba(255, 255, 255, 0.72);
+  color: #8b90a5;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 11px;
+  line-height: 1;
+  backdrop-filter: blur(4px);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.birthday-float-close:hover {
+  background: #ffffff;
+  color: var(--bd-ink);
+}
+
+.birthday-float-hero {
+  padding: 18px 18px 6px;
+}
+
+.birthday-float-illustration {
+  width: 132px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  animation: birthdayBob 3s ease-in-out infinite;
+  filter: drop-shadow(0 8px 14px rgba(83, 90, 180, 0.18));
+}
+
+.birthday-float-eyebrow {
+  margin: 2px 0 0;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bd-brand);
+}
+
+.birthday-float-title {
+  margin: 6px 18px 0;
+  font-size: 24px;
+  font-weight: 750;
+  line-height: 1.15;
+  color: var(--bd-ink);
+  letter-spacing: -0.02em;
+}
+
+.birthday-float-wish {
+  margin: 6px 22px 14px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--bd-muted);
+}
+
+.birthday-float-avatar-wrap {
+  position: relative;
+  width: 86px;
+  height: 86px;
+  margin: 0 auto 12px;
+}
+
+.birthday-float-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(240, 106, 138, 0.45);
+  animation: birthdayRing 2.4s ease-out infinite;
+}
+
+.birthday-float-avatar {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #f3f2fa;
+  border: 3px solid #ffffff;
+  box-shadow:
+    0 0 0 3px rgba(83, 90, 180, 0.18),
+    0 10px 20px rgba(42, 45, 69, 0.14);
+}
+
+.birthday-float-badge {
+  position: absolute;
+  right: -4px;
+  bottom: -2px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(42, 45, 69, 0.14);
+}
+
+.birthday-float-person {
+  margin: 0 18px 10px;
+}
+
+.birthday-float-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--bd-ink);
+  line-height: 1.25;
+}
+
+.birthday-float-role {
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--bd-muted);
+}
+
+.birthday-float-footer {
+  margin: 0 18px;
+  padding-top: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--bd-brand);
+  border-top: 1px solid rgba(83, 90, 180, 0.12);
+}
+
+.birthday-float-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.birthday-float-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: #d7d9e8;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.birthday-float-dot.active {
+  background: var(--bd-brand);
+  transform: scale(1.2);
+}
+
+@media (max-width: 767px) {
+  .birthday-float-card {
+    right: 12px;
+    bottom: 12px;
+    width: min(280px, calc(100vw - 24px));
+  }
 }

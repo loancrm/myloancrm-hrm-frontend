@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 140" fill="none">
+  <defs>
+    <linearGradient id="cakeBody" x1="60" y1="50" x2="140" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7B84D4"/>
+      <stop offset="1" stop-color="#535AB4"/>
+    </linearGradient>
+    <linearGradient id="frost" x1="55" y1="55" x2="145" y2="75" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8C8D4"/>
+      <stop offset="1" stop-color="#F06A8A"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="100" cy="118" rx="52" ry="8" fill="#535AB4" opacity="0.12"/>
+  <rect x="62" y="72" width="76" height="40" rx="10" fill="url(#cakeBody)"/>
+  <path d="M54 74 C70 58, 90 86, 100 70 C110 54, 130 82, 146 74 L146 86 C130 94, 110 68, 100 84 C90 100, 70 76, 54 86 Z" fill="url(#frost)"/>
+  <rect x="78" y="84" width="14" height="20" rx="3" fill="#F0C35A" opacity="0.9"/>
+  <rect x="98" y="84" width="14" height="20" rx="3" fill="#F0C35A" opacity="0.9"/>
+  <rect x="118" y="84" width="14" height="20" rx="3" fill="#F0C35A" opacity="0.9"/>
+  <path d="M85 70 V50" stroke="#2A2D45" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M105 70 V44" stroke="#2A2D45" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M125 70 V50" stroke="#2A2D45" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="85" cy="45" r="4.5" fill="#F06A8A"/>
+  <circle cx="105" cy="39" r="4.5" fill="#F06A8A"/>
+  <circle cx="125" cy="45" r="4.5" fill="#F06A8A"/>
+  <path d="M83 40 Q85 34 87 40" stroke="#F0C35A" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <path d="M103 34 Q105 28 107 34" stroke="#F0C35A" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <path d="M123 40 Q125 34 127 40" stroke="#F0C35A" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <circle cx="42" cy="38" r="4" fill="#F06A8A" opacity="0.7"/>
+  <circle cx="160" cy="34" r="3.5" fill="#F0C35A" opacity="0.85"/>
+  <circle cx="170" cy="58" r="3" fill="#7B84D4" opacity="0.8"/>
+  <circle cx="36" cy="68" r="2.5" fill="#7B84D4" opacity="0.7"/>
+</svg>
