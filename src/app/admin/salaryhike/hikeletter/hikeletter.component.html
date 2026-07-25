@@ -1,4 +1,4 @@
-<div class="container-fluid mt-2">
+<div class="container-fluid mt-2" *ngIf="employees">
   <div class="card heading-card p-3">
     <div class="row align-items-center">
       <div class="col-md-10">
@@ -17,27 +17,33 @@
           <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
         </div>
       </div>
-      <!-- <div class="col-md-2 text-end">
-        <img
-          src="../../../assets/images/menu/salaryhike.png"
-          width="100"
-          class="heading-image"
-        />
-      </div> -->
     </div>
   </div>
 </div>
 <div class="a4-preview">
   <div id="content" class="a4-page" [innerHTML]="hikeLetterHtml"></div>
 
-  <button
-    pButton
-    class="p-button-primary  mb-5 mt-3"
-    (click)="generatePDF()"
-    [disabled]="downloadingPDF">
-    <i class="pi pi-spin pi-spinner" *ngIf="downloadingPDF"></i>
-  <i class="pi pi-download" *ngIf="!downloadingPDF"></i>
+  <div class="letter-actions mb-5 mt-3">
+    <button
+      pButton
+      class="p-button-primary"
+      (click)="downloadPDF()"
+      [disabled]="downloadingPDF || emailingPDF"
+    >
+      <i class="pi pi-spin pi-spinner" *ngIf="downloadingPDF"></i>
+      <i class="pi pi-download" *ngIf="!downloadingPDF"></i>&nbsp;
+      {{ downloadingPDF ? "Downloading..." : "Download PDF" }}
+    </button>
 
-  {{ downloadingPDF ? "Downloading..." : "Download Increment Letter" }}
-  </button>
+    <button
+      pButton
+      class="p-button-primary"
+      (click)="emailPDF()"
+      [disabled]="downloadingPDF || emailingPDF"
+    >
+      <i class="pi pi-spin pi-spinner" *ngIf="emailingPDF"></i>
+      <i class="pi pi-envelope" *ngIf="!emailingPDF"></i>&nbsp;
+      {{ emailingPDF ? " Sending Email..." : " Email PDF" }}
+    </button>
+  </div>
 </div>

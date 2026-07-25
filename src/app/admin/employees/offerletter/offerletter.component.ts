@@ -6,13 +6,14 @@
   import { EmployeesService } from '../employees.service';
   import { DateTimeProcessorService } from 'src/app/services/date-time-processor.service';
   import { projectConstantsLocal } from 'src/app/constants/project-constants';
-  import html2canvas from 'html2canvas';
-  import jsPDF from 'jspdf';
-  import * as html2pdf from 'html2pdf.js';
   import { LocalStorageService } from 'src/app/services/local-storage.service';
   import { CompanySettingsService } from 'src/app/services/company-settings.service';
   import { BranchesService } from 'src/app/services/branches.service';
   import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+  import {
+    LetterLayout,
+    LetterLayoutService,
+  } from 'src/app/services/letter-layout.service';
 
   @Component({
     selector: 'app-offerletter',
@@ -28,11 +29,13 @@
     @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
     loading: boolean = false;
     downloadingPDF = false;
+    emailingPDF = false;
     version = projectConstantsLocal.VERSION_DESKTOP;
     employees: any = null;
     designations: any = [];
     employeeId: string | null = null;
     offerLetterContent: string | undefined;
+    letterLayout: LetterLayout | null = null;
     currentYear: number;
     companySettings: any = {};
     branches: any = [];
@@ -46,7 +49,8 @@
       private employeesService: EmployeesService,
       private dateTimeProcessor: DateTimeProcessorService,
       private companySettingsService: CompanySettingsService,
-      private branchesService: BranchesService
+      private branchesService: BranchesService,
+      private letterLayoutService: LetterLayoutService
     ) {
       this.moment = this.dateTimeProcessor.getMoment();
       this.breadCrumbItems = [
@@ -83,6 +87,7 @@
       .getTemplateByType('offerLetter')
       .subscribe((res: any) => {
         this.offerLetterContent = res.html;
+        this.letterLayout = this.letterLayoutService.parseLayout(res.layoutJson);
         this.prepareOfferLetterHtml(); // 🔥 AUTO FILL HERE
       });
 
@@ -92,6 +97,7 @@
       this.companySettingsService.getCompanySettings().subscribe(
         (response: any) => {
           this.companySettings = response || {};
+          this.prepareOfferLetterHtml();
         },
         (error: any) => {
           // Silently fail - use default values if settings not available
@@ -135,75 +141,103 @@
       return lakhs.toFixed(2) + ' LPA';
     }
 
-  generatePDF() {
+  downloadPDF() {
+    this.generateAndHandlePdf('download');
+  }
+
+  emailPDF() {
+    this.generateAndHandlePdf('email');
+  }
+
+  private async generateAndHandlePdf(mode: 'download' | 'email') {
     const element = document.getElementById('content');
     if (!element) return;
 
-    // this.loading = true;
-    this.downloadingPDF = true;
-
-    const images = element.getElementsByTagName('img');
-    const imagePromises: Promise<void>[] = [];
-
-    for (let i = 0; i < images.length; i++) {
-      const img = images[i] as HTMLImageElement;
-
-      if (img.src && !img.complete) {
-        imagePromises.push(
-          new Promise((resolve) => {
-            img.onload = () => resolve();
-            img.onerror = () => resolve();
-            setTimeout(() => resolve(), 5000);
-          })
-        );
-      }
+    if (mode === 'download') {
+      this.downloadingPDF = true;
+    } else {
+      this.emailingPDF = true;
     }
 
-    Promise.all(imagePromises).then(() => {
+    const filename = `${this.employees?.employeeName || 'Employee'} Offer Letter.pdf`;
 
-      const options = {
-        margin: [8, 0, 10, 5], // TOP LEFT BOTTOM RIGHT
-        filename: `${this.employees?.employeeName} Offer Letter.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
+    try {
+      const pdf = await this.letterLayoutService.generateLetterPdf(element, {
+        filename,
+        layout: this.letterLayout,
+        companySettings: this.companySettings,
+      });
 
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          imageTimeout: 15000,
-          // onclone: (clonedDoc) => {
-          //   // Ensure images in cloned document are loaded
-          //   const clonedImages = clonedDoc.getElementsByTagName('img');
-          //   for (let i = 0; i < clonedImages.length; i++) {
-          //     const img = clonedImages[i] as HTMLImageElement;
-          //     if (img.src && !img.complete) {
-          //       img.crossOrigin = 'anonymous';
-          //     }
-          //   }
-          // }
-        },
+      if (mode === 'download') {
+        pdf.save(filename);
+        this.toastService.showSuccess('Offer letter downloaded');
+      } else {
+        // Build the PDF in memory and send it only as an attachment.
+        await this.emailLetterPdf(pdf, filename);
+      }
+    } catch (err) {
+      console.error(err);
+      this.toastService.showError(
+        mode === 'email'
+          ? 'Failed to generate PDF for email'
+          : 'Failed to generate PDF'
+      );
+    } finally {
+      this.downloadingPDF = false;
+      this.emailingPDF = false;
+    }
+  }
 
-        jsPDF: {
-          unit: 'mm',
-          format: 'a4',
-          orientation: 'portrait'
-        }
-      };
+  private emailLetterPdf(pdf: any, filename: string): Promise<void> {
+    const toEmail = (this.employees?.emailAddress || '').trim();
+    if (!toEmail) {
+      this.toastService.showError(
+        'Employee email is missing. Update the employee profile to email the letter.'
+      );
+      return Promise.resolve();
+    }
 
-      html2pdf()
-        .set(options)
-        .from(element)
-        .save()
-        .then(() => {
-          // this.loading = false;
-          this.downloadingPDF = false;
+    let pdfBase64 = '';
+    try {
+      const dataUri = pdf.output('datauristring');
+      pdfBase64 = String(dataUri).includes(',')
+        ? String(dataUri).split(',')[1]
+        : String(dataUri);
+    } catch (e) {
+      this.toastService.showError('Could not prepare email attachment.');
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve) => {
+      this.employeesService
+        .sendLetterMail({
+          letterType: 'offer',
+          toEmail,
+          employeeName: this.employees?.employeeName || '',
+          designation: this.getDesignationName(this.employees?.designation),
+          joiningDate: this.employees?.joiningDate || '',
+          companyName: this.companySettings?.companyName || '',
+          hrEmail: this.companySettings?.hrEmail || '',
+          companyPhone: this.companySettings?.companyPhone || '',
+          companyAddress: this.companySettings?.companyAddress || '',
+          companyCity: this.companySettings?.companyCity || '',
+          filename,
+          pdfBase64,
         })
-        .catch((err) => {
-          console.error(err);
-          // this.loading = false;
-          this.downloadingPDF = false;
-        });
-
+        .subscribe(
+          (res: any) => {
+            this.toastService.showSuccess(
+              res?.message || `Offer letter emailed to ${toEmail}`
+            );
+            resolve();
+          },
+          (error: any) => {
+            this.toastService.showError(
+              error || 'Email failed to send.'
+            );
+            resolve();
+          }
+        );
     });
   }
 
@@ -270,7 +304,10 @@
     prepareOfferLetterHtml() {
       if (!this.offerLetterContent || !this.employees) return;
 
-      let html = this.offerLetterContent;
+      let html = this.letterLayoutService.applyLayout(
+        this.offerLetterContent,
+        this.letterLayout
+      );
 
     const logoUrl = this.companySettings?.companyLogo
   ? (this.companySettings.companyLogo.startsWith('http')
@@ -282,12 +319,16 @@ const logoHtml = logoUrl
   ? `<img 
         src="${logoUrl}" 
         crossorigin="anonymous"
-        style="max-height:80px;max-width:200px;object-fit:contain;" 
+        style="max-height:60px;max-width:140px;width:auto;height:auto;object-fit:contain;display:block;" 
      />`
   : '';
+      const watermarkLogoHtml = logoUrl
+        ? `<img src="${logoUrl}" crossorigin="anonymous" alt="" />`
+        : '';
       // ALL PLACEHOLDERS IN ONE OBJECT
       const replacements: { [key: string]: any } = {
         '{{COMPANY_LOGO}}': logoHtml,
+        '{{WATERMARK_LOGO}}': watermarkLogoHtml,
 
         '{{EMPLOYEE_NAME}}': this.employees.employeeName,
         '{{EMPLOYEE_CITY}}': this.employees.city,
@@ -298,6 +339,7 @@ const logoHtml = logoUrl
         '{{JOINING_DATE}}': this.employees.joiningDate,
         '{{DESIGNATION}}': this.getDesignationName(this.employees.designation),
         '{{SALARY}}': this.roundToLPA(this.employees.salary * 12),
+        '{{TOTAL_SALARY}}': this.roundToLPA(this.employees.salary * 12),
 
         '{{COMPANY_NAME}}': this.companySettings.companyName || '',
         '{{HR_EMAIL}}': this.companySettings.hrEmail || '',
@@ -310,11 +352,7 @@ const logoHtml = logoUrl
         '{{COMPANY_WEBSITE}}': this.companySettings.companyWebsite || ''
       };
 
-      //  SINGLE LOOP FOR ALL REPLACEMENTS
-      Object.keys(replacements).forEach(key => {
-        const value = replacements[key] ?? '';
-        html = html.replace(new RegExp(key, 'g'), value);
-      });
+      html = this.letterLayoutService.replacePlaceholders(html, replacements);
 
       this.offerLetterHtml = this.sanitizer.bypassSecurityTrustHtml(html);
     }

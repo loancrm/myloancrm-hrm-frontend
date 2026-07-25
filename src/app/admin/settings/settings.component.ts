@@ -237,6 +237,7 @@ export class SettingsComponent implements OnInit {
           companyState: this.companySettings.companyState || '',
           companyPincode: this.companySettings.companyPincode || '',
           companyWebsite: this.companySettings.companyWebsite || '',
+          companyLogo: this.companySettings.companyLogo || '',
           email: this.companySettings.email || '',
           appPassword: this.companySettings.appPassword || '',
           supportEmail: this.companySettings.supportEmail || '',
@@ -245,6 +246,8 @@ export class SettingsComponent implements OnInit {
         // Set logo preview if logo exists
         if (this.companySettings.companyLogo) {
           this.logoPreview = this.companySettings.companyLogo;
+        } else {
+          this.logoPreview = null;
         }
 
         // Load attendance report emails
@@ -439,21 +442,32 @@ export class SettingsComponent implements OnInit {
   saveCompanySettings() {
     if (this.companySettingsForm.valid) {
       this.loading = true;
-      this.companySettingsService
-        .updateCompanySettings(this.companySettingsForm.value)
-        .subscribe(
-          (response: any) => {
-            this.loading = false;
-            this.toastService.showSuccess(
-              'Company settings updated successfully',
-            );
-            this.loadCompanySettings();
-          },
-          (error: any) => {
-            this.loading = false;
-            this.toastService.showError(error);
-          },
-        );
+      const payload = { ...this.companySettingsForm.value };
+
+      // Logo is managed only via Upload / Remove buttons.
+      // Never wipe an existing logo when saving address/details.
+      const existingLogo = this.companySettings?.companyLogo || '';
+      if (payload.companyLogo) {
+        // keep submitted logo url
+      } else if (existingLogo) {
+        payload.companyLogo = existingLogo;
+      } else {
+        delete payload.companyLogo;
+      }
+
+      this.companySettingsService.updateCompanySettings(payload).subscribe(
+        (response: any) => {
+          this.loading = false;
+          this.toastService.showSuccess(
+            'Company settings updated successfully',
+          );
+          this.loadCompanySettings();
+        },
+        (error: any) => {
+          this.loading = false;
+          this.toastService.showError(error);
+        },
+      );
     }
   }
 
@@ -596,6 +610,11 @@ export class SettingsComponent implements OnInit {
                 (updateResponse: any) => {
                   this.loading = false;
                   this.uploadingLogo = false;
+                  this.logoFile = null;
+                  this.logoPreview = logoUrl;
+                  if (this.companySettings) {
+                    this.companySettings.companyLogo = logoUrl;
+                  }
                   this.toastService.showSuccess('Logo uploaded successfully');
                   this.loadCompanySettings(); // Reload to get updated settings
                 },

@@ -10,23 +10,25 @@ import { DropdownModule } from 'primeng/dropdown';
 // import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 const routes: Routes = [
   { path: '', component: CustomtemplateComponent },
-  { path: ':id', component: CustomtemplateComponent }
+  { path: ':id', component: CustomtemplateComponent },
 ];
 @NgModule({
-  declarations: [
-    CustomtemplateComponent,
-  ],
+  declarations: [CustomtemplateComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-     CKEditorModule,
-     FormsModule,
-     DropdownModule,
-     ButtonModule,
-     TableModule,
-  ]
+    CKEditorModule,
+    FormsModule,
+    DropdownModule,
+    ButtonModule,
+    TableModule,
+    InputTextModule,
+    InputTextareaModule,
+  ],
 })
-export class CustomtemplateModule { }
+export class CustomtemplateModule {}

@@ -22,7 +22,7 @@ export class EmployeesService {
     private serviceMeta: ServiceMeta,
     private http: HttpClient,
     private localStorageService: LocalStorageService,
-    private dateTimeProcessor: DateTimeProcessorService
+    private dateTimeProcessor: DateTimeProcessorService,
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
   }
@@ -32,7 +32,7 @@ export class EmployeesService {
   }
   getOfferLetterTemplateHtml(
     templateName: string,
-    data: any
+    data: any,
   ): Promise<string | boolean> {
     return new Promise((resolve, reject) => {
       const url = 'https://s3.thefintalk.in/offerletterformat/index.html';
@@ -44,7 +44,7 @@ export class EmployeesService {
         (error) => {
           console.error('Failed to fetch HTML:', error);
           resolve(false);
-        }
+        },
       );
     });
   }
@@ -64,7 +64,7 @@ export class EmployeesService {
     });
     return tempDiv.innerHTML;
   }
-   toggleSidebar() {
+  toggleSidebar() {
     this.sidebarVisible.next(!this.sidebarVisible.value);
   }
 
@@ -133,7 +133,7 @@ export class EmployeesService {
   async fetchAndStoreClientIp(): Promise<void> {
     const lastFetchedTime = parseInt(
       this.localStorageService.getItemFromLocalStorage('clientIpTime') || '0',
-      10
+      10,
     );
     const currentTime = Date.now();
 
@@ -149,7 +149,7 @@ export class EmployeesService {
           this.localStorageService.setItemOnLocalStorage('clientIp', newIp);
           this.localStorageService.setItemOnLocalStorage(
             'clientIpTime',
-            currentTime.toString()
+            currentTime.toString(),
           );
         }
       }
@@ -169,6 +169,28 @@ export class EmployeesService {
   //NODE MAILER
   sendTerminationmail(data) {
     const url = 'mail/terminationmail';
+    return this.serviceMeta.httpPost(url, data);
+  }
+
+  /** Email offer / hike / relieving letter PDF to the employee */
+  sendLetterMail(data: {
+    letterType: 'offer' | 'hike' | 'relieving';
+    toEmail: string;
+    employeeName?: string;
+    designation?: string;
+    joiningDate?: string;
+    hikeDate?: string;
+    effectiveDate?: string;
+    lastWorkingDate?: string;
+    companyName?: string;
+    hrEmail?: string;
+    companyPhone?: string;
+    companyAddress?: string;
+    companyCity?: string;
+    filename: string;
+    pdfBase64: string;
+  }) {
+    const url = 'mail/letter';
     return this.serviceMeta.httpPost(url, data);
   }
   //employee
@@ -562,7 +584,7 @@ export class EmployeesService {
 
   deleteFile(filePath: string) {
     const url = `https://hrfiles.thefintalk.in/hrfiles?file_path=${encodeURIComponent(
-      filePath
+      filePath,
     )}`;
     return this.serviceMeta.httpDelete(url);
   }
@@ -685,8 +707,8 @@ export class EmployeesService {
   // return this.http.get<any[]>('templateTypes');
   // }
   getTemplateTypes() {
-  return this.serviceMeta.httpGet('templateTypes');
-}
+    return this.serviceMeta.httpGet('templateTypes');
+  }
   getAllTemplates() {
     return this.serviceMeta.httpGet('offer-letter');
   }
@@ -711,30 +733,28 @@ export class EmployeesService {
     return this.serviceMeta.httpGet('offer-letter');
   }
 
-
   selectTemplate(payload: { templateId: string; templateType: string }) {
     return this.serviceMeta.httpPost('offer-letter/select', payload);
   }
 
   getTemplatesCount(filter = {}) {
-      const url = 'offer-letter/total';
-      return this.serviceMeta.httpGet(url, null, filter);
-    }
+    const url = 'offer-letter/total';
+    return this.serviceMeta.httpGet(url, null, filter);
+  }
 
-// getTemplateTypes(): Observable<any[]> {
-//   const headers = {
-//     Authorization: `Bearer ${localStorage.getItem('token')}`
-//   };
+  // getTemplateTypes(): Observable<any[]> {
+  //   const headers = {
+  //     Authorization: `Bearer ${localStorage.getItem('token')}`
+  //   };
 
-//   return this.http.get<any[]>('templateTypes', { headers });
-// }
+  //   return this.http.get<any[]>('templateTypes', { headers });
+  // }
 
+  //   getTemplateTypes() {
+  //   return this.http.get('/templateTypes');
+  // }
 
-//   getTemplateTypes() {
-//   return this.http.get('/templateTypes');
-// }
-
-//   saveOfferTemplate(payload: any) {
-//   return this.http.post('/api/offer-letter/save', payload);
-// }
+  //   saveOfferTemplate(payload: any) {
+  //   return this.http.post('/api/offer-letter/save', payload);
+  // }
 }
