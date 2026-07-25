@@ -172,9 +172,9 @@ export class EmployeesService {
     return this.serviceMeta.httpPost(url, data);
   }
 
-  /** Email offer / hike / relieving letter PDF to the employee */
+  /** Email offer / hike / relieving letter or payslip PDF to the employee */
   sendLetterMail(data: {
-    letterType: 'offer' | 'hike' | 'relieving';
+    letterType: 'offer' | 'hike' | 'relieving' | 'payslip';
     toEmail: string;
     employeeName?: string;
     designation?: string;
@@ -182,6 +182,8 @@ export class EmployeesService {
     hikeDate?: string;
     effectiveDate?: string;
     lastWorkingDate?: string;
+    payPeriod?: string;
+    netPay?: string;
     companyName?: string;
     hrEmail?: string;
     companyPhone?: string;

@@ -40,16 +40,43 @@
             [src]="'https://' + companySettings?.companyLogo"
             alt="Company Logo"
             class="companylogo"
-            style="object-fit: contain;"
+            style="object-fit: contain"
             crossorigin="anonymous"
           />
           <div class="companyheading">
-            <div class="companyname">{{ companySettings.companyName || '' | uppercase }}</div>
+            <div class="companyname">
+              {{ companySettings.companyName || "" | uppercase }}
+            </div>
             <div class="companyaddress">
-              <span *ngIf="companySettings.companyAddress">{{ companySettings.companyAddress }}</span><span *ngIf="companySettings.companyAddress && (companySettings.companyCity || companySettings.companyState || companySettings.companyPincode)">, </span>
-              <span *ngIf="companySettings.companyCity">{{ companySettings.companyCity }}</span><span *ngIf="companySettings.companyCity && (companySettings.companyState || companySettings.companyPincode)">, </span>
-              <span *ngIf="companySettings.companyState">{{ companySettings.companyState }}</span>
-              <span *ngIf="companySettings.companyPincode"> - {{ companySettings.companyPincode }}</span>
+              <span *ngIf="companySettings.companyAddress">{{
+                companySettings.companyAddress
+              }}</span
+              ><span
+                *ngIf="
+                  companySettings.companyAddress &&
+                  (companySettings.companyCity ||
+                    companySettings.companyState ||
+                    companySettings.companyPincode)
+                "
+                >,
+              </span>
+              <span *ngIf="companySettings.companyCity">{{
+                companySettings.companyCity
+              }}</span
+              ><span
+                *ngIf="
+                  companySettings.companyCity &&
+                  (companySettings.companyState ||
+                    companySettings.companyPincode)
+                "
+                >,
+              </span>
+              <span *ngIf="companySettings.companyState">{{
+                companySettings.companyState
+              }}</span>
+              <span *ngIf="companySettings.companyPincode">
+                - {{ companySettings.companyPincode }}</span
+              >
             </div>
           </div>
         </div>
@@ -101,7 +128,7 @@
                 Date of Joining <b>:&nbsp;</b>
               </div>
               <div class="value">
-                {{ payroll.joiningDate | date : "dd-MM-yyyy" }}
+                {{ payroll.joiningDate | date: "dd-MM-yyyy" }}
               </div>
             </div>
             <div class="info-line">
@@ -249,19 +276,28 @@
       <button
         pButton
         type="button"
-        (click)="generatePDF()"
-        label="Download Payslip"
+        (click)="downloadPayslip()"
+        [label]="loading ? 'Downloading...' : 'Download Payslip'"
         icon="fa fa-download"
-        [disabled]="loading"
+        [disabled]="loading || emailing"
         class="download-btn"
+      ></button>
+      <button
+        pButton
+        type="button"
+        (click)="emailPayslip()"
+        [label]="emailing ? 'Sending Email...' : 'Email Payslip'"
+        icon="fa fa-envelope"
+        [disabled]="loading || emailing"
+        class="download-btn email-btn"
       ></button>
     </div>
   </div>
 </div>
 <footer class="p-2 text-center text-lg-start mt-3" style="color: #878a99">
   <div class="text-center mb-3">
-    © {{ currentYear }} <span style="color: #8E89D0">My</span>&nbsp;<b
-      style="color: #535AB4"
+    © {{ currentYear }} <span style="color: #8e89d0">My</span>&nbsp;<b
+      style="color: #535ab4"
       >HRMS</b
     >. | All Rights Reserved
   </div>

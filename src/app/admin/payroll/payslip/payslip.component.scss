@@ -232,19 +232,29 @@ td {
 .btn-container {
   display: flex;
   justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .download-btn {
-  background: linear-gradient(145deg, #535AB4, #C7C2E8);
+  background: linear-gradient(145deg, #535ab4, #c7c2e8);
   border-radius: 100px;
-  box-shadow: rgba(3, 93, 129, 0.2) 0 -25px 18px -14px inset,
-    rgba(3, 93, 129, 0.15) 0 1px 2px, rgba(3, 93, 129, 0.15) 0 2px 4px,
-    rgba(3, 93, 129, 0.15) 0 4px 8px, rgba(3, 93, 129, 0.15) 0 8px 16px,
+  box-shadow:
+    rgba(3, 93, 129, 0.2) 0 -25px 18px -14px inset,
+    rgba(3, 93, 129, 0.15) 0 1px 2px,
+    rgba(3, 93, 129, 0.15) 0 2px 4px,
+    rgba(3, 93, 129, 0.15) 0 4px 8px,
+    rgba(3, 93, 129, 0.15) 0 8px 16px,
     rgba(3, 93, 129, 0.15) 0 16px 32px;
   cursor: pointer;
   color: white;
   display: inline-block;
-  font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+  font-family:
+    CerebriSans-Regular,
+    -apple-system,
+    system-ui,
+    Roboto,
+    sans-serif;
   padding: 7px 20px;
   text-align: center;
   text-decoration: none;
@@ -257,11 +267,27 @@ td {
   touch-action: manipulation;
 }
 
+.download-btn.email-btn {
+  background: #ffffff;
+  color: #535ab4;
+  border: 1px solid #535ab4;
+  box-shadow: none;
+}
+
+.download-btn.email-btn:hover {
+  background: #f2f1fb;
+  color: #535ab4;
+  box-shadow: none;
+}
+
 .download-btn:hover {
-  background: linear-gradient(145deg,#535AB4);
-  box-shadow: rgba(3, 93, 129, 0.35) 0 -25px 18px -14px inset,
-    rgba(3, 93, 129, 0.25) 0 1px 2px, rgba(3, 93, 129, 0.25) 0 2px 4px,
-    rgba(3, 93, 129, 0.25) 0 4px 8px, rgba(3, 93, 129, 0.25) 0 8px 16px,
+  background: linear-gradient(145deg, #535ab4);
+  box-shadow:
+    rgba(3, 93, 129, 0.35) 0 -25px 18px -14px inset,
+    rgba(3, 93, 129, 0.25) 0 1px 2px,
+    rgba(3, 93, 129, 0.25) 0 2px 4px,
+    rgba(3, 93, 129, 0.25) 0 4px 8px,
+    rgba(3, 93, 129, 0.25) 0 8px 16px,
     rgba(3, 93, 129, 0.25) 0 16px 32px;
   transform: scale(1.05);
 }
@@ -298,11 +324,12 @@ td {
   .totalnetamount {
     font-size: 7px; /* Reduce font size for mobile */
   }
-  .companyaddress{
+  .companyaddress {
     font-size: 6px;
   }
 
-  .companyname , .net-payable{
+  .companyname,
+  .net-payable {
     font-size: 11px !important; /* Adjust heading font size */
   }
 
@@ -341,7 +368,7 @@ td {
     font-size: 7px;
     padding: 1px; /* Reduce padding in table cells */
   }
-  th{
+  th {
     height: 12px;
   }
 
@@ -353,11 +380,11 @@ td {
     margin: 2px;
     padding: 1px;
   }
-  .tablecard .row{
+  .tablecard .row {
     margin: 0 0px;
     padding: 2px;
   }
-  .tablecard .row .col-md-6{
+  .tablecard .row .col-md-6 {
     padding: 0 0px;
   }
   /* Adjust button styling for smaller screens */

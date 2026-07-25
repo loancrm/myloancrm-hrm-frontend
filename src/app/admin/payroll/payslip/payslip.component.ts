@@ -28,6 +28,7 @@ export class PayslipComponent {
   payslipId: string | null = null;
   version = projectConstantsLocal.VERSION_DESKTOP;
   loading: boolean = false;
+  emailing: boolean = false;
   amountinwords: string = 'Sixty Thousand Rupees Only';
   currentYear: number;
   apiLoading: any;
@@ -103,23 +104,138 @@ export class PayslipComponent {
     );
   }
 
+  get payslipFilename(): string {
+    return `${this.payroll?.employeeName || 'Employee'} ${this.getMonthNameAndYear(this.payroll?.payrollMonth)} Payslip.pdf`;
+  }
+
   generatePDF() {
+    this.downloadPayslip();
+  }
+
+  downloadPayslip() {
     this.loading = true;
+    this.buildPayslipPdf()
+      .then((pdf) => {
+        pdf.save(this.payslipFilename);
+        this.loading = false;
+      })
+      .catch((err) => {
+        console.error(err);
+        this.loading = false;
+        this.toastService.showError('Failed to generate payslip PDF');
+      });
+  }
+
+  emailPayslip() {
+    const toEmail = (this.payroll?.emailAddress || '').trim();
+    if (!toEmail) {
+      this.toastService.showError(
+        'Employee email is missing. Update the employee profile to email the payslip.',
+      );
+      return;
+    }
+
+    this.emailing = true;
+    this.buildPayslipPdf()
+      .then((pdf) => this.sendPayslipMail(pdf, toEmail))
+      .catch((err) => {
+        console.error(err);
+        this.toastService.showError('Failed to generate payslip PDF for email');
+      })
+      .then(() => {
+        this.emailing = false;
+      });
+  }
+
+  private buildPayslipPdf(): Promise<jsPDF> {
     const pdfContent = this.pdfContent.nativeElement;
-    html2canvas(pdfContent, {
+    return html2canvas(pdfContent, {
       useCORS: true,
       allowTaint: false,
-      scale: 2, // sharper output, optional
+      scale: 1.5,
+      backgroundColor: '#ffffff',
     }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
+      // JPEG keeps the email payload small; PNG at scale 2 easily
+      // exceeds Express's default body limit and triggers PayloadTooLarge.
+      const imgData = canvas.toDataURL('image/jpeg', 0.82);
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 190;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-      pdf.save(
-        `${this.payroll?.employeeName}  ${this.getMonthNameAndYear(this.payroll?.payrollMonth)} Payslip.pdf`,
-      );
-      this.loading = false;
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 10;
+      const imgWidth = pageWidth - margin * 2;
+      let imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      // Fit on one page when possible; otherwise scale down slightly.
+      const maxHeight = pageHeight - margin * 2;
+      if (imgHeight > maxHeight) {
+        const scale = maxHeight / imgHeight;
+        imgHeight = maxHeight;
+        const scaledWidth = imgWidth * scale;
+        pdf.addImage(
+          imgData,
+          'JPEG',
+          margin + (imgWidth - scaledWidth) / 2,
+          margin,
+          scaledWidth,
+          imgHeight,
+        );
+      } else {
+        pdf.addImage(imgData, 'JPEG', margin, margin, imgWidth, imgHeight);
+      }
+      return pdf;
+    });
+  }
+
+  private sendPayslipMail(pdf: jsPDF, toEmail: string): Promise<void> {
+    let pdfBase64 = '';
+    try {
+      const dataUri = pdf.output('datauristring');
+      pdfBase64 = String(dataUri).includes(',')
+        ? String(dataUri).split(',')[1]
+        : String(dataUri);
+    } catch (e) {
+      this.toastService.showError('Could not prepare email attachment.');
+      return Promise.resolve();
+    }
+
+    const payPeriod =
+      this.payrollPeriodLabel ||
+      this.getMonthNameAndYear(this.payroll?.payrollMonth);
+
+    return new Promise<void>((resolve) => {
+      this.employeesService
+        .sendLetterMail({
+          letterType: 'payslip',
+          toEmail,
+          employeeName: this.payroll?.employeeName || '',
+          designation:
+            this.payroll?.designationName ||
+            this.getDesignationName(this.payroll?.designation),
+          payPeriod,
+          netPay:
+            this.payroll?.netSalary != null
+              ? `Rs. ${this.payroll.netSalary}`
+              : '',
+          companyName: this.companySettings?.companyName || '',
+          hrEmail: this.companySettings?.hrEmail || '',
+          companyPhone: this.companySettings?.companyPhone || '',
+          companyAddress: this.companySettings?.companyAddress || '',
+          companyCity: this.companySettings?.companyCity || '',
+          filename: this.payslipFilename,
+          pdfBase64,
+        })
+        .subscribe(
+          (res: any) => {
+            this.toastService.showSuccess(
+              res?.message || `Payslip emailed to ${toEmail}`,
+            );
+            resolve();
+          },
+          (error: any) => {
+            this.toastService.showError(error || 'Email failed to send.');
+            resolve();
+          },
+        );
     });
   }
 
@@ -209,6 +325,7 @@ export class PayslipComponent {
         ...payroll,
         designationName: employee.designationName,
         designation: employee.designation,
+        emailAddress: employee.emailAddress || payroll.emailAddress || '',
       };
     }
     return payroll;
