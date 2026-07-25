@@ -9,7 +9,7 @@ import { jwtDecode } from 'jwt-decode';
 import { AuthService } from '../auth.service';
 import { LocalStorageService } from '../services/local-storage.service';
 import { ToastService } from '../services/toast.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { projectConstantsLocal } from '../constants/project-constants';
 import { EmployeesService } from '../admin/employees/employees.service';
 
@@ -48,13 +48,21 @@ export class LoginComponent implements OnInit {
     private employeesService: EmployeesService,
     private localStorageService: LocalStorageService,
     private toastService: ToastService,
-    private router: Router
+    private route: ActivatedRoute,
+    private router: Router,
   ) {}
   ngOnInit() {
     // this.employeesService.startIpUpdateInterval();
     this.createForm();
     // localStorage.setItem('userType', JSON.stringify(this.userType));
     this.localStorageService.setItemOnLocalStorage('userType', this.userType);
+    // SSO login redirects here when the CRM subscription is not active.
+    if (this.route.snapshot.queryParamMap.get('subscriptionExpired')) {
+      this.toastService.showError({
+        error:
+          'Your subscription has expired. Renew your Professional plan to continue logging in.',
+      });
+    }
   }
 
   toggleUserType() {
@@ -90,11 +98,11 @@ export class LoginComponent implements OnInit {
         if (data && data['accessToken']) {
           this.localStorageService.setItemOnLocalStorage(
             'accessToken',
-            data['accessToken']
+            data['accessToken'],
           );
           this.localStorageService.setItemOnLocalStorage(
             'userDetails',
-            jwtDecode(data['accessToken'])
+            jwtDecode(data['accessToken']),
           );
           // this.router.navigate(['user', 'dashboard'], {
           //   queryParams: { v: this.version },
@@ -113,8 +121,16 @@ export class LoginComponent implements OnInit {
       (error) => {
         this.api_loading = false;
         this.clicked = false;
+        if (error?.status === 402) {
+          this.toastService.showError({
+            error:
+              error?.error?.message ||
+              'Only Professional plan accounts can access HRM. Please upgrade to Professional to continue.',
+          });
+          return;
+        }
         this.toastService.showError(error);
-      }
+      },
     );
   }
 }
