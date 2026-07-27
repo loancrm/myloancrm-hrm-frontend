@@ -27,8 +27,9 @@ export class DashboardComponent implements OnInit {
   branches: any[] = [];
   branchCounts: any[] = [];
   selectedDate: any;
-  loading: any;
-  apiLoading: any;
+  loading: any = false;
+  attendanceLoading = false;
+  private employeesPrefetched = false;
   totalEmployeesCount: any = 0;
   designationsCount: any = 0;
   incentivesCount: any = 0;
@@ -88,7 +89,7 @@ export class DashboardComponent implements OnInit {
     private dateTimeProcessor: DateTimeProcessorService,
     private branchesService: BranchesService,
     private companySettingsService: CompanySettingsService,
-    private officePayrollPolicyService: OfficePayrollPolicyService
+    private officePayrollPolicyService: OfficePayrollPolicyService,
   ) {
     this.moment = this.dateTimeProcessor.getMoment();
     this.officePolicy = this.officePayrollPolicyService.defaults;
@@ -110,30 +111,41 @@ export class DashboardComponent implements OnInit {
     this.clientIp =
       this.localStorageService.getItemFromLocalStorage('clientIp');
     this.capabilities = this.employeesService.getUserRbac();
-    this.dateTimeProcessor.syncServerTime().subscribe(() => {
-      this.selectedDate = this.moment().format('YYYY-MM-DD');
-    });
+    this.selectedDate = this.moment().format('YYYY-MM-DD');
+
     this.loadOfficePolicy();
-    if (!this.capabilities.employee) {
-      this.getAttendanceByDate();
-    }
-    if (this.userDetails.employeeId && this.capabilities.employee) {
-      this.getEmployeeById(this.userDetails?.employeeId);
+    if (this.userDetails?.employeeId && this.capabilities.employee) {
+      this.getEmployeeById(this.userDetails.employeeId);
     }
     this.setChartOptions();
     this.updateCountsAnalytics();
+
     if (!this.capabilities.employee) {
       this.initializeDashboardData();
+      this.loadAdminAttendanceDashboard();
     }
-    this.loadTodaysBirthdays();
-    this.fetchAttendance();
+
+    // Defer non-critical birthday fetch so dashboard paints first.
+    setTimeout(() => this.loadTodaysBirthdays(), 600);
+
+    // Sync server IST in background; reload only if the date differs.
+    this.dateTimeProcessor.syncServerTime().subscribe(() => {
+      const syncedDate = this.moment().format('YYYY-MM-DD');
+      if (syncedDate !== this.selectedDate) {
+        this.selectedDate = syncedDate;
+        if (!this.capabilities.employee) {
+          this.loadAdminAttendanceDashboard();
+        }
+      }
+      this.fetchAttendance();
+    });
   }
 
   /** Same source as header calendar: active employees whose DOB is today. */
   loadTodaysBirthdays() {
     const todayKey = this.moment().format('YYYY-MM-DD');
     const dismissedKey = this.localStorageService.getItemFromLocalStorage(
-      'birthdayCardDismissedDate'
+      'birthdayCardDismissedDate',
     );
     if (dismissedKey === todayKey) {
       this.showBirthdayCard = false;
@@ -177,7 +189,7 @@ export class DashboardComponent implements OnInit {
     this.showBirthdayCard = false;
     this.localStorageService.setItemOnLocalStorage(
       'birthdayCardDismissedDate',
-      this.moment().format('YYYY-MM-DD')
+      this.moment().format('YYYY-MM-DD'),
     );
   }
 
@@ -212,16 +224,16 @@ export class DashboardComponent implements OnInit {
       this.allowedIps = [];
       return;
     }
-    this.apiLoading = true;
+    this.attendanceLoading = true;
     this.employeesService.getIpAddress(filter).subscribe({
       next: (response: any) => {
         this.allowedIps = response.map((row) =>
-          row.ipAddress.split('.').slice(0, 2).join('.')
+          row.ipAddress.split('.').slice(0, 2).join('.'),
         );
-        this.apiLoading = false;
+        this.attendanceLoading = false;
       },
       error: (error) => {
-        this.apiLoading = false;
+        this.attendanceLoading = false;
         this.toastService.showError(error);
       },
     });
@@ -241,7 +253,7 @@ export class DashboardComponent implements OnInit {
   isLateCheckInNow(): boolean {
     const lateThreshold = this.officePayrollPolicyService.getLateThreshold(
       this.moment,
-      this.officePolicy
+      this.officePolicy,
     );
     return this.dateTimeProcessor.now().isAfter(lateThreshold);
   }
@@ -250,7 +262,7 @@ export class DashboardComponent implements OnInit {
     const checkOutThreshold =
       this.officePayrollPolicyService.getCheckOutThreshold(
         this.moment,
-        this.officePolicy
+        this.officePolicy,
       );
     return this.dateTimeProcessor.now().isBefore(checkOutThreshold);
   }
@@ -258,7 +270,7 @@ export class DashboardComponent implements OnInit {
   getLateCutoffLabel(): string {
     return this.officePayrollPolicyService.getLateCutoffLabel(
       this.moment,
-      this.officePolicy
+      this.officePolicy,
     );
   }
 
@@ -268,7 +280,7 @@ export class DashboardComponent implements OnInit {
         this.openAttendanceReasonDialog(
           'checkIn',
           true,
-          `You are checking in after ${this.getLateCutoffLabel()} (office start ${this.officePolicy.officeStartTime} + ${this.officePolicy.graceMinutes} min grace). Please enter the reason for late check-in.`
+          `You are checking in after ${this.getLateCutoffLabel()} (office start ${this.officePolicy.officeStartTime} + ${this.officePolicy.graceMinutes} min grace). Please enter the reason for late check-in.`,
         );
         return;
       }
@@ -293,7 +305,7 @@ export class DashboardComponent implements OnInit {
         this.openAttendanceReasonDialog(
           'checkOut',
           true,
-          `You are checking out before office end time (${this.officePolicy.officeEndTime}). Please enter the reason for early logout.`
+          `You are checking out before office end time (${this.officePolicy.officeEndTime}). Please enter the reason for early logout.`,
         );
         return;
       }
@@ -316,7 +328,7 @@ export class DashboardComponent implements OnInit {
   openAttendanceReasonDialog(
     type: 'checkIn' | 'checkOut',
     requiresReason: boolean,
-    message: string
+    message: string,
   ) {
     this.attendanceReasonDialogType = type;
     this.attendanceReasonDialogRequiresReason = requiresReason;
@@ -337,7 +349,7 @@ export class DashboardComponent implements OnInit {
       this.toastService.showError(
         this.attendanceReasonDialogType === 'checkIn'
           ? 'Please enter reason for late check-in'
-          : 'Please enter reason for early logout'
+          : 'Please enter reason for early logout',
       );
       return;
     }
@@ -454,7 +466,9 @@ export class DashboardComponent implements OnInit {
   loadOfficePolicy() {
     this.companySettingsService.getCompanySettings().subscribe(
       (response: any) => {
-        this.officePolicy = this.officePayrollPolicyService.normalize(response || {});
+        this.officePolicy = this.officePayrollPolicyService.normalize(
+          response || {},
+        );
         this.ipRestrictionEnabled = !(
           response?.ipRestrictionEnabled === 0 ||
           response?.ipRestrictionEnabled === false ||
@@ -467,7 +481,7 @@ export class DashboardComponent implements OnInit {
       () => {
         this.officePolicy = this.officePayrollPolicyService.defaults;
         this.ipRestrictionEnabled = true;
-      }
+      },
     );
   }
 
@@ -483,7 +497,7 @@ export class DashboardComponent implements OnInit {
     this.loading = true;
     filter['leaveFrom-lte'] = attendanceDate;
     filter['leaveTo-gte'] = attendanceDate;
-    filter['leaveInternalStatus-or'] = "1,2";
+    filter['leaveInternalStatus-or'] = '1,2';
     // ✅ Step 1: Fetch leave records first
     this.employeesService.getLeaves(filter).subscribe(
       (leavesData: any) => {
@@ -498,14 +512,15 @@ export class DashboardComponent implements OnInit {
               : [];
             const now = this.dateTimeProcessor.now();
             const currentTime = now.format('HH:mm');
-            const lateThreshold = this.officePayrollPolicyService.getLateThreshold(
-              this.moment,
-              this.officePolicy
-            );
+            const lateThreshold =
+              this.officePayrollPolicyService.getLateThreshold(
+                this.moment,
+                this.officePolicy,
+              );
             const checkOutThreshold =
               this.officePayrollPolicyService.getCheckOutThreshold(
                 this.moment,
-                this.officePolicy
+                this.officePolicy,
               );
             let status = now.isAfter(lateThreshold) ? 'Late' : 'Present';
             if (!attendanceRecord) {
@@ -518,7 +533,7 @@ export class DashboardComponent implements OnInit {
                 .subscribe((activeEmployees: any) => {
                   updatedAttendanceData = activeEmployees.map((employee) => {
                     const leaveRecord = this.leaves.find(
-                      (leave) => leave.employeeId === employee.employeeId
+                      (leave) => leave.employeeId === employee.employeeId,
                     );
                     const isSelf =
                       employee.employeeId === this.employeeData.employeeId;
@@ -535,15 +550,15 @@ export class DashboardComponent implements OnInit {
                           ? 'Half-day'
                           : 'Absent'
                         : isSelf
-                        ? status
-                        : 'Absent',
+                          ? status
+                          : 'Absent',
                       checkInTime: isSelf ? currentTime : null,
                       checkOutTime: null,
                       reason: isSelf
                         ? selfReason
                         : leaveRecord
-                        ? leaveRecord.reason
-                        : '',
+                          ? leaveRecord.reason
+                          : '',
                     };
                   });
 
@@ -551,14 +566,14 @@ export class DashboardComponent implements OnInit {
                   this.saveOrUpdateAttendance(
                     attendanceRecord,
                     attendanceDate,
-                    updatedAttendanceData
+                    updatedAttendanceData,
                   );
                   this.pendingAttendanceReason = '';
                 });
             } else {
               // ✅ Attendance exists → Check if employee record needs updating
               const employeeIndex = updatedAttendanceData.findIndex(
-                (data: any) => data.employeeId === this.employeeData.employeeId
+                (data: any) => data.employeeId === this.employeeData.employeeId,
               );
 
               if (employeeIndex !== -1) {
@@ -575,7 +590,7 @@ export class DashboardComponent implements OnInit {
                   // ✅ Check-out: Update checkout time & duration
                   const checkInMoment = this.moment(
                     updatedAttendanceData[employeeIndex].checkInTime,
-                    'HH:mm'
+                    'HH:mm',
                   );
                   const totalDuration = now.diff(checkInMoment, 'hours', true);
                   let updatedStatus =
@@ -584,7 +599,8 @@ export class DashboardComponent implements OnInit {
                   if (totalDuration >= 3.5 && totalDuration <= 6) {
                     updatedStatus = 'Half-day';
                   } else if (now.isBefore(checkOutThreshold)) {
-                    updatedStatus = this.officePayrollPolicyService.EARLY_LOGOUT_STATUS;
+                    updatedStatus =
+                      this.officePayrollPolicyService.EARLY_LOGOUT_STATUS;
                   }
                   updatedAttendanceData[employeeIndex].checkOutTime =
                     currentTime;
@@ -611,7 +627,7 @@ export class DashboardComponent implements OnInit {
               this.saveOrUpdateAttendance(
                 attendanceRecord,
                 attendanceDate,
-                updatedAttendanceData
+                updatedAttendanceData,
               );
               this.pendingAttendanceReason = '';
             }
@@ -619,13 +635,13 @@ export class DashboardComponent implements OnInit {
           (error: any) => {
             this.loading = false;
             this.toastService.showError(error);
-          }
+          },
         );
       },
       (error: any) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -633,7 +649,7 @@ export class DashboardComponent implements OnInit {
   private saveOrUpdateAttendance(
     attendanceRecord: any,
     attendanceDate: string,
-    updatedAttendanceData: any
+    updatedAttendanceData: any,
   ) {
     const attendanceData = {
       attendanceDate: attendanceDate,
@@ -651,7 +667,7 @@ export class DashboardComponent implements OnInit {
           (error: any) => {
             this.loading = false;
             this.toastService.showError(error);
-          }
+          },
         );
     } else {
       this.employeesService.createAttendance(attendanceData).subscribe(
@@ -663,11 +679,10 @@ export class DashboardComponent implements OnInit {
         (error: any) => {
           this.loading = false;
           this.toastService.showError(error);
-        }
+        },
       );
     }
   }
-
 
   fetchAttendance(filter = {}) {
     const attendanceDate = this.moment(this.selectedDate).format('YYYY-MM-DD');
@@ -678,7 +693,7 @@ export class DashboardComponent implements OnInit {
         if (attendanceRecords && attendanceRecords.length > 0) {
           const latestAttendance = attendanceRecords[0]; // Get latest entry
           const attendanceData = latestAttendance.attendanceData.find(
-            (data: any) => data.employeeId == this.userDetails.employeeId
+            (data: any) => data.employeeId == this.userDetails.employeeId,
           );
 
           if (attendanceData) {
@@ -700,7 +715,7 @@ export class DashboardComponent implements OnInit {
       },
       (error: any) => {
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -752,15 +767,46 @@ export class DashboardComponent implements OnInit {
     this.selectedDate = this.moment(event).format('YYYY-MM-DD');
     this.attendanceData = [];
     this.employeeDetails = [];
-    this.employees = [];
-    this.getAttendanceByDate()
-      .then(() => {
-        this.employeesTable.reset();
-      })
-      .catch((error) => {
-        console.error('Failed to get attendance data:', error);
-        this.toastService.showError('Failed to load attendance data.');
-      });
+    this.employeesPrefetched = false;
+    this.loadAdminAttendanceDashboard();
+  }
+
+  /**
+   * One round-trip: attendance + active employees, then build absent list.
+   * Avoids waiting for server-time sync and duplicate lazy-table fetches.
+   */
+  loadAdminAttendanceDashboard() {
+    if (!this.selectedDate) {
+      this.selectedDate = this.moment().format('YYYY-MM-DD');
+    }
+    this.attendanceLoading = true;
+    forkJoin({
+      attendance: this.employeesService.getAttendance({
+        'attendanceDate-eq': this.selectedDate,
+      }),
+      employees: this.employeesService.getEmployees({
+        'employeeInternalStatus-eq': 1,
+        sort: 'joiningDate,asc',
+      }),
+    }).subscribe({
+      next: ({ attendance, employees }: any) => {
+        this.attendanceData = Array.isArray(attendance) ? attendance : [];
+        this.employees = Array.isArray(employees) ? employees : [];
+        this.employeesPrefetched = true;
+        this.applyAttendanceSummary();
+        this.buildAbsentEmployees();
+        this.attendanceLoading = false;
+      },
+      error: () => {
+        this.attendanceLoading = false;
+        this.toastService.showError('Failed to load attendance data');
+      },
+    });
+  }
+
+  private getDayAttendanceRows(): any[] {
+    const rows = this.attendanceData?.[0]?.attendanceData;
+    return Array.isArray(rows) ? rows : [];
   }
   getEmployeeById(id) {
     this.loading = true;
@@ -771,7 +817,7 @@ export class DashboardComponent implements OnInit {
           (salaryHikeData: any) => {
             if (salaryHikeData) {
               const matchingHikes = salaryHikeData.filter(
-                (hike) => hike.employeeId == id
+                (hike) => hike.employeeId == id,
               );
               if (matchingHikes.length > 0) {
                 let totalSalary = employeeData.salary;
@@ -791,13 +837,13 @@ export class DashboardComponent implements OnInit {
           (error) => {
             this.loading = false;
             this.toastService.showError(error);
-          }
+          },
         );
       },
       (error) => {
         this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   employeeProfile(employeeId) {
@@ -814,7 +860,7 @@ export class DashboardComponent implements OnInit {
     this.countsAnalytics = [
       {
         name: 'user-check',
-        cardImages:'employee',
+        cardImages: 'employee',
         displayName: 'Active Employees',
         count: this.totalEmployeesCount,
         routerLink: 'employees',
@@ -937,58 +983,80 @@ export class DashboardComponent implements OnInit {
     ];
   }
 
+  cardStyles = [
+    {
+      bg: 'linear-gradient(125.56deg, #e5edf2cd 50%, #e1eff7cd 12%, #bfe1f8bc 70%)',
+      border: '#2595f0',
+    },
+    // { bg: 'linear-gradient(125deg, #e5edf2cd 0%, #e5edf2cd 35%, #e1eff7cd 55%, #bfe1f8bc 100%)', border: '#2595f0' },
+    {
+      bg: 'linear-gradient(125.56deg, #def1f0db 50%, #cef1efcf 12%, #b1f4dcb4 70%)',
+      border: '#08de9a',
+    }, //users
+    {
+      bg: 'linear-gradient(125.56deg, #f6eef9 50%, #f3e8f8cf 12%, #e1c6f4c4 70%)',
+      border: '#940dee',
+    }, //up coming Interviews
+    {
+      bg: 'linear-gradient(125.56deg, #d5dceed0 50%, #c8d1e8d0 13%, #c6d5f5cc 80%)',
+      border: '#165eec',
+    }, //Today Attendance
+    {
+      bg: 'linear-gradient(125.86deg, #f5f4f0 50%, #f3f0e7dd 12%, #f1e5bbdf 70%)',
+      border: '#f29509',
+    }, // last month pay roll
+    {
+      bg: 'linear-gradient(125.56deg, #e4eddf 50%, #e3f2dde2 12%,#cef2b7e2 70%)',
+      border: '#54ed07',
+    }, //pending leaves
+    {
+      bg: 'linear-gradient(125.56deg, #f1e6eae8 50%, #f1e3e9ec 12%, #f3cbd59b 70%)',
+      border: '#f00933',
+    }, // 2026 Holidays
+    {
+      bg: 'linear-gradient(125.56deg, #ddf3e5dd 50%, #d4f0dedd 12%, #baf3d6d9 70%)',
+      border: '#02f49b',
+    },
+    {
+      bg: 'linear-gradient(125.56deg, #f1f3ed 50%, #edf2e2e9 12%,#eeefaae1 70%)',
+      border: '#717303',
+    },
+  ];
 
- cardStyles = [
-  { bg: 'linear-gradient(125.56deg, #e5edf2cd 50%, #e1eff7cd 12%, #bfe1f8bc 70%)', border: '#2595f0' },
-  // { bg: 'linear-gradient(125deg, #e5edf2cd 0%, #e5edf2cd 35%, #e1eff7cd 55%, #bfe1f8bc 100%)', border: '#2595f0' },
-  { bg: 'linear-gradient(125.56deg, #def1f0db 50%, #cef1efcf 12%, #b1f4dcb4 70%)', border: '#08de9a' },//users
-  { bg: 'linear-gradient(125.56deg, #f6eef9 50%, #f3e8f8cf 12%, #e1c6f4c4 70%)', border: '#940dee' },//up coming Interviews
-  { bg: 'linear-gradient(125.56deg, #d5dceed0 50%, #c8d1e8d0 13%, #c6d5f5cc 80%)', border: '#165eec' },//Today Attendance
-  { bg: 'linear-gradient(125.86deg, #f5f4f0 50%, #f3f0e7dd 12%, #f1e5bbdf 70%)', border: '#f29509' },// last month pay roll
-  { bg: 'linear-gradient(125.56deg, #e4eddf 50%, #e3f2dde2 12%,#cef2b7e2 70%)', border: '#54ed07' }, //pending leaves
-  { bg: 'linear-gradient(125.56deg, #f1e6eae8 50%, #f1e3e9ec 12%, #f3cbd59b 70%)',border: '#f00933' }, // 2026 Holidays
-  { bg: 'linear-gradient(125.56deg, #ddf3e5dd 50%, #d4f0dedd 12%, #baf3d6d9 70%)', border: '#02f49b' },
-  { bg: 'linear-gradient(125.56deg, #f1f3ed 50%, #edf2e2e9 12%,#eeefaae1 70%)', border: '#717303' }
-];
+  iconColors = [
+    '#1694e8',
+    '#00e796f9', //users
+    '#930aee', //up coming Interviews
+    '#1052e0cc', //Today Attendance
+    '#ecba05', //Last month payroll
+    '#79f428', //pending leaves
+    '#f00933', //2026 Hloidays
+    '#02f49b',
+    '#717303',
+  ];
 
-
-
-iconColors = [
-  '#1694e8',
-  '#00e796f9',//users
-  '#930aee',//up coming Interviews
-  '#1052e0cc',//Today Attendance
-  '#ecba05',//Last month payroll
-  '#79f428',//pending leaves
-  '#f00933', //2026 Hloidays
-  '#02f49b',
-  '#717303'
-];
-
-iconbackgroundColors = [
-  '#d5e8f5',
-  '#a4f6f0',
-  '#f5e1f8',//up coming Interviews
-  '#95aaef',//Today Attendance
-  '#f1e2a4',
-  '#bee3a6',
-  '#ecbfd1',
-  '#90f2ba',
-  '#e8f093'
-]
-// iconFilters = [
-//   'invert(37%) sepia(91%) saturate(749%) hue-rotate(185deg) brightness(92%) contrast(96%)',
-//   'invert(45%) sepia(73%) saturate(412%) hue-rotate(122deg) brightness(90%) contrast(94%)',
-//   'invert(32%) sepia(61%) saturate(623%) hue-rotate(250deg) brightness(90%) contrast(97%)',
-//   'invert(27%) sepia(58%) saturate(505%) hue-rotate(200deg) brightness(92%) contrast(95%)',
-//   'invert(68%) sepia(88%) saturate(415%) hue-rotate(360deg) brightness(95%) contrast(90%)',
-//   'invert(56%) sepia(79%) saturate(365%) hue-rotate(85deg) brightness(93%) contrast(91%)',
-//   'invert(40%) sepia(51%) saturate(505%) hue-rotate(210deg) brightness(96%) contrast(93%)',
-//   'invert(45%) sepia(62%) saturate(521%) hue-rotate(330deg) brightness(95%) contrast(92%)',
-//   'invert(41%) sepia(72%) saturate(401%) hue-rotate(145deg) brightness(94%) contrast(92%)'
-// ];
-
-
+  iconbackgroundColors = [
+    '#d5e8f5',
+    '#a4f6f0',
+    '#f5e1f8', //up coming Interviews
+    '#95aaef', //Today Attendance
+    '#f1e2a4',
+    '#bee3a6',
+    '#ecbfd1',
+    '#90f2ba',
+    '#e8f093',
+  ];
+  // iconFilters = [
+  //   'invert(37%) sepia(91%) saturate(749%) hue-rotate(185deg) brightness(92%) contrast(96%)',
+  //   'invert(45%) sepia(73%) saturate(412%) hue-rotate(122deg) brightness(90%) contrast(94%)',
+  //   'invert(32%) sepia(61%) saturate(623%) hue-rotate(250deg) brightness(90%) contrast(97%)',
+  //   'invert(27%) sepia(58%) saturate(505%) hue-rotate(200deg) brightness(92%) contrast(95%)',
+  //   'invert(68%) sepia(88%) saturate(415%) hue-rotate(360deg) brightness(95%) contrast(90%)',
+  //   'invert(56%) sepia(79%) saturate(365%) hue-rotate(85deg) brightness(93%) contrast(91%)',
+  //   'invert(40%) sepia(51%) saturate(505%) hue-rotate(210deg) brightness(96%) contrast(93%)',
+  //   'invert(45%) sepia(62%) saturate(521%) hue-rotate(330deg) brightness(95%) contrast(92%)',
+  //   'invert(41%) sepia(72%) saturate(401%) hue-rotate(145deg) brightness(94%) contrast(92%)'
+  // ];
 
   // updateCountsAnalytics() {
   //   const isEmployee = this.capabilities?.employee;
@@ -1129,15 +1197,15 @@ iconbackgroundColors = [
     item.isLoading = false;
     item.name = 'placeholder';
   }
-  calculateAttendanceCounts(): void {
-    this.totalPresentCount =
-      this.totalAbsentCount =
-      this.totalHalfDayCount =
-      this.totalLateCount =
-      this.totalEarlyLogoutCount =
-      0;
-    this.attendanceData[0]?.attendanceData.forEach((attendance) => {
-      switch (attendance.status) {
+  applyAttendanceSummary(): void {
+    this.totalPresentCount = 0;
+    this.totalAbsentCount = 0;
+    this.totalHalfDayCount = 0;
+    this.totalLateCount = 0;
+    this.totalEarlyLogoutCount = 0;
+
+    for (const row of this.getDayAttendanceRows()) {
+      switch (row?.status) {
         case 'Present':
           this.totalPresentCount++;
           break;
@@ -1154,10 +1222,14 @@ iconbackgroundColors = [
           this.totalHalfDayCount++;
           break;
       }
-    });
+    }
     this.updateCountsAnalytics();
   }
+
   loadEmployees(event) {
+    if (this.employeesPrefetched) {
+      return;
+    }
     this.currentTableEvent = event;
     let api_filter = this.employeesService.setFiltersFromPrimeTable(event);
     api_filter = Object.assign({}, api_filter);
@@ -1168,67 +1240,48 @@ iconbackgroundColors = [
       this.getEmployees(api_filter);
     }
   }
-  setDefaultAttendanceData() {
-    this.employeeDetails = this.employees
-      .filter((employee) =>
-        this.attendanceData[0]?.attendanceData.some(
-          (att) =>
-            att.employeeId === employee.employeeId && att.status === 'Absent'
-        )
-      )
-      .map((employee) => {
-        const attendance = this.attendanceData[0]?.attendanceData.find(
-          (att) => att.employeeId === employee.employeeId
-        );
-        return {
-          ...employee,
-          status: attendance?.status,
-          checkInTime: attendance?.checkInTime,
-          checkOutTime: attendance?.checkOutTime,
-        };
+
+  /** Build Absent Employees list in one pass (Map lookup, no nested scans). */
+  buildAbsentEmployees() {
+    const absentById = new Map<string, any>();
+    for (const att of this.getDayAttendanceRows()) {
+      if (att?.status === 'Absent' && att.employeeId != null) {
+        absentById.set(String(att.employeeId), att);
+      }
+    }
+
+    this.employeeDetails = (this.employees || []).reduce((list, employee) => {
+      const att = absentById.get(String(employee.employeeId));
+      if (!att) {
+        return list;
+      }
+      list.push({
+        ...employee,
+        status: att.status,
+        checkInTime: att.checkInTime,
+        checkOutTime: att.checkOutTime,
       });
+      return list;
+    }, [] as any[]);
   }
+
   getEmployees(filter = {}) {
-    this.apiLoading = true;
+    this.attendanceLoading = true;
     this.employeesService.getEmployees(filter).subscribe({
       next: (response: any) => {
-        if (response) {
-          this.employees = response;
-          this.setDefaultAttendanceData();
-        } else {
-          console.warn('No employees data received');
-        }
-        this.apiLoading = false;
+        this.employees = Array.isArray(response) ? response : [];
+        this.buildAbsentEmployees();
+        this.attendanceLoading = false;
       },
       error: (error: any) => {
-        this.apiLoading = false;
+        this.attendanceLoading = false;
         this.toastService.showError(
-          'Failed to load employees: ' + error.message
+          'Failed to load employees: ' + (error?.message || error),
         );
       },
-    });
-  }
-  getAttendanceByDate(filter = {}): Promise<void> {
-    this.apiLoading = true;
-    filter['attendanceDate-eq'] = this.selectedDate;
-    return new Promise((resolve, reject) => {
-      this.employeesService.getAttendance(filter).subscribe(
-        (response: any) => {
-          this.attendanceData = response;
-          this.apiLoading = false;
-          this.calculateAttendanceCounts();
-          resolve();
-        },
-        (error: any) => {
-          this.apiLoading = false;
-          this.toastService.showError('Failed to load attendance data');
-          reject(error);
-        }
-      );
     });
   }
   fetchCounts(filter = {}) {
-    this.loading = true;
     const employeefilter = { ...filter, 'employeeInternalStatus-eq': 1 };
     const interviewsfilter = { ...filter, 'interviewInternalStatus-eq': 1 };
     const leavesfilter = { ...filter, 'leaveInternalStatus-eq': 1 };
@@ -1242,10 +1295,10 @@ iconbackgroundColors = [
     };
     if (this.selectedYear) {
       const startOfYear = this.moment(`${this.selectedYear}-01-01`).format(
-        'YYYY-MM-DD'
+        'YYYY-MM-DD',
       );
       const endOfYear = this.moment(`${this.selectedYear}-12-31`).format(
-        'YYYY-MM-DD'
+        'YYYY-MM-DD',
       );
       holidayfilter['date-gte'] = startOfYear;
       holidayfilter['date-lte'] = endOfYear;
@@ -1283,19 +1336,16 @@ iconbackgroundColors = [
         this.designationsCount = designationsCount;
         this.incentivesCount = incentivesCount;
         this.updateCountsAnalytics();
-        this.loading = false;
       },
       (error: any) => {
-        this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   getGenderCounts(filter = {}) {
     filter['employeeInternalStatus-eq'] = 1;
     const maleFilter = { ...filter, 'gender-eq': 2 };
     const femaleFilter = { ...filter, 'gender-eq': 1 };
-    this.loading = true;
     forkJoin({
       maleCount: this.employeesService?.getEmployeesCount(maleFilter),
       femaleCount: this.employeesService?.getEmployeesCount(femaleFilter),
@@ -1304,12 +1354,10 @@ iconbackgroundColors = [
         this.maleCount = response.maleCount;
         this.femaleCount = response.femaleCount;
         this.setChartOptions();
-        this.loading = false;
       },
       (error: any) => {
-        this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
   isAllZeros(): boolean {
@@ -1321,20 +1369,16 @@ iconbackgroundColors = [
       ...filter,
       'designation-eq': designation,
     }));
-    this.loading = true;
     forkJoin(
-      filters.map((f) => this.employeesService.getEmployeesCount(f))
+      filters.map((f) => this.employeesService.getEmployeesCount(f)),
     ).subscribe(
       (counts: any) => {
-        // this.designationCounts = counts.map((count) => count || 0);
         this.designationCounts = counts;
         this.setChartOptions();
-        this.loading = false;
       },
       (error: any) => {
-        this.loading = false;
         this.toastService.showError(error);
-      }
+      },
     );
   }
 
@@ -1374,53 +1418,54 @@ iconbackgroundColors = [
   // }
   getBranchCounts(filter = {}) {
     filter['employeeInternalStatus-eq'] = 1;
-    this.loading = true;
 
     // First fetch all active branches
-    this.branchesService.getBranches({ 'branchInternalStatus-eq': 1 }).subscribe(
-      (branchesData: any) => {
-        this.branches = branchesData || [];
+    this.branchesService
+      .getBranches({ 'branchInternalStatus-eq': 1 })
+      .subscribe(
+        (branchesData: any) => {
+          this.branches = branchesData || [];
 
-        if (this.branches.length === 0) {
-          this.branchCounts = [];
-          this.setChartOptions();
-          this.loading = false;
-          return;
-        }
-
-        // Create filters for each branch
-        // Note: Employees store branchId (string) in ofcBranch field, not id (number)
-        const branchFilters = this.branches.map((branch: any) => ({
-          ...filter,
-          'ofcBranch-eq': branch.branchId || branch.id,
-        }));
-
-
-        // Get employee counts for each branch
-        forkJoin(
-          branchFilters.map((f) => this.employeesService.getEmployeesCount(f))
-        ).subscribe(
-          (counts: any) => {
-            this.branchCounts = this.branches.map((branch: any, index: number) => ({
-              branchId: branch.id,
-              branchName: branch.displayName || branch.name || `Branch ${branch.id}`,
-              count: counts[index] || 0,
-            }));
-
+          if (this.branches.length === 0) {
+            this.branchCounts = [];
             this.setChartOptions();
-            this.loading = false;
-          },
-          (error: any) => {
-            this.loading = false;
-            this.toastService.showError(error);
+            return;
           }
-        );
-      },
-      (error: any) => {
-        this.loading = false;
-        this.toastService.showError(error);
-      }
-    );
+
+          // Create filters for each branch
+          // Note: Employees store branchId (string) in ofcBranch field, not id (number)
+          const branchFilters = this.branches.map((branch: any) => ({
+            ...filter,
+            'ofcBranch-eq': branch.branchId || branch.id,
+          }));
+
+          // Get employee counts for each branch
+          forkJoin(
+            branchFilters.map((f) =>
+              this.employeesService.getEmployeesCount(f),
+            ),
+          ).subscribe(
+            (counts: any) => {
+              this.branchCounts = this.branches.map(
+                (branch: any, index: number) => ({
+                  branchId: branch.id,
+                  branchName:
+                    branch.displayName || branch.name || `Branch ${branch.id}`,
+                  count: counts[index] || 0,
+                }),
+              );
+
+              this.setChartOptions();
+            },
+            (error: any) => {
+              this.toastService.showError(error);
+            },
+          );
+        },
+        (error: any) => {
+          this.toastService.showError(error);
+        },
+      );
   }
 
   // Check if all branch counts are zero
@@ -1485,8 +1530,6 @@ iconbackgroundColors = [
     //       },
     //     },
     //   ],
-
-
 
     //   // colors: [
     //   //   '#640D5F',
@@ -1561,82 +1604,78 @@ iconbackgroundColors = [
     //   },
     // };
     this.DepartmentChartOptions = {
-  series: [
-    { name: 'Inside Sales', data: [this.designationCounts[0] || 0] },
-    { name: 'Operations Team', data: [this.designationCounts[1] || 0] },
-    { name: 'Human Resource', data: [this.designationCounts[2] || 0] },
-    { name: 'Information Technology', data: [this.designationCounts[3] || 0] },
-  ],
+      series: [
+        { name: 'Inside Sales', data: [this.designationCounts[0] || 0] },
+        { name: 'Operations Team', data: [this.designationCounts[1] || 0] },
+        { name: 'Human Resource', data: [this.designationCounts[2] || 0] },
+        {
+          name: 'Information Technology',
+          data: [this.designationCounts[3] || 0],
+        },
+      ],
 
-  chart: {
-    height: 400,
-    type: 'bar',
-    toolbar: { show: true },
-  },
+      chart: {
+        height: 400,
+        type: 'bar',
+        toolbar: { show: true },
+      },
 
-  plotOptions: {
-    bar: {
-      distributed: true,
-      columnWidth: '10%',     // ✅ small bars on ALL screens
-      borderRadius: 6,        // ✅ rounded corners
-      borderRadiusApplication: 'end',
-      endingShape: 'rounded',
+      plotOptions: {
+        bar: {
+          distributed: true,
+          columnWidth: '10%', // ✅ small bars on ALL screens
+          borderRadius: 6, // ✅ rounded corners
+          borderRadiusApplication: 'end',
+          endingShape: 'rounded',
+        },
+      },
 
-    },
-  },
+      // colors: [
+      //   '#7EB0D5',
+      //   '#B2E061',
+      //   '#BD7EBE',
+      //   '#FFB55A',
+      // ],
+      colors: ['#8d6e9bbf', '#3EB3D2', '#DE8170', '#6F783F'],
 
-  // colors: [
-  //   '#7EB0D5',
-  //   '#B2E061',
-  //   '#BD7EBE',
-  //   '#FFB55A',
-  // ],
-  colors: [
-    '#8d6e9bbf',
-    '#3EB3D2',
-    '#DE8170',
-    '#6F783F',
-  ],
+      dataLabels: {
+        enabled: true,
+        style: { fontSize: '12px', color: 'black' },
+      },
 
-  dataLabels: {
-    enabled: true,
-    style: { fontSize: '12px', color:'black' },
-  },
+      stroke: {
+        width: 10,
+        colors: ['#fff'],
+      },
 
-  stroke: {
-    width: 10,
-    colors: ['#fff'],
-  },
+      title: {
+        text: 'Departments Analytics',
+        align: 'left',
+        style: {
+          fontSize: '22px',
+          color: '#333',
+          fontWeight: '500',
+        },
+      },
 
-  title: {
-    text: 'Departments Analytics',
-    align: 'left',
-    style: {
-      fontSize: '22px',
-      color: '#333',
-      fontWeight: '500',
-    },
-  },
+      grid: {
+        borderColor: '#e7e7e7',
+        padding: { left: 10, right: 10 }, // ✅ keeps spacing clean
+      },
 
-  grid: {
-    borderColor: '#e7e7e7',
-    padding: { left: 10, right: 10 }, // ✅ keeps spacing clean
-  },
+      xaxis: {
+        categories: ['Departments'],
+      },
 
-  xaxis: {
-    categories: ['Departments'],
-  },
+      yaxis: {
+        title: { text: 'Count' },
+      },
 
-  yaxis: {
-    title: { text: 'Count' },
-  },
-
-  legend: {
-    position: 'bottom',
-    horizontalAlign: 'center',
-  },
-};
-
+      legend: {
+        position: 'bottom',
+        horizontalAlign: 'center',
+      },
+    };
 
     this.pieChartOptions = {
       series: [this.maleCount || 0, this.femaleCount || 0],
@@ -1661,8 +1700,9 @@ iconbackgroundColors = [
         offsetX: -5,
         formatter: (seriesName, opts) => {
           const customLabels = ['Male', 'Female'];
-          return `${customLabels[opts.seriesIndex]}: ${opts.w.config.series[opts.seriesIndex]
-            }`;
+          return `${customLabels[opts.seriesIndex]}: ${
+            opts.w.config.series[opts.seriesIndex]
+          }`;
         },
       },
       dataLabels: {
@@ -1689,12 +1729,25 @@ iconbackgroundColors = [
       ],
     };
     // Dynamic branch chart
-    const branchSeries = this.branchCounts.map((branch: any) => branch.count || 0);
-    const branchLabels = this.branchCounts.map((branch: any) => branch.branchName);
+    const branchSeries = this.branchCounts.map(
+      (branch: any) => branch.count || 0,
+    );
+    const branchLabels = this.branchCounts.map(
+      (branch: any) => branch.branchName,
+    );
 
     // Generate colors dynamically (repeating if needed)
-    const branchColors = ['#ABA5DC', '#8E89D0', '#706EC4', '#535AB4', '#3D4A94', '#2A3574'];
-    const chartColors = branchSeries.map((_, index) => branchColors[index % branchColors.length]);
+    const branchColors = [
+      '#ABA5DC',
+      '#8E89D0',
+      '#706EC4',
+      '#535AB4',
+      '#3D4A94',
+      '#2A3574',
+    ];
+    const chartColors = branchSeries.map(
+      (_, index) => branchColors[index % branchColors.length],
+    );
 
     this.branchpieChartOptions = {
       series: branchSeries.length > 0 ? branchSeries : [0],
@@ -1718,15 +1771,18 @@ iconbackgroundColors = [
         offsetY: 15,
         offsetX: -5,
         formatter: (seriesName, opts) => {
-          const customLabels = branchLabels.length > 0 ? branchLabels : ['No Branches'];
-          return `${customLabels[opts.seriesIndex]}: ${opts.w.config.series[opts.seriesIndex]
-            }`;
+          const customLabels =
+            branchLabels.length > 0 ? branchLabels : ['No Branches'];
+          return `${customLabels[opts.seriesIndex]}: ${
+            opts.w.config.series[opts.seriesIndex]
+          }`;
         },
       },
       dataLabels: {
         enabled: true,
         formatter: function (val, opts) {
-          var customLabels = branchLabels.length > 0 ? branchLabels : ['No Branches'];
+          var customLabels =
+            branchLabels.length > 0 ? branchLabels : ['No Branches'];
           var seriesValues = opts.w.config.series[opts.seriesIndex];
           var customLabel = customLabels[opts.seriesIndex];
           return customLabel + ': ' + seriesValues;

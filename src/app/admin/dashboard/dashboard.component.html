@@ -1,8 +1,4 @@
-<div *ngIf="loading">
-  <app-preloader></app-preloader>
-</div>
-
-<div class="container-fluid mb-3" *ngIf="!loading">
+<div class="container-fluid mb-3">
   <div class="row">
     <div class="col-md-8 mt-3">
       <div class="card welcome-card" *ngIf="userDetails">
@@ -45,7 +41,7 @@
           </div>
         </div>
       </div>
-      <div class="bg-color" *ngIf="!loading">
+      <div class="bg-color">
         <div class="row">
           <div class="d-flex flex-wrap justify-content-start">
             <ng-container *ngFor="let item of countsAnalytics; let i = index">
@@ -226,13 +222,10 @@
             [value]="employeeDetails"
             [sortOrder]="1"
             [sortField]="'joiningDate'"
-            [lazy]="true"
-            (onLazyLoad)="loadEmployees($event)"
             dataKey="id"
             [showCurrentPageReport]="true"
             class="p-datatable-striped table"
-            [totalRecords]="totalEmployeesCount"
-            [loading]="apiLoading"
+            [loading]="attendanceLoading"
             responsiveLayout="scroll"
             [globalFilterFields]="[
               'referenceNo',

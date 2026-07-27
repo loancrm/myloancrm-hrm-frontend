@@ -5,8 +5,8 @@ export interface IncentiveTier {
   /** How to compute incentive once this tier matches. */
   rewardType: 'rate' | 'fixed';
   /**
-   * User-friendly rate value. Enter 20 for 0.20%, 30 for 0.30%.
-   * Incentive = disbursed × (ratePercent / 10000).
+   * Exact percent of disbursed amount. Pass 0.3 for 0.3%, 0.2 for 0.2%.
+   * Incentive = disbursed × (ratePercent / 100).
    */
   ratePercent: number;
   /** Used when rewardType = fixed. Flat ₹ amount (e.g. for ≥ 1 lakh give this amount). */
@@ -32,23 +32,23 @@ export class IncentivePolicyService {
       {
         minAmount: 10000000,
         rewardType: 'rate',
-        ratePercent: 30, // 0.30%
+        ratePercent: 0.3,
         fixedAmount: 0,
       },
       {
         minAmount: 4900000,
         rewardType: 'rate',
-        ratePercent: 20, // 0.20%
+        ratePercent: 0.2,
         fixedAmount: 0,
       },
       {
         minAmount: 1500000,
         rewardType: 'rate',
-        ratePercent: 15, // 0.15%
+        ratePercent: 0.15,
         fixedAmount: 0,
       },
     ],
-    flatRatePercent: 20, // 0.20%
+    flatRatePercent: 0.2,
   };
 
   normalize(raw: any): IncentiveCalcConfig {
@@ -65,7 +65,7 @@ export class IncentivePolicyService {
     }
 
     const pattern = parsed.pattern === 'flat' ? 'flat' : 'tiered';
-    const flatRate = this.toUserRate(Number(parsed.flatRatePercent));
+    const flatRate = this.toExactRate(Number(parsed.flatRatePercent));
     const tiers = this.normalizeTiers(parsed.tiers);
 
     return {
@@ -141,23 +141,24 @@ export class IncentivePolicyService {
   }
 
   /**
-   * User enters 20 → means 0.20% → amount × 0.002.
-   * Old saved values like 0.20 are migrated to 20.
+   * ratePercent is exact percent: 0.3 → 0.3% of amount.
+   * amount × (0.3 / 100) = amount × 0.003
    */
   private applyRate(amount: number, userRate: number): number {
-    const rate = this.toUserRate(Number(userRate) || 0);
-    // 20 → 0.20% of amount = amount * 20 / 10000
-    return amount * (rate / 10000);
+    const rate = this.toExactRate(Number(userRate) || 0);
+    return amount * (rate / 100);
   }
 
-  /** Convert old decimal rates (0.20) to user values (20). */
-  private toUserRate(value: number): number {
+  /**
+   * Keep exact decimal rates (0.3). Migrate old UI values like 30 → 0.3.
+   */
+  private toExactRate(value: number): number {
     if (!Number.isFinite(value) || value < 0) {
       return 0;
     }
-    // Old format stored 0.15 / 0.2 / 0.3 — migrate to 15 / 20 / 30
-    if (value > 0 && value < 1) {
-      return Number((value * 100).toFixed(4));
+    // Old format stored 15 / 20 / 30 meaning 0.15% / 0.20% / 0.30%
+    if (value >= 1) {
+      return Number((value / 100).toFixed(4));
     }
     return value;
   }
@@ -178,7 +179,7 @@ export class IncentivePolicyService {
         return {
           minAmount: Number(tier?.minAmount),
           rewardType: rewardType as 'rate' | 'fixed',
-          ratePercent: this.toUserRate(Number(tier?.ratePercent) || 0),
+          ratePercent: this.toExactRate(Number(tier?.ratePercent) || 0),
           fixedAmount: Number(tier?.fixedAmount) || 0,
         };
       })
@@ -198,8 +199,8 @@ export class IncentivePolicyService {
     return {
       pattern: this.defaults.pattern,
       applyPerMonthBucket: true,
-      flatRatePercent: this.defaults.flatRatePercent,
       tiers: this.defaults.tiers.map((t) => ({ ...t })),
+      flatRatePercent: this.defaults.flatRatePercent,
     };
   }
 }
